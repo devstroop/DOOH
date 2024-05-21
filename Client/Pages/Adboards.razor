@@ -1,0 +1,77 @@
+@page "/adboards"
+
+@attribute [Authorize]
+<PageTitle>Adboards</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                    <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
+                    <RadzenSplitButtonItem Text="CSV" Value="csv" />
+                </RadzenSplitButton>
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@adboards" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Adboard" RowDoubleClick="@EditRow">
+            <Columns>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Adboard Id">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardModel.Model" Title="Adboard Model">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Provider.ProviderName" Title="Provider">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Category.CategoryName" Title="Category">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="DisplaySerial" Title="Display Serial">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="MotherboardSerial" Title="Motherboard Serial">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="BaseRatePerSecond" Title="Base Rate Per Second">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Attachment" Title="Attachment">
+                    <Template Context="adboard">
+                            <RadzenImage Path="@adboard.Attachment.GetThumbnail()" style="width: 100px; height: 100px" Visible="@(adboard.Attachment != null)" />
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Latitude" Title="Latitude">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Longitude" Title="Longitude">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Address" Title="Address">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="City.CityName" Title="City">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="State.StateName" Title="State">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Country.CountryName" Title="Country">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="IsActive" Title="Is Active">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CreatedAt" Title="Created At">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="UpdatedAt" Title="Updated At">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="adboard">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, adboard)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

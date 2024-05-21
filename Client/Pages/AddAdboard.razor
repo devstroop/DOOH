@@ -1,0 +1,161 @@
+@page "/add-adboard"
+
+@attribute [Authorize]
+<PageTitle>Add Adboard</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Adboard</RadzenAlert>
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboard" Visible="@(adboard != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Adboard Model" Component="AdboardModel" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@adboardModelsForAdboardModelId" TextProperty="Model" ValueProperty="AdboardModelId" AllowClear=true
+                         Placeholder="Choose AdboardModel" style="display: block; width: 100%" @bind-Value="@adboard.AdboardModelId" Name="AdboardModelId"
+                        SelectedValue=@adboardModelsForAdboardModelIdValue Count=@adboardModelsForAdboardModelIdCount LoadData=@adboardModelsForAdboardModelIdLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Provider" Component="Provider" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ProviderName" ValueProperty="ProviderId" AllowClear=true
+                         Placeholder="Choose Provider" style="display: block; width: 100%" @bind-Value="@adboard.ProviderId" Name="ProviderId"
+                        SelectedValue=@providersForProviderIdValue Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Category" Component="Category" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@categoriesForCategoryId" TextProperty="CategoryName" ValueProperty="CategoryId" AllowClear=true
+                         Placeholder="Choose Category" style="display: block; width: 100%" @bind-Value="@adboard.CategoryId" Name="CategoryId"
+                        SelectedValue=@categoriesForCategoryIdValue Count=@categoriesForCategoryIdCount LoadData=@categoriesForCategoryIdLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Display Serial" Component="DisplaySerial" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.DisplaySerial" Name="DisplaySerial" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Motherboard Serial" Component="MotherboardSerial" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.MotherboardSerial" Name="MotherboardSerial" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Base Rate Per Second" Component="BaseRatePerSecond" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.BaseRatePerSecond" Name="BaseRatePerSecond" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Attachment" Component="Attachment" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenStack>
+                        
+                    <RadzenDropDownDataGrid Data="@attachmentsForAttachmentKey" TextProperty="AttachmentKey" ValueProperty="AttachmentKey" AllowClear=true
+                         Placeholder="Choose Attachment" style="display: block; width: 100%" @bind-Value="@adboard.AttachmentKey" Name="AttachmentKey"
+                        SelectedValue=@attachmentsForAttachmentKeyValue Count=@attachmentsForAttachmentKeyCount LoadData=@attachmentsForAttachmentKeyLoadData />
+
+                        <DOOH.Client.Components.UploadComponent @ref="uploadBrandLogo" OnComplete="@((value) => OnUploadComplete(value.FirstOrDefault()))" OnProgress="((value) => StateHasChanged())" Accept="image/*" />
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Latitude" Component="Latitude" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Latitude" Name="Latitude" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Longitude" Component="Longitude" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Longitude" Name="Longitude" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="City" Component="City" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@citiesForCityName" TextProperty="CityName" ValueProperty="CityName" AllowClear=true
+                         Placeholder="Choose City" style="display: block; width: 100%" @bind-Value="@adboard.CityName" Name="CityName"
+                        SelectedValue=@citiesForCityNameValue Count=@citiesForCityNameCount LoadData=@citiesForCityNameLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="State" Component="State" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@statesForStateName" TextProperty="StateName" ValueProperty="StateName" AllowClear=true
+                         Placeholder="Choose State" style="display: block; width: 100%" @bind-Value="@adboard.StateName" Name="StateName"
+                        SelectedValue=@statesForStateNameValue Count=@statesForStateNameCount LoadData=@statesForStateNameLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
+                         Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@adboard.CountryName" Name="CountryName"
+                        SelectedValue=@countriesForCountryNameValue Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenCheckBox @bind-Value="@adboard.IsActive" Name="IsActive" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Created At" Component="CreatedAt" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@adboard.CreatedAt" Name="CreatedAt" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Updated At" Component="UpdatedAt" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@adboard.UpdatedAt" Name="UpdatedAt" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

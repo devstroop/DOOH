@@ -1,0 +1,41 @@
+@page "/add-adboard-token"
+@attribute [Authorize]
+
+<PageTitle>Add AdboardToken</PageTitle>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save AdboardToken</RadzenAlert>
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.AdboardToken" Data="@adboardToken" Visible="@(adboardToken != null && canEdit)" Submit="@FormSubmit">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Adboard" Component="Adboard" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDropDownDataGrid Data="@adboardsForAdboardId" TextProperty="DisplaySerial" ValueProperty="AdboardId" AllowClear=true
+                         Placeholder="Choose Adboard" style="display: block; width: 100%" @bind-Value="@adboardToken.AdboardId" Name="AdboardId"
+                        SelectedValue=@adboardsForAdboardIdValue Count=@adboardsForAdboardIdCount LoadData=@adboardsForAdboardIdLoadData />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Refresh Token" Component="RefreshToken" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboardToken.RefreshToken" Name="RefreshToken" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Refresh Token Expiry" Component="RefreshTokenExpiry" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@adboardToken.RefreshTokenExpiry" Name="RefreshTokenExpiry" />
+                    <RadzenRequiredValidator Component="RefreshTokenExpiry" Text="RefreshTokenExpiry is required" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+

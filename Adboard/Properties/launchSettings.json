@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "DOOH.Adboard": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "remoteDebugEnabled": false,
+      "remoteDebugMachine": "192.168.1.202:22",
+      "authenticationMode": "None",
+      "nativeDebugging": true
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json"
+}
