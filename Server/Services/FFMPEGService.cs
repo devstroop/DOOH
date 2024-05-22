@@ -50,7 +50,6 @@ namespace DOOH.Server.Services
         {
             var content = new MultipartFormDataContent();
             content.Add(new StreamContent(stream), "file", "file");
-
             var response = await _httpClient.PostAsync($"/convert/video/to/mp4{(transpose != null ? $"?transpose={transpose}" : "")}", content);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStreamAsync();

@@ -72,19 +72,23 @@ namespace DOOH.Adboard.Services
             await process.WaitForExitAsync(cancellationToken);
         }
 
-        public async Task<Tuple<DateTime, DateTime>> Play(Advertisement advertisement, CancellationToken cancellationToken)
-        {
-            var command = $"cvlc -vvv https://cdn.hallads.com/{advertisement.AttachmentKey} vlc://quit";
-            var startedAt = DateTime.Now;
-            await Run(command, cancellationToken);
-            await Clear(cancellationToken);
-            var stoppedAt = DateTime.Now;
-            return new Tuple<DateTime, DateTime>(startedAt, stoppedAt);
-        }
-
         public async Task Clear(CancellationToken cancellationToken)
         {
             await Run("setterm -clear >/dev/tty1;", cancellationToken);
+        }
+
+
+        public async Task SetWifiCredentials(string ssid, string password)
+        {
+            // remove existing network without removing interfaces
+            await Run("sudo wpa_cli remove_network all", CancellationToken.None);
+            var command = $"wpa_passphrase \"{ssid}\" \"{password}\" | sudo tee -a /etc/wpa_supplicant/wpa_supplicant.conf";
+            await Run(command, CancellationToken.None);
+        }
+
+        public async Task ResetWifiCredeitials()
+        {
+            await SetWifiCredentials("ADBNET", "Pass@123");
         }
     }
 }

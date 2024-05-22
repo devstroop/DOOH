@@ -1,4 +1,4 @@
-﻿
+
 <RadzenFieldset Text="Media" style="margin-bottom: 1rem">
     <RadzenUpload id="ddUpload" @ref="uploadDD"
                   ChooseText="Drag and drop to upload"
@@ -38,7 +38,6 @@
     public string Accept { get; set; } = "video/*,image/*";
     [Parameter]
     public bool Multiple { get; set; } = false;
-
     [Parameter]
     public Action OnChange { get; set; }
     [Parameter]
@@ -47,8 +46,10 @@
     public Action<string> OnError { get; set; }
     [Parameter]
     public Action<double> OnProgress { get; set; }
+    [Parameter]
+    public string BaseUri { get; set; }
 
-    private string Url => Multiple ? "/api/cdn/multiple" : "/api/cdn/single";
+    private string Url => Multiple ? $"{BaseUri}api/cdn/multiple" : $"{BaseUri}api/cdn/single";
     private bool ShowProgress { get; set; }
     private RadzenUpload uploadDD;
     List<DOOH.Server.Models.DOOHDB.Attachment> attachments = new List<DOOH.Server.Models.DOOHDB.Attachment>();

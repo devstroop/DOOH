@@ -40,7 +40,7 @@ builder.Services.AddTransient(sp =>
 });
 builder.Services.AddHostedService<PlaybackWorker>();
 builder.Services.AddSingleton<DOOHDBService>();
-//builder.Services.AddSingleton<InterloopService>();
+builder.Services.AddSingleton<InterloopService>();
 builder.Services.AddSingleton<AdService>();
 builder.Services.AddAuthorizationCore();
 var host = builder.Build();

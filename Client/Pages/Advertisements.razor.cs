@@ -127,5 +127,16 @@ namespace DOOH.Client.Pages
 }, "Advertisements");
             }
         }
+
+
+        // OnAdMediaClick
+        protected async Task OnAdMediaClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
+        {
+            await DialogService.OpenAsync<Components.Player>($"{advertisement.Attachment.FileName}", new Dictionary<string, object> { { "Src", $"https://cdn.hallads.com/{advertisement.AttachmentKey}" } }, options: new DialogOptions
+            {
+                Width = "100%",
+                Height = "100%"
+            });
+        }
     }
 }

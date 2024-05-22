@@ -25,19 +25,21 @@ namespace DOOH.Adboard.Services
             }
         }
 
-        public void UpdateAdvertisements(IEnumerable<Server.Models.DOOHDB.Advertisement> advertisements)
+        public async Task UpdateAdvertisements(IEnumerable<Server.Models.DOOHDB.Advertisement> advertisements, CancellationToken cancellationToken)
         {
-            lock (_lock)
+            await Task.Run(() =>
             {
-                _advertisements.Clear();
-                _advertisements.AddRange(advertisements);
-            }
+                lock (_lock)
+                {
+                    _advertisements = advertisements.ToList();
+                }
+            }, cancellationToken);
         }
 
-        public async Task Sync()
+        public async Task Sync(CancellationToken cancellationToken)
         {
             var advertisements = await _doohdbService.GetAdvertisements(expand: "Attachment");
-            UpdateAdvertisements(advertisements.Value);
+            await UpdateAdvertisements(advertisements.Value, cancellationToken);
         }
     }
 }

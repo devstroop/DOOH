@@ -20,13 +20,15 @@ namespace DOOH.Adboard.Workers
         private readonly DOOHDBService _doohdbService;
         private readonly int _adboardId;
         private readonly AdService _adService;
+        private readonly InterloopService _interloopService;
 
         public PlaybackWorker(
             ILogger<PlaybackWorker> logger,
             HttpClient httpClient,
             IConfiguration configuration,
             DOOHDBService doohdbService,
-            AdService adService)
+            AdService adService,
+            InterloopService interloopService)
         {
             _logger = logger;
             _httpClient = httpClient;
@@ -34,123 +36,152 @@ namespace DOOH.Adboard.Workers
             _adboardId = _configuration.GetValue<int?>("Service:AdboardId") ?? 1;
             _doohdbService = doohdbService;
             _adService = adService;
+            _interloopService = interloopService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                try
+                var adboard = await _doohdbService.GetAdboardByAdboardId(adboardId: _adboardId);
+                var wifi = await _doohdbService.GetAdboardWifiByAdboardId(adboardId: _adboardId);
+
+                if (wifi != null && wifi.HasConnected != true)
                 {
-                    var adboard = await _doohdbService.GetAdboardByAdboardId(adboardId: _adboardId);
-                    var wifi = await _doohdbService.GetAdboardWifiByAdboardId(adboardId: _adboardId);
+                    var ssid = wifi.SSID;
+                    var password = wifi.Password;
+                    _logger.LogInformation("Configuring wifi connection...");
+                    _logger.LogInformation($"SSID: {ssid}");
 
-                    if (wifi != null && wifi.HasConnected != true)
-                    {
-                        var ssid = wifi.SSID;
-                        var password = wifi.Password;
-                        _logger.LogInformation($"New Wifi Credentials: {ssid}/{password}");
+                    await _interloopService.SetWifiCredentials(ssid, password);
 
-                        // Configure wifi connection - code needed here
-
-                        wifi.HasConnected = true;
-                        wifi.ConnectedAt = DateTime.Now;
-                        await _doohdbService.UpdateAdboardWifiByAdboardId(_adboardId, wifi);
-                    }
-                    if (_adService.Advertisements.Count == 0)
-                    {
-                        await _adService.Sync();
-                    }
-                    await PlayAdvertisementsAsync(_adService.Advertisements, cancellationToken);
+                    wifi.HasConnected = true;
+                    wifi.ConnectedAt = DateTime.Now;
+                    await _doohdbService.UpdateAdboardWifiByAdboardId(_adboardId, wifi);
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while configuring wifi connection.");
+            }
+
+
+            try
+            {
+                await _adService.Sync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing advertisements.");
+            }
+
+            try
+            {
+                using (var libvlc = new LibVLC(enableDebugLogs: false,
+                    options: new string[]{
+                            "--quiet",
+                            "--fullscreen"
+                    }))
+                using (var player = new MediaPlayer(libvlc)
                 {
-                    _logger.LogError(ex, "An error occurred while processing advertisements.");
+                    EnableHardwareDecoding = true,
+                    NetworkCaching = 10000,
+                    Scale = 0
+                })
+                {
+                    while (!cancellationToken.IsCancellationRequested)
+                    {
+                        try
+                        {
+                            await PlayAdvertisementsAsync(libvlc, player, new List<Advertisement>(_adService.Advertisements), cancellationToken);
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "An error occurred while playing advertisements.");
+                        }
+                    }
                 }
-
-                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken); // Delay for 10 seconds
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while initializing playback.");
             }
         }
 
-        private async Task PlayAdvertisementsAsync(IEnumerable<Advertisement> advertisements, CancellationToken cancellationToken)
+        private async Task PlayAdvertisementsAsync(LibVLC libvlc, MediaPlayer player, IEnumerable<Advertisement> advertisements, CancellationToken cancellationToken)
         {
-            using (var libvlc = new LibVLC(enableDebugLogs: false,
-                options: new string[]{
-                    "--quiet"
-                }))
-            using (var player = new MediaPlayer(libvlc)
+            bool isSynced = false;
+            int currentAdvertisementIndex = 0;
+            int totalAdvertisements = advertisements.Count();
+            foreach (var advertisement in advertisements)
             {
-                EnableHardwareDecoding = true,
-                NetworkCaching = 5000,
-                Scale = 0
-                
-                
-            })
-            {
-
-                player.EnableHardwareDecoding = true;
-                var _tempAdvertisements = new List<Advertisement>(advertisements);
-                foreach (var advertisement in _tempAdvertisements)
+                try
                 {
-                    try
+                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.AttachmentKey}");
+                    string[] option = new string[]
                     {
-                        var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.AttachmentKey}");
-                        string[] option = new string[] {
-                             //@":dshow-vdev=",
-                             @":dshow-adev=none",
-                             @":dshow-size=1080x1920",
-                             @":dshow-aspect-ratio=9\:16",
-                             @":live-caching=0",
-                             @":clock-synchro=0",
-                             //@":sout=#duplicate{dst=file{dst=C:\Users\matthias.mueller\Desktop\test.mp4},dst=display}",
-                             //@":sout-all",
-                             //@":sout-keep",
-                             @"--video-filter","rotate{angle=270}",
-                        };
-                        var media = new Media(libvlc, mediaUri, option);
-                        if (player.Play(media))
+                        //"--video-filter=transform",
+                        //"--transform-type=270",
+                    };
+                    var media = new Media(libvlc, mediaUri, option);
+                    if (await Task.Run(() => player.Play(media), cancellationToken))
+                    {
+                        var playbackTcs = new TaskCompletionSource<bool>();
+                        media.StateChanged += (_, e) =>
                         {
-                            var playbackTcs = new TaskCompletionSource<bool>();
-                            media.StateChanged += (_, e) =>
+                            if (e.State == VLCState.Stopped || e.State == VLCState.Error || e.State == VLCState.Paused)
                             {
-                                if (e.State == VLCState.Stopped || e.State == VLCState.Error || e.State == VLCState.Paused)
-                                {
-                                    Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
-                                }
-                            };
-                            player.PositionChanged += (_, e) =>
-                            {
-                                if (e.Position >= 0.98f)
-                                {
-                                    Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
-                                }
-                            };
-                            player.TimeChanged += (_, e) =>
-                            {
-                                if (((advertisement.Duration * 1000) - e.Time) <= 500)
-                                {
-                                    Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
-                                }
-
-                            };
-                            if (_tempAdvertisements.IndexOf(advertisement) == 1)
-                            {
-                                await Task.Run(() => _adService.Sync(), cancellationToken);
+                                Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
                             }
-                            await playbackTcs.Task;
-                            await Task.Delay(TimeSpan.FromMilliseconds(100), cancellationToken);
+                        };
+                        player.PositionChanged += (_, e) =>
+                        {
+                            if (e.Position >= 0.98f)
+                            {
+                                Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
+                            }
+                        };
+                        player.TimeChanged += (_, e) =>
+                        {
+                            if (((advertisement.Duration * 1000) - e.Time) <= 500)
+                            {
+                                Task.Run(() => playbackTcs.TrySetResult(true), cancellationToken);
+                            }
+                        };
+
+                        if (!isSynced && currentAdvertisementIndex > 0 || (currentAdvertisementIndex == 0 && totalAdvertisements == 1))
+                        {
+                            try
+                            {
+                                await _adService.Sync(cancellationToken);
+                                isSynced = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "An error occurred during sync operation.");
+                            }
                         }
+
+                        await playbackTcs.Task;
                     }
-                    catch (OperationCanceledException)
-                    {
-                        await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken);
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        await Task.Delay(TimeSpan.FromMilliseconds(500), cancellationToken);
-                        continue;
-                    }
+                }
+                catch (OperationCanceledException)
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(1000), cancellationToken);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    await Task.Delay(TimeSpan.FromMilliseconds(1000), cancellationToken);
+                    continue;
+                }
+                finally
+                {
+                    currentAdvertisementIndex++;
                 }
             }
         }

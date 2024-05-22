@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers
 
 
             using var stream0 = file.OpenReadStream();
-            var out0 = await FFMPEGService.ConvertVideoToMp4(stream0);
+            var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
 
             using var stream1 = out0;
             await CDNService.UploadObjectAsync(attachmentKey, stream1);
@@ -170,7 +170,7 @@ namespace DOOH.Server.Controllers
 
 
                 using var stream0 = file.OpenReadStream();
-                var out0 = await FFMPEGService.ConvertVideoToMp4(stream0);
+                var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
 
                 using var stream1 = out0;
                 await CDNService.UploadObjectAsync(attachmentKey, stream1);

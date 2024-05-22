@@ -24,7 +24,11 @@
                     <RadzenDropDownDataGrid Data="@attachmentsForAttachmentKey" TextProperty="AttachmentKey" ValueProperty="AttachmentKey" AllowClear=true
                                             Placeholder="Choose Attachment" style="display: block; width: 100%" @bind-Value="@advertisement.AttachmentKey" Name="AttachmentKey"
                                             SelectedValue=@attachmentsForAttachmentKeyValue Count=@attachmentsForAttachmentKeyCount LoadData=@attachmentsForAttachmentKeyLoadData />
-                    <DOOH.Client.Components.UploadComponent @ref="uploadDD" OnComplete="@((value) => OnUploadComplete(value.FirstOrDefault()))" OnProgress="((value) => StateHasChanged())" Accept="image/*,video/*" />
+                    <DOOH.Client.Components.UploadComponent @ref="uploadDD"
+                                                            BaseUri="@NavigationManager.BaseUri" 
+                                                            OnComplete="@((value) => OnUploadComplete(value.FirstOrDefault()))" 
+                                                            OnProgress="((value) => StateHasChanged())" 
+                                                            Accept="image/*,video/*" />
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>

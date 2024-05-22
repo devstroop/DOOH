@@ -29,7 +29,7 @@
                 </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Advertisement" Property="Attachment" Title="Attachment">
                         <Template Context="advertisement">
-                            <RadzenImage Path="@advertisement.Attachment.GetThumbnail()" style="width: 100px; height: 100px" Visible="@(advertisement.Attachment != null)" />
+                            <RadzenImage Path="@advertisement.Attachment.GetThumbnail()" style="max-width: 100px; border: 1px solid #dfdfdf; border-radius: 4px" Visible="@(advertisement.Attachment != null)" Click="@((args) => OnAdMediaClick(args, advertisement))" />
                         </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Advertisement" Property="Duration" Title="Duration">
