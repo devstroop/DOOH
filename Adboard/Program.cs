@@ -6,6 +6,11 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+// Ensure the application reads the appsettings.json file
+//builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+//builder.Configuration.AddEnvironmentVariables();
+
 // Initialize LibVLCSharp core
 Core.Initialize();
 builder.Services.AddTransient(sp =>
