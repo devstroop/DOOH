@@ -9,7 +9,7 @@ using System.Runtime;
 var builder = Host.CreateApplicationBuilder(args);
 
 // Set GC settings
-GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
 
 // Initialize LibVLCSharp core

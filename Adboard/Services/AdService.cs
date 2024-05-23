@@ -5,7 +5,7 @@ namespace DOOH.Adboard.Services
     public class AdService
     {
         private readonly object _lock = new object();
-        private List<Server.Models.DOOHDB.Advertisement> _advertisements = new List<Server.Models.DOOHDB.Advertisement>();
+        private IEnumerable<Server.Models.DOOHDB.Advertisement> _advertisements = new List<Server.Models.DOOHDB.Advertisement>();
 
         private readonly DOOHDBService _doohdbService;
 
@@ -14,13 +14,13 @@ namespace DOOH.Adboard.Services
             _doohdbService = doohdbService;
         }
 
-        public IReadOnlyList<Server.Models.DOOHDB.Advertisement> Advertisements
+        public IReadOnlyCollection<Server.Models.DOOHDB.Advertisement> Advertisements
         {
             get
             {
                 lock (_lock)
                 {
-                    return _advertisements.AsReadOnly();
+                    return _advertisements.ToList();
                 }
             }
         }

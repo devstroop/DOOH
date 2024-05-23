@@ -49,8 +49,8 @@ namespace DOOH.Adboard.Workers
                 using (var libvlc = new LibVLC(enableDebugLogs: false, options: new string[] { "--quiet", "--fullscreen" }))
                 using (var player = new MediaPlayer(libvlc)
                 {
-                    EnableHardwareDecoding = true,
-                    NetworkCaching = 10000,
+                    EnableHardwareDecoding = false,
+                    NetworkCaching = 1000,
                     Scale = 0
                 })
                 {
