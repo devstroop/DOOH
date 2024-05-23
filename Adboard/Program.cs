@@ -4,12 +4,13 @@ using DOOH.Adboard.Workers;
 using LibVLCSharp.Shared;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using System.Runtime;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Ensure the application reads the appsettings.json file
-//builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-//builder.Configuration.AddEnvironmentVariables();
+// Set GC settings
+GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
 
 // Initialize LibVLCSharp core
 Core.Initialize();

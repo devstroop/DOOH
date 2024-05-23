@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-DOOH.Adboard-063c9b43-b2a0-4753-a6f0-e3bd41830564</UserSecretsId>
+
+	  <!--<ServerGarbageCollection>true</ServerGarbageCollection>-->
   </PropertyGroup>
 
   <ItemGroup>
