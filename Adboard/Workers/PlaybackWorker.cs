@@ -21,6 +21,7 @@ namespace DOOH.Adboard.Workers
         private readonly int _adboardId;
         private readonly AdService _adService;
         private readonly InterloopService _interloopService;
+        //private readonly CameraService _cameraService;
 
         public PlaybackWorker(
             ILogger<PlaybackWorker> logger,
@@ -37,6 +38,8 @@ namespace DOOH.Adboard.Workers
             _doohdbService = doohdbService;
             _adService = adService;
             _interloopService = interloopService;
+            //_cameraService = cameraService;
+            //_fstream = null;
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -160,6 +163,9 @@ namespace DOOH.Adboard.Workers
                             }
                         };
 
+                        // Capture the video stream
+                        //_cameraService.StartCapturing();
+
                         if (!isSynced && (currentAdvertisementIndex > 0 || (currentAdvertisementIndex == 0 && totalAdvertisements == 1)))
                         {
                             try
@@ -174,6 +180,7 @@ namespace DOOH.Adboard.Workers
                         }
 
                         await playbackTcs.Task;
+                        //_cameraService.StopCapturing();
                     }
                 }
                 catch (OperationCanceledException)

@@ -48,6 +48,11 @@ builder.Services.AddHostedService<PlaybackWorker>();
 builder.Services.AddSingleton<DOOHDBService>();
 builder.Services.AddSingleton<InterloopService>();
 builder.Services.AddSingleton<AdService>();
+//builder.Services.AddSingleton<CameraService>();
 builder.Services.AddAuthorizationCore();
+
+builder.Services.AddMemoryCache();
+builder.Services.AddDistributedMemoryCache();
+
 var host = builder.Build();
 host.Run();
