@@ -11,6 +11,7 @@ var builder = Host.CreateApplicationBuilder(args);
 // Set GC settings
 GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+GC.Collect();
 
 // Initialize LibVLCSharp core
 Core.Initialize();
@@ -48,11 +49,9 @@ builder.Services.AddHostedService<PlaybackWorker>();
 builder.Services.AddSingleton<DOOHDBService>();
 builder.Services.AddSingleton<InterloopService>();
 builder.Services.AddSingleton<AdService>();
-//builder.Services.AddSingleton<CameraService>();
+builder.Services.AddSingleton<CameraService>();
 builder.Services.AddAuthorizationCore();
-
 builder.Services.AddMemoryCache();
 builder.Services.AddDistributedMemoryCache();
-
 var host = builder.Build();
 host.Run();

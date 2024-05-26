@@ -1,28 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.IO;
+using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
-using Iot.Device.Graphics;
 using Iot.Device.Media;
 
 namespace DOOH.Adboard.Services
 {
-    public class CameraService
+    public class CameraService : IDisposable
     {
         private readonly VideoConnectionSettings _settings;
         private VideoDevice _device;
-        private FileStream _fileStream;
+        private Channel<byte[]> _channel;
         private CancellationTokenSource _tokenSource;
         private bool _isCapturing;
-        private string outputPath = "/home/admin/stream.h264";
+
         public CameraService()
         {
-            // int busId, string outputPath, uint width, uint height, VideoPixelFormat pixelFormat
+            // Initialize video settings: busId, resolution (width, height), pixel format
             _settings = new VideoConnectionSettings(0, (640, 480), VideoPixelFormat.H264);
             _device = VideoDevice.Create(_settings);
-            _fileStream = File.Create(outputPath);
+            _channel = Channel.CreateUnbounded<byte[]>();
             _tokenSource = new CancellationTokenSource();
             _isCapturing = false;
 
@@ -57,13 +55,19 @@ namespace DOOH.Adboard.Services
         {
             try
             {
-                await _fileStream.WriteAsync(e.ImageBuffer, 0, e.Length);
+                // Write the image buffer to the channel
+                await _channel.Writer.WriteAsync(e.ImageBuffer);
                 Console.Write(".");
             }
             catch (ObjectDisposedException)
             {
                 // Ignore this exception as it is thrown when the stream is stopped
             }
+        }
+
+        public ChannelReader<byte[]> GetChannelReader()
+        {
+            return _channel.Reader;
         }
 
         public void Dispose()
@@ -73,14 +77,9 @@ namespace DOOH.Adboard.Services
                 StopCapturing();
             }
 
-            _fileStream?.Dispose();
             _device?.Dispose();
             _tokenSource?.Dispose();
-        }
-
-        public FileStream GetStream()
-        {
-            return _fileStream;
+            _channel.Writer.TryComplete();
         }
     }
 }
