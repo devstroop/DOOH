@@ -12,7 +12,7 @@ namespace DOOH.Server.Filters
 
         public override Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            if (context.HttpContext.Request.Path.StartsWithSegments("/Account") || context.HttpContext.Request.Path.StartsWithSegments("/Login"))
+            if (context.HttpContext.Request.Path.StartsWithSegments("/Account") || context.HttpContext.Request.Path.StartsWithSegments("/authentication/login"))
             {
                 return Task.CompletedTask;
             }

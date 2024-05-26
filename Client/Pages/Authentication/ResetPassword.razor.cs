@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Authentication
 {
     public partial class ResetPassword
     {

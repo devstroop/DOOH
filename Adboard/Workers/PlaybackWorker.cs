@@ -21,7 +21,6 @@ namespace DOOH.Adboard.Workers
         private readonly int _adboardId;
         private readonly AdService _adService;
         private readonly InterloopService _interloopService;
-        private readonly CameraService _cameraService;
 
         public PlaybackWorker(
             ILogger<PlaybackWorker> logger,
@@ -29,8 +28,7 @@ namespace DOOH.Adboard.Workers
             IConfiguration configuration,
             DOOHDBService doohdbService,
             AdService adService,
-            InterloopService interloopService,
-            CameraService cameraService)
+            InterloopService interloopService)
         {
             _logger = logger;
             _httpClient = httpClient;
@@ -39,7 +37,6 @@ namespace DOOH.Adboard.Workers
             _doohdbService = doohdbService;
             _adService = adService;
             _interloopService = interloopService;
-            _cameraService = cameraService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -138,7 +135,6 @@ namespace DOOH.Adboard.Workers
 
                     if (await Task.Run(() => player.Play(media), cancellationToken))
                     {
-                        _cameraService.StartCapturing();
                         var playbackTcs = new TaskCompletionSource<bool>();
                         cancellationToken.Register(() => playbackTcs.TrySetCanceled());
 
@@ -164,8 +160,6 @@ namespace DOOH.Adboard.Workers
                             }
                         };
 
-                        // Capture the video stream
-                        //_cameraService.StartCapturing();
 
                         if (!isSynced && (currentAdvertisementIndex > 0 || (currentAdvertisementIndex == 0 && totalAdvertisements == 1)))
                         {
@@ -181,7 +175,6 @@ namespace DOOH.Adboard.Workers
                         }
 
                         await playbackTcs.Task;
-                        _cameraService.StopCapturing();
                     }
                 }
                 catch (OperationCanceledException)

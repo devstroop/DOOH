@@ -107,7 +107,7 @@ namespace DOOH.Client
 
         public void Login()
         {
-            navigationManager.NavigateTo("Login", true);
+            navigationManager.NavigateTo("/authentication/login", true);
         }
 
         public async Task<IEnumerable<ApplicationRole>> GetRoles()

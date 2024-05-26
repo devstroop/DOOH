@@ -46,10 +46,10 @@ builder.Services.AddTransient(sp =>
     return httpClient;
 });
 builder.Services.AddHostedService<PlaybackWorker>();
+builder.Services.AddHostedService<CameraWorker>();
 builder.Services.AddSingleton<DOOHDBService>();
 builder.Services.AddSingleton<InterloopService>();
 builder.Services.AddSingleton<AdService>();
-builder.Services.AddSingleton<CameraService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddMemoryCache();
 builder.Services.AddDistributedMemoryCache();

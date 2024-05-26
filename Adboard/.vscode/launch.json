@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Remote Launch - Framework-Dependent",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "~/.dotnet/dotnet",
+            "args": ["~/net8.0/DOOH.Adboard.dll"],
+            "cwd": "~/net8.0",
+            "stopAtEntry": false,
+            "console": "internalConsole",
+            "pipeTransport": {
+                "pipeCwd": "${workspaceRoot}",
+                "pipeProgram": "ssh",
+                "pipeArgs": [
+                    "admin@192.168.1.15"
+                ],
+                "debuggerPath": "~/vsdbg/vsdbg"
+            }
+        },
+    ]
+}

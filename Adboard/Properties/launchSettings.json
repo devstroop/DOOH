@@ -7,7 +7,7 @@
       },
       "dotnetRunMessages": true,
       "remoteDebugEnabled": false,
-      "remoteDebugMachine": "192.168.1.202:22",
+      "remoteDebugMachine": "192.168.1.15:22",
       "authenticationMode": "None",
       "nativeDebugging": true
     }

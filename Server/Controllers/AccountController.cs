@@ -37,11 +37,11 @@ namespace DOOH.Server.Controllers
         {
              if (!string.IsNullOrEmpty(redirectUrl))
              {
-                 return Redirect($"~/Login?error={error}&redirectUrl={Uri.EscapeDataString(redirectUrl.Replace("~", ""))}");
+                 return Redirect($"~/authentication/login?error={error}&redirectUrl={Uri.EscapeDataString(redirectUrl.Replace("~", ""))}");
              }
              else
              {
-                 return Redirect($"~/Login?error={error}");
+                 return Redirect($"~/authentication/login?error={error}");
              }
         }
 
@@ -50,10 +50,10 @@ namespace DOOH.Server.Controllers
         {
             if (returnUrl != "/" && !string.IsNullOrEmpty(returnUrl))
             {
-                return Redirect($"~/Login?redirectUrl={Uri.EscapeDataString(returnUrl)}");
+                return Redirect($"~/authentication/login?redirectUrl={Uri.EscapeDataString(returnUrl)}");
             }
 
-            return Redirect("~/Login");
+            return Redirect("~/authentication/login");
         }
 
         [HttpPost]
@@ -116,7 +116,7 @@ If you didn't request this code, you can safely ignore this email. Someone else 
 
                     await SendEmailAsync(user.Email, "Your single-use code", text);
 
-                    return Redirect($"~/SecurityCode?email={Uri.EscapeDataString(user.Email)}");
+                    return Redirect($"~/authentication/securitycode?email={Uri.EscapeDataString(user.Email)}");
                 }
                 if (result.Succeeded)
                 {
@@ -230,7 +230,7 @@ If you didn't request this registration, you can safely ignore this email. Someo
 
             if (result.Succeeded)
             {
-                return Redirect("~/Login?info=Your registration has been confirmed");
+                return Redirect("~/authentication/login?info=Your registration has been confirmed");
             }
 
             return RedirectWithError("Invalid user or confirmation code");
@@ -269,7 +269,7 @@ If you didn't request this registration, you can safely ignore this email. Someo
 
             if (user == null)
             {
-                return Redirect("~/Login?error=Invalid user");
+                return Redirect("~/authentication/login?error=Invalid user");
             }
 
             var password = GenerateRandomPassword();
@@ -280,10 +280,10 @@ If you didn't request this registration, you can safely ignore this email. Someo
             {
                 await SendEmailAsync(user.Email, "New password", $"<p>Your new password is: {password}</p><p>Please change it after login.</p>");
 
-                return Redirect("~/Login?info=Password reset successful. You will receive an email with your new password.");
+                return Redirect("~/authentication/login?info=Password reset successful. You will receive an email with your new password.");
             }
 
-            return Redirect("~/Login?error=Invalid user or confirmation code");
+            return Redirect("~/authentication/login?error=Invalid user or confirmation code");
         }
 
         private static string GenerateRandomPassword()
