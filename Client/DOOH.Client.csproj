@@ -18,7 +18,8 @@
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Pages\Admin\" />
+	  <Folder Include="Pages\Adboard\" />
+	  <Folder Include="Pages\Provider\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>

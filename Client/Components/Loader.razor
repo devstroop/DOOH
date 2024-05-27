@@ -1,0 +1,12 @@
+<lottie-player src="/lotties/loader.json" background="transparent" speed="@Speed" style="@Style" direction="1" mode="normal" loop autoplay></lottie-player>
+@code {
+    [Parameter]
+    public int Speed { get; set; } = 1;
+    [Parameter]
+    public string Height { get; set; } = "300px";
+    [Parameter]
+    public string Width { get; set; } = "300px";
+    
+
+    public string Style => $"width: {Width}; height: {Height};";
+}

@@ -16,6 +16,9 @@
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="6">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
     </RadzenHeader>
@@ -27,9 +30,20 @@
         </RadzenRow>
     </RadzenBody>
     <RadzenFooter>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal">
-            <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-            <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-        </RadzenStack>
+        <RadzenRow>
+            <RadzenColumn SizeMD="6">
+                <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Start">
+                    <CulturePicker />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="6">
+                <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenText Text="DOOH v1.0.0" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    <RadzenText Text="Copyright Ⓒ 2024" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        
+        
     </RadzenFooter>
 </RadzenLayout>

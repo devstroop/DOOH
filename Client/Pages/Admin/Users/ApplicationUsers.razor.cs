@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Users
 {
-    public partial class AddApplicationUser
+    public partial class ApplicationUsers
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,9 +30,8 @@ namespace DOOH.Client.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.ApplicationRole> roles;
-        protected DOOH.Server.Models.ApplicationUser user;
-        protected IEnumerable<string> userRoles = Enumerable.Empty<string>();
+        protected IEnumerable<DOOH.Server.Models.ApplicationUser> users;
+        protected RadzenDataGrid<DOOH.Server.Models.ApplicationUser> grid0;
         protected string error;
         protected bool errorVisible;
 
@@ -41,29 +40,39 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            user = new DOOH.Server.Models.ApplicationUser();
-
-            roles = await Security.GetRoles();
+            users = await Security.GetUsers();
         }
 
-        protected async Task FormSubmit(DOOH.Server.Models.ApplicationUser user)
+        protected async Task AddClick()
+        {
+            await DialogService.OpenAsync<AddApplicationUser>("Add Application User");
+
+            users = await Security.GetUsers();
+        }
+
+        protected async Task RowSelect(DOOH.Server.Models.ApplicationUser user)
+        {
+            await DialogService.OpenAsync<EditApplicationUser>("Edit Application User", new Dictionary<string, object>{ {"Id", user.Id} });
+
+            users = await Security.GetUsers();
+        }
+
+        protected async Task DeleteClick(DOOH.Server.Models.ApplicationUser user)
         {
             try
             {
-                user.Roles = roles.Where(role => userRoles.Contains(role.Id)).ToList();
-                await Security.CreateUser(user);
-                DialogService.Close(null);
+                if (await DialogService.Confirm("Are you sure you want to delete this user?") == true)
+                {
+                    await Security.DeleteUser($"{user.Id}");
+
+                    users = await Security.GetUsers();
+                }
             }
             catch (Exception ex)
             {
                 errorVisible = true;
                 error = ex.Message;
             }
-        }
-
-        protected async Task CancelClick()
-        {
-            DialogService.Close(null);
         }
     }
 }

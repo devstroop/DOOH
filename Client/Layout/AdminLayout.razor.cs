@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Layout
 {
-    public partial class AddApplicationRole
+    public partial class AdminLayout
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,36 +30,14 @@ namespace DOOH.Client.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected DOOH.Server.Models.ApplicationRole role;
-        protected string error;
-        protected bool errorVisible;
+        bool sidebarExpanded = true;
 
         [Inject]
         protected SecurityService Security { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        void SidebarToggleClick()
         {
-            role = new DOOH.Server.Models.ApplicationRole();
-        }
-
-        protected async Task FormSubmit(DOOH.Server.Models.ApplicationRole role)
-        {
-            try
-            {
-                await Security.CreateRole(role);
-
-                DialogService.Close(null);
-            }
-            catch (Exception ex)
-            {
-                errorVisible = true;
-                error = ex.Message;
-            }
-        }
-
-        protected async Task CancelClick()
-        {
-            DialogService.Close(null);
+            sidebarExpanded = !sidebarExpanded;
         }
     }
 }

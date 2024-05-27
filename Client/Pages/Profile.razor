@@ -49,6 +49,14 @@
                         <RadzenCompareValidator Component="ConfirmPassword" Text="Passwords should be the same" Value="@newPassword" />
                     </RadzenColumn>
                 </RadzenRow>
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Component="2FA" style="width: 100%" Text="2FA" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <RadzenCheckBox @bind-Value="@twoFactorEnabled" style="display: block; width: 100%" Name="2FA" />
+                    </RadzenColumn>
+                </RadzenRow>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
                         <RadzenButton ButtonType="ButtonType.Submit" Text="Change password" Variant="Variant.Flat" />
                 </RadzenStack>

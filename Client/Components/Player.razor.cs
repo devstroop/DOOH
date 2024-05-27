@@ -2,6 +2,7 @@ using Blazored.Video.Support;
 using Blazored.Video;
 using Microsoft.AspNetCore.Components;
 using Radzen;
+using Microsoft.JSInterop;
 
 namespace DOOH.Client.Components
 {
@@ -12,6 +13,9 @@ namespace DOOH.Client.Components
 
         [Inject]
         private DialogService DialogService { get; set; }
+
+        [Inject]
+        private IJSRuntime JSRuntime { get; set; }
 
 
         Dictionary<VideoEvents, VideoStateOptions> options = new Dictionary<VideoEvents, VideoStateOptions>();
@@ -53,6 +57,15 @@ namespace DOOH.Client.Components
             {
                 await video.PausePlayback();
                 DialogService.Close(id);
+            }
+        }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("videoHandler.initialize");
             }
         }
     }

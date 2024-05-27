@@ -1,37 +1,24 @@
 @using Blazored.Video
-<RadzenStack JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+<RadzenStack AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
     <BlazoredVideo @ref="video"
                    CanPlay=@(s=>OnEvent(ref PausePlayText,s))
                    Ended=@(s=>OnEvent(ref PausePlayText,s))
                    Pause=@(s=>OnEvent(ref PausePlayText,s))
                    Play=@(s=>OnEvent(ref PausePlayText,s))
                    VideoEventOptions="options"
-                   class="w-40 video-container" 
+                   class="video-container"
                    autoplay="autoplay"
-                   loop="loop"
-                   style="max-width:100%;border: 1px solid #dfdfdf; border-radius: 4px">
+                   loop="loop">
         <source src="@Src" type="video/mp4" />
     </BlazoredVideo>
 </RadzenStack>
+
 <style>
     .video-container {
         max-width: 100%;
-        border: 1px solid #dfdfdf;
-        border-radius: 4px;
+        max-height: 100%;
         cursor: pointer; /* To indicate the video is clickable */
+        transform: rotate(270deg); /* Rotate the video 90 degrees */
+        transform-origin: center center; /* Ensure the video rotates around its center */
     }
 </style>
-
-<script>
-    document.querySelector('video.video-container').addEventListener('click', function () {
-        if (this.requestFullscreen) {
-            this.requestFullscreen();
-        } else if (this.mozRequestFullScreen) { // Firefox
-            this.mozRequestFullScreen();
-        } else if (this.webkitRequestFullscreen) { // Chrome, Safari and Opera
-            this.webkitRequestFullscreen();
-        } else if (this.msRequestFullscreen) { // IE/Edge
-            this.msRequestFullscreen();
-        }
-    });
-</script>

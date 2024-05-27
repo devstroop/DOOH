@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Authentication
 {
-    public partial class EditApplicationUser
+    public partial class RegisterApplicationUser
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,45 +30,41 @@ namespace DOOH.Client.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.ApplicationRole> roles;
         protected DOOH.Server.Models.ApplicationUser user;
-        protected IEnumerable<string> userRoles;
-        protected string error;
+        protected bool isBusy;
         protected bool errorVisible;
-
-        [Parameter]
-        public string Id { get; set; }
+        protected string error;
 
         [Inject]
         protected SecurityService Security { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            user = await Security.GetUserById($"{Id}");
-
-            userRoles = user.Roles.Select(role => role.Id);
-
-            roles = await Security.GetRoles();
+            user = new DOOH.Server.Models.ApplicationUser();
         }
 
-        protected async Task FormSubmit(DOOH.Server.Models.ApplicationUser user)
+        protected async Task FormSubmit()
         {
             try
             {
-                user.Roles = roles.Where(role => userRoles.Contains(role.Id)).ToList();
-                await Security.UpdateUser($"{Id}", user);
-                DialogService.Close(null);
+                isBusy = true;
+
+                await Security.Register(user.Email, user.Password);
+
+                DialogService.Close(true);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
                 error = ex.Message;
             }
+
+            isBusy = false;
         }
 
         protected async Task CancelClick()
         {
-            DialogService.Close(null);
+            DialogService.Close(false);
         }
     }
 }

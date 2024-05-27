@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Users
 {
-    public partial class ApplicationRoles
+    public partial class AddApplicationUser
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -31,7 +31,8 @@ namespace DOOH.Client.Pages
         protected NotificationService NotificationService { get; set; }
 
         protected IEnumerable<DOOH.Server.Models.ApplicationRole> roles;
-        protected RadzenDataGrid<DOOH.Server.Models.ApplicationRole> grid0;
+        protected DOOH.Server.Models.ApplicationUser user;
+        protected IEnumerable<string> userRoles = Enumerable.Empty<string>();
         protected string error;
         protected bool errorVisible;
 
@@ -40,32 +41,29 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            roles = await Security.GetRoles();
-        }
-
-        protected async Task AddClick()
-        {
-            await DialogService.OpenAsync<AddApplicationRole>("Add Application Role");
+            user = new DOOH.Server.Models.ApplicationUser();
 
             roles = await Security.GetRoles();
         }
 
-        protected async Task DeleteClick(DOOH.Server.Models.ApplicationRole role)
+        protected async Task FormSubmit(DOOH.Server.Models.ApplicationUser user)
         {
             try
             {
-                if (await DialogService.Confirm("Are you sure you want to delete this role?") == true)
-                {
-                    await Security.DeleteRole($"{role.Id}");
-
-                    roles = await Security.GetRoles();
-                }
+                user.Roles = roles.Where(role => userRoles.Contains(role.Id)).ToList();
+                await Security.CreateUser(user);
+                DialogService.Close(null);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
                 error = ex.Message;
             }
+        }
+
+        protected async Task CancelClick()
+        {
+            DialogService.Close(null);
         }
     }
 }

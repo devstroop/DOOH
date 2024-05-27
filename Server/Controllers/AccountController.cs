@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using DOOH.Server.Models;
+using DOOH.Server.Data;
 
 namespace DOOH.Server.Controllers
 {
@@ -20,15 +21,17 @@ namespace DOOH.Server.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly ApplicationIdentityDbContext identityContext;
         private readonly IWebHostEnvironment env;
         private readonly IConfiguration configuration;
 
         public AccountController(IWebHostEnvironment env, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager, IConfiguration configuration)
+            RoleManager<ApplicationRole> roleManager, ApplicationIdentityDbContext identityContext, IConfiguration configuration)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.identityContext = identityContext;
             this.env = env;
             this.configuration = configuration;
         }
@@ -37,11 +40,11 @@ namespace DOOH.Server.Controllers
         {
              if (!string.IsNullOrEmpty(redirectUrl))
              {
-                 return Redirect($"~/authentication/login?error={error}&redirectUrl={Uri.EscapeDataString(redirectUrl.Replace("~", ""))}");
+                 return Redirect($"/authentication/login?error={error}&redirectUrl={Uri.EscapeDataString(redirectUrl.Replace("~", ""))}");
              }
              else
              {
-                 return Redirect($"~/authentication/login?error={error}");
+                 return Redirect($"/authentication/login?error={error}");
              }
         }
 
@@ -50,16 +53,17 @@ namespace DOOH.Server.Controllers
         {
             if (returnUrl != "/" && !string.IsNullOrEmpty(returnUrl))
             {
-                return Redirect($"~/authentication/login?redirectUrl={Uri.EscapeDataString(returnUrl)}");
+                return Redirect($"/authentication/login?redirectUrl={Uri.EscapeDataString(returnUrl)}");
             }
 
-            return Redirect("~/authentication/login");
+            return Redirect("/authentication/login");
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(string userName, string password, string redirectUrl)
         {
-            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.StartsWith("/") ? redirectUrl : $"~/{redirectUrl}";
+            //redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.StartsWith("/") ? redirectUrl : $"~/{redirectUrl}";
+            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
 
             if (env.EnvironmentName == "Development" && userName == "admin" && password == "admin")
             {
@@ -71,7 +75,7 @@ namespace DOOH.Server.Controllers
 
                 roleManager.Roles.ToList().ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r.Name)));
                 await signInManager.SignInWithClaimsAsync(new ApplicationUser { UserName = userName, Email = userName }, isPersistent: false, claims);
-
+                redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
                 return Redirect(redirectUrl);
             }
 
@@ -91,21 +95,10 @@ namespace DOOH.Server.Controllers
                     return RedirectWithError("User email not confirmed", redirectUrl);
                 }
 
-                var isTenantsAdmin = userName == "tenantsadmin" && password == "tenantsadmin";    
-                var isTwoFactor = await userManager.GetTwoFactorEnabledAsync(user);
-                if (!isTwoFactor && !isTenantsAdmin)
-                {
-                    await userManager.SetTwoFactorEnabledAsync(user, true);
-                }
-                var isAdboard = await userManager.IsInRoleAsync(user, "Adboard");
-                if (isAdboard)
-                {
-                    await userManager.SetTwoFactorEnabledAsync(user, false);
-                }
 
                 var result = await signInManager.PasswordSignInAsync(userName, password, false, false);
 
-                if (result.RequiresTwoFactor && !isTenantsAdmin)
+                if (result.RequiresTwoFactor)
                 {
                     var code = await userManager.GenerateTwoFactorTokenAsync(user, "Email");
 
@@ -116,10 +109,21 @@ If you didn't request this code, you can safely ignore this email. Someone else 
 
                     await SendEmailAsync(user.Email, "Your single-use code", text);
 
-                    return Redirect($"~/authentication/securitycode?email={Uri.EscapeDataString(user.Email)}");
+                    return Redirect($"/authentication/securitycode?email={Uri.EscapeDataString(user.Email)}");
                 }
                 if (result.Succeeded)
                 {
+
+                    var userRoles = identityContext.UserRoles.Where(x => x.UserId == user.Id);
+
+                    if(userRoles.Where(x => x.Name.ToLower().Trim() == "admin").Count() > 0)
+                    {
+                        redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                    }
+                    else if(userRoles.Where(x => x.Name.ToLower().Trim() == "provider").Count() > 0)
+                    {
+                        redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/provider" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                    }
                     return Redirect(redirectUrl);
                 }
             }
@@ -137,7 +141,7 @@ If you didn't request this code, you can safely ignore this email. Someone else 
                 return RedirectWithError("Invalid security code");
             }
 
-            return Redirect("~/");
+            return Redirect("/");
         }
         [HttpPost]
         [Authorize]
@@ -179,7 +183,7 @@ If you didn't request this code, you can safely ignore this email. Someone else 
         {
             await signInManager.SignOutAsync();
 
-            return Redirect("~/");
+            return Redirect("/");
         }
 
         [HttpPost]
@@ -230,7 +234,7 @@ If you didn't request this registration, you can safely ignore this email. Someo
 
             if (result.Succeeded)
             {
-                return Redirect("~/authentication/login?info=Your registration has been confirmed");
+                return Redirect("/authentication/login?info=Your registration has been confirmed");
             }
 
             return RedirectWithError("Invalid user or confirmation code");
@@ -269,7 +273,7 @@ If you didn't request this registration, you can safely ignore this email. Someo
 
             if (user == null)
             {
-                return Redirect("~/authentication/login?error=Invalid user");
+                return Redirect("/authentication/login?error=Invalid user");
             }
 
             var password = GenerateRandomPassword();
@@ -280,10 +284,10 @@ If you didn't request this registration, you can safely ignore this email. Someo
             {
                 await SendEmailAsync(user.Email, "New password", $"<p>Your new password is: {password}</p><p>Please change it after login.</p>");
 
-                return Redirect("~/authentication/login?info=Password reset successful. You will receive an email with your new password.");
+                return Redirect("/authentication/login?info=Password reset successful. You will receive an email with your new password.");
             }
 
-            return Redirect("~/authentication/login?error=Invalid user or confirmation code");
+            return Redirect("/authentication/login?error=Invalid user or confirmation code");
         }
 
         private static string GenerateRandomPassword()

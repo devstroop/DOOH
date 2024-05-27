@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Users
 {
-    public partial class Profile
+    public partial class EditApplicationUser
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,51 +30,45 @@ namespace DOOH.Client.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected bool twoFactorEnabled = false;
-        protected string oldPassword = "";
-        protected string newPassword = "";
-        protected string confirmPassword = "";
+        protected IEnumerable<DOOH.Server.Models.ApplicationRole> roles;
         protected DOOH.Server.Models.ApplicationUser user;
+        protected IEnumerable<string> userRoles;
         protected string error;
         protected bool errorVisible;
-        protected bool successVisible;
+
+        [Parameter]
+        public string Id { get; set; }
 
         [Inject]
         protected SecurityService Security { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            user = await Security.GetUserById($"{Security.User.Id}");
-            twoFactorEnabled = Security.User.TwoFactorEnabled;
+            user = await Security.GetUserById($"{Id}");
+
+            userRoles = user.Roles.Select(role => role.Id);
+
+            roles = await Security.GetRoles();
         }
 
-        protected async Task FormSubmit()
+        protected async Task FormSubmit(DOOH.Server.Models.ApplicationUser user)
         {
             try
             {
-                bool flag = false;
-                if(oldPassword != newPassword)
-                {
-                    await Security.ChangePassword(oldPassword, newPassword);
-                    flag = true;
-                }
-                if (twoFactorEnabled != Security.User.TwoFactorEnabled)
-                {
-                    var user = Security.User;
-                    user.TwoFactorEnabled = twoFactorEnabled;
-                    await Security.UpdateUser(user.Id, user);
-                    flag = true;
-                }
-                if (flag)
-                {
-                    successVisible = true;
-                }
+                user.Roles = roles.Where(role => userRoles.Contains(role.Id)).ToList();
+                await Security.UpdateUser($"{Id}", user);
+                DialogService.Close(null);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
                 error = ex.Message;
             }
+        }
+
+        protected async Task CancelClick()
+        {
+            DialogService.Close(null);
         }
     }
 }

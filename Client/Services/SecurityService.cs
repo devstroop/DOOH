@@ -141,12 +141,12 @@ namespace DOOH.Client
             return await httpClient.DeleteAsync(uri);
         }
 
-        public async Task<IEnumerable<ApplicationUser>> GetUsers()
+        public async Task<IEnumerable<ApplicationUser>> GetUsers(string expand = "Roles")
         {
             var uri = new Uri(baseUri, $"ApplicationUsers");
 
 
-            uri = uri.GetODataUri();
+            uri = uri.GetODataUri(expand: expand);
 
             var response = await httpClient.GetAsync(uri);
 

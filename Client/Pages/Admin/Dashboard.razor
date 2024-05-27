@@ -1,11 +1,38 @@
+@layout AdminLayout
 @page "/admin/dashboard"
 @page "/admin"
 
 @attribute [Authorize]
 
-<PageTitle>Dashboard</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="Dashboard" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-</RadzenRow>
+<PageTitle>Dashboard | Admin</PageTitle>
+
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenText Text="Admin Dashboard" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal">
+
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn SizeMD="3">
+            <RadzenCard>
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="1.5rem">
+                    <RadzenStack>
+                        <RadzenIcon Icon="people" Style="font-size:4rem" class="rz-p-5" />
+                    </RadzenStack>
+                    <RadzenStack Gap="1">
+                        <RadzenText Text="Users" TextStyle="TextStyle.H5" class="rz-mb-0" />
+                        <RadzenText Text="100" TextStyle="TextStyle.DisplayH5" class="rz-mb-0" />
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenCard>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="3"></RadzenColumn>
+        <RadzenColumn SizeMD="3"></RadzenColumn>
+        <RadzenColumn SizeMD="3"></RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

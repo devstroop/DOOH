@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Users
 {
-    public partial class RegisterApplicationUser
+    public partial class AddApplicationRole
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,41 +30,36 @@ namespace DOOH.Client.Pages
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected DOOH.Server.Models.ApplicationUser user;
-        protected bool isBusy;
-        protected bool errorVisible;
+        protected DOOH.Server.Models.ApplicationRole role;
         protected string error;
+        protected bool errorVisible;
 
         [Inject]
         protected SecurityService Security { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            user = new DOOH.Server.Models.ApplicationUser();
+            role = new DOOH.Server.Models.ApplicationRole();
         }
 
-        protected async Task FormSubmit()
+        protected async Task FormSubmit(DOOH.Server.Models.ApplicationRole role)
         {
             try
             {
-                isBusy = true;
+                await Security.CreateRole(role);
 
-                await Security.Register(user.Email, user.Password);
-
-                DialogService.Close(true);
+                DialogService.Close(null);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
                 error = ex.Message;
             }
-
-            isBusy = false;
         }
 
         protected async Task CancelClick()
         {
-            DialogService.Close(false);
+            DialogService.Close(null);
         }
     }
 }
