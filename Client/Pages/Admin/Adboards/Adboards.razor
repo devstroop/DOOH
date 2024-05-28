@@ -1,4 +1,4 @@
-@layout AdminLayout
+﻿@layout AdminLayout
 @page "/admin/adboards"
 
 @attribute [Authorize]
@@ -9,8 +9,38 @@
         <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
     </RadzenColumn>
 </RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
     <Template>
-        @context
+        <RadzenRow Style="min-width: 400px">
+            <ImageComponent Path="@context.Image" />
+            <RadzenColumn>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
+                    <RadzenBadge Text="@context.Category.CategoryName" Style="@(String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}")" />
+                </RadzenStack>
+
+                <RadzenText Text="@($"{(!String.IsNullOrEmpty(context.Address) ? $"{context.Address}, " : "")} {context.CityName}")" TextStyle="TextStyle.Subtitle1" class="rz-mb-0" />
+
+                <RadzenRow>
+                    <RadzenColumn Size="3">
+                        <RadzenText Text="Rate (Base):" TextStyle="TextStyle.Body1" class="rz-mb-0" />
+                    </RadzenColumn>
+                    <RadzenColumn Size="9">
+                        <RadzenText Text="@($"₹{(context.BaseRatePerSecond ?? 0):F2}/s")" TextStyle="TextStyle.Body1" class="rz-mb-0" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn Size="5"></RadzenColumn>
+                    <RadzenColumn Size="7"></RadzenColumn>
+                </RadzenRow>
+            </RadzenColumn>
+
+            @* <RadzenStack JustifyContent="JustifyContent.End">
+            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Style="margin-left: auto" Click="@((args) => DetailsSplitButtonClicked(args, context))">
+            <RadzenSplitButtonItem Text="Edit" Icon="edit" />
+            <RadzenSplitButtonItem Text="Delete" Icon="delete" />
+            </RadzenSplitButton>
+            </RadzenStack> *@
+        </RadzenRow>
     </Template>
 </RadzenDataList>

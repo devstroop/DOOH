@@ -40,9 +40,11 @@
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
             <RadzenPanelMenuItem Text="Accounts" Icon="group" Path="#" />
-            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards" />
+            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
+                <RadzenPanelMenuItem Text="Models" Path="/admin/adboards/models" />
+            </RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
-                <RadzenPanelMenuItem Text="Roles" Icon="security" Path="/admin/users/application-roles" />
+                <RadzenPanelMenuItem Text="Roles" Path="/admin/users/application-roles" />
             </RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Settings" Icon="settings">
                 <RadzenPanelMenuItem Text="Categories" Path="/admin/settings/categories" />
