@@ -54,7 +54,7 @@
                         <RadzenLabel Component="2FA" style="width: 100%" Text="2FA" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <RadzenCheckBox @bind-Value="@twoFactorEnabled" style="display: block; width: 100%" Name="2FA" />
+                        <RadzenSwitch @bind-Value="@twoFactorEnabled" Name="2FA" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">

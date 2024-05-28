@@ -63,7 +63,7 @@ namespace DOOH.Server.Controllers
         public async Task<IActionResult> Login(string userName, string password, string redirectUrl)
         {
             //redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.StartsWith("/") ? redirectUrl : $"~/{redirectUrl}";
-            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+            redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") ? "/" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
 
             if (env.EnvironmentName == "Development" && userName == "admin" && password == "admin")
             {
@@ -75,7 +75,7 @@ namespace DOOH.Server.Controllers
 
                 roleManager.Roles.ToList().ForEach(r => claims.Add(new Claim(ClaimTypes.Role, r.Name)));
                 await signInManager.SignInWithClaimsAsync(new ApplicationUser { UserName = userName, Email = userName }, isPersistent: false, claims);
-                redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") ? "/admin" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
                 return Redirect(redirectUrl);
             }
 
@@ -114,15 +114,18 @@ If you didn't request this code, you can safely ignore this email. Someone else 
                 if (result.Succeeded)
                 {
 
-                    var userRoles = identityContext.UserRoles.Where(x => x.UserId == user.Id);
-
-                    if(userRoles.Where(x => x.Name.ToLower().Trim() == "admin").Count() > 0)
+                    var userRoles = identityContext.UserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
+                    if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "admin"))
                     {
-                        redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/admin" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                        redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
+                            ? "/admin" 
+                            : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
                     }
-                    else if(userRoles.Where(x => x.Name.ToLower().Trim() == "provider").Count() > 0)
+                    else if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "provider"))
                     {
-                        redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "/provider" : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                        redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
+                            ? "/provider" 
+                            : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
                     }
                     return Redirect(redirectUrl);
                 }

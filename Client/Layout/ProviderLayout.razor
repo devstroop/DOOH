@@ -7,10 +7,25 @@
     <RadzenHeader>
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
             <RadzenColumn Size="5">
-                <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                    <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+                    <a href="/"><RadzenImage Path="images\LOGO-LIGHT-GREEN.png" style="height: 32px;" AlternateText="Application logo" /></a>
+                </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="7">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End"></RadzenStack>
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
+                        <ChildContent>
+
+                            <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
+                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                        </ChildContent>
+                        <Template>
+                            @Security.User?.Name
+                            <RadzenGravatar Email="@Security.User?.Name" />
+                        </Template>
+                    </RadzenProfileMenu>
+                </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
     </RadzenHeader>
@@ -23,8 +38,16 @@
     </RadzenBody>
     <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 240px">
         <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Home" Path="" />
+            <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/provider/dashboard" />
+            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/provider/adboards" />
+            <RadzenPanelMenuItem Text="Revenue" Icon="insights" Path="#" />
+            <RadzenPanelMenuItem Text="Payouts" Icon="history" Path="#">
+                <RadzenPanelMenuItem Text="Bank Accounts" Path="#" />
+            </RadzenPanelMenuItem>
+            <RadzenPanelMenuItem Text="Reports" Icon="report" Path="#" />
+            <RadzenPanelMenuItem Text="Support" Icon="support" Path="#" />
         </RadzenPanelMenu>
+
     </RadzenSidebar>
     <RadzenFooter>
         <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal">

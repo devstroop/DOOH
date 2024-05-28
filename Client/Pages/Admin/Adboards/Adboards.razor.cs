@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Layout
+namespace DOOH.Client.Pages.Admin.Adboards
 {
-    public partial class PublicLayout
+    public partial class Adboards
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -33,27 +33,26 @@ namespace DOOH.Client.Layout
         [Inject]
         protected SecurityService Security { get; set; }
 
-        protected void ProfileMenuClick(RadzenProfileMenuItem args)
-        {
-            if (args.Value == "Logout")
-            {
-                Security.Logout();
-            }
-        }
+        [Inject]
+        protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
 
-        protected async Task DashboardClick(MouseEventArgs args)
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
+
+        protected int adboardsCount;
+
+
+        protected async Task adboardsLoadData(LoadDataArgs args)
         {
-            if (Security.IsInRole("Admin"))
+            try
             {
-                NavigationManager.NavigateTo("/admin/dashboard");
+                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
+
+                adboards = result.Value.AsODataEnumerable();
+                adboardsCount = result.Count;
             }
-            else if (Security.IsInRole("Provider"))
+            catch (Exception)
             {
-                NavigationManager.NavigateTo("/provider/dashboard");
-            }
-            else
-            {
-                return;
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
             }
         }
     }

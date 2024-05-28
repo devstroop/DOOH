@@ -1,0 +1,16 @@
+@layout AdminLayout
+@page "/admin/adboards"
+
+@attribute [Authorize]
+
+<PageTitle>Adboards</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+    </RadzenColumn>
+</RadzenRow>
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
+    <Template>
+        @context
+    </Template>
+</RadzenDataList>

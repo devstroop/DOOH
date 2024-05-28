@@ -1,12 +1,51 @@
-@layout ProviderLayout
+﻿@layout ProviderLayout
 @page "/provider/dashboard"
 @page "/provider"
 
 @attribute [Authorize]
 
 <PageTitle>Provider Dashboard</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="Provider Dashboard" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-</RadzenRow>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenText Text="Provider Dashboard" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow>
+        <RadzenColumn SizeMD="6">
+            <RadzenChart>
+                <RadzenLineSeries Smooth="true" Data="@revenue2023" CategoryProperty="Date" Title="2023" LineType="LineType.Dashed" ValueProperty="Revenue">
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                    <RadzenSeriesDataLabels Visible="@false" />
+                </RadzenLineSeries>
+                <RadzenLineSeries Smooth="true" Data="@revenue2024" CategoryProperty="Date" Title="2024" ValueProperty="Revenue">
+                    <RadzenMarkers Visible="@true" MarkerType="MarkerType.Circle" />
+                    <RadzenSeriesDataLabels Visible="false" />
+                </RadzenLineSeries>
+                <RadzenCategoryAxis Padding="20" />
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Footfall" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="6">
+            <RadzenChart>
+                <RadzenLineSeries Smooth="true" Data="@revenue2023" CategoryProperty="Date" Title="2023" LineType="LineType.Dashed" ValueProperty="Revenue">
+                    <RadzenMarkers Visible="true" MarkerType="MarkerType.Square" />
+                    <RadzenSeriesDataLabels Visible="@false" />
+                </RadzenLineSeries>
+                <RadzenLineSeries Smooth="true" Data="@revenue2024" CategoryProperty="Date" Title="2024" ValueProperty="Revenue">
+                    <RadzenMarkers Visible="@true" MarkerType="MarkerType.Circle" />
+                    <RadzenSeriesDataLabels Visible="false" />
+                </RadzenLineSeries>
+                <RadzenCategoryAxis Padding="20" />
+                <RadzenValueAxis Formatter="@FormatAsINR">
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Revenue (₹)" />
+                </RadzenValueAxis>
+            </RadzenChart>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

@@ -19,7 +19,8 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Pages\Adboard\" />
-	  <Folder Include="Pages\Provider\" />
+	  <Folder Include="Pages\Admin\Adboards\" />
+	  <Folder Include="Pages\Provider\Adboards\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>

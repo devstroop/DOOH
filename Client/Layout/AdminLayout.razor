@@ -10,7 +10,19 @@
                 <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
             </RadzenColumn>
             <RadzenColumn Size="7">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End"></RadzenStack>
+                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
+                        <ChildContent>
+
+                            <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
+                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                        </ChildContent>
+                        <Template>
+                            @Security.User?.Name
+                            <RadzenGravatar Email="@Security.User?.Name" />
+                        </Template>
+                    </RadzenProfileMenu>
+                </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
     </RadzenHeader>
@@ -23,12 +35,12 @@
     </RadzenBody>
     <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2">
         <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-            <RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+            <a href="/"><RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
         </RadzenStack>
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
             <RadzenPanelMenuItem Text="Accounts" Icon="group" Path="#" />
-            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="#" />
+            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards" />
             <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
                 <RadzenPanelMenuItem Text="Roles" Icon="security" Path="/admin/users/application-roles" />
             </RadzenPanelMenuItem>

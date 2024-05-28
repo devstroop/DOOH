@@ -8,7 +8,7 @@
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" Class="rz-px-4" Style="height: 100%;">
             <RadzenColumn Size="6">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="1rem">
-                    <RadzenImage Path="images\LOGO-WHITE-GREEN.png" style="height: 24px"></RadzenImage>
+                    <a href="/"><RadzenImage Path="images\LOGO-WHITE-GREEN.png" style="height: 24px"></RadzenImage></a>
 
                     <RadzenMenu>
                         <RadzenMenuItem Text="Home" Path="" />
@@ -17,7 +17,24 @@
             </RadzenColumn>
             <RadzenColumn Size="6">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                    @if (Security.IsAuthenticated())
+                    {
+                        <RadzenButton Text="Dashboard" Click="@DashboardClick" />
+                        <RadzenProfileMenu Click="@ProfileMenuClick">
+                            <ChildContent>
+                                <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
+                                <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                            </ChildContent>
+                            <Template>
+                                @Security.User?.Name
+                                <RadzenGravatar Email="@Security.User?.Name" />
+                            </Template>
+                        </RadzenProfileMenu>
+                    }
+                    else
+                    {
+                        <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                    }
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>

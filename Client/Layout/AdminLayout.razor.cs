@@ -39,5 +39,12 @@ namespace DOOH.Client.Layout
         {
             sidebarExpanded = !sidebarExpanded;
         }
+        protected void ProfileMenuClick(RadzenProfileMenuItem args)
+        {
+            if (args.Value == "Logout")
+            {
+                Security.Logout();
+            }
+        }
     }
 }
