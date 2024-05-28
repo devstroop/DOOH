@@ -86,7 +86,6 @@ namespace DOOH.Server
             var items = Context.Adboards.AsQueryable();
 
             items = items.Include(i => i.AdboardModel);
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Category);
             items = items.Include(i => i.City);
             items = items.Include(i => i.Country);
@@ -123,7 +122,6 @@ namespace DOOH.Server
                               .Where(i => i.AdboardId == adboardid);
 
             items = items.Include(i => i.AdboardModel);
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Category);
             items = items.Include(i => i.City);
             items = items.Include(i => i.Country);
@@ -218,7 +216,6 @@ namespace DOOH.Server
             var itemToDelete = Context.Adboards
                               .Where(i => i.AdboardId == adboardid)
                               .Include(i => i.AdboardNetworks)
-                              .Include(i => i.AdboardTokens)
                               .Include(i => i.AdboardWifis)
                               .Include(i => i.Analytics)
                               .Include(i => i.CampaignAdboards)
@@ -577,169 +574,6 @@ namespace DOOH.Server
             }
 
             OnAfterAdboardNetworkDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportAdboardTokensToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardtokens/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardtokens/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportAdboardTokensToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardtokens/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardtokens/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnAdboardTokensRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardToken> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.AdboardToken>> GetAdboardTokens(Query query = null)
-        {
-            var items = Context.AdboardTokens.AsQueryable();
-
-            items = items.Include(i => i.Adboard);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnAdboardTokensRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnAdboardTokenGet(DOOH.Server.Models.DOOHDB.AdboardToken item);
-        partial void OnGetAdboardTokenByAdboardId(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardToken> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardToken> GetAdboardTokenByAdboardId(int adboardid)
-        {
-            var items = Context.AdboardTokens
-                              .AsNoTracking()
-                              .Where(i => i.AdboardId == adboardid);
-
-            items = items.Include(i => i.Adboard);
- 
-            OnGetAdboardTokenByAdboardId(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnAdboardTokenGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnAdboardTokenCreated(DOOH.Server.Models.DOOHDB.AdboardToken item);
-        partial void OnAfterAdboardTokenCreated(DOOH.Server.Models.DOOHDB.AdboardToken item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardToken> CreateAdboardToken(DOOH.Server.Models.DOOHDB.AdboardToken adboardtoken)
-        {
-            OnAdboardTokenCreated(adboardtoken);
-
-            var existingItem = Context.AdboardTokens
-                              .Where(i => i.AdboardId == adboardtoken.AdboardId)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.AdboardTokens.Add(adboardtoken);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(adboardtoken).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterAdboardTokenCreated(adboardtoken);
-
-            return adboardtoken;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardToken> CancelAdboardTokenChanges(DOOH.Server.Models.DOOHDB.AdboardToken item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnAdboardTokenUpdated(DOOH.Server.Models.DOOHDB.AdboardToken item);
-        partial void OnAfterAdboardTokenUpdated(DOOH.Server.Models.DOOHDB.AdboardToken item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardToken> UpdateAdboardToken(int adboardid, DOOH.Server.Models.DOOHDB.AdboardToken adboardtoken)
-        {
-            OnAdboardTokenUpdated(adboardtoken);
-
-            var itemToUpdate = Context.AdboardTokens
-                              .Where(i => i.AdboardId == adboardtoken.AdboardId)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(adboardtoken);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterAdboardTokenUpdated(adboardtoken);
-
-            return adboardtoken;
-        }
-
-        partial void OnAdboardTokenDeleted(DOOH.Server.Models.DOOHDB.AdboardToken item);
-        partial void OnAfterAdboardTokenDeleted(DOOH.Server.Models.DOOHDB.AdboardToken item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardToken> DeleteAdboardToken(int adboardid)
-        {
-            var itemToDelete = Context.AdboardTokens
-                              .Where(i => i.AdboardId == adboardid)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnAdboardTokenDeleted(itemToDelete);
-
-
-            Context.AdboardTokens.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterAdboardTokenDeleted(itemToDelete);
 
             return itemToDelete;
         }
@@ -1374,7 +1208,6 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Attachments
                               .Where(i => i.AttachmentKey == attachmentkey)
-                              .Include(i => i.Adboards)
                               .Include(i => i.AdboardModels)
                               .Include(i => i.Advertisements)
                               .Include(i => i.Brands)

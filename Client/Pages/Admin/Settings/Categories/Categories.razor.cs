@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Provider.Adboards
+namespace DOOH.Client.Pages.Admin.Settings.Categories
 {
-    public partial class Adboards
+    public partial class Categories
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -36,28 +36,21 @@ namespace DOOH.Client.Pages.Provider.Adboards
         [Inject]
         protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Category> categories;
 
-        protected int adboardsCount;
-        protected bool isAdboardsLoading = false;
+        protected int categoriesCount;
 
+        protected bool isCategoriesLoading = false;
 
-        protected async Task adboardsLoadData(LoadDataArgs args)
+        protected async Task categoriesLoadData(LoadDataArgs args)
         {
             try
             {
-                isAdboardsLoading = true;
+                isCategoriesLoading = true;
+                var result = await DOOHDBService.GetCategories(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
 
-                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "Category");
-
-                adboards = result.Value.AsODataEnumerable();
-
-                foreach(var adboard in adboards)
-                {
-                    await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
-                }
-
-                adboardsCount = result.Count;
+                categories = result.Value.AsODataEnumerable();
+                categoriesCount = result.Count;
             }
             catch (Exception)
             {
@@ -65,14 +58,8 @@ namespace DOOH.Client.Pages.Provider.Adboards
             }
             finally
             {
-                isAdboardsLoading = false;
+                isCategoriesLoading = false;
             }
-        }
-
-        // DetailsSplitButtonClicked
-        protected async void DetailsSplitButtonClicked(RadzenSplitButtonItem item)
-        {
-            //var dialogResult = await DialogService.OpenAsync<DOOH.Client.Pages.Provider.Adboards.AdboardDetails>("Adboard Details", new Dictionary<string, object>() { { "AdboardId", args.AdboardId} });
         }
     }
 }

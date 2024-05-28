@@ -69,7 +69,6 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var items = this.context.Attachments
                     .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
-                    .Include(i => i.Adboards)
                     .Include(i => i.AdboardModels)
                     .Include(i => i.Advertisements)
                     .Include(i => i.Brands)

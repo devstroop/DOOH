@@ -33,12 +33,6 @@ namespace DOOH.Server.Data
               .HasPrincipalKey(i => i.AdboardModelId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
-              .HasOne(i => i.Attachment)
-              .WithMany(i => i.Adboards)
-              .HasForeignKey(i => i.AttachmentKey)
-              .HasPrincipalKey(i => i.AttachmentKey);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Category)
               .WithMany(i => i.Adboards)
               .HasForeignKey(i => i.CategoryId)
@@ -89,12 +83,6 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardNetwork>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.AdboardNetworks)
-              .HasForeignKey(i => i.AdboardId)
-              .HasPrincipalKey(i => i.AdboardId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardToken>()
-              .HasOne(i => i.Adboard)
-              .WithMany(i => i.AdboardTokens)
               .HasForeignKey(i => i.AdboardId)
               .HasPrincipalKey(i => i.AdboardId);
 
@@ -304,10 +292,6 @@ namespace DOOH.Server.Data
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardToken>()
-              .Property(p => p.RefreshTokenExpiry)
-              .HasColumnType("datetime");
-
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardWifi>()
               .Property(p => p.ConnectedAt)
               .HasColumnType("datetime");
@@ -375,8 +359,6 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardModel> AdboardModels { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardNetwork> AdboardNetworks { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.AdboardToken> AdboardTokens { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardWifi> AdboardWifis { get; set; }
 

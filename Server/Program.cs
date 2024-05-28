@@ -32,7 +32,6 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Adboard>("Adboards");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardModel>("AdboardModels");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardNetwork>("AdboardNetworks");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardToken>("AdboardTokens");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardWifi>("AdboardWifis");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Advertisement>("Advertisements");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Analytic>("Analytics");
@@ -55,7 +54,6 @@ builder.Services.AddControllers().AddOData(opt =>
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
 builder.Services.AddHttpClient("DOOH.Server").ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false }).AddHeaderPropagation(o => o.Headers.Add("Cookie"));
 builder.Services.AddHeaderPropagation(o => o.Headers.Add("Cookie"));
-
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<DOOH.Client.SecurityService>();

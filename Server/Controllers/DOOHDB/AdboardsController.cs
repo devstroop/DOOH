@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.OData.Formatter;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.AspNetCore.Authorization;
 
 namespace DOOH.Server.Controllers.DOOHDB
 {
@@ -28,7 +27,7 @@ namespace DOOH.Server.Controllers.DOOHDB
             this.context = context;
         }
 
-
+    
         [HttpGet]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
         public IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> GetAdboards()
@@ -71,7 +70,6 @@ namespace DOOH.Server.Controllers.DOOHDB
                 var items = this.context.Adboards
                     .Where(i => i.AdboardId == key)
                     .Include(i => i.AdboardNetworks)
-                    .Include(i => i.AdboardTokens)
                     .Include(i => i.AdboardWifis)
                     .Include(i => i.Analytics)
                     .Include(i => i.CampaignAdboards)
@@ -132,7 +130,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Attachment,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -173,7 +171,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Attachment,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -209,7 +207,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == item.AdboardId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Attachment,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
 
                 this.OnAfterAdboardCreated(item);
 

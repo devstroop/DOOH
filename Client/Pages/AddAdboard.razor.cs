@@ -46,8 +46,6 @@ namespace DOOH.Client.Pages
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Category> categoriesForCategoryId;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Attachment> attachmentsForAttachmentKey;
-
         protected IEnumerable<DOOH.Server.Models.DOOHDB.City> citiesForCityName;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.State> statesForStateName;
@@ -136,32 +134,6 @@ namespace DOOH.Client.Pages
             }
         }
 
-        protected int attachmentsForAttachmentKeyCount;
-        protected DOOH.Server.Models.DOOHDB.Attachment attachmentsForAttachmentKeyValue;
-        protected async Task attachmentsForAttachmentKeyLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetAttachments(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(AttachmentKey, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                attachmentsForAttachmentKey = result.Value.AsODataEnumerable();
-                attachmentsForAttachmentKeyCount = result.Count;
-
-                if (!object.Equals(adboard.AttachmentKey, null))
-                {
-                    var valueResult = await DOOHDBService.GetAttachments(filter: $"AttachmentKey eq '{adboard.AttachmentKey}'");
-                    var firstItem = valueResult.Value.FirstOrDefault();
-                    if (firstItem != null)
-                    {
-                        attachmentsForAttachmentKeyValue = firstItem;
-                    }
-                }
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Attachment" });
-            }
-        }
 
         protected int citiesForCityNameCount;
         protected DOOH.Server.Models.DOOHDB.City citiesForCityNameValue;
@@ -268,15 +240,6 @@ namespace DOOH.Client.Pages
         [Inject]
         protected SecurityService Security { get; set; }
 
-
-        DOOH.Client.Components.UploadComponent uploadBrandLogo;
-
-        protected void OnUploadComplete(Attachment attachment)
-        {
-            adboard.AttachmentKey = attachment.AttachmentKey;
-            adboard.Attachment = attachment;
-            StateHasChanged();
-        }
 
     }
 }

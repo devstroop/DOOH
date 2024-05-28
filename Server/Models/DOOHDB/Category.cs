@@ -33,6 +33,9 @@ namespace DOOH.Server.Models.DOOHDB
         [ConcurrencyCheck]
         public string CategoryDescription { get; set; }
 
+        [ConcurrencyCheck]
+        public string CategoryColor { get; set; }
+
         public ICollection<Adboard> Adboards { get; set; }
     }
 }

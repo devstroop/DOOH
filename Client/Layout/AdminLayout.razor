@@ -44,7 +44,10 @@
             <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
                 <RadzenPanelMenuItem Text="Roles" Icon="security" Path="/admin/users/application-roles" />
             </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="#" />
+            <RadzenPanelMenuItem Text="Settings" Icon="settings">
+                <RadzenPanelMenuItem Text="Categories" Icon="category" Path="/admin/settings/categories" />
+                <RadzenPanelMenuItem Text="Cities" Icon="location_city" Path="/admin/settings/cities" />
+            </RadzenPanelMenuItem>
         </RadzenPanelMenu>
         <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
             <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />

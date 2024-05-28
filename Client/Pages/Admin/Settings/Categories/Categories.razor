@@ -1,0 +1,17 @@
+@layout AdminLayout
+@page "/admin/settings/categories"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Categories> L
+
+@attribute [Authorize]
+
+<PageTitle>Categories</PageTitle>
+<RadzenRow>
+    <RadzenColumn Size="12">
+        <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+    </RadzenColumn>
+</RadzenRow>
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Category" Data="@categories" AllowPaging="true" LoadData="@categoriesLoadData" Count="@categoriesCount" IsLoading="@isCategoriesLoading">
+    <Template>
+        @context.CategoryName
+    </Template>
+</RadzenDataList>

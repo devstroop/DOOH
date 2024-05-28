@@ -61,17 +61,10 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Attachment" Component="Attachment" style="width: 100%" />
+                    <RadzenLabel Text="Image" Component="Image" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenStack>
-                        
-                    <RadzenDropDownDataGrid Data="@attachmentsForAttachmentKey" TextProperty="AttachmentKey" ValueProperty="AttachmentKey" AllowClear=true
-                         Placeholder="Choose Attachment" style="display: block; width: 100%" @bind-Value="@adboard.AttachmentKey" Name="AttachmentKey"
-                        SelectedValue=@attachmentsForAttachmentKeyValue Count=@attachmentsForAttachmentKeyCount LoadData=@attachmentsForAttachmentKeyLoadData />
-
-                        <DOOH.Client.Components.UploadComponent @ref="uploadBrandLogo" OnComplete="@((value) => OnUploadComplete(value.FirstOrDefault()))" OnProgress="((value) => StateHasChanged())" Accept="image/*" />
-                    </RadzenStack>
+            <RadzenColumn SizeMD="9">
+                <RadzenTextBox @bind-Value="@adboard.Image" style="display: block; width: 100%" Name="Image" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">

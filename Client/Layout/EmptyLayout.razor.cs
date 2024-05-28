@@ -10,7 +10,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Layout
 {
-    public partial class AdboardLayout
+    public partial class EmptyLayout
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }

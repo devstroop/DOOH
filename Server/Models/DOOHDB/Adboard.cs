@@ -47,12 +47,10 @@ namespace DOOH.Server.Models.DOOHDB
         public string MotherboardSerial { get; set; }
 
         [ConcurrencyCheck]
-        public decimal? BaseRatePerSecond { get; set; }
+        public string Image { get; set; }
 
         [ConcurrencyCheck]
-        public string AttachmentKey { get; set; }
-
-        public Attachment Attachment { get; set; }
+        public decimal? BaseRatePerSecond { get; set; }
 
         [ConcurrencyCheck]
         public double? Latitude { get; set; }
@@ -88,8 +86,6 @@ namespace DOOH.Server.Models.DOOHDB
         public DateTime? UpdatedAt { get; set; }
 
         public ICollection<AdboardNetwork> AdboardNetworks { get; set; }
-
-        public ICollection<AdboardToken> AdboardTokens { get; set; }
 
         public ICollection<AdboardWifi> AdboardWifis { get; set; }
 

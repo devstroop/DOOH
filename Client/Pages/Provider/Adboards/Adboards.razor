@@ -1,5 +1,6 @@
 @layout ProviderLayout
 @page "/provider/adboards"
+@inject Microsoft.Extensions.Localization.IStringLocalizer<Adboards> L
 
 @attribute [Authorize]
 
@@ -9,12 +10,24 @@
         <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
     </RadzenColumn>
 </RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
     <Template>
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenImage Path="@context.AttachmentKey" Width="100" Height="100" />
-            <RadzenStack>
-                @context.Address
+        <RadzenStack Orientation="Orientation.Horizontal" Style="min-width: 400px">
+            <ImageComponent Path="@context.Image"/>
+            <RadzenStack Style="width: 100%">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Gap="0">
+                        <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" />
+                        <RadzenText Text="@($"{(String.IsNullOrEmpty(context.Address) ? $"{context.Address}, " : "")} {context.CityName}")" TextStyle="TextStyle.Subtitle1" />
+                        <RadzenBadge Text="@context.Category.CategoryName" Style="@($"{(String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}")}")" />
+                    </RadzenStack>
+                    <RadzenStack>
+                        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Style="margin-left: auto" Click="@DetailsSplitButtonClicked">
+                            <RadzenSplitButtonItem Text="Edit" Icon="edit" />
+                            @* <RadzenSplitButtonItem Text="Delete" Icon="delete" /> *@
+                        </RadzenSplitButton>
+                    </RadzenStack>
+                </RadzenStack>
             </RadzenStack>
         </RadzenStack>
     </Template>

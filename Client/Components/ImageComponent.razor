@@ -1,0 +1,9 @@
+﻿<RadzenImage Path="@Path" Style="@Style" />
+@code {
+    [Parameter]
+    public string Path { get; set; }
+
+    [Parameter]
+    public string Style { get; set; } = "min-width: 120px; min-height: 120px; width: 120px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px";
+
+}

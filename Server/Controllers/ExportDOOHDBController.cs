@@ -61,20 +61,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetAdboardNetworks(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/adboardtokens/csv")]
-        [HttpGet("/export/DOOHDB/adboardtokens/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAdboardTokensToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetAdboardTokens(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/adboardtokens/excel")]
-        [HttpGet("/export/DOOHDB/adboardtokens/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAdboardTokensToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetAdboardTokens(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/adboardwifis/csv")]
         [HttpGet("/export/DOOHDB/adboardwifis/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportAdboardWifisToCSV(string fileName = null)

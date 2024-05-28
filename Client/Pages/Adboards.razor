@@ -39,7 +39,7 @@
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Attachment" Title="Attachment">
                     <Template Context="adboard">
-                            <RadzenImage Path="@adboard.Attachment.GetThumbnail()" style="width: 100px; height: 100px" Visible="@(adboard.Attachment != null)" />
+                            <RadzenImage Path="@adboard.Image" style="width: 100px; height: 100px" Visible="@(!String.IsNullOrEmpty(adboard.Image))" />
                     </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Latitude" Title="Latitude">
