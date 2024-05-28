@@ -33,7 +33,7 @@
             </RadzenColumn>
         </RadzenRow>
     </RadzenBody>
-    <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2">
+    <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 270px">
         <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
             <a href="/"><RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
         </RadzenStack>
@@ -45,8 +45,10 @@
                 <RadzenPanelMenuItem Text="Roles" Icon="security" Path="/admin/users/application-roles" />
             </RadzenPanelMenuItem>
             <RadzenPanelMenuItem Text="Settings" Icon="settings">
-                <RadzenPanelMenuItem Text="Categories" Icon="category" Path="/admin/settings/categories" />
-                <RadzenPanelMenuItem Text="Cities" Icon="location_city" Path="/admin/settings/cities" />
+                <RadzenPanelMenuItem Text="Categories" Path="/admin/settings/categories" />
+                <RadzenPanelMenuItem Text="Cities" Path="/admin/settings/cities" />
+                <RadzenPanelMenuItem Text="States" Path="/admin/settings/states" />
+                <RadzenPanelMenuItem Text="Countries" Path="/admin/settings/countries" />
             </RadzenPanelMenuItem>
         </RadzenPanelMenu>
         <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">

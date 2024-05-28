@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Settings.States
 {
-    public partial class Categories
+    public partial class States
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -33,9 +33,9 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Category> categories;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.State> states;
 
-        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Category> grid0;
+        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.State> grid0;
         protected int count;
 
         protected string search = "";
@@ -56,35 +56,35 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.GetCategories(filter: $@"(contains(CategoryName,""{search}"") or contains(CategoryDescription,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-                categories = result.Value.AsODataEnumerable();
+                var result = await DOOHDBService.GetStates(filter: $@"(contains(StateName,""{search}"") or contains(CountryName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "Country", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+                states = result.Value.AsODataEnumerable();
                 count = result.Count;
             }
             catch (System.Exception ex)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Categories" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load States" });
             }
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<AddCategory>("Add Category", null);
+            await DialogService.OpenAsync<AddState>("Add State", null);
             await grid0.Reload();
         }
 
-        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Category> args)
+        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.State> args)
         {
-            await DialogService.OpenAsync<EditCategory>("Edit Category", new Dictionary<string, object> { {"CategoryId", args.Data.CategoryId} });
+            await DialogService.OpenAsync<EditState>("Edit State", new Dictionary<string, object> { {"StateName", args.Data.StateName} });
             await grid0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Category category)
+        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.State state)
         {
             try
             {
                 if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
                 {
-                    var deleteResult = await DOOHDBService.DeleteCategory(categoryId:category.CategoryId);
+                    var deleteResult = await DOOHDBService.DeleteState(stateName:state.StateName);
 
                     if (deleteResult != null)
                     {
@@ -98,7 +98,7 @@ namespace DOOH.Client.Pages
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = $"Error",
-                    Detail = $"Unable to delete Category"
+                    Detail = $"Unable to delete State"
                 });
             }
         }
@@ -107,24 +107,24 @@ namespace DOOH.Client.Pages
         {
             if (args?.Value == "csv")
             {
-                await DOOHDBService.ExportCategoriesToCSV(new Query
+                await DOOHDBService.ExportStatesToCSV(new Query
 {
     Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
     OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "",
+    Expand = "Country",
     Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Categories");
+}, "States");
             }
 
             if (args == null || args.Value == "xlsx")
             {
-                await DOOHDBService.ExportCategoriesToExcel(new Query
+                await DOOHDBService.ExportStatesToExcel(new Query
 {
     Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
     OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "",
+    Expand = "Country",
     Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Categories");
+}, "States");
             }
         }
     }

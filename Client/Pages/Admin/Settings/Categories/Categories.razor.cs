@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
+using DOOH.Server.Models.DOOHDB;
 
 namespace DOOH.Client.Pages.Admin.Settings.Categories
 {
@@ -61,5 +62,38 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
                 isCategoriesLoading = false;
             }
         }
+
+        protected async Task AddCategoryClick(MouseEventArgs args)
+        {
+            var dialogResult = await DialogService.OpenAsync<AddCategory>("Add Category", null);
+            if (dialogResult != null)
+            {
+                await categoriesLoadData(new LoadDataArgs() { });
+            }
+        }
+
+        protected async void MoreVertClick(RadzenSplitButtonItem item, Category category)
+        {
+            if (item.Text == "Edit")
+            {
+                var dialogResult = await DialogService.OpenAsync<EditCategory>("Edit Category", new Dictionary<string, object>() { { "CategoryId", category.CategoryId } });
+                if (dialogResult != null)
+                {
+                    await categoriesLoadData(new LoadDataArgs() { });
+                    StateHasChanged();
+                }
+            }
+            else if (item.Text == "Delete")
+            {
+                var dialogResult = await DialogService.Confirm("Are you sure you want to delete this category?", "Delete Category");
+                if (dialogResult == true)
+                {
+                    await DOOHDBService.DeleteCategory(categoryId: category.CategoryId);
+                    await categoriesLoadData(new LoadDataArgs() { });
+                    StateHasChanged();
+                }
+            }
+        }
+
     }
 }

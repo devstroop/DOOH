@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Settings.Cities
 {
-    public partial class AddState
+    public partial class AddCity
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -34,46 +34,46 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            state = new DOOH.Server.Models.DOOHDB.State();
+            city = new DOOH.Server.Models.DOOHDB.City();
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.State state;
+        protected DOOH.Server.Models.DOOHDB.City city;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Country> countriesForCountryName;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.State> statesForStateName;
 
 
-        protected int countriesForCountryNameCount;
-        protected DOOH.Server.Models.DOOHDB.Country countriesForCountryNameValue;
-        protected async Task countriesForCountryNameLoadData(LoadDataArgs args)
+        protected int statesForStateNameCount;
+        protected DOOH.Server.Models.DOOHDB.State statesForStateNameValue;
+        protected async Task statesForStateNameLoadData(LoadDataArgs args)
         {
             try
             {
-                var result = await DOOHDBService.GetCountries(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(CountryName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                countriesForCountryName = result.Value.AsODataEnumerable();
-                countriesForCountryNameCount = result.Count;
+                var result = await DOOHDBService.GetStates(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(StateName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
+                statesForStateName = result.Value.AsODataEnumerable();
+                statesForStateNameCount = result.Count;
 
-                if (!object.Equals(state.CountryName, null))
+                if (!object.Equals(city.StateName, null))
                 {
-                    var valueResult = await DOOHDBService.GetCountries(filter: $"CountryName eq '{state.CountryName}'");
+                    var valueResult = await DOOHDBService.GetStates(filter: $"StateName eq '{city.StateName}'");
                     var firstItem = valueResult.Value.FirstOrDefault();
                     if (firstItem != null)
                     {
-                        countriesForCountryNameValue = firstItem;
+                        statesForStateNameValue = firstItem;
                     }
                 }
 
             }
             catch (System.Exception ex)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Country" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load State" });
             }
         }
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.CreateState(state);
-                DialogService.Close(state);
+                var result = await DOOHDBService.CreateCity(city);
+                DialogService.Close(city);
             }
             catch (Exception ex)
             {

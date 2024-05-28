@@ -2,16 +2,42 @@
 @page "/admin/settings/categories"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Categories> L
 
-@attribute [Authorize]
+@attribute [Authorize("Admin")]
 
 <PageTitle>Categories</PageTitle>
 <RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+    <RadzenColumn Size="6">
+        <RadzenStack Orientation="Orientation.Horizontal">
+            <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="6">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+            <RadzenButton Icon="add" Text="Add Category" ButtonStyle="ButtonStyle.Primary" Click="@AddCategoryClick" />
+        </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Category" Data="@categories" AllowPaging="true" LoadData="@categoriesLoadData" Count="@categoriesCount" IsLoading="@isCategoriesLoading">
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Category" Data="@categories" AllowPaging="true" LoadData="@categoriesLoadData" Count="@categoriesCount" IsLoading="@isCategoriesLoading" WrapItems="true">
     <Template>
-        @context.CategoryName
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <div style="@($"border-radius: 4rem; width: 36px; height: 36px; {(String.IsNullOrEmpty(context.CategoryColor) ? "" : $"background-color: {context.CategoryColor}")}")">
+                </div>
+                <RadzenStack Gap="0.25rem" JustifyContent="JustifyContent.Center">
+                    <RadzenText Text="@context.CategoryName" TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-weight:500" />
+                    <RadzenText Text="@context.CategoryDescription" TextStyle="Radzen.Blazor.TextStyle.Caption" Visible="@(!String.IsNullOrEmpty(context.CategoryDescription))" class="rz-mb-0" />
+                </RadzenStack>
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenColumn>
+                    <RadzenText Text="Commission" TextStyle="TextStyle.Caption" class="rz-mb-0" />
+                    <RadzenText Text="@($"{(context.Commission ?? 0):F2}%")" TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-weight:500" />
+                </RadzenColumn>
+                <RadzenSplitButton Icon="more_vert" ButtonStyle="ButtonStyle.Light" Click="@((args) => MoreVertClick(args, context))">
+                    <RadzenSplitButtonItem Text="Edit" Icon="edit" />
+                    <RadzenSplitButtonItem Text="Delete" Icon="delete" />
+                </RadzenSplitButton>
+            </RadzenStack>
+        </RadzenStack>
     </Template>
 </RadzenDataList>

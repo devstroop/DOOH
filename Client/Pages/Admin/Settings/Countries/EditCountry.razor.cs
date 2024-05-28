@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Settings.Countries
 {
     public partial class EditCountry
     {
@@ -37,21 +37,21 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            country = await DOOHDBService.GetCountryByCountryName(countryName:CountryName);
+            country = await DOOHDBService.GetCountryByCountryName(countryName: CountryName);
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Country country;
+        protected Server.Models.DOOHDB.Country country;
 
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.UpdateCountry(countryName:CountryName, country);
+                var result = await DOOHDBService.UpdateCountry(countryName: CountryName, country);
                 if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    hasChanges = true;
+                    canEdit = false;
+                    return;
                 }
                 DialogService.Close(country);
             }
@@ -79,7 +79,7 @@ namespace DOOH.Client.Pages
             hasChanges = false;
             canEdit = true;
 
-            country = await DOOHDBService.GetCountryByCountryName(countryName:CountryName);
+            country = await DOOHDBService.GetCountryByCountryName(countryName: CountryName);
         }
     }
 }

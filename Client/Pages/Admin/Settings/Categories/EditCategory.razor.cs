@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Settings.Categories
 {
-    public partial class AddCountry
+    public partial class EditCategory
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -32,19 +32,28 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        [Parameter]
+        public int CategoryId { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            country = new DOOH.Server.Models.DOOHDB.Country();
+            category = await DOOHDBService.GetCategoryByCategoryId(categoryId:CategoryId);
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Country country;
+        protected DOOH.Server.Models.DOOHDB.Category category;
 
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.CreateCountry(country);
-                DialogService.Close(country);
+                var result = await DOOHDBService.UpdateCategory(categoryId:CategoryId, category);
+                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                {
+                     hasChanges = true;
+                     canEdit = false;
+                     return;
+                }
+                DialogService.Close(category);
             }
             catch (Exception ex)
             {
@@ -63,5 +72,14 @@ namespace DOOH.Client.Pages
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+
+        protected async Task ReloadButtonClick(MouseEventArgs args)
+        {
+            hasChanges = false;
+            canEdit = true;
+
+            category = await DOOHDBService.GetCategoryByCategoryId(categoryId:CategoryId);
+        }
     }
 }

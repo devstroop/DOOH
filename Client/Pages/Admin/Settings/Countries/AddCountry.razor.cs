@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Settings.Countries
 {
-    public partial class AddCategory
+    public partial class AddCountry
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -34,17 +34,17 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            category = new DOOH.Server.Models.DOOHDB.Category();
+            country = new Server.Models.DOOHDB.Country();
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Category category;
+        protected Server.Models.DOOHDB.Country country;
 
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.CreateCategory(category);
-                DialogService.Close(category);
+                var result = await DOOHDBService.CreateCountry(country);
+                DialogService.Close(country);
             }
             catch (Exception ex)
             {

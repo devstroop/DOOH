@@ -1,11 +1,11 @@
-@page "/categories"
+@page "/admin/settings/states"
 
-@attribute [Authorize]
-<PageTitle>Categories</PageTitle>
+@attribute [Authorize("Admin")]
+<PageTitle>States</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
         <RadzenColumn Size="12" SizeMD="6">
-            <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+            <RadzenText Text="States" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
@@ -21,22 +21,18 @@
     <RadzenRow>
       <RadzenColumn SizeMD=12>
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@categories" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Category" RowDoubleClick="@EditRow">
+            Data="@states" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.State" RowDoubleClick="@EditRow">
             <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Category" Property="CategoryId" Title="Category Id">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.State" Property="StateName" Title="State Name">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Category" Property="CategoryName" Title="Category Name">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.State" Property="Country.CountryName" Title="Country">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Category" Property="Commission" Title="Commission">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Category" Property="CategoryDescription" Title="Category Description">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Category" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                    <Template Context="category">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.State" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="state">
 
                         <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
                             Shade="Shade.Lighter" Variant="Variant.Flat"
-                            Click=@(args => GridDeleteButtonClick(args, category)) @onclick:stopPropagation="true" />
+                            Click=@(args => GridDeleteButtonClick(args, state)) @onclick:stopPropagation="true" />
                     </Template>
                 </RadzenDataGridColumn>
             </Columns>

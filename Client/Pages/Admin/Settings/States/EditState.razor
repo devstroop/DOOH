@@ -1,7 +1,5 @@
-@page "/edit-category"
-
-@attribute [Authorize]
-<PageTitle>Edit Category</PageTitle>
+@attribute [Authorize("Admin")]
+<PageTitle>Edit State</PageTitle>
 <RadzenRow>
     <RadzenColumn SizeMD="9">
     <RadzenLabel style="font-weight: bold" Text="Item no longer available." Visible="@(!canEdit)" />
@@ -20,30 +18,25 @@
 </RadzenRow>
 
     <RadzenColumn SizeMD=12>
-        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Category</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Category" Data="@category" Visible="@(category != null && canEdit)" Submit="@FormSubmit">
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save State</RadzenAlert>
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.State" Data="@state" Visible="@(state != null && canEdit)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Category Name" Component="CategoryName" style="width: 100%" />
+                    <RadzenLabel Text="State Name" Component="StateName" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@category.CategoryName" Name="CategoryName" />
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@state.StateName" Name="StateName" />
+                    <RadzenRequiredValidator Component="StateName" Text="StateName is required" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Commission" Component="Commission" style="width: 100%" />
+                    <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@category.Commission" Name="Commission" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Category Description" Component="CategoryDescription" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@category.CategoryDescription" Name="CategoryDescription" />
+                    <RadzenDropDownDataGrid Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
+                         Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@state.CountryName" Name="CountryName"
+                        SelectedValue=@countriesForCountryNameValue Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
                 </RadzenColumn>
             </RadzenRow>
           <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
