@@ -19,9 +19,9 @@ namespace DOOH.Client.Components
 
 
         Dictionary<VideoEvents, VideoStateOptions> options = new Dictionary<VideoEvents, VideoStateOptions>();
-        VideoState videoState;
+        VideoState videoState { get; set; }
         string PausePlayText = "Pause";
-        BlazoredVideo video;
+        BlazoredVideo video { get; set; }
         string id;
 
         [Inject]
@@ -44,21 +44,22 @@ namespace DOOH.Client.Components
                 true => "Play",
                 _ => "Pause"
             };
+            this.videoState = videoState;
             StateHasChanged();
         }
 
-        async Task PlayOrPause(BlazoredVideo video)
-        {
-            if (await video.GetPausedAsync())
-            {
-                await video.StartPlayback();
-            }
-            else
-            {
-                await video.PausePlayback();
-                DialogService.Close(id);
-            }
-        }
+        //async Task PlayOrPause(BlazoredVideo video)
+        //{
+        //    if (await video.GetPausedAsync())
+        //    {
+        //        await video.StartPlayback();
+        //    }
+        //    else
+        //    {
+        //        await video.PausePlayback();
+        //        DialogService.Close(id);
+        //    }
+        //}
 
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

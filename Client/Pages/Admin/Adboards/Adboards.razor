@@ -1,46 +1,136 @@
-﻿@layout AdminLayout
+@layout AdminLayout
 @page "/admin/adboards"
 
 @attribute [Authorize]
 
 <PageTitle>Adboards</PageTitle>
 <RadzenRow>
-    <RadzenColumn Size="12">
+    <RadzenColumn Size="6">
         <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
     </RadzenColumn>
+    <RadzenColumn Size="6">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+            <RadzenButton Text="Refresh" Icon="refresh" ButtonStyle="ButtonStyle.Light" Click="@RefreshClick" />
+            <RadzenButton Text="Add Adboard" Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddAdboardClick" />
+        </RadzenStack>
+    </RadzenColumn>
 </RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
+<RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+<RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
     <Template>
-        <RadzenRow Style="min-width: 400px">
-            <ImageComponent Path="@context.Image" />
+        <RadzenRow Style="width: 600px">
+            <ImageComponent Path="@context.Image" Style="width: 165px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px" />
             <RadzenColumn>
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
-                    <RadzenBadge Text="@context.Category.CategoryName" Style="@(String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}")" />
+                <RadzenRow>
+                    <RadzenColumn>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" class="rz-mb-1">
+                            <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
+                            <RadzenStack Orientation="Orientation.Horizontal" Gap="05" AlignItems="AlignItems.Center">
+                                <RadzenIcon Icon="fiber_manual_record" IconStyle="@(context.IsActive ? IconStyle.Success : IconStyle.Danger)" Style="font-size: 12px;filter: saturate(4) drop-shadow(1px 1px 2px var(--rz-success));" />
+                                <RadzenText Text="Online" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: 500" />
+                            </RadzenStack>
+                        </RadzenStack>
+                        <RadzenStack class="rz-mb-2" Gap="0" AlignItems="AlignItems.Start">
+                            <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Start">
+                                <RadzenText Text="@(String.IsNullOrEmpty(context.Address) ? "NA" : context.Address)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0" />
+                                <RadzenBadge Text="@context.Category.CategoryName" Style="@((String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}"))" class="rz-py-05 rz-px-1" />
+                            </RadzenStack>
+                            <RadzenText Text="@($"{context.CityName} {context.StateName}")" TextStyle="TextStyle.Overline" />
+
+                        </RadzenStack>
+                    </RadzenColumn>
+                    <RadzenColumn>
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                            @* <RadzenSwitch @bind-Value="@context.IsActive" Change="@((args) => ToggleAdboardIsActive(args, context))" /> *@
+                            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Click="@((args) => DetailsSplitButtonClicked(args, context))" Size="Radzen.ButtonSize.Small">
+                                <RadzenSplitButtonItem Text="Edit" Icon="edit" />
+                                <RadzenSplitButtonItem Text="Delete" Icon="delete" />
+                            </RadzenSplitButton>
+                        </RadzenStack>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenColumn SizeMD="6">
+                        <table>
+                            <tr>
+                                <td>
+                                    <RadzenText Text="Rate (Base)" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                                </td>
+                                <td>
+                                    <RadzenText Text="@($"₹{(context.BaseRatePerSecond ?? 0):F2}/s")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <RadzenText Text="Model" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                                </td>
+                                <td>
+                                    <RadzenText Text="@(context.AdboardModel.Model)" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top">
+                                    <RadzenText Text="Display" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                                </td>
+                                <td>
+                                    <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                        <RadzenText Text="@($"{context.AdboardModel.Display.Brand.BrandName} {context.AdboardModel.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                        <RadzenText Text="@($"Size: {context.AdboardModel.Display.ScreenWidth}x{context.AdboardModel.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                        <RadzenText Text="@($"S/N: {context.DisplaySerial}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                    </RadzenStack>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align: top">
+                                    <RadzenText Text="Motherboard" TextStyle="TextStyle.Caption" class="rz-mb-05 rz-mr-2" />
+                                </td>
+                                <td>
+                                    <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                        <RadzenText Text="@($"{context.AdboardModel.Motherboard.Brand.BrandName} {context.AdboardModel.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                        <RadzenText Text="@($"S/N: {context.MotherboardSerial}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                    </RadzenStack>
+                                </td>
+                            </tr>
+                            @* <tr>
+                            <td>
+                            <RadzenText Text="City" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                            </td>
+                            <td>
+                            <RadzenText Text="@(context.CityName ?? "NA")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                            </td>
+                            </tr>
+                            <tr>
+                            <td>
+                            <RadzenText Text="State" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                            </td>
+                            <td>
+                            <RadzenText Text="@(context.StateName ?? "NA")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                            </td>
+                            </tr> *@
+                        </table>
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="6">
+                        <RadzenGoogleMap ApiKey="AIzaSyD5TVLwuVu0NHEaJA3hEdlpHqnM4StGGNE" Zoom="15" Center="@(new GoogleMapPosition() { Lat = context.Latitude ?? 0, Lng = context.Longitude ?? 0 })">
+                            <Markers>
+                                <RadzenGoogleMapMarker Title="@($"#{context.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = context.Latitude ?? 0, Lng = context.Longitude ?? 0 })" />
+                            </Markers>
+                        </RadzenGoogleMap>
+                    </RadzenColumn>
+                </RadzenRow>
+                @* <RadzenRow class="rz-mt-3">
+                <RadzenColumn>
+
+                </RadzenColumn>
+                <RadzenColumn>
+                <RadzenStack Orientation="Orientation.Horizontal">
                 </RadzenStack>
-
-                <RadzenText Text="@($"{(!String.IsNullOrEmpty(context.Address) ? $"{context.Address}, " : "")} {context.CityName}")" TextStyle="TextStyle.Subtitle1" class="rz-mb-0" />
-
-                <RadzenRow>
-                    <RadzenColumn Size="3">
-                        <RadzenText Text="Rate (Base):" TextStyle="TextStyle.Body1" class="rz-mb-0" />
-                    </RadzenColumn>
-                    <RadzenColumn Size="9">
-                        <RadzenText Text="@($"₹{(context.BaseRatePerSecond ?? 0):F2}/s")" TextStyle="TextStyle.Body1" class="rz-mb-0" />
-                    </RadzenColumn>
-                </RadzenRow>
-                <RadzenRow>
-                    <RadzenColumn Size="5"></RadzenColumn>
-                    <RadzenColumn Size="7"></RadzenColumn>
-                </RadzenRow>
+                </RadzenColumn>
+                <RadzenColumn>
+                <RadzenStack Orientation="Orientation.Horizontal">
+                </RadzenStack>
+                </RadzenColumn>
+                </RadzenRow> *@
             </RadzenColumn>
-
-            @* <RadzenStack JustifyContent="JustifyContent.End">
-            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Style="margin-left: auto" Click="@((args) => DetailsSplitButtonClicked(args, context))">
-            <RadzenSplitButtonItem Text="Edit" Icon="edit" />
-            <RadzenSplitButtonItem Text="Delete" Icon="delete" />
-            </RadzenSplitButton>
-            </RadzenStack> *@
         </RadzenRow>
     </Template>
 </RadzenDataList>

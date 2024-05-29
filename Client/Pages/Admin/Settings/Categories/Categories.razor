@@ -19,7 +19,7 @@
 </RadzenRow>
 <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Category" Data="@categories" AllowPaging="true" LoadData="@categoriesLoadData" Count="@categoriesCount" IsLoading="@isCategoriesLoading" WrapItems="true">
     <Template>
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="width:400px">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                 <div style="@($"border-radius: 4rem; width: 36px; height: 36px; {(String.IsNullOrEmpty(context.CategoryColor) ? "" : $"background-color: {context.CategoryColor}")}")">
                 </div>

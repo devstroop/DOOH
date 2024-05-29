@@ -2,7 +2,7 @@
 
 namespace DOOH.Client.Components
 {
-    public partial class Lottie
+    public partial class LottieComponent
     {
         [Parameter]
         public required string Src { get; set; }

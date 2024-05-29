@@ -1,9 +1,14 @@
-﻿<RadzenImage Path="@Path" Style="@Style" />
+<RadzenImage Path="@Path" Style="@_Style" />
 @code {
     [Parameter]
     public string Path { get; set; }
 
     [Parameter]
-    public string Style { get; set; } = "min-width: 120px; min-height: 120px; width: 120px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px";
+    public string Style { get; set; }
 
+    [Parameter]
+    public bool Disable { get; set; } = false;
+
+
+    private string _Style => Disable ? $"{Style}; filter: grayscale(100%) opacity(50%)  drop-shadow(4px 4px 5px gray);" : Style;
 }

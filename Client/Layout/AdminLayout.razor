@@ -3,59 +3,63 @@
 <RadzenNotification />
 <RadzenTooltip />
 <RadzenContextMenu />
-<RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
-    <RadzenHeader>
-        <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenColumn Size="5">
-                <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
-            </RadzenColumn>
-            <RadzenColumn Size="7">
-                <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
-                        <ChildContent>
 
-                            <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
-                            <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
-                        </ChildContent>
-                        <Template>
-                            @Security.User?.Name
-                            <RadzenGravatar Email="@Security.User?.Name" />
-                        </Template>
-                    </RadzenProfileMenu>
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenHeader>
-    <RadzenBody Expanded="@sidebarExpanded">
-        <RadzenRow class="rz-mx-auto rz-px-4 rz-pt-2 rz-pt-md-4 rz-pt-lg-6 rz-pt-xl-12 rz-pb-2 rz-pb-lg-12" Style="max-width: 1440px;">
-            <RadzenColumn Size="12">
-                @Body
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenBody>
-    <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 270px">
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-            <a href="/"><RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
-        </RadzenStack>
-        <RadzenPanelMenu>
-            <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
-            <RadzenPanelMenuItem Text="Accounts" Icon="group" Path="#" />
-            <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
-                <RadzenPanelMenuItem Text="Models" Path="/admin/adboards/models" />
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
-                <RadzenPanelMenuItem Text="Roles" Path="/admin/users/application-roles" />
-            </RadzenPanelMenuItem>
-            <RadzenPanelMenuItem Text="Settings" Icon="settings">
-                <RadzenPanelMenuItem Text="Categories" Path="/admin/settings/categories" />
-                <RadzenPanelMenuItem Text="Cities" Path="/admin/settings/cities" />
-                <RadzenPanelMenuItem Text="States" Path="/admin/settings/states" />
-                <RadzenPanelMenuItem Text="Countries" Path="/admin/settings/countries" />
-            </RadzenPanelMenuItem>
-        </RadzenPanelMenu>
-        <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
-            <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-            <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-        </RadzenStack>
-    </RadzenSidebar>
-</RadzenLayout>
+<CascadingValue Value="@this">
+    @* <LoadingComponent Visible="@ShowLoading" Style="width: 100%; height: 100%" /> *@
+    <RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'" Visible="!ShowLoading">
+        <RadzenHeader>
+            <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
+                <RadzenColumn Size="5">
+                    <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+                </RadzenColumn>
+                <RadzenColumn Size="7">
+                    <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                        <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
+                            <ChildContent>
+
+                                <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
+                                <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                            </ChildContent>
+                            <Template>
+                                @Security.User?.Name
+                                <RadzenGravatar Email="@Security.User?.Name" />
+                            </Template>
+                        </RadzenProfileMenu>
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenHeader>
+        <RadzenBody Expanded="@sidebarExpanded">
+            <RadzenRow class="rz-mx-auto rz-px-4 rz-pt-2 rz-pt-md-4 rz-pt-lg-6 rz-pt-xl-12 rz-pb-2 rz-pb-lg-12" Style="max-width: 1440px;">
+                <RadzenColumn Size="12">
+                    @Body
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenBody>
+        <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 255px">
+            <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
+                <a href="/"><RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
+            </RadzenStack>
+            <RadzenPanelMenu>
+                <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
+                <RadzenPanelMenuItem Text="Accounts" Icon="group" Path="#" />
+                <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
+                    <RadzenPanelMenuItem Text="Models" Path="/admin/adboards/models" />
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
+                    <RadzenPanelMenuItem Text="Roles" Path="/admin/users/application-roles" />
+                </RadzenPanelMenuItem>
+                <RadzenPanelMenuItem Text="Settings" Icon="settings">
+                    <RadzenPanelMenuItem Text="Categories" Path="/admin/settings/categories" />
+                    <RadzenPanelMenuItem Text="Cities" Path="/admin/settings/cities" />
+                    <RadzenPanelMenuItem Text="States" Path="/admin/settings/states" />
+                    <RadzenPanelMenuItem Text="Countries" Path="/admin/settings/countries" />
+                </RadzenPanelMenuItem>
+            </RadzenPanelMenu>
+            <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
+                <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            </RadzenStack>
+        </RadzenSidebar>
+    </RadzenLayout>
+</CascadingValue>

@@ -37,6 +37,8 @@ namespace DOOH.Client.Layout
         [Inject]
         protected SecurityService Security { get; set; }
 
+        public bool ShowLoading { get; set; } = false;
+
         void SidebarToggleClick()
         {
             sidebarExpanded = !sidebarExpanded;
