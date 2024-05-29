@@ -52,7 +52,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            Layout.ShowLoading = true;
+            //Layout.ShowLoading = true;
         }
 
 
@@ -80,7 +80,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
             finally
             {
                 isAdboardsLoading = false;
-                Layout.ShowLoading = false;
             }
         }
 

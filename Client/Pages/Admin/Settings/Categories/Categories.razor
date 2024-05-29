@@ -13,7 +13,7 @@
     </RadzenColumn>
     <RadzenColumn Size="6">
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-            <RadzenButton Icon="add" Text="Add Category" ButtonStyle="ButtonStyle.Primary" Click="@AddCategoryClick" />
+            <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddCategoryClick" />
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
@@ -33,7 +33,7 @@
                     <RadzenText Text="Commission" TextStyle="TextStyle.Caption" class="rz-mb-0" />
                     <RadzenText Text="@($"{(context.Commission ?? 0):F2}%")" TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-weight:500" />
                 </RadzenColumn>
-                <RadzenSplitButton Icon="more_vert" ButtonStyle="ButtonStyle.Light" Click="@((args) => MoreVertClick(args, context))">
+                <RadzenSplitButton Icon="more_vert" ButtonStyle="ButtonStyle.Light" Size="Radzen.ButtonSize.Small" Click="@((args) => MoreVertClick(args, context))">
                     <RadzenSplitButtonItem Text="Edit" Icon="edit" />
                     <RadzenSplitButtonItem Text="Delete" Icon="delete" />
                 </RadzenSplitButton>
