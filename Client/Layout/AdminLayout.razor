@@ -38,13 +38,15 @@
         </RadzenBody>
         <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 255px">
             <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-                <a href="/"><RadzenImage Path="images\LOGO-DARK-GREEN.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
+                <a href="/"><RadzenImage Path="images\LOGO-DARK-BLUE.png" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
             </RadzenStack>
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
                 <RadzenPanelMenuItem Text="Accounts" Icon="group" Path="#" />
                 <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
                     <RadzenPanelMenuItem Text="Models" Path="/admin/adboards/models" />
+                    <RadzenPanelMenuItem Text="Wifis" Path="/admin/adboards/wifis" />
+                    <RadzenPanelMenuItem Text="Networks" Path="/admin/adboards/networks" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
                     <RadzenPanelMenuItem Text="Roles" Path="/admin/users/application-roles" />

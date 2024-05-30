@@ -8,7 +8,7 @@
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" Class="rz-px-4" Style="height: 100%;">
             <RadzenColumn Size="6">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="1rem">
-                    <a href="/"><RadzenImage Path="images\LOGO-WHITE-GREEN.png" style="height: 24px"></RadzenImage></a>
+                    <a href="/"><RadzenImage Path="images\LOGO-DARK-BLUE.png" style="height: 32px"></RadzenImage></a>
 
                     @* <RadzenMenu>
                         <RadzenMenuItem Text="Home" Path="" />
@@ -19,7 +19,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
                     @if (Security.IsAuthenticated())
                     {
-                        <RadzenButton Text="Dashboard" Click="@DashboardClick" />
+                        <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="ButtonSize.Small"/>
                         <RadzenProfileMenu Click="@ProfileMenuClick">
                             <ChildContent>
                                 <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />

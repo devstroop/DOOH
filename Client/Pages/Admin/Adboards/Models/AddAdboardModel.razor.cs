@@ -9,9 +9,9 @@ using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Adboards.Models
 {
-    public partial class EditAdboardModel
+    public partial class AddAdboardModel
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -33,12 +33,9 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        [Parameter]
-        public int AdboardModelId { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
-            adboardModel = await DOOHDBService.GetAdboardModelByAdboardModelId(adboardModelId:AdboardModelId);
+            adboardModel = new DOOH.Server.Models.DOOHDB.AdboardModel();
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.AdboardModel adboardModel;
@@ -134,13 +131,7 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.UpdateAdboardModel(adboardModelId:AdboardModelId, adboardModel);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
-                {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
-                }
+                var result = await DOOHDBService.CreateAdboardModel(adboardModel);
                 DialogService.Close(adboardModel);
             }
             catch (Exception ex)
@@ -160,15 +151,6 @@ namespace DOOH.Client.Pages
 
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            adboardModel = await DOOHDBService.GetAdboardModelByAdboardModelId(adboardModelId:AdboardModelId);
-        }
 
         DOOH.Client.Components.UploadComponent uploadBrandLogo;
 

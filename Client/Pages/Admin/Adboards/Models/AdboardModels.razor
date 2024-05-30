@@ -1,19 +1,20 @@
-@page "/adboard-models"
+@layout AdminLayout
+@page "/admin/adboards/models"
 
 @attribute [Authorize]
-<PageTitle>AdboardModels</PageTitle>
+<PageTitle>Models (Adboard)</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
         <RadzenColumn Size="12" SizeMD="6">
-            <RadzenText Text="AdboardModels" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+            <RadzenText Text="Models (Adboard)" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                @* <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
                     <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
                     <RadzenSplitButtonItem Text="CSV" Value="csv" />
-                </RadzenSplitButton>
-                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+                </RadzenSplitButton> *@
+                <RadzenButton Icon="add" Click="@AddButtonClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
@@ -23,7 +24,7 @@
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@adboardModels" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.AdboardModel" RowDoubleClick="@EditRow">
             <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardModel" Property="AdboardModelId" Title="Adboard Model Id">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardModel" Property="AdboardModelId" Title="Id">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardModel" Property="Model" Title="Model">
                 </RadzenDataGridColumn>

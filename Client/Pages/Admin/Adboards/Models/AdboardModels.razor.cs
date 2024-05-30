@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Adboards.Models
 {
-    public partial class Adboards
+    public partial class AdboardModels
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -33,9 +33,9 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.AdboardModel> adboardModels;
 
-        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Adboard> grid0;
+        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.AdboardModel> grid0;
         protected int count;
 
         protected string search = "";
@@ -56,35 +56,35 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.GetAdboards(filter: $@"(contains(DisplaySerial,""{search}"") or contains(MotherboardSerial,""{search}"") or contains(AttachmentKey,""{search}"") or contains(Address,""{search}"") or contains(CityName,""{search}"") or contains(StateName,""{search}"") or contains(CountryName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "AdboardModel,Provider,Category,Attachment,City,State,Country", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-                adboards = result.Value.AsODataEnumerable();
+                var result = await DOOHDBService.GetAdboardModels(filter: $@"(contains(Model,""{search}"") or contains(AttachmentKey,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "Attachment,Display,Motherboard", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+                adboardModels = result.Value.AsODataEnumerable();
                 count = result.Count;
             }
             catch (System.Exception ex)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Adboards" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load AdboardModels" });
             }
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<AddAdboard>("Add Adboard", null);
+            await DialogService.OpenAsync<AddAdboardModel>("Add AdboardModel", null);
             await grid0.Reload();
         }
 
-        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Adboard> args)
+        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.AdboardModel> args)
         {
-            await DialogService.OpenAsync<EditAdboard>("Edit Adboard", new Dictionary<string, object> { {"AdboardId", args.Data.AdboardId} });
+            await DialogService.OpenAsync<EditAdboardModel>("Edit AdboardModel", new Dictionary<string, object> { {"AdboardModelId", args.Data.AdboardModelId} });
             await grid0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Adboard adboard)
+        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.AdboardModel adboardModel)
         {
             try
             {
                 if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
                 {
-                    var deleteResult = await DOOHDBService.DeleteAdboard(adboardId:adboard.AdboardId);
+                    var deleteResult = await DOOHDBService.DeleteAdboardModel(adboardModelId:adboardModel.AdboardModelId);
 
                     if (deleteResult != null)
                     {
@@ -98,7 +98,7 @@ namespace DOOH.Client.Pages
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = $"Error",
-                    Detail = $"Unable to delete Adboard"
+                    Detail = $"Unable to delete AdboardModel"
                 });
             }
         }
@@ -107,24 +107,24 @@ namespace DOOH.Client.Pages
         {
             if (args?.Value == "csv")
             {
-                await DOOHDBService.ExportAdboardsToCSV(new Query
+                await DOOHDBService.ExportAdboardModelsToCSV(new Query
 {
     Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
     OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "AdboardModel,Provider,Category,Attachment,City,State,Country",
+    Expand = "Attachment,Display,Motherboard",
     Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Adboards");
+}, "AdboardModels");
             }
 
             if (args == null || args.Value == "xlsx")
             {
-                await DOOHDBService.ExportAdboardsToExcel(new Query
+                await DOOHDBService.ExportAdboardModelsToExcel(new Query
 {
     Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
     OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "AdboardModel,Provider,Category,Attachment,City,State,Country",
+    Expand = "Attachment,Display,Motherboard",
     Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Adboards");
+}, "AdboardModels");
             }
         }
     }

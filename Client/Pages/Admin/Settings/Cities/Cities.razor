@@ -10,11 +10,11 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                @* <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
                     <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
                     <RadzenSplitButtonItem Text="CSV" Value="csv" />
-                </RadzenSplitButton>
-                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+                </RadzenSplitButton> *@
+                <RadzenButton Icon="add" Click="@AddButtonClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
@@ -22,7 +22,7 @@
     <RadzenRow>
       <RadzenColumn SizeMD=12>
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@cities" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.City" RowDoubleClick="@EditRow">
+            Data="@cities" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.City">
             <Columns>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.City" Property="CityName" Title="City Name">
                 </RadzenDataGridColumn>
