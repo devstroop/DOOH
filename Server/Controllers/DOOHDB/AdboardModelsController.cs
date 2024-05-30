@@ -126,7 +126,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment,Display,Motherboard");
+                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
                 this.OnAfterAdboardModelUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -167,7 +167,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment,Display,Motherboard");
+                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
                 this.OnAfterAdboardModelUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -203,7 +203,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == item.AdboardModelId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment,Display,Motherboard");
+                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
 
                 this.OnAfterAdboardModelCreated(item);
 

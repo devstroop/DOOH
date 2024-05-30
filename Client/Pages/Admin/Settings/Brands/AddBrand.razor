@@ -1,0 +1,33 @@
+@attribute [Authorize]
+<PageTitle>Add Brand</PageTitle>
+<RadzenColumn SizeMD=12>
+    <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Brand</RadzenAlert>
+    <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Brand" Data="@brand" Visible="@(brand != null && canEdit)" Submit="@FormSubmit">
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Brand Name" Component="BrandName" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@brand.BrandName" Name="BrandName" />
+                <RadzenRequiredValidator Component="BrandName" Text="BrandName is required" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Logo" Component="BrandLogo" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenStack>
+                    <RadzenImage Path="@brand.BrandLogo" style="width: auto; height: 64px" />
+                    <RadzenUpload Multiple="false" Url="/api/upload" />
+                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@brand.BrandLogo" Change="@((args) => StateHasChanged())" Name="BrandLogo" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+            <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick" />
+        </RadzenStack>
+    </RadzenTemplateForm>
+</RadzenColumn>
+

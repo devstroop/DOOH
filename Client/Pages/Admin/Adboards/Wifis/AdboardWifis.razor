@@ -1,0 +1,73 @@
+@layout AdminLayout
+@page "/admin/adboards/wifis"
+
+@attribute [Authorize]
+<PageTitle>Wifis (Adboard)</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Wifis (Adboard)" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                @* <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
+                <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
+                <RadzenSplitButtonItem Text="CSV" Value="csv" />
+                </RadzenSplitButton> *@
+                <RadzenButton Icon="add" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+    <RadzenRow>
+        <RadzenColumn SizeMD=12>
+            <RadzenDataGrid @ref="grid0" ColumnWidth="200px" AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+                            Data="@adboardWifis" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" RowDoubleClick="@EditRow">
+                <Columns>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="Adboard.AdboardId" Title="Adboard">
+                        <Template>
+                            <RadzenText Text="@($"#{context.AdboardId}")" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="SSID" Title="SSID">
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="Password" Title="Password">
+                        <Template Context="adboardWifi">
+                            ********
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="HasConnected" Title="Connected?">
+                        <Template Context="adboardWifi">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenIcon Icon="check" IconStyle="IconStyle.Success" Style="font-size: 1.5rem" Visible="@(adboardWifi.HasConnected == true)" />
+                                <RadzenIcon Icon="close" IconStyle="IconStyle.Danger" Style="font-size: 1.5rem" Visible="@(adboardWifi.HasConnected != true)" />
+                                <RadzenText Text="@($"{adboardWifi.ConnectedAt?.GetTimeAgo()}")" TextStyle="TextStyle.Overline" Visible="@(adboardWifi.HasConnected == true)" class="rz-mb-0" />
+                                <RadzenText Text="@($"not yet")" TextStyle="TextStyle.Overline" Visible="@(adboardWifi.HasConnected != true)" class="rz-mb-0" />
+                            </RadzenStack>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="CreatedAt" Title="Created At">
+                        <Template>
+                            <RadzenText Text="@context.CreatedAt.GetTimeAgo()" TextStyle="TextStyle.Overline" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Property="UpdatedAt" Title="Updated At">
+                        <Template>
+                            <RadzenText Text="@context.UpdatedAt?.GetTimeAgo()" TextStyle="TextStyle.Overline" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                        <Template Context="adboardWifi">
+
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                                          Shade="Shade.Lighter" Variant="Variant.Flat"
+                                          Click=@(args => GridDeleteButtonClick(args, adboardWifi)) @onclick:stopPropagation="true" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+
+            </RadzenDataGrid>
+
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

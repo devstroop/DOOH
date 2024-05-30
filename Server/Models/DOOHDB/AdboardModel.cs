@@ -29,11 +29,6 @@ namespace DOOH.Server.Models.DOOHDB
         public string Model { get; set; }
 
         [ConcurrencyCheck]
-        public string AttachmentKey { get; set; }
-
-        public Attachment Attachment { get; set; }
-
-        [ConcurrencyCheck]
         public int? DisplayId { get; set; }
 
         public Display Display { get; set; }
@@ -42,6 +37,9 @@ namespace DOOH.Server.Models.DOOHDB
         public int? MotherboardId { get; set; }
 
         public Motherboard Motherboard { get; set; }
+
+        [ConcurrencyCheck]
+        public string Image { get; set; }
 
         public ICollection<Adboard> Adboards { get; set; }
     }

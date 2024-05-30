@@ -12,7 +12,8 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddClick" Variant="Variant.Flat" />
+                <RadzenButton Icon="security" Click="@((args) => NavigationManager.NavigateTo("/admin/users/application-roles"))" Variant="Variant.Flat" />
+                <RadzenButton Icon="add" Click="@AddClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>

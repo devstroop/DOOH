@@ -263,7 +263,6 @@ namespace DOOH.Server
         {
             var items = Context.AdboardModels.AsQueryable();
 
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Display);
             items = items.Include(i => i.Motherboard);
 
@@ -296,7 +295,6 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.AdboardModelId == adboardmodelid);
 
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Display);
             items = items.Include(i => i.Motherboard);
  
@@ -1208,9 +1206,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Attachments
                               .Where(i => i.AttachmentKey == attachmentkey)
-                              .Include(i => i.AdboardModels)
                               .Include(i => i.Advertisements)
-                              .Include(i => i.Brands)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -1419,7 +1415,6 @@ namespace DOOH.Server
         {
             var items = Context.Brands.AsQueryable();
 
-            items = items.Include(i => i.Attachment);
 
             if (query != null)
             {
@@ -1450,7 +1445,6 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.BrandId == brandid);
 
-            items = items.Include(i => i.Attachment);
  
             OnGetBrandByBrandId(ref items);
 

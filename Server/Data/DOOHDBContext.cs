@@ -63,12 +63,6 @@ namespace DOOH.Server.Data
               .HasPrincipalKey(i => i.StateName);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardModel>()
-              .HasOne(i => i.Attachment)
-              .WithMany(i => i.AdboardModels)
-              .HasForeignKey(i => i.AttachmentKey)
-              .HasPrincipalKey(i => i.AttachmentKey);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardModel>()
               .HasOne(i => i.Display)
               .WithMany(i => i.AdboardModels)
               .HasForeignKey(i => i.DisplayId)
@@ -127,12 +121,6 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Billings)
               .HasForeignKey(i => i.TaxId)
               .HasPrincipalKey(i => i.TaxId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Brand>()
-              .HasOne(i => i.Attachment)
-              .WithMany(i => i.Brands)
-              .HasForeignKey(i => i.BrandLogo_AttachmentKey)
-              .HasPrincipalKey(i => i.AttachmentKey);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Adboard)

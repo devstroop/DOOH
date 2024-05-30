@@ -29,9 +29,7 @@ namespace DOOH.Server.Models.DOOHDB
         public string BrandName { get; set; }
 
         [ConcurrencyCheck]
-        public string BrandLogo_AttachmentKey { get; set; }
-
-        public Attachment Attachment { get; set; }
+        public string BrandLogo { get; set; }
 
         public ICollection<Display> Displays { get; set; }
 

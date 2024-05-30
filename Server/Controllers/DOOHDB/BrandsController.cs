@@ -127,7 +127,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Brands.Where(i => i.BrandId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment");
+                
                 this.OnAfterBrandUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -168,7 +168,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Brands.Where(i => i.BrandId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment");
+                
                 this.OnAfterBrandUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -204,7 +204,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Brands.Where(i => i.BrandId == item.BrandId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Attachment");
+                
 
                 this.OnAfterBrandCreated(item);
 

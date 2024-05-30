@@ -69,9 +69,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var items = this.context.Attachments
                     .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
-                    .Include(i => i.AdboardModels)
                     .Include(i => i.Advertisements)
-                    .Include(i => i.Brands)
                     .AsQueryable();
 
                 items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Attachment>(Request, items);

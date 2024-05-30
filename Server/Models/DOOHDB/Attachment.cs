@@ -63,10 +63,6 @@ namespace DOOH.Server.Models.DOOHDB
         [ConcurrencyCheck]
         public DateTime? UpdatedAt { get; set; }
 
-        public ICollection<AdboardModel> AdboardModels { get; set; }
-
         public ICollection<Advertisement> Advertisements { get; set; }
-
-        public ICollection<Brand> Brands { get; set; }
     }
 }

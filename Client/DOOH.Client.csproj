@@ -19,8 +19,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Pages\Adboard\" />
-	  <Folder Include="Pages\Admin\Adboards\Network\" />
-	  <Folder Include="Pages\Admin\Adboards\Wifi\" />
 	  <Folder Include="Pages\Provider\Adboards\" />
 	</ItemGroup>
 	<PropertyGroup>

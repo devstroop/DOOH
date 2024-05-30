@@ -1,0 +1,51 @@
+@layout AdminLayout
+@page "/admin/adboards/networks"
+
+@attribute [Authorize]
+<PageTitle>AdboardNetworks</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Networks (Adboard)" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+            Data="@adboardNetworks" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork">
+            <Columns>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="Adboard.AdboardId" Title="Adboard">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="PhysicalAddress" Title="Physical Address">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="LocalIP" Title="Local IP">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="PublicIP" Title="Public IP">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="Subnet" Title="Subnet">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="Gateway" Title="Gateway">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Property="DNS" Title="D N S">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.AdboardNetwork" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="adboardNetwork">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, adboardNetwork)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>
