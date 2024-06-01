@@ -13,7 +13,7 @@
 <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
     <Template>
         <RadzenStack Orientation="Orientation.Horizontal" Style="min-width: 400px">
-            <ImageComponent Path="@context.Image"/>
+            @* <ImageComponent Path="@context.Image"/> *@
             <RadzenStack Style="width: 100%">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
                     <RadzenStack Gap="0">

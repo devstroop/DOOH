@@ -46,6 +46,6 @@ namespace DOOH.Server.Models.DOOHDB
         [ConcurrencyCheck]
         public double? ScreenHeight { get; set; }
 
-        public ICollection<AdboardModel> AdboardModels { get; set; }
+        public ICollection<Adboard> Adboards { get; set; }
     }
 }

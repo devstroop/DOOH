@@ -5,16 +5,6 @@
         <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboard" Visible="@(adboard != null && canEdit)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Adboard Model" Component="AdboardModel" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenDropDownDataGrid Data="@adboardModelsForAdboardModelId" TextProperty="Model" ValueProperty="AdboardModelId" AllowClear=true
-                         Placeholder="Choose AdboardModel" style="display: block; width: 100%" @bind-Value="@adboard.AdboardModelId" Name="AdboardModelId"
-                        SelectedValue=@adboardModelsForAdboardModelIdValue Count=@adboardModelsForAdboardModelIdCount LoadData=@adboardModelsForAdboardModelIdLoadData />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Provider" Component="Provider" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
@@ -33,22 +23,46 @@
                         SelectedValue=@categoriesForCategoryIdValue Count=@categoriesForCategoryIdCount LoadData=@categoriesForCategoryIdLoadData />
                 </RadzenColumn>
             </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Display Serial" Component="DisplaySerial" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.DisplaySerial" Name="DisplaySerial" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Motherboard Serial" Component="MotherboardSerial" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.MotherboardSerial" Name="MotherboardSerial" />
-                </RadzenColumn>
-            </RadzenRow>
+
+
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Motherboard" Component="Motherboard" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@motherboardsForMotherboardId" TextProperty="Model" ValueProperty="MotherboardId" AllowClear=true
+                                        Placeholder="Choose Motherboard" style="display: block; width: 100%" @bind-Value="@adboard.MotherboardId" Name="MotherboardId"
+                                        SelectedValue=@motherboardsForMotherboardIdValue Count=@motherboardsForMotherboardIdCount LoadData=@motherboardsForMotherboardIdLoadData>
+                    <Template Context="data">
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.25rem">
+                            <RadzenText Text="@data.Brand?.BrandName" Visible="!String.IsNullOrEmpty(data.Brand?.BrandName)" class="rz-mb-0" />
+                            <RadzenText Text="@data.Model" class="rz-mb-0" />
+                        </RadzenStack>
+                    </Template>
+                </RadzenDropDownDataGrid>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Display" Component="Display" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid Data="@displaysForDisplayId" TextProperty="Model" ValueProperty="DisplayId" AllowClear=true
+                                        Placeholder="Choose Display" style="display: block; width: 100%" @bind-Value="@adboard.DisplayId" Name="DisplayId"
+                                        SelectedValue=@displaysForDisplayIdValue Count=@displaysForDisplayIdCount LoadData=@displaysForDisplayIdLoadData>
+                    <Template Context="data">
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.25rem">
+                            <RadzenText Text="@data.Brand?.BrandName" Visible="!String.IsNullOrEmpty(data.Brand?.BrandName)" class="rz-mb-0" />
+                            <RadzenText Text="@data.Model" class="rz-mb-0" />
+                        </RadzenStack>
+                    </Template>
+                </RadzenDropDownDataGrid>
+            </RadzenColumn>
+        </RadzenRow>
+
+
+
+
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Base Rate Per Second" Component="BaseRatePerSecond" style="width: 100%" />
@@ -59,10 +73,10 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Image" Component="Image" style="width: 100%" />
+                    <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
                 </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenTextBox @bind-Value="@adboard.Image" style="display: block; width: 100%" Name="Image" />
+                @* <RadzenTextBox @bind-Value="@adboard.Images" style="display: block; width: 100%" Name="Image" /> *@
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -124,23 +138,7 @@
                     <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenCheckBox @bind-Value="@adboard.IsActive" Name="IsActive" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Created At" Component="CreatedAt" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@adboard.CreatedAt" Name="CreatedAt" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Updated At" Component="UpdatedAt" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@adboard.UpdatedAt" Name="UpdatedAt" />
+                    <RadzenSwitch @bind-Value="@adboard.IsActive" Name="IsActive" />
                 </RadzenColumn>
             </RadzenRow>
           <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">

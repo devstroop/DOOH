@@ -69,6 +69,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var items = this.context.Adboards
                     .Where(i => i.AdboardId == key)
+                    .Include(i => i.AdboardImages)
                     .Include(i => i.AdboardNetworks)
                     .Include(i => i.AdboardWifis)
                     .Include(i => i.Analytics)
@@ -130,7 +131,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -171,7 +172,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -207,7 +208,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == item.AdboardId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "AdboardModel,Category,City,Country,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
 
                 this.OnAfterAdboardCreated(item);
 

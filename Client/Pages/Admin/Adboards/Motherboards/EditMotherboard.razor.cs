@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Models.Displays
+namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
 {
-    public partial class AddDisplay
+    public partial class EditMotherboard
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -32,12 +32,15 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        [Parameter]
+        public int MotherboardId { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            display = new DOOH.Server.Models.DOOHDB.Display();
+            motherboard = await DOOHDBService.GetMotherboardByMotherboardId(motherboardId:MotherboardId);
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Display display;
+        protected DOOH.Server.Models.DOOHDB.Motherboard motherboard;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Brand> brandsForBrandId;
 
@@ -52,9 +55,9 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
                 brandsForBrandId = result.Value.AsODataEnumerable();
                 brandsForBrandIdCount = result.Count;
 
-                if (!object.Equals(display.BrandId, null))
+                if (!object.Equals(motherboard.BrandId, null))
                 {
-                    var valueResult = await DOOHDBService.GetBrands(filter: $"BrandId eq {display.BrandId}");
+                    var valueResult = await DOOHDBService.GetBrands(filter: $"BrandId eq {motherboard.BrandId}");
                     var firstItem = valueResult.Value.FirstOrDefault();
                     if (firstItem != null)
                     {
@@ -72,8 +75,14 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
         {
             try
             {
-                var result = await DOOHDBService.CreateDisplay(display);
-                DialogService.Close(display);
+                var result = await DOOHDBService.UpdateMotherboard(motherboardId:MotherboardId, motherboard);
+                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                {
+                     hasChanges = true;
+                     canEdit = false;
+                     return;
+                }
+                DialogService.Close(motherboard);
             }
             catch (Exception ex)
             {
@@ -92,5 +101,14 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+
+        protected async Task ReloadButtonClick(MouseEventArgs args)
+        {
+            hasChanges = false;
+            canEdit = true;
+
+            motherboard = await DOOHDBService.GetMotherboardByMotherboardId(motherboardId:MotherboardId);
+        }
     }
 }

@@ -85,10 +85,11 @@ namespace DOOH.Server
         {
             var items = Context.Adboards.AsQueryable();
 
-            items = items.Include(i => i.AdboardModel);
             items = items.Include(i => i.Category);
             items = items.Include(i => i.City);
             items = items.Include(i => i.Country);
+            items = items.Include(i => i.Display);
+            items = items.Include(i => i.Motherboard);
             items = items.Include(i => i.Provider);
             items = items.Include(i => i.State);
 
@@ -121,10 +122,11 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.AdboardId == adboardid);
 
-            items = items.Include(i => i.AdboardModel);
             items = items.Include(i => i.Category);
             items = items.Include(i => i.City);
             items = items.Include(i => i.Country);
+            items = items.Include(i => i.Display);
+            items = items.Include(i => i.Motherboard);
             items = items.Include(i => i.Provider);
             items = items.Include(i => i.State);
  
@@ -215,6 +217,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Adboards
                               .Where(i => i.AdboardId == adboardid)
+                              .Include(i => i.AdboardImages)
                               .Include(i => i.AdboardNetworks)
                               .Include(i => i.AdboardWifis)
                               .Include(i => i.Analytics)
@@ -247,24 +250,23 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
-        public async Task ExportAdboardModelsToExcel(Query query = null, string fileName = null)
+        public async Task ExportAdboardImagesToExcel(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardmodels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardmodels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardimages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardimages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        public async Task ExportAdboardModelsToCSV(Query query = null, string fileName = null)
+        public async Task ExportAdboardImagesToCSV(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardmodels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardmodels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardimages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardimages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        partial void OnAdboardModelsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardModel> items);
+        partial void OnAdboardImagesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardImage> items);
 
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.AdboardModel>> GetAdboardModels(Query query = null)
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.AdboardImage>> GetAdboardImages(Query query = null)
         {
-            var items = Context.AdboardModels.AsQueryable();
+            var items = Context.AdboardImages.AsQueryable();
 
-            items = items.Include(i => i.Display);
-            items = items.Include(i => i.Motherboard);
+            items = items.Include(i => i.Adboard);
 
             if (query != null)
             {
@@ -280,42 +282,41 @@ namespace DOOH.Server
                 ApplyQuery(ref items, query);
             }
 
-            OnAdboardModelsRead(ref items);
+            OnAdboardImagesRead(ref items);
 
             return await Task.FromResult(items);
         }
 
-        partial void OnAdboardModelGet(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnGetAdboardModelByAdboardModelId(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardModel> items);
+        partial void OnAdboardImageGet(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnGetAdboardImageByAdboardImageId(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardImage> items);
 
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> GetAdboardModelByAdboardModelId(int adboardmodelid)
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> GetAdboardImageByAdboardImageId(int adboardimageid)
         {
-            var items = Context.AdboardModels
+            var items = Context.AdboardImages
                               .AsNoTracking()
-                              .Where(i => i.AdboardModelId == adboardmodelid);
+                              .Where(i => i.AdboardImageId == adboardimageid);
 
-            items = items.Include(i => i.Display);
-            items = items.Include(i => i.Motherboard);
+            items = items.Include(i => i.Adboard);
  
-            OnGetAdboardModelByAdboardModelId(ref items);
+            OnGetAdboardImageByAdboardImageId(ref items);
 
             var itemToReturn = items.FirstOrDefault();
 
-            OnAdboardModelGet(itemToReturn);
+            OnAdboardImageGet(itemToReturn);
 
             return await Task.FromResult(itemToReturn);
         }
 
-        partial void OnAdboardModelCreated(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelCreated(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageCreated(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageCreated(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> CreateAdboardModel(DOOH.Server.Models.DOOHDB.AdboardModel adboardmodel)
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> CreateAdboardImage(DOOH.Server.Models.DOOHDB.AdboardImage adboardimage)
         {
-            OnAdboardModelCreated(adboardmodel);
+            OnAdboardImageCreated(adboardimage);
 
-            var existingItem = Context.AdboardModels
-                              .Where(i => i.AdboardModelId == adboardmodel.AdboardModelId)
+            var existingItem = Context.AdboardImages
+                              .Where(i => i.AdboardImageId == adboardimage.AdboardImageId)
                               .FirstOrDefault();
 
             if (existingItem != null)
@@ -325,21 +326,21 @@ namespace DOOH.Server
 
             try
             {
-                Context.AdboardModels.Add(adboardmodel);
+                Context.AdboardImages.Add(adboardimage);
                 Context.SaveChanges();
             }
             catch
             {
-                Context.Entry(adboardmodel).State = EntityState.Detached;
+                Context.Entry(adboardimage).State = EntityState.Detached;
                 throw;
             }
 
-            OnAfterAdboardModelCreated(adboardmodel);
+            OnAfterAdboardImageCreated(adboardimage);
 
-            return adboardmodel;
+            return adboardimage;
         }
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> CancelAdboardModelChanges(DOOH.Server.Models.DOOHDB.AdboardModel item)
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> CancelAdboardImageChanges(DOOH.Server.Models.DOOHDB.AdboardImage item)
         {
             var entityToCancel = Context.Entry(item);
             if (entityToCancel.State == EntityState.Modified)
@@ -351,15 +352,15 @@ namespace DOOH.Server
             return item;
         }
 
-        partial void OnAdboardModelUpdated(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelUpdated(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageUpdated(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageUpdated(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> UpdateAdboardModel(int adboardmodelid, DOOH.Server.Models.DOOHDB.AdboardModel adboardmodel)
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> UpdateAdboardImage(int adboardimageid, DOOH.Server.Models.DOOHDB.AdboardImage adboardimage)
         {
-            OnAdboardModelUpdated(adboardmodel);
+            OnAdboardImageUpdated(adboardimage);
 
-            var itemToUpdate = Context.AdboardModels
-                              .Where(i => i.AdboardModelId == adboardmodel.AdboardModelId)
+            var itemToUpdate = Context.AdboardImages
+                              .Where(i => i.AdboardImageId == adboardimage.AdboardImageId)
                               .FirstOrDefault();
 
             if (itemToUpdate == null)
@@ -368,24 +369,23 @@ namespace DOOH.Server
             }
                 
             var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(adboardmodel);
+            entryToUpdate.CurrentValues.SetValues(adboardimage);
             entryToUpdate.State = EntityState.Modified;
 
             Context.SaveChanges();
 
-            OnAfterAdboardModelUpdated(adboardmodel);
+            OnAfterAdboardImageUpdated(adboardimage);
 
-            return adboardmodel;
+            return adboardimage;
         }
 
-        partial void OnAdboardModelDeleted(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelDeleted(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageDeleted(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageDeleted(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> DeleteAdboardModel(int adboardmodelid)
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> DeleteAdboardImage(int adboardimageid)
         {
-            var itemToDelete = Context.AdboardModels
-                              .Where(i => i.AdboardModelId == adboardmodelid)
-                              .Include(i => i.Adboards)
+            var itemToDelete = Context.AdboardImages
+                              .Where(i => i.AdboardImageId == adboardimageid)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -393,10 +393,10 @@ namespace DOOH.Server
                throw new Exception("Item no longer available");
             }
 
-            OnAdboardModelDeleted(itemToDelete);
+            OnAdboardImageDeleted(itemToDelete);
 
 
-            Context.AdboardModels.Remove(itemToDelete);
+            Context.AdboardImages.Remove(itemToDelete);
 
             try
             {
@@ -408,7 +408,7 @@ namespace DOOH.Server
                 throw;
             }
 
-            OnAfterAdboardModelDeleted(itemToDelete);
+            OnAfterAdboardImageDeleted(itemToDelete);
 
             return itemToDelete;
         }
@@ -2517,7 +2517,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Displays
                               .Where(i => i.DisplayId == displayid)
-                              .Include(i => i.AdboardModels)
+                              .Include(i => i.Adboards)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -2848,7 +2848,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Motherboards
                               .Where(i => i.MotherboardId == motherboardid)
-                              .Include(i => i.AdboardModels)
+                              .Include(i => i.Adboards)
                               .FirstOrDefault();
 
             if (itemToDelete == null)

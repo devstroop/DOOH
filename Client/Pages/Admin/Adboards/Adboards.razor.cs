@@ -62,7 +62,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
             {
                 isAdboardsLoading = true;
 
-                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "Category,AdboardModel($expand=Display($expand=Brand),Motherboard($expand=Brand))");
+                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "Category,Display($expand=Brand),Motherboard($expand=Brand)");
 
                 adboards = result.Value.AsODataEnumerable();
 

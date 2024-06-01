@@ -24,30 +24,25 @@ namespace DOOH.Server.Models.DOOHDB
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AdboardId { get; set; }
 
-        [Required]
-        [ConcurrencyCheck]
-        public int AdboardModelId { get; set; }
-
-        public AdboardModel AdboardModel { get; set; }
-
         [ConcurrencyCheck]
         public int? ProviderId { get; set; }
 
         public Provider Provider { get; set; }
 
         [ConcurrencyCheck]
+        public int? DisplayId { get; set; }
+
+        public Display Display { get; set; }
+
+        [ConcurrencyCheck]
+        public int? MotherboardId { get; set; }
+
+        public Motherboard Motherboard { get; set; }
+
+        [ConcurrencyCheck]
         public int? CategoryId { get; set; }
 
         public Category Category { get; set; }
-
-        [ConcurrencyCheck]
-        public string DisplaySerial { get; set; }
-
-        [ConcurrencyCheck]
-        public string MotherboardSerial { get; set; }
-
-        [ConcurrencyCheck]
-        public string Image { get; set; }
 
         [ConcurrencyCheck]
         public decimal? BaseRatePerSecond { get; set; }
@@ -84,6 +79,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         [ConcurrencyCheck]
         public DateTime? UpdatedAt { get; set; }
+
+        public ICollection<AdboardImage> AdboardImages { get; set; }
 
         public ICollection<AdboardNetwork> AdboardNetworks { get; set; }
 

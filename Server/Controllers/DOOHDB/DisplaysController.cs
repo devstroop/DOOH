@@ -69,7 +69,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var items = this.context.Displays
                     .Where(i => i.DisplayId == key)
-                    .Include(i => i.AdboardModels)
+                    .Include(i => i.Adboards)
                     .AsQueryable();
 
                 items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Display>(Request, items);

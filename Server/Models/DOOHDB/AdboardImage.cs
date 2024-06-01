@@ -7,8 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace DOOH.Server.Models.DOOHDB
 {
-    [Table("AdboardModel", Schema = "dbo")]
-    public partial class AdboardModel
+    [Table("AdboardImage", Schema = "dbo")]
+    public partial class AdboardImage
     {
 
         [NotMapped]
@@ -22,25 +22,16 @@ namespace DOOH.Server.Models.DOOHDB
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AdboardModelId { get; set; }
+        public int AdboardImageId { get; set; }
 
         [Required]
         [ConcurrencyCheck]
-        public string Model { get; set; }
+        public int AdboardId { get; set; }
 
-        [ConcurrencyCheck]
-        public int? DisplayId { get; set; }
+        public Adboard Adboard { get; set; }
 
-        public Display Display { get; set; }
-
-        [ConcurrencyCheck]
-        public int? MotherboardId { get; set; }
-
-        public Motherboard Motherboard { get; set; }
-
+        [Required]
         [ConcurrencyCheck]
         public string Image { get; set; }
-
-        public ICollection<Adboard> Adboards { get; set; }
     }
 }

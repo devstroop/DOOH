@@ -43,6 +43,6 @@ namespace DOOH.Server.Models.DOOHDB
         [ConcurrencyCheck]
         public string Rom { get; set; }
 
-        public ICollection<AdboardModel> AdboardModels { get; set; }
+        public ICollection<Adboard> Adboards { get; set; }
     }
 }

@@ -19,7 +19,7 @@
 <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
     <Template>
         <RadzenRow Style="width: 600px">
-            <ImageComponent Path="@context.Image" Style="width: 165px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px" />
+            @* <ImageComponent Path="@context.Image" Style="width: 165px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px" /> *@
             <RadzenColumn>
                 <RadzenRow>
                     <RadzenColumn>
@@ -61,22 +61,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <RadzenText Text="Model" TextStyle="TextStyle.Caption" class="rz-mb-05" />
-                                </td>
-                                <td>
-                                    <RadzenText Text="@(context.AdboardModel.Model)" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
-                                </td>
-                            </tr>
-                            <tr>
                                 <td style="vertical-align: top">
                                     <RadzenText Text="Display" TextStyle="TextStyle.Caption" class="rz-mb-05" />
                                 </td>
                                 <td>
                                     <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
-                                        <RadzenText Text="@($"{context.AdboardModel.Display.Brand.BrandName} {context.AdboardModel.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
-                                        <RadzenText Text="@($"Size: {context.AdboardModel.Display.ScreenWidth}x{context.AdboardModel.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
-                                        <RadzenText Text="@($"S/N: {context.DisplaySerial}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                        <RadzenText Text="@($"{context.Display.Brand.BrandName} {context.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                        <RadzenText Text="@($"Size: {context.Display.ScreenWidth}x{context.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
                                     </RadzenStack>
                                 </td>
                             </tr>
@@ -86,8 +77,7 @@
                                 </td>
                                 <td>
                                     <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
-                                        <RadzenText Text="@($"{context.AdboardModel.Motherboard.Brand.BrandName} {context.AdboardModel.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
-                                        <RadzenText Text="@($"S/N: {context.MotherboardSerial}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                        <RadzenText Text="@($"{context.Motherboard.Brand.BrandName} {context.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
                                     </RadzenStack>
                                 </td>
                             </tr>

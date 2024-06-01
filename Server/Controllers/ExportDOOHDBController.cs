@@ -33,18 +33,18 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetAdboards(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/adboardmodels/csv")]
-        [HttpGet("/export/DOOHDB/adboardmodels/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAdboardModelsToCSV(string fileName = null)
+        [HttpGet("/export/DOOHDB/adboardimages/csv")]
+        [HttpGet("/export/DOOHDB/adboardimages/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportAdboardImagesToCSV(string fileName = null)
         {
-            return ToCSV(ApplyQuery(await service.GetAdboardModels(), Request.Query, false), fileName);
+            return ToCSV(ApplyQuery(await service.GetAdboardImages(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/adboardmodels/excel")]
-        [HttpGet("/export/DOOHDB/adboardmodels/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAdboardModelsToExcel(string fileName = null)
+        [HttpGet("/export/DOOHDB/adboardimages/excel")]
+        [HttpGet("/export/DOOHDB/adboardimages/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportAdboardImagesToExcel(string fileName = null)
         {
-            return ToExcel(ApplyQuery(await service.GetAdboardModels(), Request.Query, false), fileName);
+            return ToExcel(ApplyQuery(await service.GetAdboardImages(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/DOOHDB/adboardnetworks/csv")]

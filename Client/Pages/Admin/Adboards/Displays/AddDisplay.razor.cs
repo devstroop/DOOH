@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Models.Displays
+namespace DOOH.Client.Pages.Admin.Adboards.Displays
 {
-    public partial class EditDisplay
+    public partial class AddDisplay
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -32,12 +32,9 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        [Parameter]
-        public int DisplayId { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
-            display = await DOOHDBService.GetDisplayByDisplayId(displayId:DisplayId);
+            display = new DOOH.Server.Models.DOOHDB.Display();
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Display display;
@@ -75,13 +72,7 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
         {
             try
             {
-                var result = await DOOHDBService.UpdateDisplay(displayId:DisplayId, display);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
-                {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
-                }
+                var result = await DOOHDBService.CreateDisplay(display);
                 DialogService.Close(display);
             }
             catch (Exception ex)
@@ -101,14 +92,5 @@ namespace DOOH.Client.Pages.Admin.Models.Displays
 
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            display = await DOOHDBService.GetDisplayByDisplayId(displayId:DisplayId);
-        }
     }
 }

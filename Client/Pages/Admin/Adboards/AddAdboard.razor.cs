@@ -40,7 +40,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.AdboardModel> adboardModelsForAdboardModelId;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
 
@@ -52,33 +51,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Country> countriesForCountryName;
 
-
-        protected int adboardModelsForAdboardModelIdCount;
-        protected DOOH.Server.Models.DOOHDB.AdboardModel adboardModelsForAdboardModelIdValue;
-        protected async Task adboardModelsForAdboardModelIdLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetAdboardModels(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(Model, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                adboardModelsForAdboardModelId = result.Value.AsODataEnumerable();
-                adboardModelsForAdboardModelIdCount = result.Count;
-
-                if (!object.Equals(adboard.AdboardModelId, null))
-                {
-                    var valueResult = await DOOHDBService.GetAdboardModels(filter: $"AdboardModelId eq {adboard.AdboardModelId}");
-                    var firstItem = valueResult.Value.FirstOrDefault();
-                    if (firstItem != null)
-                    {
-                        adboardModelsForAdboardModelIdValue = firstItem;
-                    }
-                }
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load AdboardModel" });
-            }
-        }
 
         protected int providersForProviderIdCount;
         protected DOOH.Server.Models.DOOHDB.Provider providersForProviderIdValue;
@@ -239,6 +211,69 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+
+
+
+
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displaysForDisplayId;
+
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Motherboard> motherboardsForMotherboardId;
+
+
+        protected int displaysForDisplayIdCount;
+        protected DOOH.Server.Models.DOOHDB.Display displaysForDisplayIdValue;
+        protected async Task displaysForDisplayIdLoadData(LoadDataArgs args)
+        {
+            try
+            {
+                var result = await DOOHDBService.GetDisplays(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(Model, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}", expand: "Brand");
+                displaysForDisplayId = result.Value.AsODataEnumerable();
+                displaysForDisplayIdCount = result.Count;
+
+                if (!object.Equals(adboard.DisplayId, null))
+                {
+                    var valueResult = await DOOHDBService.GetDisplays(filter: $"DisplayId eq {adboard.DisplayId}");
+                    var firstItem = valueResult.Value.FirstOrDefault();
+                    if (firstItem != null)
+                    {
+                        displaysForDisplayIdValue = firstItem;
+                    }
+                }
+
+            }
+            catch (System.Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Display" });
+            }
+        }
+
+        protected int motherboardsForMotherboardIdCount;
+        protected DOOH.Server.Models.DOOHDB.Motherboard motherboardsForMotherboardIdValue;
+        protected async Task motherboardsForMotherboardIdLoadData(LoadDataArgs args)
+        {
+            try
+            {
+                var result = await DOOHDBService.GetMotherboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(Rom, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}", expand: "Brand");
+                motherboardsForMotherboardId = result.Value.AsODataEnumerable();
+                motherboardsForMotherboardIdCount = result.Count;
+
+                if (!object.Equals(adboard.MotherboardId, null))
+                {
+                    var valueResult = await DOOHDBService.GetMotherboards(filter: $"MotherboardId eq {adboard.MotherboardId}");
+                    var firstItem = valueResult.Value.FirstOrDefault();
+                    if (firstItem != null)
+                    {
+                        motherboardsForMotherboardIdValue = firstItem;
+                    }
+                }
+
+            }
+            catch (System.Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Motherboard" });
+            }
+        }
 
 
     }

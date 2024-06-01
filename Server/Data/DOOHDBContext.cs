@@ -27,12 +27,6 @@ namespace DOOH.Server.Data
             });
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
-              .HasOne(i => i.AdboardModel)
-              .WithMany(i => i.Adboards)
-              .HasForeignKey(i => i.AdboardModelId)
-              .HasPrincipalKey(i => i.AdboardModelId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Category)
               .WithMany(i => i.Adboards)
               .HasForeignKey(i => i.CategoryId)
@@ -51,6 +45,18 @@ namespace DOOH.Server.Data
               .HasPrincipalKey(i => i.CountryName);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
+              .HasOne(i => i.Display)
+              .WithMany(i => i.Adboards)
+              .HasForeignKey(i => i.DisplayId)
+              .HasPrincipalKey(i => i.DisplayId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
+              .HasOne(i => i.Motherboard)
+              .WithMany(i => i.Adboards)
+              .HasForeignKey(i => i.MotherboardId)
+              .HasPrincipalKey(i => i.MotherboardId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Provider)
               .WithMany(i => i.Adboards)
               .HasForeignKey(i => i.ProviderId)
@@ -62,17 +68,11 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.StateName)
               .HasPrincipalKey(i => i.StateName);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardModel>()
-              .HasOne(i => i.Display)
-              .WithMany(i => i.AdboardModels)
-              .HasForeignKey(i => i.DisplayId)
-              .HasPrincipalKey(i => i.DisplayId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardModel>()
-              .HasOne(i => i.Motherboard)
-              .WithMany(i => i.AdboardModels)
-              .HasForeignKey(i => i.MotherboardId)
-              .HasPrincipalKey(i => i.MotherboardId);
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardImage>()
+              .HasOne(i => i.Adboard)
+              .WithMany(i => i.AdboardImages)
+              .HasForeignKey(i => i.AdboardId)
+              .HasPrincipalKey(i => i.AdboardId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardNetwork>()
               .HasOne(i => i.Adboard)
@@ -344,7 +344,7 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Adboard> Adboards { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.AdboardModel> AdboardModels { get; set; }
+        public DbSet<DOOH.Server.Models.DOOHDB.AdboardImage> AdboardImages { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardNetwork> AdboardNetworks { get; set; }
 

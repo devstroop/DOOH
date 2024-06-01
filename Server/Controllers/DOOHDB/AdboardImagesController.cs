@@ -17,12 +17,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DOOH.Server.Controllers.DOOHDB
 {
-    [Route("odata/DOOHDB/AdboardModels")]
-    public partial class AdboardModelsController : ODataController
+    [Route("odata/DOOHDB/AdboardImages")]
+    public partial class AdboardImagesController : ODataController
     {
         private DOOH.Server.Data.DOOHDBContext context;
 
-        public AdboardModelsController(DOOH.Server.Data.DOOHDBContext context)
+        public AdboardImagesController(DOOH.Server.Data.DOOHDBContext context)
         {
             this.context = context;
         }
@@ -30,34 +30,34 @@ namespace DOOH.Server.Controllers.DOOHDB
     
         [HttpGet]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.AdboardModel> GetAdboardModels()
+        public IEnumerable<DOOH.Server.Models.DOOHDB.AdboardImage> GetAdboardImages()
         {
-            var items = this.context.AdboardModels.AsQueryable<DOOH.Server.Models.DOOHDB.AdboardModel>();
-            this.OnAdboardModelsRead(ref items);
+            var items = this.context.AdboardImages.AsQueryable<DOOH.Server.Models.DOOHDB.AdboardImage>();
+            this.OnAdboardImagesRead(ref items);
 
             return items;
         }
 
-        partial void OnAdboardModelsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardModel> items);
+        partial void OnAdboardImagesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardImage> items);
 
-        partial void OnAdboardModelGet(ref SingleResult<DOOH.Server.Models.DOOHDB.AdboardModel> item);
+        partial void OnAdboardImageGet(ref SingleResult<DOOH.Server.Models.DOOHDB.AdboardImage> item);
 
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        [HttpGet("/odata/DOOHDB/AdboardModels(AdboardModelId={AdboardModelId})")]
-        public SingleResult<DOOH.Server.Models.DOOHDB.AdboardModel> GetAdboardModel(int key)
+        [HttpGet("/odata/DOOHDB/AdboardImages(AdboardImageId={AdboardImageId})")]
+        public SingleResult<DOOH.Server.Models.DOOHDB.AdboardImage> GetAdboardImage(int key)
         {
-            var items = this.context.AdboardModels.Where(i => i.AdboardModelId == key);
+            var items = this.context.AdboardImages.Where(i => i.AdboardImageId == key);
             var result = SingleResult.Create(items);
 
-            OnAdboardModelGet(ref result);
+            OnAdboardImageGet(ref result);
 
             return result;
         }
-        partial void OnAdboardModelDeleted(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelDeleted(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageDeleted(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageDeleted(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
-        [HttpDelete("/odata/DOOHDB/AdboardModels(AdboardModelId={AdboardModelId})")]
-        public IActionResult DeleteAdboardModel(int key)
+        [HttpDelete("/odata/DOOHDB/AdboardImages(AdboardImageId={AdboardImageId})")]
+        public IActionResult DeleteAdboardImage(int key)
         {
             try
             {
@@ -67,12 +67,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.AdboardModels
-                    .Where(i => i.AdboardModelId == key)
-                    .Include(i => i.Adboards)
+                var items = this.context.AdboardImages
+                    .Where(i => i.AdboardImageId == key)
                     .AsQueryable();
 
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardModel>(Request, items);
+                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
 
                 var item = items.FirstOrDefault();
 
@@ -80,10 +79,10 @@ namespace DOOH.Server.Controllers.DOOHDB
                 {
                     return StatusCode((int)HttpStatusCode.PreconditionFailed);
                 }
-                this.OnAdboardModelDeleted(item);
-                this.context.AdboardModels.Remove(item);
+                this.OnAdboardImageDeleted(item);
+                this.context.AdboardImages.Remove(item);
                 this.context.SaveChanges();
-                this.OnAfterAdboardModelDeleted(item);
+                this.OnAfterAdboardImageDeleted(item);
 
                 return new NoContentResult();
 
@@ -95,12 +94,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnAdboardModelUpdated(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelUpdated(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageUpdated(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageUpdated(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
-        [HttpPut("/odata/DOOHDB/AdboardModels(AdboardModelId={AdboardModelId})")]
+        [HttpPut("/odata/DOOHDB/AdboardImages(AdboardImageId={AdboardImageId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PutAdboardModel(int key, [FromBody]DOOH.Server.Models.DOOHDB.AdboardModel item)
+        public IActionResult PutAdboardImage(int key, [FromBody]DOOH.Server.Models.DOOHDB.AdboardImage item)
         {
             try
             {
@@ -109,11 +108,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.AdboardModels
-                    .Where(i => i.AdboardModelId == key)
+                var items = this.context.AdboardImages
+                    .Where(i => i.AdboardImageId == key)
                     .AsQueryable();
 
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardModel>(Request, items);
+                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
 
                 var firstItem = items.FirstOrDefault();
 
@@ -121,13 +120,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 {
                     return StatusCode((int)HttpStatusCode.PreconditionFailed);
                 }
-                this.OnAdboardModelUpdated(item);
-                this.context.AdboardModels.Update(item);
+                this.OnAdboardImageUpdated(item);
+                this.context.AdboardImages.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
-                this.OnAfterAdboardModelUpdated(item);
+                var itemToReturn = this.context.AdboardImages.Where(i => i.AdboardImageId == key);
+                Request.QueryString = Request.QueryString.Add("$expand", "Adboard");
+                this.OnAfterAdboardImageUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -137,9 +136,9 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        [HttpPatch("/odata/DOOHDB/AdboardModels(AdboardModelId={AdboardModelId})")]
+        [HttpPatch("/odata/DOOHDB/AdboardImages(AdboardImageId={AdboardImageId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PatchAdboardModel(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.AdboardModel> patch)
+        public IActionResult PatchAdboardImage(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.AdboardImage> patch)
         {
             try
             {
@@ -148,11 +147,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.AdboardModels
-                    .Where(i => i.AdboardModelId == key)
+                var items = this.context.AdboardImages
+                    .Where(i => i.AdboardImageId == key)
                     .AsQueryable();
 
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardModel>(Request, items);
+                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
 
                 var item = items.FirstOrDefault();
 
@@ -162,13 +161,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
                 patch.Patch(item);
 
-                this.OnAdboardModelUpdated(item);
-                this.context.AdboardModels.Update(item);
+                this.OnAdboardImageUpdated(item);
+                this.context.AdboardImages.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
-                this.OnAfterAdboardModelUpdated(item);
+                var itemToReturn = this.context.AdboardImages.Where(i => i.AdboardImageId == key);
+                Request.QueryString = Request.QueryString.Add("$expand", "Adboard");
+                this.OnAfterAdboardImageUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -178,12 +177,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnAdboardModelCreated(DOOH.Server.Models.DOOHDB.AdboardModel item);
-        partial void OnAfterAdboardModelCreated(DOOH.Server.Models.DOOHDB.AdboardModel item);
+        partial void OnAdboardImageCreated(DOOH.Server.Models.DOOHDB.AdboardImage item);
+        partial void OnAfterAdboardImageCreated(DOOH.Server.Models.DOOHDB.AdboardImage item);
 
         [HttpPost]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.AdboardModel item)
+        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.AdboardImage item)
         {
             try
             {
@@ -197,15 +196,15 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest();
                 }
 
-                this.OnAdboardModelCreated(item);
-                this.context.AdboardModels.Add(item);
+                this.OnAdboardImageCreated(item);
+                this.context.AdboardImages.Add(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.AdboardModels.Where(i => i.AdboardModelId == item.AdboardModelId);
+                var itemToReturn = this.context.AdboardImages.Where(i => i.AdboardImageId == item.AdboardImageId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Display,Motherboard");
+                Request.QueryString = Request.QueryString.Add("$expand", "Adboard");
 
-                this.OnAfterAdboardModelCreated(item);
+                this.OnAfterAdboardImageCreated(item);
 
                 return new ObjectResult(SingleResult.Create(itemToReturn))
                 {

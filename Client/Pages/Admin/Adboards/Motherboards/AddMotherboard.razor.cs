@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Models.Motherboards
+namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
 {
     public partial class AddMotherboard
     {

@@ -126,97 +126,97 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportAdboardModelsToExcel(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportAdboardImagesToExcel(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardmodels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardmodels/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardimages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardimages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        public async System.Threading.Tasks.Task ExportAdboardModelsToCSV(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportAdboardImagesToCSV(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardmodels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardmodels/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardimages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardimages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        partial void OnGetAdboardModels(HttpRequestMessage requestMessage);
+        partial void OnGetAdboardImages(HttpRequestMessage requestMessage);
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardModel>> GetAdboardModels(Query query)
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardImage>> GetAdboardImages(Query query)
         {
-            return await GetAdboardModels(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+            return await GetAdboardImages(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
         }
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardModel>> GetAdboardModels(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardImage>> GetAdboardImages(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
         {
-            var uri = new Uri(baseUri, $"AdboardModels");
+            var uri = new Uri(baseUri, $"AdboardImages");
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetAdboardModels(httpRequestMessage);
+            OnGetAdboardImages(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardModel>>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardImage>>(response);
         }
 
-        partial void OnCreateAdboardModel(HttpRequestMessage requestMessage);
+        partial void OnCreateAdboardImage(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> CreateAdboardModel(DOOH.Server.Models.DOOHDB.AdboardModel adboardModel = default(DOOH.Server.Models.DOOHDB.AdboardModel))
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> CreateAdboardImage(DOOH.Server.Models.DOOHDB.AdboardImage adboardImage = default(DOOH.Server.Models.DOOHDB.AdboardImage))
         {
-            var uri = new Uri(baseUri, $"AdboardModels");
+            var uri = new Uri(baseUri, $"AdboardImages");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardModel), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardImage), Encoding.UTF8, "application/json");
 
-            OnCreateAdboardModel(httpRequestMessage);
+            OnCreateAdboardImage(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardModel>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardImage>(response);
         }
 
-        partial void OnDeleteAdboardModel(HttpRequestMessage requestMessage);
+        partial void OnDeleteAdboardImage(HttpRequestMessage requestMessage);
 
-        public async Task<HttpResponseMessage> DeleteAdboardModel(int adboardModelId = default(int))
+        public async Task<HttpResponseMessage> DeleteAdboardImage(int adboardImageId = default(int))
         {
-            var uri = new Uri(baseUri, $"AdboardModels({adboardModelId})");
+            var uri = new Uri(baseUri, $"AdboardImages({adboardImageId})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
 
-            OnDeleteAdboardModel(httpRequestMessage);
+            OnDeleteAdboardImage(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        partial void OnGetAdboardModelByAdboardModelId(HttpRequestMessage requestMessage);
+        partial void OnGetAdboardImageByAdboardImageId(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.AdboardModel> GetAdboardModelByAdboardModelId(string expand = default(string), int adboardModelId = default(int))
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardImage> GetAdboardImageByAdboardImageId(string expand = default(string), int adboardImageId = default(int))
         {
-            var uri = new Uri(baseUri, $"AdboardModels({adboardModelId})");
+            var uri = new Uri(baseUri, $"AdboardImages({adboardImageId})");
 
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetAdboardModelByAdboardModelId(httpRequestMessage);
+            OnGetAdboardImageByAdboardImageId(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardModel>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardImage>(response);
         }
 
-        partial void OnUpdateAdboardModel(HttpRequestMessage requestMessage);
+        partial void OnUpdateAdboardImage(HttpRequestMessage requestMessage);
         
-        public async Task<HttpResponseMessage> UpdateAdboardModel(int adboardModelId = default(int), DOOH.Server.Models.DOOHDB.AdboardModel adboardModel = default(DOOH.Server.Models.DOOHDB.AdboardModel))
+        public async Task<HttpResponseMessage> UpdateAdboardImage(int adboardImageId = default(int), DOOH.Server.Models.DOOHDB.AdboardImage adboardImage = default(DOOH.Server.Models.DOOHDB.AdboardImage))
         {
-            var uri = new Uri(baseUri, $"AdboardModels({adboardModelId})");
+            var uri = new Uri(baseUri, $"AdboardImages({adboardImageId})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboardModel.ETag);    
+            httpRequestMessage.Headers.Add("If-Match", adboardImage.ETag);    
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardModel), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardImage), Encoding.UTF8, "application/json");
 
-            OnUpdateAdboardModel(httpRequestMessage);
+            OnUpdateAdboardImage(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }

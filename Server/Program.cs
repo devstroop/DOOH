@@ -30,7 +30,7 @@ builder.Services.AddControllers().AddOData(opt =>
 {
     var oDataBuilderDOOHDB = new ODataConventionModelBuilder();
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Adboard>("Adboards");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardModel>("AdboardModels");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardImage>("AdboardImages");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardNetwork>("AdboardNetworks");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardWifi>("AdboardWifis");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Advertisement>("Advertisements");
