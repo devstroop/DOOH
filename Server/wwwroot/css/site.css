@@ -115,6 +115,8 @@
     --rz-series-22: #91b83d;
     --rz-series-23: #3db845;
     --rz-series-24: #3db8a1;
+    --rz-border-radius: 2px;
+    --rz-button-border-radius: 0.75rem;
 }
 
 body {

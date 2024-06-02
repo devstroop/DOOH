@@ -9,10 +9,9 @@ namespace DOOH.Client.Components
         [Parameter]
         public int Speed { get; set; } = 1;
         [Parameter]
-        public string Height { get; set; } = "auto";
+        public string Style { get; set; }
         [Parameter]
-        public string Width { get; set; } = "auto";
+        public string Class { get; set; }
 
-        public string Style => $"width: {Width}; height: {Height};";
     }
 }

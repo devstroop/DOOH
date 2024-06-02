@@ -1,0 +1,36 @@
+﻿@page "/dashboard"
+<h3>Redirecting to Dashboard...</h3>
+@code {
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    protected SecurityService SecurityService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        RedirectToDashboard();
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            RedirectToDashboard();
+        }
+    }
+
+    private void RedirectToDashboard()
+    {
+        if (SecurityService.IsInRole("Admin"))
+        {
+            NavigationManager.NavigateTo("/admin/dashboard");
+            return;
+        }
+        if (SecurityService.IsInRole("Provider"))
+        {
+            NavigationManager.NavigateTo("/provider/dashboard");
+            return;
+        }
+    }
+}

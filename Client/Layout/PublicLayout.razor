@@ -8,33 +8,34 @@
         <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0" Class="rz-px-4" Style="height: 100%;">
             <RadzenColumn Size="6">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="1rem">
-                    <a href="/"><RadzenImage Path="images\LOGO-DARK-BLUE.png" style="height: 32px"></RadzenImage></a>
+                    <a href="/"><RadzenImage Path="vectors\Doohfy-Blue.svg" style="height: 32px"></RadzenImage></a>
 
                     @* <RadzenMenu>
-                        <RadzenMenuItem Text="Home" Path="" />
+                    <RadzenMenuItem Text="Home" Path="" />
                     </RadzenMenu> *@
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="6">
-                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    @if (Security.IsAuthenticated())
-                    {
-                        <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="ButtonSize.Small"/>
-                        <RadzenProfileMenu Click="@ProfileMenuClick">
-                            <ChildContent>
-                                <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
-                                <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
-                            </ChildContent>
-                            <Template>
-                                @Security.User?.Name
-                                <RadzenGravatar Email="@Security.User?.Name" />
-                            </Template>
-                        </RadzenProfileMenu>
-                    }
-                    else
-                    {
-                        <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
-                    }
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                    <AuthorizeView>
+                        <Authorized>
+                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="ButtonSize.Medium" />
+                            <RadzenProfileMenu Click="@ProfileMenuClick">
+                                <ChildContent>
+                                    @* <RadzenProfileMenuItem Path="/dashboard" Icon="dashboard" Text="Dashboard" /> *@
+                                    <RadzenProfileMenuItem Path="/profile" Icon="settings" Text="Profile" />
+                                    <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                                </ChildContent>
+                                <Template>
+                                    @* @Security.User?.Name *@
+                                    <RadzenGravatar Email="@Security.User?.Name" />
+                                </Template>
+                            </RadzenProfileMenu>
+                        </Authorized>
+                        <NotAuthorized>
+                            <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
@@ -42,7 +43,7 @@
     <RadzenBody>
         <RadzenRow Class="rz-mx-auto rz-px-4 rz-pt-2 rz-pt-md-4 rz-pt-lg-6 rz-pt-xl-12 rz-pb-2 rz-pb-lg-12" Style="max-width: 1440px;">
             <RadzenColumn Size="12">
-            @Body
+                @Body
             </RadzenColumn>
         </RadzenRow>
     </RadzenBody>
@@ -60,7 +61,7 @@
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>
-        
-        
+
+
     </RadzenFooter>
 </RadzenLayout>

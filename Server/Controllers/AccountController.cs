@@ -114,19 +114,22 @@ If you didn't request this code, you can safely ignore this email. Someone else 
                 if (result.Succeeded)
                 {
 
-                    var userRoles = identityContext.UserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
-                    if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "admin"))
-                    {
-                        redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
-                            ? "/admin" 
+                    //var userRoles = identityContext.UserRoles.Where(x => x.UserId == user.Id).Select(x => x.RoleId).ToList();
+                    //if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "admin"))
+                    //{
+                    //    redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
+                    //        ? "/admin" 
+                    //        : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                    //}
+                    //else if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "provider"))
+                    //{
+                    //    redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
+                    //        ? "/provider" 
+                    //        : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
+                    //}
+                    redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/")
+                            ? "/dashboard"
                             : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
-                    }
-                    else if (userRoles.Any(x => roleManager.Roles.FirstOrDefault(y => y.Id == x)?.Name.ToLower().Trim() == "provider"))
-                    {
-                        redirectUrl = (string.IsNullOrEmpty(redirectUrl) || redirectUrl == "/") 
-                            ? "/provider" 
-                            : redirectUrl.StartsWith("/") ? redirectUrl : $"/{redirectUrl}";
-                    }
                     return Redirect(redirectUrl);
                 }
             }

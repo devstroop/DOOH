@@ -3,11 +3,29 @@
 
 <PageTitle>Index</PageTitle>
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Index> L
-<RadzenRow Gap="5" RowGap="5">
-    <RadzenColumn Size="12">
-        <RadzenStack Orientation="Orientation.Horizontal">
-            <DOOH.Client.Components.LottieComponent Src="/lotties/doohfy-anim1.json" Height="135px" />
-        </RadzenStack>
-    </RadzenColumn>
-</RadzenRow>
+<RadzenStack>
+    <RadzenRow Gap="5" RowGap="5">
+        <RadzenColumn SizeMD="6">
+            <RadzenStack AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
+                <RadzenStack>
+                    <DOOH.Client.Components.LottieComponent Src="/animations/doohfy-anim-2.json" Style="height:135px" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" class="rz-ml-2" Wrap="FlexWrap.Wrap">
+                    <RadzenText Text="Impact locally" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0; font-weight: 500;" />
+                    <RadzenText Text="with Doohfy Ads" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0;" />
+                </RadzenStack>
+                <RadzenStack class="rz-ml-2">
+                    <RadzenText Text="We deliver creative experiances and futuristic advertising that amplify your brand's reach, breed customer loyalty - and boost your bottom line." TextStyle="TextStyle.Body1" />
+                </RadzenStack>
+                <RadzenStack class="rz-ml-2 rz-mt-4" Orientation="Orientation.Horizontal" Gap="1rem">
+                    <RadzenButton Text="Get Started!" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                    <RadzenButton Text="Contact an Expert" ButtonStyle="ButtonStyle.Light" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="6">
+            <DOOH.Client.Components.LottieComponent Src="/animations/doohfy-gradient-1.json" Style="width:100%" />
+        </RadzenColumn>
+    </RadzenRow>
 
+</RadzenStack>

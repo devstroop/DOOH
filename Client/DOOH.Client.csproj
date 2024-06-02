@@ -16,6 +16,7 @@
 		<Compile Include="../Server/Models/**/*.cs" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
+		<PackageReference Include="TheBlazorCarousel" Version="1.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Pages\Adboard\" />

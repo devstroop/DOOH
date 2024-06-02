@@ -37,6 +37,9 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [Inject]
         protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
 
+        [Inject]
+        protected IConfiguration Configuration { get; set; }
+
         [CascadingParameter]
         protected AdminLayout Layout { get; set; }
 
@@ -62,7 +65,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
             {
                 isAdboardsLoading = true;
 
-                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "Category,Display($expand=Brand),Motherboard($expand=Brand)");
+                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks");
 
                 adboards = result.Value.AsODataEnumerable();
 
@@ -143,7 +146,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
             }
         }
 
-        // RefreshClick
         protected async void RefreshClick(MouseEventArgs args)
         {
             await adboardsLoadData(new LoadDataArgs() { });

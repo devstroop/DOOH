@@ -1,0 +1,74 @@
+<RadzenRow Style="width: 600px">
+    @* <ImageComponent Path="@context.Image" Style="width: 165px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px" /> *@
+
+    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" AlignItems="AlignItems.Center">
+        <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" />
+    </RadzenStack>
+    <RadzenColumn>
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" class="rz-mb-1">
+                    <RadzenText Text="@($"#{Context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="05" AlignItems="AlignItems.Center">
+                        <RadzenIcon Icon="fiber_manual_record" IconStyle="@(Context.IsActive ? IconStyle.Success : IconStyle.Danger)" Style="font-size: 12px;filter: saturate(4) drop-shadow(1px 1px 2px var(--rz-success));" />
+                        <RadzenText Text="Online" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: 500" />
+                    </RadzenStack>
+                </RadzenStack>
+                <RadzenStack Gap="0" AlignItems="AlignItems.Start">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Start">
+                        <RadzenText Text="@(String.IsNullOrEmpty(Context.Address) ? "NA" : Context.Address)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0" />
+                        <RadzenBadge Text="@Context.Category.CategoryName" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}"))" class="rz-py-05 rz-px-1" />
+                    </RadzenStack>
+                    <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" />
+
+                </RadzenStack>
+
+                <RadzenStack class="rz-mb-3" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Visible="@(Actions != null)">
+                    @Actions(Context)
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <table>
+                    <tr>
+                        <td>
+                            <RadzenText Text="Rate (Base)" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                        </td>
+                        <td>
+                            <RadzenText Text="@($"₹{(Context.BaseRatePerSecond ?? 0):F2}/s")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top">
+                            <RadzenText Text="Display" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                        </td>
+                        <td>
+                            <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                <RadzenText Text="@($"{Context.Display.Brand.BrandName} {Context.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                <RadzenText Text="@($"Size: {Context.Display.ScreenWidth}x{Context.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                            </RadzenStack>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top">
+                            <RadzenText Text="Motherboard" TextStyle="TextStyle.Caption" class="rz-mb-05 rz-mr-2" />
+                        </td>
+                        <td>
+                            <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                <RadzenText Text="@($"{Context.Motherboard.Brand.BrandName} {Context.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                            </RadzenStack>
+                        </td>
+                    </tr>
+                </table>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenColumn>
+    @* <RadzenColumn>
+        <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" Zoom="15" Center="@(new GoogleMapPosition() { Lat = Context.Latitude ?? 0, Lng = Context.Longitude ?? 0 })">
+            <Markers>
+                <RadzenGoogleMapMarker Title="@($"#{Context.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = Context.Latitude ?? 0, Lng = Context.Longitude ?? 0 })" />
+            </Markers>
+        </RadzenGoogleMap>
+    </RadzenColumn> *@
+</RadzenRow>
