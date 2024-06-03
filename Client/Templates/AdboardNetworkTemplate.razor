@@ -1,0 +1,56 @@
+﻿<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="Physical Address" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.PhysicalAddress" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="Local IP" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.LocalIP" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="Public IP" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.PublicIP" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="Subnet" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.Subnet" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="Gateway" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.Gateway" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn Size="5">
+            <RadzenText Text="DNS" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+        </RadzenColumn>
+        <RadzenColumn Size="7">
+            <RadzenText Text="@AdboardNetwork.DNS" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+        </RadzenColumn>
+    </RadzenRow>
+
+</RadzenStack>
+@code {
+    [Parameter]
+    public Server.Models.DOOHDB.AdboardNetwork AdboardNetwork { get; set; }
+
+}

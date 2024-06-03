@@ -10,6 +10,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddRadzenComponents();
 builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
+builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddHttpClient("DOOH.Server", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("DOOH.Server"));

@@ -1,10 +1,8 @@
-<RadzenRow Style="width: 600px">
-    @* <ImageComponent Path="@context.Image" Style="width: 165px; height: auto; border: 1px solid #dfdfdf; border-radius: 4px" /> *@
-
-    <RadzenStack Orientation="Orientation.Horizontal" Gap="1rem" AlignItems="AlignItems.Center">
+<RadzenRow Style="width: 400px; box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1); border: 1px solid #e9e9e9; border-radius: 4px">
+    <RadzenColumn SizeMD="4">
         <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" />
-    </RadzenStack>
-    <RadzenColumn>
+    </RadzenColumn>
+    <RadzenColumn SizeMD="8">
         <RadzenRow>
             <RadzenColumn Size="12">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" class="rz-mb-1">
@@ -15,15 +13,15 @@
                     </RadzenStack>
                 </RadzenStack>
                 <RadzenStack Gap="0" AlignItems="AlignItems.Start">
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Start">
-                        <RadzenText Text="@(String.IsNullOrEmpty(Context.Address) ? "NA" : Context.Address)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+                        <RadzenText Text="@(String.IsNullOrEmpty(Context.Address) ? "NA" : Context.Address)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0 rz-mr-2" />
                         <RadzenBadge Text="@Context.Category.CategoryName" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}"))" class="rz-py-05 rz-px-1" />
                     </RadzenStack>
-                    <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" />
+                    <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
 
                 </RadzenStack>
 
-                <RadzenStack class="rz-mb-3" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Visible="@(Actions != null)">
+                <RadzenStack Gap="0.5rem" class="rz-mb-3" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Visible="@(Actions != null)">
                     @Actions(Context)
                 </RadzenStack>
             </RadzenColumn>
@@ -39,27 +37,33 @@
                             <RadzenText Text="@($"₹{(Context.BaseRatePerSecond ?? 0):F2}/s")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
                         </td>
                     </tr>
-                    <tr>
-                        <td style="vertical-align: top">
-                            <RadzenText Text="Display" TextStyle="TextStyle.Caption" class="rz-mb-05" />
-                        </td>
-                        <td>
-                            <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
-                                <RadzenText Text="@($"{Context.Display.Brand.BrandName} {Context.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
-                                <RadzenText Text="@($"Size: {Context.Display.ScreenWidth}x{Context.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
-                            </RadzenStack>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="vertical-align: top">
-                            <RadzenText Text="Motherboard" TextStyle="TextStyle.Caption" class="rz-mb-05 rz-mr-2" />
-                        </td>
-                        <td>
-                            <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
-                                <RadzenText Text="@($"{Context.Motherboard.Brand.BrandName} {Context.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
-                            </RadzenStack>
-                        </td>
-                    </tr>
+                    @if (Context.Motherboard != null)
+                    {
+                        <tr>
+                            <td style="vertical-align: top">
+                                <RadzenText Text="Motherboard" TextStyle="TextStyle.Caption" class="rz-mb-05 rz-mr-2" />
+                            </td>
+                            <td>
+                                <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                    <RadzenText Text="@($"{Context.Motherboard.Brand?.BrandName ?? string.Empty} {Context.Motherboard.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                </RadzenStack>
+                            </td>
+                        </tr>
+                    }
+                    @if (Context.Display != null)
+                    {
+                        <tr>
+                            <td style="vertical-align: top">
+                                <RadzenText Text="Display" TextStyle="TextStyle.Caption" class="rz-mb-05" />
+                            </td>
+                            <td>
+                                <RadzenStack Orientation="Orientation.Vertical" Gap="0" class="rz-mt-05">
+                                    <RadzenText Text="@($"{Context.Display.Brand?.BrandName ?? string.Empty} {Context.Display.Model}")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-weight:600" />
+                                    <RadzenText Text="@($"Size: {Context.Display.ScreenWidth}x{Context.Display.ScreenHeight}cm")" TextStyle="TextStyle.Caption" class="rz-mb-05" Style="font-size: 11px" />
+                                </RadzenStack>
+                            </td>
+                        </tr>
+                    }
                 </table>
             </RadzenColumn>
         </RadzenRow>

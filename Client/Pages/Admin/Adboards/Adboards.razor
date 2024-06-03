@@ -4,29 +4,50 @@
 @attribute [Authorize]
 
 <PageTitle>Adboards</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="6">
-        <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-    <RadzenColumn Size="6">
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
-            <RadzenButton Icon="refresh" ButtonStyle="ButtonStyle.Light" Click="@RefreshClick" />
-            <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddAdboardClick" />
-        </RadzenStack>
-    </RadzenColumn>
-</RadzenRow>
-<RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
-<RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
-    <Template>
-        <AdboardTemplate Context="@context">
-            <Actions Context="childContext">
-                <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Click="@((args) => DetailsSplitButtonClicked(args, childContext))" Size="Radzen.ButtonSize.Small">
-                    <RadzenSplitButtonItem Text="Edit" Icon="edit" />
-                    <RadzenSplitButtonItem Text="Delete" Icon="delete" />
-                </RadzenSplitButton>
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Size="Radzen.ButtonSize.Small" />
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="public" Size="Radzen.ButtonSize.Small" />
-            </Actions>
-        </AdboardTemplate>
-    </Template>
-</RadzenDataList>
+<RadzenStack>
+    <RadzenRow class="rz-mb-1">
+        <RadzenColumn Size="4">
+            <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+        <RadzenColumn Size="8">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenTextBox Placeholder="Search ..." @bind-Value=@search aria-label="Search by address" />
+                <RadzenButton Icon="search" Click="@Search" />
+                <RadzenButton Icon="refresh" ButtonStyle="ButtonStyle.Light" Click="@RefreshClick" />
+                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddAdboardClick" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
+        <Template>
+            <AdboardTemplate Context="@context">
+                <Actions Context="childContext">
+                    <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Click="@((args) => DetailsSplitButtonClicked(args, childContext))" Size="Radzen.ButtonSize.Small">
+                        <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                        <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+                    </RadzenSplitButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Size="Radzen.ButtonSize.Small" Click="@((args) => MapClick(args, context))" Visible="@(((context.Latitude ?? 0) != 0) && ((context.Longitude ?? 0) != 0))" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="public" Size="Radzen.ButtonSize.Small" Click="@((args) => NetworkClick(args, context))" Visible="@(context.AdboardNetworks.Count > 0)" />
+                </Actions>
+            </AdboardTemplate>
+        </Template>
+        <LoadingTemplate>
+            <RadzenText Text="Loading..." />
+        </LoadingTemplate>
+    </RadzenDataList>
+
+    <RadzenStack Visible="!(list0 != null && list0?.Count > 0)">
+
+    </RadzenStack>
+</RadzenStack>
+<style>
+    .rz-menuitem {
+        padding: 0.5rem;
+    }
+
+        .rz-menuitem .rz-menuitem-icon {
+            font-size: 18px;
+        }
+
+</style>

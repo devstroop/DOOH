@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 using DOOH.Client.Layout;
+using DOOH.Client.Templates;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -50,7 +51,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
 
         protected bool isAdboardsLoading = false;
-        protected string search = "";
+        protected string search { get; set; } = "";
 
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
@@ -58,6 +59,47 @@ namespace DOOH.Client.Pages.Admin.Adboards
             //Layout.ShowLoading = true;
         }
 
+        string SanitizeSearch(string input)
+        {
+            // Basic sanitization by escaping single quotes
+            return input?.Replace("'", "''");
+        }
+        //protected async Task adboardsLoadData(LoadDataArgs args)
+        //{
+        //    try
+        //    {
+        //        isAdboardsLoading = true;
+
+        //        string sanitizedSearch = SanitizeSearch(search);
+
+        //        var searchFilter = !string.IsNullOrEmpty(sanitizedSearch) ? $@"(contains(Address,""{sanitizedSearch}"") or contains(CityName,""{sanitizedSearch}"") or contains(StateName,""{sanitizedSearch}"") or contains(CountryName,""{sanitizedSearch}"") and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)})" : null;
+        //        var combinedFilter = string.IsNullOrEmpty(searchFilter) ? args.Filter : $"{searchFilter} and {args.Filter}";
+
+        //        var result = await DOOHDBService.GetAdboards(
+        //            top: args.Top,
+        //            skip: args.Skip,
+        //            count: (args.Top != null && args.Skip != null),
+        //            filter: combinedFilter,
+        //            orderby: args.OrderBy,
+        //            expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks");
+        //        adboards = result.Value.AsODataEnumerable();
+
+        //        foreach (var adboard in adboards)
+        //        {
+        //            await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
+        //        }
+
+        //        adboardsCount = result.Count;
+        //    }
+        //    catch (Exception)
+        //    {
+        //        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+        //    }
+        //    finally
+        //    {
+        //        isAdboardsLoading = false;
+        //    }
+        //}
 
         protected async Task adboardsLoadData(LoadDataArgs args)
         {
@@ -65,8 +107,45 @@ namespace DOOH.Client.Pages.Admin.Adboards
             {
                 isAdboardsLoading = true;
 
-                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks");
+                // Sanitize the search input
+                string SanitizeSearch(string input)
+                {
+                    return input?.Replace("'", "''");
+                }
 
+                string sanitizedSearch = SanitizeSearch(search);
+
+                // Construct the search filter
+                string searchFilter = !string.IsNullOrEmpty(sanitizedSearch)
+                    ? $"(contains(Address, '{sanitizedSearch}') or contains(CityName, '{sanitizedSearch}') or contains(StateName, '{sanitizedSearch}') or contains(CountryName, '{sanitizedSearch}'))"
+                    : null;
+
+                // Combine filters
+                string combinedFilter;
+                if (!string.IsNullOrEmpty(searchFilter) && !string.IsNullOrEmpty(args.Filter))
+                {
+                    combinedFilter = $"{searchFilter} and {args.Filter}";
+                }
+                else if (!string.IsNullOrEmpty(searchFilter))
+                {
+                    combinedFilter = searchFilter;
+                }
+                else
+                {
+                    combinedFilter = args.Filter;
+                }
+
+                // Get adboards
+                var result = await DOOHDBService.GetAdboards(
+                    top: args.Top,
+                    skip: args.Skip,
+                    count: (args.Top != null && args.Skip != null),
+                    filter: combinedFilter,
+                    orderby: args.OrderBy,
+                    expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks"
+                );
+
+                // Process the result
                 adboards = result.Value.AsODataEnumerable();
 
                 foreach (var adboard in adboards)
@@ -86,8 +165,10 @@ namespace DOOH.Client.Pages.Admin.Adboards
             }
         }
 
+
         protected async void DetailsSplitButtonClicked(RadzenSplitButtonItem item, DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
+
             if (item.Text == "Edit")
             {
                 var dialogResult = await DialogService.OpenAsync<EditAdboard>("Edit Adboard", new Dictionary<string, object>() { { "AdboardId", adboard.AdboardId } });
@@ -152,13 +233,33 @@ namespace DOOH.Client.Pages.Admin.Adboards
             StateHasChanged();
         }
 
-        protected async Task Search(ChangeEventArgs args)
+        protected async Task Search(MouseEventArgs args)
         {
-            search = $"{args.Value}";
 
             await list0.GoToPage(0);
 
             await list0.Reload();
+        }
+
+        protected async Task NetworkClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Adboard adboard)
+        {
+            var adboardNetwork = adboard.AdboardNetworks.FirstOrDefault();
+            var parameters = new Dictionary<string, object>() { { "AdboardNetwork", adboardNetwork } };
+            var options = new DialogOptions() { Width="360px", Draggable = true, CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true };
+            await DialogService.OpenAsync<AdboardNetworkTemplate>("Network", parameters, options);
+        }
+
+        protected async Task MapClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Adboard adboard)
+        {
+            var markers = new List<Tuple<string, GoogleMapPosition>>();
+            var position = new GoogleMapPosition() { Lat = adboard.Latitude ?? 0, Lng = adboard.Longitude ?? 0 };
+            markers.Add(new Tuple<string, GoogleMapPosition>($"#{adboard.AdboardId}", position));
+            var parameters = new Dictionary<string, object>();
+            parameters.Add("Markers", markers);
+            parameters.Add("Center", position);
+            parameters.Add("Zoom", 18);
+            var options = new DialogOptions() { Width = "800px", Height = "600px", Draggable = true, CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true };
+            await DialogService.OpenAsync<GoogleMapTemplate>("Map", parameters, options);
         }
     }
 }

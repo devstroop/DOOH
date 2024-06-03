@@ -1,18 +1,18 @@
-@attribute [Authorize]
+﻿@attribute [Authorize]
 <PageTitle>Edit Adboard</PageTitle>
 <RadzenRow>
-    <RadzenColumn SizeMD="9">
+    <RadzenColumn SizeMD="8">
         <RadzenLabel style="font-weight: bold" Text="Item no longer available." Visible="@(!canEdit)" />
     </RadzenColumn>
-    <RadzenColumn SizeMD="3">
+    <RadzenColumn SizeMD="4">
         <RadzenButton ButtonStyle="ButtonStyle.Secondary" style="margin-bottom: 20px" Text="Close" Visible="@(!canEdit)" Click="@CancelButtonClick" />
     </RadzenColumn>
 </RadzenRow>
 <RadzenRow>
-    <RadzenColumn SizeMD="9">
+    <RadzenColumn SizeMD="8">
         <RadzenLabel style="font-weight: bold" Text="Another user has made conflicting changes to one or more of the fields you have modified. Please reload." Visible="@hasChanges" />
     </RadzenColumn>
-    <RadzenColumn SizeMD="3">
+    <RadzenColumn SizeMD="4">
         <RadzenButton ButtonStyle="ButtonStyle.Secondary" Icon="autorenew" style="margin-bottom: 20px" Text="Reload" Visible="@hasChanges" Click="@ReloadButtonClick" />
     </RadzenColumn>
 </RadzenRow>
@@ -21,20 +21,20 @@
     <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Adboard</RadzenAlert>
     <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboard" Visible="@(adboard != null && canEdit)" Submit="@FormSubmit">
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Provider" Component="Provider" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ProviderName" ValueProperty="ProviderId" AllowClear=true
                                         Placeholder="Choose Provider" style="display: block; width: 100%" @bind-Value="@adboard.ProviderId" Name="ProviderId"
                                         SelectedValue=@providersForProviderIdValue Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Category" Component="Category" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@categoriesForCategoryId" TextProperty="CategoryName" ValueProperty="CategoryId" AllowClear=true
                                         Placeholder="Choose Category" style="display: block; width: 100%" @bind-Value="@adboard.CategoryId" Name="CategoryId"
                                         SelectedValue=@categoriesForCategoryIdValue Count=@categoriesForCategoryIdCount LoadData=@categoriesForCategoryIdLoadData />
@@ -43,10 +43,10 @@
 
 
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Motherboard" Component="Motherboard" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@motherboardsForMotherboardId" TextProperty="Model" ValueProperty="MotherboardId" AllowClear=true
                                         Placeholder="Choose Motherboard" style="display: block; width: 100%" @bind-Value="@adboard.MotherboardId" Name="MotherboardId"
                                         SelectedValue=@motherboardsForMotherboardIdValue Count=@motherboardsForMotherboardIdCount LoadData=@motherboardsForMotherboardIdLoadData>
@@ -60,10 +60,10 @@
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Display" Component="Display" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@displaysForDisplayId" TextProperty="Model" ValueProperty="DisplayId" AllowClear=true
                                         Placeholder="Choose Display" style="display: block; width: 100%" @bind-Value="@adboard.DisplayId" Name="DisplayId"
                                         SelectedValue=@displaysForDisplayIdValue Count=@displaysForDisplayIdCount LoadData=@displaysForDisplayIdLoadData>
@@ -81,80 +81,81 @@
 
 
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Base Rate Per Second" Component="BaseRatePerSecond" style="width: 100%" />
+            <RadzenColumn SizeMD="4">
+                <RadzenLabel Text="Rate(₹)/s (Base)" Component="BaseRatePerSecond" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.BaseRatePerSecond" Name="BaseRatePerSecond" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
+                <RadzenUpload style="display: block; width: 100%" Multiple="true" DeleteText="Delete" ChooseText="Choose"></RadzenUpload>
                 @* <RadzenTextBox @bind-Value="@adboard.Images" style="display: block; width: 100%" Name="Image" /> *@
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Latitude" Component="Latitude" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Latitude" Name="Latitude" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Longitude" Component="Longitude" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Longitude" Name="Longitude" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="City" Component="City" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@citiesForCityName" TextProperty="CityName" ValueProperty="CityName" AllowClear=true
                                         Placeholder="Choose City" style="display: block; width: 100%" @bind-Value="@adboard.CityName" Name="CityName"
                                         SelectedValue=@citiesForCityNameValue Count=@citiesForCityNameCount LoadData=@citiesForCityNameLoadData />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="State" Component="State" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@statesForStateName" TextProperty="StateName" ValueProperty="StateName" AllowClear=true
                                         Placeholder="Choose State" style="display: block; width: 100%" @bind-Value="@adboard.StateName" Name="StateName"
                                         SelectedValue=@statesForStateNameValue Count=@statesForStateNameCount LoadData=@statesForStateNameLoadData />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
                                         Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@adboard.CountryName" Name="CountryName"
                                         SelectedValue=@countriesForCountryNameValue Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
             </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenColumn SizeMD="8">
                 <RadzenSwitch @bind-Value="@adboard.IsActive" Name="IsActive" />
             </RadzenColumn>
         </RadzenRow>

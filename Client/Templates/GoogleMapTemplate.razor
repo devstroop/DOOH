@@ -1,0 +1,16 @@
+﻿<RadzenStack Style="width: 100%; height: 100%;">
+    <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" Zoom="@Zoom" Center="@Center">
+        <Markers>
+            @foreach (var each in Markers)
+            {
+                <RadzenGoogleMapMarker Title="@each.Item1" Position="@each.Item2" />
+            }
+        </Markers>
+    </RadzenGoogleMap>
+</RadzenStack>
+<style>
+    .rz-dialog .rz-dialog-content{
+        height: 100%;
+        width: 100%;
+    }
+</style>

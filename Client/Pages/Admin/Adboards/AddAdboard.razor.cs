@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -274,7 +275,49 @@ namespace DOOH.Client.Pages.Admin.Adboards
                 NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Motherboard" });
             }
         }
-
+        int upoadProgress = 0;
+        bool uploadVisible = false;
+        List<Radzen.FileInfo> uploadFiles = new List<Radzen.FileInfo>();
+        List<string> uploadImages = new List<string>();
+        protected void OnUploadProgress(UploadProgressArgs args)
+        {
+            upoadProgress = args.Progress;
+            if (args.Progress == 100)
+            {
+                uploadVisible = false;
+            }
+            else
+            {
+                uploadVisible = true;
+            }
+        }
+        protected void OnUploadChange(UploadChangeEventArgs args)
+        {
+            if (args.Files != null && args.Files.Count() > 0)
+            {
+                foreach(var file in args.Files)
+                {
+                    if(file.ContentType.Contains("image"))
+                    {
+                        try
+                        {
+                            // read file
+                            var stream = file.OpenReadStream();
+                            var base64 = $"data:{file.ContentType};base64,{Convert.ToBase64String(new System.IO.BinaryReader(stream).ReadBytes((int)stream.Length))}";
+                            uploadImages.Add(base64);
+                            stream.Close();
+                            uploadFiles.Add(file);
+                        }
+                        catch (Exception ex)
+                        {
+                            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"File {file.Name} is too large" });
+                            return;
+                        }
+                    }
+                }
+                uploadFiles.AddRange(args.Files);
+            }
+        }
 
     }
 }

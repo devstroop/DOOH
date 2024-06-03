@@ -17,7 +17,6 @@ namespace DOOH.Client.Templates
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
-        //protected string gMapApiKey => Configuration.GetValue<string>("Google:API_KEY");
 
         protected override void OnInitialized()
         {
