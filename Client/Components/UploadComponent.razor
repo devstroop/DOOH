@@ -1,102 +1,131 @@
+@using System;
+@using System.Collections.Generic;
+@using System.Net.Http;
+@using DOOH.Server.Models.DOOHDB
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.Components.Web;
+@using Microsoft.JSInterop;
+@using Radzen;
+@using Radzen.Blazor;
 
-<RadzenFieldset Text="Media" style="margin-bottom: 1rem">
-    <RadzenUpload id="ddUpload" @ref="uploadDD"
-                  ChooseText="Drag and drop to upload"
-                  Auto="true"
-                  Multiple="@Multiple"
-                  Url="@Url"
-                  InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
-                  Progress="@Progress"
-                  Change="@Change"
-                  Complete="@Complete"
-                  Error="@Error"
-                  class="w-100"
-                  Accept="@Accept">
-    </RadzenUpload>
-    <RadzenProgressBar @bind-Value="@Value" Visible="@ShowProgress" ProgressBarStyle="Radzen.ProgressBarStyle.Success" />
-    <RadzenStack Orientation="Orientation.Horizontal">
-        @foreach (var attachment in attachments)
-        {
-            <RadzenImage Path="@attachment.GetThumbnail()" style="width: 100px; height: 100px" />
-        }
-    </RadzenStack>
-</RadzenFieldset>
+<RadzenStack Wrap="FlexWrap.Wrap" Orientation="Orientation.Horizontal" Gap="0">
+    @* <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+    <RadzenImage Path="/images/warning.png" Style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; margin: 6px; border: 1px solid #cfcfcf; box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);" />
+    <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" />
+    </RadzenStack> *@
+
+    @foreach (var image in Images ?? new List<AdboardImage>())
+    {
+        <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+            <RadzenImage Path="@ValidatedImages.GetValueOrDefault(image.Image, "/images/warning.png")" Style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; margin: 6px; border: 1px solid #cfcfcf; box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);" />
+            <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@((args) => DeleteImageClick(args, image.Image))" />
+        </RadzenStack>
+    }
+    <RadzenUpload Id="ddUpload" Icon="add" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" />
+</RadzenStack>
 <style>
-    #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
-        width: 100%;
-        text-align: center;
-        font-size: 16px;
-        padding: 100px 0;
-        border-radius: 0;
+    .delete-upload-image {
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 0;
     }
+
+    #ddUpload {
+        left: 0;
+    }
+
+        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose .rzi {
+            font-size: 24px;
+            align-self: center;
+            color: #9f9f9f;
+        }
+
+        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
+            height: 80px;
+            width: 80px;
+            text-align: center;
+            align-content: center;
+            border-radius: 8px;
+            border: 2px dashed #bfbfbf;
+            background-color: #efefef;
+            font-weight: 400;
+        }
 </style>
-
 @code {
-    [Parameter]
-    public double Value { get; set; }
-    [Parameter]
-    public string Accept { get; set; } = "video/*,image/*";
-    [Parameter]
-    public bool Multiple { get; set; } = false;
-    [Parameter]
-    public Action OnChange { get; set; }
-    [Parameter]
-    public Action<List<DOOH.Server.Models.DOOHDB.Attachment>> OnComplete { get; set; }
-    [Parameter]
-    public Action<string> OnError { get; set; }
-    [Parameter]
-    public Action<double> OnProgress { get; set; }
-    [Parameter]
-    public string BaseUri { get; set; }
+    [Parameter] public ICollection<AdboardImage> Images { get; set; }
+    [Parameter] public Action<ICollection<AdboardImage>> Change { get; set; }
+    private Dictionary<string, string> ValidatedImages = new Dictionary<string, string>();
+    private int progress = 0;
+    private string uploadText => progress > 0 && progress < 100 ? $"{progress}%" : string.Empty;
 
-    private string Url => Multiple ? $"{BaseUri}api/cdn/multiple" : $"{BaseUri}api/cdn/single";
-    private bool ShowProgress { get; set; }
-    private RadzenUpload uploadDD;
-    List<DOOH.Server.Models.DOOHDB.Attachment> attachments = new List<DOOH.Server.Models.DOOHDB.Attachment>();
+    [Inject] private IJSRuntime JSRuntime { get; set; }
+    [Inject] private NavigationManager NavigationManager { get; set; }
+    [Inject] private HttpClient HttpClient { get; set; }
 
-    private void Progress(UploadProgressArgs args)
+    protected override async Task OnInitializedAsync()
     {
-        Value = args.Progress;
-
-        if (args.Progress == 100)
-        {
-            ShowProgress = false;
-        }
-        OnProgress?.Invoke(args.Progress);
-        StateHasChanged();
+        await ValidateImages();
     }
 
-    private void Change(UploadChangeEventArgs args)
+    private async Task ValidateImages()
     {
-        ShowProgress = true;
-        OnProgress?.Invoke(0.0);
-        StateHasChanged();
+        foreach (var image in Images ?? new List<AdboardImage>())
+        {
+            var validImage = await GetValidImageAsync(image.Image);
+            ValidatedImages[image.Image] = validImage;
+        }
     }
 
-    private void Complete(UploadCompleteEventArgs args)
+    private async Task<string> GetValidImageAsync(string image)
     {
-        ShowProgress = false;
-        if (Multiple)
+        if (string.IsNullOrEmpty(image))
         {
-            // Deserialize the args.JsonResponse as List<Attachment>
-            var list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<DOOH.Server.Models.DOOHDB.Attachment>>(args.RawResponse);
-            attachments.AddRange(list);
+            return "/images/no-image.jpg";
         }
-        else
+
+        var absoluteUri = image.Trim().StartsWith("http") ? image : $"{NavigationManager.BaseUri}{image}";
+
+        try
         {
-            // Deserialize the args.RawResponse as Attachment
-            var attachment = Newtonsoft.Json.JsonConvert.DeserializeObject<DOOH.Server.Models.DOOHDB.Attachment>(args.RawResponse);
-            attachments.Add(attachment);
+            var response = await HttpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, absoluteUri));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return "/images/warning.png";
+            }
         }
-        OnComplete?.Invoke(attachments);
-        StateHasChanged();
+        catch
+        {
+            return "/images/warning.png";
+        }
+
+        return image;
     }
 
-    private void Error(UploadErrorEventArgs args)
+    private async Task DeleteImageClick(MouseEventArgs args, string image)
     {
-        ShowProgress = false;
-        Value = 0;
-        OnError?.Invoke(args.Message);
-        StateHasChanged();
+        Images = Images.Where(x => x.Image != image).ToList();
+        ValidatedImages.Remove(image);
+        Change?.Invoke(Images);
+    }
+
+    private void OnProgress(UploadProgressArgs args)
+    {
+        progress = args.Progress;
+    }
+
+    private async Task OnComplete(UploadCompleteEventArgs args)
+    {
+        // Console log 'args.RawResponse'
+        await JSRuntime.InvokeVoidAsync("console.log", args.RawResponse);
+// progress = 0;
+//         foreach (var file in args.RawResponse)
+//         {
+//             Images.Add(new AdboardImage { Image = file });
+//         }
+
+        await ValidateImages();
+        Change?.Invoke(Images);
     }
 }

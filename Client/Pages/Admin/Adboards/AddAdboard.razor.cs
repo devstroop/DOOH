@@ -319,5 +319,12 @@ namespace DOOH.Client.Pages.Admin.Adboards
             }
         }
 
+
+        protected void AdboardImagesChange(ICollection<DOOH.Server.Models.DOOHDB.AdboardImage> images)
+        {
+            adboard.AdboardImages = images;
+            StateHasChanged();
+        }
+
     }
 }

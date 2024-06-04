@@ -11,6 +11,35 @@
                 <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ProviderName" ValueProperty="ProviderId" AllowClear=true
                                         Placeholder="Choose Provider" style="display: block; width: 100%" @bind-Value="@adboard.ProviderId" Name="ProviderId"
                                         SelectedValue=@providersForProviderIdValue Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData />
+                                        @if(providersForProviderIdValue != null)
+                {
+                    <table style="font-size: 12px">
+                       <tr>
+                            <td>Id (#)</td>
+                            <td>@providersForProviderIdValue.ProviderId</td>
+                        </tr>
+                        <tr>
+                            <td>Name</td>
+                            <td>@providersForProviderIdValue.ProviderName</td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>@providersForProviderIdValue.ProviderEmail</td>
+                        </tr>
+                        <tr>
+                            <td>Phone</td>
+                            <td>@providersForProviderIdValue.ProviderPhone</td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td>@($"{providersForProviderIdValue.Address}, {providersForProviderIdValue.CityName}, {providersForProviderIdValue.StateName}")</td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>@(providersForProviderIdValue.IsActive == true ? "Active" : "Inactive")</td>
+                        </tr>
+                    </table>
+                }
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
@@ -59,14 +88,12 @@
                 </RadzenDropDownDataGrid>
             </RadzenColumn>
         </RadzenRow>
-
-
-
-
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
-                <RadzenLabel Text="Rate(₹)/s" Component="BaseRatePerSecond" style="width: 100%" />
-                <RadzenBadge Text="Base" />
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenLabel Text="Rate (₹)/s" Component="BaseRatePerSecond" />
+                    <RadzenBadge Text="Base" />
+                </RadzenStack>
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.BaseRatePerSecond" Name="BaseRatePerSecond" />
@@ -77,14 +104,7 @@
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenStack Wrap="FlexWrap.Wrap">
-                    @foreach (string image in uploadImages)
-                    {
-                        <RadzenImage Path="@image" alt="Image" style="width: 100px; height: 100px; object-fit: cover; margin-right: 0.5rem; margin-bottom: 0.5rem;" />
-                    }
-                </RadzenStack>
-                <RadzenUpload style="display: block; width: 100%;" Multiple="true" DeleteText="Delete" ChooseText="Choose" Progress="@OnUploadProgress" Change="@OnUploadChange"/>
-                @* <RadzenTextBox @bind-Value="@adboard.Images" style="display: block; width: 100%" Name="Image" /> *@
+                <UploadComponent Images="@adboard.AdboardImages" Change="@AdboardImagesChange" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
@@ -108,7 +128,7 @@
                 <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
+                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

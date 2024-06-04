@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -38,7 +39,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected override async Task OnInitializedAsync()
         {
-            adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId);
+            adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId, expand: "AdboardImages");
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
@@ -291,7 +292,11 @@ namespace DOOH.Client.Pages.Admin.Adboards
             }
         }
 
-
+        protected void AdboardImagesChange(ICollection<DOOH.Server.Models.DOOHDB.AdboardImage> images)
+        {
+            adboard.AdboardImages = images;
+            StateHasChanged();
+        }
 
     }
 }

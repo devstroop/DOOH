@@ -75,6 +75,7 @@ builder.Services.AddControllers().AddOData(o =>
 });
 builder.Services.AddScoped<AuthenticationStateProvider, DOOH.Client.ApplicationAuthenticationStateProvider>();
 builder.Services.AddLocalization();
+builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

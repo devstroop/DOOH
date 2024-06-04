@@ -82,7 +82,10 @@
 
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
-                <RadzenLabel Text="Rate(₹)/s (Base)" Component="BaseRatePerSecond" style="width: 100%" />
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenLabel Text="Rate (₹)/s" Component="BaseRatePerSecond" />
+                    <RadzenBadge Text="Base" />
+                </RadzenStack>
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.BaseRatePerSecond" Name="BaseRatePerSecond" />
@@ -93,8 +96,7 @@
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenUpload style="display: block; width: 100%" Multiple="true" DeleteText="Delete" ChooseText="Choose"></RadzenUpload>
-                @* <RadzenTextBox @bind-Value="@adboard.Images" style="display: block; width: 100%" Name="Image" /> *@
+                <UploadComponent Images="@adboard.AdboardImages" Change="@AdboardImagesChange" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

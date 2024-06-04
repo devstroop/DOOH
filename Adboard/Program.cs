@@ -14,7 +14,7 @@ GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.Compa
 GC.Collect();
 
 // Initialize LibVLCSharp core
-Core.Initialize();
+//Core.Initialize();
 builder.Services.AddTransient(sp =>
 {
     var httpClient = new HttpClient { BaseAddress = new Uri(builder.Configuration.GetValue<string>("Service:URL") ?? "https://doohfy.com") };
@@ -45,8 +45,8 @@ builder.Services.AddTransient(sp =>
 
     return httpClient;
 });
-builder.Services.AddHostedService<PlaybackWorker>();
-//builder.Services.AddHostedService<CameraWorker>();
+//builder.Services.AddHostedService<PlaybackWorker>();
+builder.Services.AddHostedService<AnalyticWorker>();
 builder.Services.AddSingleton<DOOHDBService>();
 builder.Services.AddSingleton<InterloopService>();
 builder.Services.AddSingleton<AdService>();

@@ -1,5 +1,9 @@
 <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Orientation.Horizontal" Gap="0.5rem">
-    <RadzenIcon Icon="language" Style="font-size: 24px" />
-    <RadzenDropDown @bind-Value="@culture" TValue="string" Data="@(new [] { new { Text = "English", Value = "en" }, new { Text = "हिन्दी", Value = "hi" } })"
-                    TextProperty="Text" ValueProperty="Value" Change="@ChangeCulture" Style="width: 8rem"/>
+    <RadzenIcon Icon="language" Style="font-size: 20px" />
+    <RadzenDropDown id="cultureDropDown" @bind-Value="@culture" TValue="string" Data="@(new [] { new { Text = "English", Value = "en" }, new { Text = "हिन्दी", Value = "hi" } })"
+                    TextProperty="Text" ValueProperty="Value" Change="@ChangeCulture" Style="width: 6rem; height: 30px; font-size: small; " class="rz-px-2 rz-py-1">
+        <Template Context="context">
+            <RadzenText Text="@context.Text" TextStyle="TextStyle.Caption"/>
+        </Template>
+    </RadzenDropDown>
 </RadzenStack>
