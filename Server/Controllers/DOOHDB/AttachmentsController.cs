@@ -67,18 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Attachments
+                var item = this.context.Attachments
                     .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
-                    .Include(i => i.Advertisements)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Attachment>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAttachmentDeleted(item);
                 this.context.Attachments.Remove(item);
@@ -109,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Attachments
-                    .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Attachment>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.AttachmentKey != Uri.UnescapeDataString(key)))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAttachmentUpdated(item);
                 this.context.Attachments.Update(item);
@@ -148,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Attachments
-                    .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Attachment>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Attachments.Where(i => i.AttachmentKey == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

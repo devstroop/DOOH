@@ -47,13 +47,11 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
             try
             {
                 var result = await DOOHDBService.UpdateCategory(categoryId:CategoryId, category);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(category);
                 }
-                DialogService.Close(category);
             }
             catch (Exception ex)
             {
@@ -66,20 +64,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
             DialogService.Close(null);
         }
 
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            category = await DOOHDBService.GetCategoryByCategoryId(categoryId:CategoryId);
-        }
     }
 }

@@ -67,17 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.AdboardImages
+                var item = this.context.AdboardImages
                     .Where(i => i.AdboardImageId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAdboardImageDeleted(item);
                 this.context.AdboardImages.Remove(item);
@@ -108,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.AdboardImages
-                    .Where(i => i.AdboardImageId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.AdboardImageId != key))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAdboardImageUpdated(item);
                 this.context.AdboardImages.Update(item);
@@ -147,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.AdboardImages
-                    .Where(i => i.AdboardImageId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.AdboardImage>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.AdboardImages.Where(i => i.AdboardImageId == key).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

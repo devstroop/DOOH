@@ -4,7 +4,7 @@
 <PageTitle>Add Campaign</PageTitle>
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Campaign</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaign" Visible="@(campaign != null && canEdit)" Submit="@FormSubmit">
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaign" Visible="@(campaign != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Campaign Name" Component="CampaignName" style="width: 100%" />

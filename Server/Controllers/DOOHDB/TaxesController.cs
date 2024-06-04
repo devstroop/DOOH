@@ -67,19 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Taxes
+                var item = this.context.Taxes
                     .Where(i => i.TaxId == key)
-                    .Include(i => i.Billings)
-                    .Include(i => i.Taxes1)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Tax>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnTaxDeleted(item);
                 this.context.Taxes.Remove(item);
@@ -110,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Taxes
-                    .Where(i => i.TaxId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Tax>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.TaxId != key))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnTaxUpdated(item);
                 this.context.Taxes.Update(item);
@@ -149,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Taxes
-                    .Where(i => i.TaxId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Tax>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Taxes.Where(i => i.TaxId == key).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

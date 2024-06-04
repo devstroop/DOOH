@@ -67,18 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Categories
+                var item = this.context.Categories
                     .Where(i => i.CategoryId == key)
-                    .Include(i => i.Adboards)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Category>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCategoryDeleted(item);
                 this.context.Categories.Remove(item);
@@ -109,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Categories
-                    .Where(i => i.CategoryId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Category>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.CategoryId != key))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCategoryUpdated(item);
                 this.context.Categories.Update(item);
@@ -148,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Categories
-                    .Where(i => i.CategoryId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Category>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Categories.Where(i => i.CategoryId == key).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

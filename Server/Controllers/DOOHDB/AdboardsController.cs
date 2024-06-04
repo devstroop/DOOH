@@ -67,23 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Adboards
+                var item = this.context.Adboards
                     .Where(i => i.AdboardId == key)
-                    .Include(i => i.AdboardImages)
-                    .Include(i => i.AdboardNetworks)
-                    .Include(i => i.AdboardWifis)
-                    .Include(i => i.Analytics)
-                    .Include(i => i.CampaignAdboards)
-                    .Include(i => i.Earnings)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Adboard>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAdboardDeleted(item);
                 this.context.Adboards.Remove(item);
@@ -114,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Adboards
-                    .Where(i => i.AdboardId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Adboard>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.AdboardId != key))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnAdboardUpdated(item);
                 this.context.Adboards.Update(item);
@@ -153,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Adboards
-                    .Where(i => i.AdboardId == key)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Adboard>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Adboards.Where(i => i.AdboardId == key).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

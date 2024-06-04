@@ -76,13 +76,10 @@ namespace DOOH.Client.Pages.Admin.Settings.Cities
             try
             {
                 var result = await DOOHDBService.UpdateCity(cityName:CityName, city);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(city);
                 }
-                DialogService.Close(city);
             }
             catch (Exception ex)
             {
@@ -95,20 +92,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Cities
             DialogService.Close(null);
         }
 
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            city = await DOOHDBService.GetCityByCityName(cityName:CityName);
-        }
     }
 }

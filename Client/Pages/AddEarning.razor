@@ -4,7 +4,7 @@
 <PageTitle>Add Earning</PageTitle>
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Earning</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Earning" Data="@earning" Visible="@(earning != null && canEdit)" Submit="@FormSubmit">
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Earning" Data="@earning" Visible="@(earning != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Earning Id" Component="EarningId" style="width: 100%" />

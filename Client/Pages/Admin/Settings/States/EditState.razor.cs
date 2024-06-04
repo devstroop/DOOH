@@ -76,13 +76,10 @@ namespace DOOH.Client.Pages.Admin.Settings.States
             try
             {
                 var result = await DOOHDBService.UpdateState(stateName:StateName, state);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(state);
                 }
-                DialogService.Close(state);
             }
             catch (Exception ex)
             {
@@ -96,19 +93,9 @@ namespace DOOH.Client.Pages.Admin.Settings.States
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
 
 
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            state = await DOOHDBService.GetStateByStateName(stateName:StateName);
-        }
     }
 }

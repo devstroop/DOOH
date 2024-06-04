@@ -37,6 +37,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected override async Task OnInitializedAsync()
         {
             adboard = new DOOH.Server.Models.DOOHDB.Adboard();
+            adboard.AdboardImages = new List<DOOH.Server.Models.DOOHDB.AdboardImage>();
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
@@ -193,7 +194,10 @@ namespace DOOH.Client.Pages.Admin.Adboards
             try
             {
                 var result = await DOOHDBService.CreateAdboard(adboard);
-                DialogService.Close(adboard);
+                if(result != null)
+                {
+                    DialogService.Close(adboard);
+                }
             }
             catch (Exception ex)
             {
@@ -205,10 +209,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
         {
             DialogService.Close(null);
         }
-
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
 
         [Inject]
         protected SecurityService Security { get; set; }

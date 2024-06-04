@@ -73,7 +73,10 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
             try
             {
                 var result = await DOOHDBService.CreateAdboardWifi(adboardWifi);
-                DialogService.Close(adboardWifi);
+                if(result != null)
+                {
+                    DialogService.Close(adboardWifi);
+                }
             }
             catch (Exception ex)
             {
@@ -85,10 +88,6 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
         {
             DialogService.Close(null);
         }
-
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
 
         [Inject]
         protected SecurityService Security { get; set; }

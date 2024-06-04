@@ -67,20 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.States
+                var item = this.context.States
                     .Where(i => i.StateName == Uri.UnescapeDataString(key))
-                    .Include(i => i.Adboards)
-                    .Include(i => i.Cities)
-                    .Include(i => i.Providers)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.State>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnStateDeleted(item);
                 this.context.States.Remove(item);
@@ -111,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.States
-                    .Where(i => i.StateName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.State>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.StateName != Uri.UnescapeDataString(key)))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnStateUpdated(item);
                 this.context.States.Update(item);
@@ -150,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.States
-                    .Where(i => i.StateName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.State>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.States.Where(i => i.StateName == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

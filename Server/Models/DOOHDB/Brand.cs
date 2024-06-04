@@ -10,25 +10,13 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("Brand", Schema = "dbo")]
     public partial class Brand
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BrandId { get; set; }
 
         [Required]
-        [ConcurrencyCheck]
         public string BrandName { get; set; }
 
-        [ConcurrencyCheck]
         public string BrandLogo { get; set; }
 
         public ICollection<Display> Displays { get; set; }

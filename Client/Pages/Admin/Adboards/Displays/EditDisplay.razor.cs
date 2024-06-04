@@ -76,13 +76,12 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
             try
             {
                 var result = await DOOHDBService.UpdateDisplay(displayId:DisplayId, display);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(display);
                 }
-                DialogService.Close(display);
+
             }
             catch (Exception ex)
             {
@@ -96,19 +95,8 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
 
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            display = await DOOHDBService.GetDisplayByDisplayId(displayId:DisplayId);
-        }
     }
 }

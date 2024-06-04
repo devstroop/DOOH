@@ -4,7 +4,7 @@
 <PageTitle>Add CampaignAdboard</PageTitle>
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save CampaignAdboard</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.CampaignAdboard" Data="@campaignAdboard" Visible="@(campaignAdboard != null && canEdit)" Submit="@FormSubmit">
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.CampaignAdboard" Data="@campaignAdboard" Visible="@(campaignAdboard != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Campaign" Component="Campaign" style="width: 100%" />

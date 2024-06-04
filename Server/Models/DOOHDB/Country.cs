@@ -10,16 +10,6 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("Country", Schema = "dbo")]
     public partial class Country
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [Required]
         public string CountryName { get; set; }

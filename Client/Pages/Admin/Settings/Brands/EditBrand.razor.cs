@@ -49,13 +49,10 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
             try
             {
                 var result = await DOOHDBService.UpdateBrand(brandId:BrandId, brand);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(brand);
                 }
-                DialogService.Close(brand);
             }
             catch (Exception ex)
             {
@@ -68,29 +65,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
             DialogService.Close(null);
         }
 
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            brand = await DOOHDBService.GetBrandByBrandId(brandId:BrandId);
-        }
-
-
-        protected async Task Upload()
-        {
-
-        }
-        
-
-
     }
 }

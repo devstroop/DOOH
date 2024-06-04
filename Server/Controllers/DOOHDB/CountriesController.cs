@@ -67,20 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Countries
+                var item = this.context.Countries
                     .Where(i => i.CountryName == Uri.UnescapeDataString(key))
-                    .Include(i => i.Adboards)
-                    .Include(i => i.Providers)
-                    .Include(i => i.States)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Country>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCountryDeleted(item);
                 this.context.Countries.Remove(item);
@@ -111,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Countries
-                    .Where(i => i.CountryName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Country>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.CountryName != Uri.UnescapeDataString(key)))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCountryUpdated(item);
                 this.context.Countries.Update(item);
@@ -150,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Countries
-                    .Where(i => i.CountryName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.Country>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Countries.Where(i => i.CountryName == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

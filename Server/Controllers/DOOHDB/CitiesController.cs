@@ -67,19 +67,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var items = this.context.Cities
+                var item = this.context.Cities
                     .Where(i => i.CityName == Uri.UnescapeDataString(key))
-                    .Include(i => i.Adboards)
-                    .Include(i => i.Providers)
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.City>(Request, items);
-
-                var item = items.FirstOrDefault();
+                    .FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCityDeleted(item);
                 this.context.Cities.Remove(item);
@@ -110,17 +104,9 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Cities
-                    .Where(i => i.CityName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.City>(Request, items);
-
-                var firstItem = items.FirstOrDefault();
-
-                if (firstItem == null)
+                if (item == null || (item.CityName != Uri.UnescapeDataString(key)))
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 this.OnCityUpdated(item);
                 this.context.Cities.Update(item);
@@ -149,17 +135,11 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var items = this.context.Cities
-                    .Where(i => i.CityName == Uri.UnescapeDataString(key))
-                    .AsQueryable();
-
-                items = Data.EntityPatch.ApplyTo<DOOH.Server.Models.DOOHDB.City>(Request, items);
-
-                var item = items.FirstOrDefault();
+                var item = this.context.Cities.Where(i => i.CityName == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
-                    return StatusCode((int)HttpStatusCode.PreconditionFailed);
+                    return BadRequest();
                 }
                 patch.Patch(item);
 

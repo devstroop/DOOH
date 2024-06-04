@@ -86,10 +86,6 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
             DialogService.Close(null);
         }
 
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
     }

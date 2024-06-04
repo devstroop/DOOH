@@ -58,9 +58,6 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
     }

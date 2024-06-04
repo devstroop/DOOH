@@ -7,6 +7,7 @@
 @using Microsoft.JSInterop;
 @using Radzen;
 @using Radzen.Blazor;
+@using System.Text.Json
 
 <RadzenStack Wrap="FlexWrap.Wrap" Orientation="Orientation.Horizontal" Gap="0">
     @* <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
@@ -105,8 +106,13 @@
 
     private async Task DeleteImageClick(MouseEventArgs args, string image)
     {
-        Images = Images.Where(x => x.Image != image).ToList();
+        if (!image.Trim().StartsWith("http"))
+        {
+            await HttpClient.DeleteAsync($"upload/delete?fileName='{image}'");
+        }
+
         ValidatedImages.Remove(image);
+        Images = Images.Where(x => x.Image != image).ToList();
         Change?.Invoke(Images);
     }
 
@@ -117,13 +123,17 @@
 
     private async Task OnComplete(UploadCompleteEventArgs args)
     {
-        // Console log 'args.RawResponse'
-        await JSRuntime.InvokeVoidAsync("console.log", args.RawResponse);
-// progress = 0;
-//         foreach (var file in args.RawResponse)
-//         {
-//             Images.Add(new AdboardImage { Image = file });
-//         }
+        progress = 0;
+        // example 'args.RawResponse' :
+        //{"urls":["/images/1.jpg","/images/2.jpg","/images/3.jpg"]}
+
+        var response = args.RawResponse;
+        var urls = JsonSerializer.Deserialize<Dictionary<string, string[]>>(response);
+
+        foreach (var url in urls["urls"])
+        {
+            Images.Add(new AdboardImage { Image = url });
+        }
 
         await ValidateImages();
         Change?.Invoke(Images);

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using SkiaSharp;
+﻿using SkiaSharp;
 using NcnnDotNet;
 using UltraFaceDotNet;
 using Iot.Device.Media;

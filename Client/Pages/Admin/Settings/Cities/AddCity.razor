@@ -3,7 +3,7 @@
 <PageTitle>Add City</PageTitle>
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save City</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.City" Data="@city" Visible="@(city != null && canEdit)" Submit="@FormSubmit">
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.City" Data="@city" Visible="@(city != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="City Name" Component="CityName" style="width: 100%" />

@@ -4,7 +4,7 @@
 <PageTitle>Add AdboardWifi</PageTitle>
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save AdboardWifi</RadzenAlert>
-        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Data="@adboardWifi" Visible="@(adboardWifi != null && canEdit)" Submit="@FormSubmit">
+        <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.AdboardWifi" Data="@adboardWifi" Visible="@(adboardWifi != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Adboard" Component="Adboard" style="width: 100%" />

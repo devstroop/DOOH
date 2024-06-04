@@ -2,7 +2,7 @@
 <PageTitle>Add Adboard</PageTitle>
 <RadzenColumn SizeMD=12>
     <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Adboard</RadzenAlert>
-    <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboard" Visible="@(adboard != null && canEdit)" Submit="@FormSubmit">
+    <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboard" Visible="@(adboard != null)" Submit="@FormSubmit">
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Provider" Component="Provider" style="width: 100%" />

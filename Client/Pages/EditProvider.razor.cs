@@ -134,13 +134,10 @@ namespace DOOH.Client.Pages
             try
             {
                 var result = await DOOHDBService.UpdateProvider(providerId:ProviderId, provider);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(provider);
                 }
-                DialogService.Close(provider);
             }
             catch (Exception ex)
             {
@@ -154,19 +151,7 @@ namespace DOOH.Client.Pages
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            provider = await DOOHDBService.GetProviderByProviderId(providerId:ProviderId);
-        }
     }
 }

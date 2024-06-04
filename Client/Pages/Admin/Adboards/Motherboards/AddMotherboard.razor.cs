@@ -87,9 +87,6 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
     }

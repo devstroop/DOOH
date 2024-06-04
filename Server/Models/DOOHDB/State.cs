@@ -10,22 +10,11 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("State", Schema = "dbo")]
     public partial class State
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [Required]
         public string StateName { get; set; }
 
         [Required]
-        [ConcurrencyCheck]
         public string CountryName { get; set; }
 
         public Country Country { get; set; }

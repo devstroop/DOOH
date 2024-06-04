@@ -70,19 +70,40 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        // Multiple files upload with parameter
-        [HttpPost("upload/{id}")]
-        public IActionResult Post(IFormFile[] files, int id)
+        // Delete file
+        [HttpDelete("upload/delete")]
+        public IActionResult Delete(string fileName)
         {
-            return Multiple(files);
+            try
+            {
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return BadRequest("File name is required.");
+                }
+
+                var filePath = Path.Combine(_environment.WebRootPath, fileName);
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        // Image file upload
-        [HttpPost("upload/image")]
-        public IActionResult Image(IFormFile file)
-        {
-            return Single(file);
-        }
+
+        // Multiple files upload with parameter
+        //[HttpPost("upload/{id}")]
+        //public IActionResult Post(IFormFile[] files, int id)
+        //{
+        //    return Multiple(files);
+        //}
+
 
         // Private method to save file
         private void SaveFile(IFormFile file, string fileName)

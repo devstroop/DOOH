@@ -9,6 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
 using static System.Net.Mime.MediaTypeNames;
+using DOOH.Client.Pages.Admin.Adboards.Displays;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -196,13 +197,12 @@ namespace DOOH.Client.Pages.Admin.Adboards
             try
             {
                 var result = await DOOHDBService.UpdateAdboard(adboardId:AdboardId, adboard);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(adboard);
                 }
-                DialogService.Close(adboard);
+
             }
             catch (Exception ex)
             {
@@ -216,21 +216,9 @@ namespace DOOH.Client.Pages.Admin.Adboards
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
 
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId);
-        }
-
 
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displaysForDisplayId;

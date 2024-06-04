@@ -10,16 +10,6 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("CampaignAdboard", Schema = "dbo")]
     public partial class CampaignAdboard
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [Required]
         public int CampaignId { get; set; }

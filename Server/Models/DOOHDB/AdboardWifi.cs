@@ -10,16 +10,6 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("AdboardWifi", Schema = "dbo")]
     public partial class AdboardWifi
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [Required]
         public int AdboardId { get; set; }
@@ -27,22 +17,16 @@ namespace DOOH.Server.Models.DOOHDB
         public Adboard Adboard { get; set; }
 
         [Required]
-        [ConcurrencyCheck]
         public string SSID { get; set; }
 
-        [ConcurrencyCheck]
         public string Password { get; set; }
 
-        [ConcurrencyCheck]
         public DateTime? ConnectedAt { get; set; }
 
-        [ConcurrencyCheck]
         public DateTime CreatedAt { get; set; }
 
-        [ConcurrencyCheck]
         public DateTime? UpdatedAt { get; set; }
 
-        [ConcurrencyCheck]
         public bool? HasConnected { get; set; }
     }
 }

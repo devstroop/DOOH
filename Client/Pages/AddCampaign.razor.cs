@@ -57,10 +57,6 @@ namespace DOOH.Client.Pages
             DialogService.Close(null);
         }
 
-
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
     }

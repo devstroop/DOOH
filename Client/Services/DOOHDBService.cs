@@ -117,7 +117,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboard.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboard), Encoding.UTF8, "application/json");
 
@@ -212,7 +211,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboardImage.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardImage), Encoding.UTF8, "application/json");
 
@@ -307,7 +305,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboardNetwork.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardNetwork), Encoding.UTF8, "application/json");
 
@@ -402,7 +399,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboardWifi.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardWifi), Encoding.UTF8, "application/json");
 
@@ -497,7 +493,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", advertisement.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(advertisement), Encoding.UTF8, "application/json");
 
@@ -592,7 +587,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", analytic.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(analytic), Encoding.UTF8, "application/json");
 
@@ -687,7 +681,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", attachment.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(attachment), Encoding.UTF8, "application/json");
 
@@ -782,7 +775,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", billing.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(billing), Encoding.UTF8, "application/json");
 
@@ -877,7 +869,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", brand.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(brand), Encoding.UTF8, "application/json");
 
@@ -972,7 +963,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", campaign.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaign), Encoding.UTF8, "application/json");
 
@@ -1067,7 +1057,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", campaignAdboard.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignAdboard), Encoding.UTF8, "application/json");
 
@@ -1162,7 +1151,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", category.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(category), Encoding.UTF8, "application/json");
 
@@ -1257,7 +1245,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", city.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(city), Encoding.UTF8, "application/json");
 
@@ -1352,7 +1339,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", country.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(country), Encoding.UTF8, "application/json");
 
@@ -1447,7 +1433,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", display.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(display), Encoding.UTF8, "application/json");
 
@@ -1542,7 +1527,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", earning.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(earning), Encoding.UTF8, "application/json");
 
@@ -1637,7 +1621,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", motherboard.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(motherboard), Encoding.UTF8, "application/json");
 
@@ -1732,7 +1715,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", provider.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(provider), Encoding.UTF8, "application/json");
 
@@ -1827,7 +1809,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", state.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(state), Encoding.UTF8, "application/json");
 
@@ -1922,7 +1903,6 @@ namespace DOOH.Client
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", tax.ETag);    
 
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(tax), Encoding.UTF8, "application/json");
 

@@ -108,13 +108,10 @@ namespace DOOH.Client.Pages
             try
             {
                 var result = await DOOHDBService.UpdateCampaignAdboard(campaignId:CampaignId, adboardId:AdboardId, campaignAdboard);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                     hasChanges = true;
-                     canEdit = false;
-                     return;
+                    DialogService.Close(campaignAdboard);
                 }
-                DialogService.Close(campaignAdboard);
             }
             catch (Exception ex)
             {
@@ -128,19 +125,7 @@ namespace DOOH.Client.Pages
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            campaignAdboard = await DOOHDBService.GetCampaignAdboardByCampaignIdAndAdboardId(campaignId:CampaignId, adboardId:AdboardId);
-        }
     }
 }

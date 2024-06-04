@@ -47,13 +47,10 @@ namespace DOOH.Client.Pages.Admin.Settings.Countries
             try
             {
                 var result = await DOOHDBService.UpdateCountry(countryName: CountryName, country);
-                if (result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed)
+                if (result != null)
                 {
-                    hasChanges = true;
-                    canEdit = false;
-                    return;
+                    DialogService.Close(country);
                 }
-                DialogService.Close(country);
             }
             catch (Exception ex)
             {
@@ -67,19 +64,8 @@ namespace DOOH.Client.Pages.Admin.Settings.Countries
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
-
         [Inject]
         protected SecurityService Security { get; set; }
 
-
-        protected async Task ReloadButtonClick(MouseEventArgs args)
-        {
-            hasChanges = false;
-            canEdit = true;
-
-            country = await DOOHDBService.GetCountryByCountryName(countryName: CountryName);
-        }
     }
 }

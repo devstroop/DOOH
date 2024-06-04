@@ -117,8 +117,6 @@ namespace DOOH.Client.Pages
         }
 
 
-        protected bool hasChanges = false;
-        protected bool canEdit = true;
 
         [Inject]
         protected SecurityService Security { get; set; }

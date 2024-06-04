@@ -10,22 +10,11 @@ namespace DOOH.Server.Models.DOOHDB
     [Table("City", Schema = "dbo")]
     public partial class City
     {
-
-        [NotMapped]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        [JsonPropertyName("@odata.etag")]
-        public string ETag
-        {
-            get;
-            set;
-        }
-
         [Key]
         [Required]
         public string CityName { get; set; }
 
         [Required]
-        [ConcurrencyCheck]
         public string StateName { get; set; }
 
         public State State { get; set; }
