@@ -42,6 +42,8 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
 
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
+
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
 
@@ -213,14 +215,9 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [Inject]
         protected SecurityService Security { get; set; }
 
-
-
-
-
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displaysForDisplayId;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Motherboard> motherboardsForMotherboardId;
-
 
         protected int displaysForDisplayIdCount;
         protected DOOH.Server.Models.DOOHDB.Display displaysForDisplayIdValue;

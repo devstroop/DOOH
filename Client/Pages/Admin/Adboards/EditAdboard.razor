@@ -60,10 +60,6 @@
                 </RadzenDropDownDataGrid>
             </RadzenColumn>
         </RadzenRow>
-
-
-
-
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
@@ -104,7 +100,7 @@
                 <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
+                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

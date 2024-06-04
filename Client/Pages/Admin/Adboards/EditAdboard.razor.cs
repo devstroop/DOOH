@@ -1,15 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
-using Radzen.Blazor;
-using DOOH.Server.Models.DOOHDB;
-using static System.Net.Mime.MediaTypeNames;
-using DOOH.Client.Pages.Admin.Adboards.Displays;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -38,12 +30,17 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [Parameter]
         public int AdboardId { get; set; }
 
+        [Inject]
+        protected SecurityService Security { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId, expand: "AdboardImages");
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
+
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
 
@@ -214,12 +211,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
         {
             DialogService.Close(null);
         }
-
-
-
-        [Inject]
-        protected SecurityService Security { get; set; }
-
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displaysForDisplayId;
 
