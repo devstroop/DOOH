@@ -1,0 +1,27 @@
+@layout AdminLayout
+@page "/admin/settings"
+
+@attribute [Authorize]
+
+<PageTitle>Settings</PageTitle>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenText Text="Settings" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+    </RadzenRow>
+    
+    <RadzenTabs @bind-SelectedIndex=@selectedIndex>
+        <Tabs>
+            <RadzenTabsItem Text="Customers">
+                Customers
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Orders">
+                Orders
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Order Details">
+                Order Details
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</RadzenStack>

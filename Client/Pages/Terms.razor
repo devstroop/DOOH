@@ -4,10 +4,20 @@
 
 <PageTitle>Terms</PageTitle>
 <RadzenStack>
-    <RadzenRow>
-        <RadzenColumn Size="12">
-            <RadzenText Text="Terms" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-        </RadzenColumn>
-    </RadzenRow>
-    <RadzenHtml @bind-Value="@policy.Content" Visible="@(policy != null)"></RadzenHtml>
+    @if (policy != null && !isLoading)
+    {
+        @((MarkupString)policy.Content)
+    }
+    else if (isLoading)
+    {
+        <RadzenPanel>
+            <RadzenText Text="Loading..." />
+        </RadzenPanel>
+    }
+    else
+    {
+        <RadzenPanel>
+            <RadzenText Text="No terms of use found." />
+        </RadzenPanel>
+    }
 </RadzenStack>

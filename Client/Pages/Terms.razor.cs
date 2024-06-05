@@ -37,6 +37,7 @@ namespace DOOH.Client.Pages
         public DOOHDBService DOOHDBService { get; set; }
 
         protected DOOH.Server.Models.DOOHDB.Policy policy;
+        protected bool isLoading = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -53,11 +54,18 @@ namespace DOOH.Client.Pages
 
         private async Task Fetch()
         {
+            isLoading = false;
+            StateHasChanged();
             try
             {
                 policy = await DOOHDBService.GetPolicyById(id: "terms");
             }
             catch { }
+            finally
+            {
+                isLoading = false;
+                StateHasChanged();
+            }
         }
 
     }

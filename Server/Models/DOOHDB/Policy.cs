@@ -14,8 +14,6 @@ namespace DOOH.Server.Models.DOOHDB
         [Required]
         public string Id { get; set; }
 
-        public DateTime EffectiveDate { get; set; }
-
         public string Content { get; set; }
     }
 }

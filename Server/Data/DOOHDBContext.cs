@@ -260,10 +260,6 @@ namespace DOOH.Server.Data
               .Property(p => p.TotalDuration)
               .HasDefaultValueSql(@"((0))");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Policy>()
-              .Property(p => p.EffectiveDate)
-              .HasDefaultValueSql(@"(sysdatetime())");
-
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.IsActive)
               .HasDefaultValueSql(@"((0))");
@@ -334,10 +330,6 @@ namespace DOOH.Server.Data
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.UpdatedAt)
-              .HasColumnType("datetime");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Policy>()
-              .Property(p => p.EffectiveDate)
               .HasColumnType("datetime");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()

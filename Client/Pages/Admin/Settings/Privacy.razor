@@ -17,11 +17,9 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start">
-        <RadzenLabel Text="Effective Date" Component="EffectiveDate" />
-        <RadzenDatePicker DateFormat="MM/dd/yyyy" @bind-Value="@policy.EffectiveDate" Name="EffectiveDate" Visible="@(policy != null && isEditing)" />
-        <RadzenText class="rz-mb-0" Text="@policy.EffectiveDate.ToString()" Visible="@(policy != null && !isEditing)" />
-    </RadzenStack>
     <RadzenHtmlEditor @bind-Value=@policy.Content style="min-height: 400px;" Visible="@(policy != null && isEditing)"></RadzenHtmlEditor>
-    <RadzenHtml @bind-Value="@policy.Content" Visible="@(policy != null && !isEditing)"></RadzenHtml>
+    @if (policy != null && !isEditing)
+    {
+        @((MarkupString)policy.Content)
+    }
 </RadzenStack>

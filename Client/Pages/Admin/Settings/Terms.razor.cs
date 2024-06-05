@@ -61,12 +61,13 @@ namespace DOOH.Client.Pages.Admin.Settings
                 if (isNew)
                 {
                     await DOOHDBService.CreatePolicy(policy);
-                    isNew = false;
                 }
                 else
                 {
                     await DOOHDBService.UpdatePolicy(policy.Id, policy);
                 }
+                isNew = false;
+                isEditing = false;
                 NotificationService.Notify(NotificationSeverity.Success, "Success", "Terms of use saved!");
             }
             catch (Exception ex)
