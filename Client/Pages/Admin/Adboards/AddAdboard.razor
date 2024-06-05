@@ -104,7 +104,7 @@
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <UploadComponent @bind-Images="@images" />
+                <UploadComponent Items="@adboardImages.Select(x => x.Image).ToList()" Delete="@OnDeleteImage" Add="@OnAddImage" Refresh="@OnRefreshImage" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

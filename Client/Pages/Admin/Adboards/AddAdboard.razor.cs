@@ -34,6 +34,8 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        protected List<AdboardImage> adboardImages;
+
         protected override async Task OnInitializedAsync()
         {
             adboard = new DOOH.Server.Models.DOOHDB.Adboard();
@@ -41,23 +43,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
-
-        protected List<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
-        protected List<string> images 
-        { 
-            get => adboardImages.Select(x => x.Image).ToList();
-            set 
-            {
-                adboardImages.RemoveAll(x => !images.Contains(x.Image));
-                foreach (var image in value)
-                {
-                    if (!adboardImages.Any(x => x.Image == image))
-                    {
-                        adboardImages.Add(new DOOH.Server.Models.DOOHDB.AdboardImage() { AdboardImageId=0, Image = image });
-                    }
-                }
-            }
-        }
 
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
@@ -215,6 +200,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
                 {
                     foreach (var each in adboardImages)
                     {
+                        each.AdboardId = adboardResult.AdboardId;
                         if (each.AdboardImageId == 0)
                         {
                             each.AdboardId = adboardResult.AdboardId;
@@ -304,56 +290,28 @@ namespace DOOH.Client.Pages.Admin.Adboards
                 NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Motherboard" });
             }
         }
-        int upoadProgress = 0;
-        bool uploadVisible = false;
-        List<Radzen.FileInfo> uploadFiles = new List<Radzen.FileInfo>();
-        List<string> uploadImages = new List<string>();
-        protected void OnUploadProgress(UploadProgressArgs args)
+
+        protected async void OnDeleteImage(string image)
         {
-            upoadProgress = args.Progress;
-            if (args.Progress == 100)
+            var adboardImage = adboardImages.FirstOrDefault(x => x.Image == image);
+            if (adboardImage != null)
             {
-                uploadVisible = false;
-            }
-            else
-            {
-                uploadVisible = true;
-            }
-        }
-        protected void OnUploadChange(UploadChangeEventArgs args)
-        {
-            if (args.Files != null && args.Files.Count() > 0)
-            {
-                foreach(var file in args.Files)
+                if (adboardImage.AdboardImageId != 0)
                 {
-                    if(file.ContentType.Contains("image"))
-                    {
-                        try
-                        {
-                            // read file
-                            var stream = file.OpenReadStream();
-                            var base64 = $"data:{file.ContentType};base64,{Convert.ToBase64String(new System.IO.BinaryReader(stream).ReadBytes((int)stream.Length))}";
-                            uploadImages.Add(base64);
-                            stream.Close();
-                            uploadFiles.Add(file);
-                        }
-                        catch (Exception ex)
-                        {
-                            NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"File {file.Name} is too large" });
-                            return;
-                        }
-                    }
+                    await DOOHDBService.DeleteAdboardImage(adboardImage.AdboardImageId);
                 }
-                uploadFiles.AddRange(args.Files);
+                adboardImages.Remove(adboardImage);
             }
-        }
-
-
-        protected void AdboardImagesChange(ICollection<DOOH.Server.Models.DOOHDB.AdboardImage> images)
-        {
-            adboard.AdboardImages = images;
             StateHasChanged();
         }
 
+        protected async void OnAddImage(string image)
+        {
+            var adboardImage = new DOOH.Server.Models.DOOHDB.AdboardImage() { AdboardImageId = 0, Image = image };
+            //adboardImage = await DOOHDBService.CreateAdboardImage(adboardImage);
+            adboardImages.Add(adboardImage);
+            StateHasChanged();
+        }
+        protected void OnRefreshImage() => StateHasChanged();
     }
 }

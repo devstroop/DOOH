@@ -2,6 +2,7 @@ using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
+using DOOH.Server.Models.DOOHDB;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -33,6 +34,8 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected List<AdboardImage> adboardImages;
+
         protected override async Task OnInitializedAsync()
         {
             adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId, expand: "AdboardImages");
@@ -41,22 +44,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
 
-        protected List<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
-        protected List<string> images
-        {
-            get => adboardImages.Select(x => x.Image).ToList();
-            set
-            {
-                adboardImages.RemoveAll(x => !images.Contains(x.Image));
-                foreach (var image in value)
-                {
-                    if (!adboardImages.Any(x => x.Image == image))
-                    {
-                        adboardImages.Add(new DOOH.Server.Models.DOOHDB.AdboardImage() { AdboardImageId = 0, AdboardId=adboard.AdboardId, Image = image });
-                    }
-                }
-            }
-        }
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
 
@@ -303,11 +290,29 @@ namespace DOOH.Client.Pages.Admin.Adboards
             }
         }
 
-        protected void AdboardImagesChange(ICollection<DOOH.Server.Models.DOOHDB.AdboardImage> images)
+
+        protected async void OnDeleteImage(string image)
         {
-            adboard.AdboardImages = images;
+            var adboardImage = adboardImages.FirstOrDefault(x => x.Image == image);
+            if (adboardImage != null)
+            {
+                if (adboardImage.AdboardImageId != 0)
+                {
+                    await DOOHDBService.DeleteAdboardImage(adboardImage.AdboardImageId);
+                }
+                adboardImages.Remove(adboardImage);
+            }
             StateHasChanged();
         }
 
+        protected async void OnAddImage(string image)
+        {
+            var adboardImage = new DOOH.Server.Models.DOOHDB.AdboardImage() { AdboardImageId = 0, AdboardId = AdboardId, Image = image };
+            //adboardImage = await DOOHDBService.CreateAdboardImage(adboardImage);
+            adboardImages.Add(adboardImage);
+            StateHasChanged();
+        }
+
+        protected void OnRefreshImage() => StateHasChanged();
     }
 }

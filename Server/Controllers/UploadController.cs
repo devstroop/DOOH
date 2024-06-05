@@ -71,17 +71,17 @@ namespace DOOH.Server.Controllers
         }
 
         // Delete file
-        [HttpDelete("upload/delete")]
-        public IActionResult Delete(string fileName)
+        [HttpDelete("upload/delete/{**key}")]
+        public IActionResult Delete(string key)
         {
             try
             {
-                if (string.IsNullOrEmpty(fileName))
+                if (string.IsNullOrEmpty(key))
                 {
                     return BadRequest("File name is required.");
                 }
-
-                var filePath = Path.Combine(_environment.WebRootPath, fileName);
+                key = key.Replace("/", "\\");
+                var filePath = Path.Combine(_environment.WebRootPath, key);
                 if (System.IO.File.Exists(filePath))
                 {
                     System.IO.File.Delete(filePath);
@@ -95,14 +95,6 @@ namespace DOOH.Server.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
-
-        // Multiple files upload with parameter
-        //[HttpPost("upload/{id}")]
-        //public IActionResult Post(IFormFile[] files, int id)
-        //{
-        //    return Multiple(files);
-        //}
 
 
         // Private method to save file
