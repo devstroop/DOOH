@@ -1,5 +1,3 @@
-@page "/edit-provider"
-
 @attribute [Authorize]
 <PageTitle>Edit Provider</PageTitle>
 
@@ -7,101 +5,85 @@
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Provider</RadzenAlert>
         <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Provider" Data="@provider" Visible="@(provider != null)" Submit="@FormSubmit">
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Provider Name" Component="ProviderName" style="width: 100%" />
+                <RadzenColumn SizeMD="4">
+                    <RadzenLabel Text="Name" Component="ProviderName" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.ProviderName" Name="ProviderName" />
                     <RadzenRequiredValidator Component="ProviderName" Text="ProviderName is required" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Provider Company" Component="ProviderCompany" style="width: 100%" />
+                <RadzenColumn SizeMD="4">
+                    <RadzenLabel Text="Company" Component="ProviderCompany" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.ProviderCompany" Name="ProviderCompany" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Provider Email" Component="ProviderEmail" style="width: 100%" />
+                <RadzenColumn SizeMD="4">
+                    <RadzenLabel Text="Email" Component="ProviderEmail" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.ProviderEmail" Name="ProviderEmail" />
                     <RadzenRequiredValidator Component="ProviderEmail" Text="ProviderEmail is required" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Provider Phone" Component="ProviderPhone" style="width: 100%" />
+                <RadzenColumn SizeMD="4">
+                    <RadzenLabel Text="Phone" Component="ProviderPhone" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.ProviderPhone" Name="ProviderPhone" />
                     <RadzenRequiredValidator Component="ProviderPhone" Text="ProviderPhone is required" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
+                <RadzenColumn SizeMD="4">
                     <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.Address" Name="Address" />
                     <RadzenRequiredValidator Component="Address" Text="Address is required" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
+                <RadzenColumn SizeMD="4">
                     <RadzenLabel Text="City" Component="City" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenDropDownDataGrid Data="@citiesForCityName" TextProperty="CityName" ValueProperty="CityName" AllowClear=true
                          Placeholder="Choose City" style="display: block; width: 100%" @bind-Value="@provider.CityName" Name="CityName"
                         SelectedValue=@citiesForCityNameValue Count=@citiesForCityNameCount LoadData=@citiesForCityNameLoadData />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
+                <RadzenColumn SizeMD="4">
                     <RadzenLabel Text="State" Component="State" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenDropDownDataGrid Data="@statesForStateName" TextProperty="StateName" ValueProperty="StateName" AllowClear=true
                          Placeholder="Choose State" style="display: block; width: 100%" @bind-Value="@provider.StateName" Name="StateName"
                         SelectedValue=@statesForStateNameValue Count=@statesForStateNameCount LoadData=@statesForStateNameLoadData />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
+                <RadzenColumn SizeMD="4">
                     <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
+                <RadzenColumn SizeMD="8">
                     <RadzenDropDownDataGrid Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
                          Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@provider.CountryName" Name="CountryName"
                         SelectedValue=@countriesForCountryNameValue Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
+                <RadzenColumn SizeMD="4">
                     <RadzenLabel Text="Is Active" Component="IsActive" style="width: 100%" />
                 </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenCheckBox @bind-Value="@provider.IsActive" Name="IsActive" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Created At" Component="CreatedAt" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@provider.CreatedAt" Name="CreatedAt" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Updated At" Component="UpdatedAt" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@provider.UpdatedAt" Name="UpdatedAt" />
+                <RadzenColumn SizeMD="8">
+                    <RadzenSwitch @bind-Value="@provider.IsActive" Name="IsActive" />
                 </RadzenColumn>
             </RadzenRow>
           <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
