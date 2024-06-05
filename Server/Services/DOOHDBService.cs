@@ -2876,6 +2876,167 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
+        public async Task ExportPoliciesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/policies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/policies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportPoliciesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/policies/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/policies/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnPoliciesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Policy> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Policy>> GetPolicies(Query query = null)
+        {
+            var items = Context.Policies.AsQueryable();
+
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnPoliciesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnPolicyGet(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnGetPolicyById(ref IQueryable<DOOH.Server.Models.DOOHDB.Policy> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.Policy> GetPolicyById(string id)
+        {
+            var items = Context.Policies
+                              .AsNoTracking()
+                              .Where(i => i.Id == id);
+
+ 
+            OnGetPolicyById(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnPolicyGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnPolicyCreated(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnAfterPolicyCreated(DOOH.Server.Models.DOOHDB.Policy item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Policy> CreatePolicy(DOOH.Server.Models.DOOHDB.Policy policy)
+        {
+            OnPolicyCreated(policy);
+
+            var existingItem = Context.Policies
+                              .Where(i => i.Id == policy.Id)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Policies.Add(policy);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(policy).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterPolicyCreated(policy);
+
+            return policy;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.Policy> CancelPolicyChanges(DOOH.Server.Models.DOOHDB.Policy item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnPolicyUpdated(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnAfterPolicyUpdated(DOOH.Server.Models.DOOHDB.Policy item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Policy> UpdatePolicy(string id, DOOH.Server.Models.DOOHDB.Policy policy)
+        {
+            OnPolicyUpdated(policy);
+
+            var itemToUpdate = Context.Policies
+                              .Where(i => i.Id == policy.Id)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(policy);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterPolicyUpdated(policy);
+
+            return policy;
+        }
+
+        partial void OnPolicyDeleted(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnAfterPolicyDeleted(DOOH.Server.Models.DOOHDB.Policy item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Policy> DeletePolicy(string id)
+        {
+            var itemToDelete = Context.Policies
+                              .Where(i => i.Id == id)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnPolicyDeleted(itemToDelete);
+
+
+            Context.Policies.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterPolicyDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportProvidersToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/providers/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/providers/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);

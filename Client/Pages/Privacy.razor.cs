@@ -10,7 +10,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Pages
 {
-    public partial class EditCampaign
+    public partial class Privacy
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -29,42 +29,36 @@ namespace DOOH.Client.Pages
 
         [Inject]
         protected NotificationService NotificationService { get; set; }
-        [Inject]
-        public DOOHDBService DOOHDBService { get; set; }
-
-        [Parameter]
-        public int CampaignId { get; set; }
-
-        protected override async Task OnInitializedAsync()
-        {
-            campaign = await DOOHDBService.GetCampaignByCampaignId(campaignId:CampaignId);
-        }
-        protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Campaign campaign;
-
-        protected async Task FormSubmit()
-        {
-            try
-            {
-                var result = await DOOHDBService.UpdateCampaign(campaignId:CampaignId, campaign);
-                if (result != null)
-                {
-                    DialogService.Close(campaign);
-                }
-            }
-            catch (Exception ex)
-            {
-                errorVisible = true;
-            }
-        }
-
-        protected async Task CancelButtonClick(MouseEventArgs args)
-        {
-            DialogService.Close(null);
-        }
-
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        [Inject]
+        public DOOHDBService DOOHDBService { get; set; }
+
+        protected DOOH.Server.Models.DOOHDB.Policy policy;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await Fetch();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Fetch();
+            }
+        }
+
+        private async Task Fetch()
+        {
+            try
+            {
+                policy = await DOOHDBService.GetPolicyById(id: "privacy");
+            }
+            catch { }
+        }
+
     }
 }

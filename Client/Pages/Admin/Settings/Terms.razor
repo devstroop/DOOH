@@ -1,0 +1,27 @@
+@layout AdminLayout
+@page "/admin/settings/terms"
+
+@attribute [Authorize]
+
+<PageTitle>Terms</PageTitle>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="6">
+            <RadzenText Text="Terms" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Text="Save" Icon="save" Click="@SaveClick" ButtonStyle="ButtonStyle.Primary" Visible="@isEditing" />
+                <RadzenButton Text="Cancel" Click="@CancelClick" ButtonStyle="ButtonStyle.Light" Visible="@isEditing" />
+                <RadzenButton Text="Edit" Click="@EditClick" ButtonStyle="ButtonStyle.Light" Visible="!isEditing" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start">
+        <RadzenLabel Text="Effective Date" Component="EffectiveDate" />
+        <RadzenDatePicker DateFormat="MM/dd/yyyy" @bind-Value="@policy.EffectiveDate" Name="EffectiveDate" Visible="@(policy != null && isEditing)" />
+        <RadzenText class="rz-mb-0" Text="@policy.EffectiveDate.ToString()" Visible="@(policy != null && !isEditing)" />
+    </RadzenStack>
+    <RadzenHtmlEditor @bind-Value=@policy.Content style="min-height: 400px;" Visible="@(policy != null && isEditing)"></RadzenHtmlEditor>
+    <RadzenHtml @bind-Value="@policy.Content" Visible="@(policy != null && !isEditing)"></RadzenHtml>
+</RadzenStack>

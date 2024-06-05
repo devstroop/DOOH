@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Adboards.Wifis
+namespace DOOH.Client.Pages.Admin.Campaigns
 {
-    public partial class AddAdboardWifi
+    public partial class AddCampaign
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -34,20 +34,17 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
 
         protected override async Task OnInitializedAsync()
         {
-            adboardWifi = new DOOH.Server.Models.DOOHDB.AdboardWifi();
+            campaign = new DOOH.Server.Models.DOOHDB.Campaign();
         }
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.AdboardWifi adboardWifi;
+        protected DOOH.Server.Models.DOOHDB.Campaign campaign;
 
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.CreateAdboardWifi(adboardWifi);
-                if(result != null)
-                {
-                    DialogService.Close(adboardWifi);
-                }
+                var result = await DOOHDBService.CreateCampaign(campaign);
+                DialogService.Close(campaign);
             }
             catch (Exception ex)
             {

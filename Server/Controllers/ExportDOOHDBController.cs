@@ -257,6 +257,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetMotherboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/policies/csv")]
+        [HttpGet("/export/DOOHDB/policies/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportPoliciesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetPolicies(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/policies/excel")]
+        [HttpGet("/export/DOOHDB/policies/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportPoliciesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetPolicies(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/providers/csv")]
         [HttpGet("/export/DOOHDB/providers/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportProvidersToCSV(string fileName = null)

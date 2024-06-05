@@ -22,7 +22,7 @@
     <RadzenRow>
         <RadzenColumn SizeMD=12>
             <RadzenDataGrid @ref="grid0" ColumnWidth="200px" AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-                            Data="@providers" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Provider" RowDoubleClick="@EditRow">
+                            Data="@providers" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Provider" RowClick="@EditRow">
                 <Columns>
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="ProviderId" Title="Id" Width="96px">
                     </RadzenDataGridColumn>
@@ -44,7 +44,9 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="IsActive" Title="Active">
                         <Template>
-                            <RadzenSwitch @bind-Value="@(context.IsActive)" Disabled="true" />
+                            <RadzenStack JustifyContent="JustifyContent.Center">
+                                <RadzenSwitch @bind-Value="@(context.IsActive)" Disabled="true" />
+                            </RadzenStack>
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="CreatedAt" Title="Created At">

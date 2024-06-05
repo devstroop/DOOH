@@ -1,0 +1,13 @@
+@layout PublicLayout
+@page "/privacy"
+
+
+<PageTitle>Privacy</PageTitle>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenText Text="Privacy" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenHtml @bind-Value="@policy.Content" Visible="@(policy != null)"></RadzenHtml>
+</RadzenStack>

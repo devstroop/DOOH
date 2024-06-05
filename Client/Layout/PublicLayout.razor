@@ -19,7 +19,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
                     <AuthorizeView>
                         <Authorized>
-                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="ButtonSize.Medium" />
+                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Small" />
                             <RadzenProfileMenu Click="@ProfileMenuClick">
                                 <ChildContent>
                                     @* <RadzenProfileMenuItem Path="/dashboard" Icon="dashboard" Text="Dashboard" /> *@
@@ -51,13 +51,20 @@
         <RadzenRow>
             <RadzenColumn SizeMD="6">
                 <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.Start">
-                    <CulturePicker />
+                    @* <CulturePicker /> *@
+                    <RadzenText Text="Doohfy.com" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    <RadzenText Text="Copyright Ⓒ 2024" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn SizeMD="6">
                 <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                    <RadzenText Text="DOOH v1.0.0" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-                    <RadzenText Text="Copyright Ⓒ 2024" class="rz-mb-0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                    <RadzenStack AlignItems="Radzen.AlignItems.Center" Orientation="Radzen.Orientation.Horizontal" Gap="0.25rem" >
+                        <RadzenText class="rz-mb-0" Text="Developed by" Style="font-size: small" />
+                        <RadzenLink Text="Devstroop Technologies" Path="https://devstroop.com" Style="font-size: small" />
+                    </RadzenStack>
+                    
+                    <RadzenLink Text="Privacy" Path="/privacy" Style="font-size: small" />
+                    <RadzenLink Text="Terms" Path="/terms" Style="font-size: small" />
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>

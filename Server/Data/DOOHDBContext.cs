@@ -260,6 +260,10 @@ namespace DOOH.Server.Data
               .Property(p => p.TotalDuration)
               .HasDefaultValueSql(@"((0))");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Policy>()
+              .Property(p => p.EffectiveDate)
+              .HasDefaultValueSql(@"(sysdatetime())");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.IsActive)
               .HasDefaultValueSql(@"((0))");
@@ -332,6 +336,10 @@ namespace DOOH.Server.Data
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Policy>()
+              .Property(p => p.EffectiveDate)
+              .HasColumnType("datetime");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
@@ -375,6 +383,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Earning> Earnings { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Motherboard> Motherboards { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.Policy> Policies { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
 

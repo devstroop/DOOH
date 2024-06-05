@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Campaigns
 {
-    public partial class AddCampaign
+    public partial class EditCampaign
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -32,9 +32,12 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        [Parameter]
+        public int CampaignId { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            campaign = new DOOH.Server.Models.DOOHDB.Campaign();
+            campaign = await DOOHDBService.GetCampaignByCampaignId(campaignId:CampaignId);
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Campaign campaign;
@@ -43,8 +46,11 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.CreateCampaign(campaign);
-                DialogService.Close(campaign);
+                var result = await DOOHDBService.UpdateCampaign(campaignId:CampaignId, campaign);
+                if (result != null)
+                {
+                    DialogService.Close(campaign);
+                }
             }
             catch (Exception ex)
             {
@@ -56,6 +62,7 @@ namespace DOOH.Client.Pages
         {
             DialogService.Close(null);
         }
+
 
         [Inject]
         protected SecurityService Security { get; set; }
