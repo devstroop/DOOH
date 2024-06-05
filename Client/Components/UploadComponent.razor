@@ -10,16 +10,12 @@
 @using System.Text.Json
 
 <RadzenStack Wrap="FlexWrap.Wrap" Orientation="Orientation.Horizontal" Gap="0">
-    @* <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
-    <RadzenImage Path="/images/warning.png" Style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; margin: 6px; border: 1px solid #cfcfcf; box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);" />
-    <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" />
-    </RadzenStack> *@
-
-    @foreach (var image in Images ?? new List<AdboardImage>())
+    @foreach (var image in Images ?? new List<string>())
     {
         <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
-            <RadzenImage Path="@ValidatedImages.GetValueOrDefault(image.Image, "/images/warning.png")" Style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; margin: 6px; border: 1px solid #cfcfcf; box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);" />
-            <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@((args) => DeleteImageClick(args, image.Image))" />
+            <RadzenImage Path="@_validatedImages.GetValueOrDefault(image, "/images/warning.png")" Style="width: 84px; height: 84px; object-fit: cover; border-radius: 8px; margin: 6px; border: 1px solid #cfcfcf; box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);" />
+            <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@((args) => DeleteImageClick(args, image))" />
+            <RadzenProgressBarCircular Value="@progress" Size="ProgressBarCircularSize.Small" Visible="@(progress > 0 && progress < 100)" />
         </RadzenStack>
     }
     <RadzenUpload Id="ddUpload" Icon="add" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" />
@@ -54,9 +50,10 @@
         }
 </style>
 @code {
-    [Parameter] public ICollection<AdboardImage> Images { get; set; }
-    [Parameter] public Action<ICollection<AdboardImage>> Change { get; set; }
-    private Dictionary<string, string> ValidatedImages = new Dictionary<string, string>();
+    [Parameter] public List<string> Images { get; set; }
+    [Parameter] public Action<List<string>> ImagesChanged { get; set; }
+    [Parameter] public Action<int> Progress { get; set; }
+    private Dictionary<string, string> _validatedImages = new Dictionary<string, string>();
     private int progress = 0;
     private string uploadText => progress > 0 && progress < 100 ? $"{progress}%" : string.Empty;
 
@@ -71,10 +68,10 @@
 
     private async Task ValidateImages()
     {
-        foreach (var image in Images ?? new List<AdboardImage>())
+        foreach (var image in Images ?? new List<string>())
         {
-            var validImage = await GetValidImageAsync(image.Image);
-            ValidatedImages[image.Image] = validImage;
+            var validImage = await GetValidImageAsync(image);
+            _validatedImages[image] = validImage;
         }
     }
 
@@ -111,19 +108,15 @@
             await HttpClient.DeleteAsync($"upload/delete?fileName='{image}'");
         }
 
-        ValidatedImages.Remove(image);
-        Images = Images.Where(x => x.Image != image).ToList();
-        Change?.Invoke(Images);
+        _validatedImages.Remove(image);
+        Images = Images.Where(x => x != image).ToList();
+        ImagesChanged?.Invoke(Images);
     }
 
-    private void OnProgress(UploadProgressArgs args)
-    {
-        progress = args.Progress;
-    }
+    private void OnProgress(UploadProgressArgs args) => Progress?.Invoke(args.Progress);
 
     private async Task OnComplete(UploadCompleteEventArgs args)
     {
-        progress = 0;
         // example 'args.RawResponse' :
         //{"urls":["/images/1.jpg","/images/2.jpg","/images/3.jpg"]}
 
@@ -132,10 +125,10 @@
 
         foreach (var url in urls["urls"])
         {
-            Images.Add(new AdboardImage { Image = url });
+            Images.Add(url);
         }
 
         await ValidateImages();
-        Change?.Invoke(Images);
+        ImagesChanged?.Invoke(Images);
     }
 }

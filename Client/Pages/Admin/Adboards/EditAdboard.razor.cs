@@ -36,11 +36,27 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected override async Task OnInitializedAsync()
         {
             adboard = await DOOHDBService.GetAdboardByAdboardId(adboardId:AdboardId, expand: "AdboardImages");
+            adboardImages = adboard.AdboardImages.ToList();
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Adboard adboard;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
+        protected List<DOOH.Server.Models.DOOHDB.AdboardImage> adboardImages;
+        protected List<string> images
+        {
+            get => adboardImages.Select(x => x.Image).ToList();
+            set
+            {
+                adboardImages.RemoveAll(x => !images.Contains(x.Image));
+                foreach (var image in value)
+                {
+                    if (!adboardImages.Any(x => x.Image == image))
+                    {
+                        adboardImages.Add(new DOOH.Server.Models.DOOHDB.AdboardImage() { AdboardImageId = 0, AdboardId=adboard.AdboardId, Image = image });
+                    }
+                }
+            }
+        }
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Provider> providersForProviderId;
 
@@ -197,6 +213,22 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
                 if (result != null)
                 {
+                    foreach (var each in adboardImages)
+                    {
+                        if (each.AdboardImageId == 0)
+                        {
+                            var adboardImageResult = await DOOHDBService.CreateAdboardImage(each);
+                            if (adboardImageResult != null)
+                            {
+                                each.AdboardImageId = adboardImageResult.AdboardImageId;
+                            }
+                        }
+                        else
+                        {
+                            await DOOHDBService.UpdateAdboardImage(each.AdboardImageId, each);
+                        }
+                    }
+                    adboard.AdboardImages = adboardImages;
                     DialogService.Close(adboard);
                 }
 
