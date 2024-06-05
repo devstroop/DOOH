@@ -7,10 +7,7 @@
             <RadzenColumn Size="12">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" class="rz-mb-1">
                     <RadzenText Text="@($"#{Context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="05" AlignItems="AlignItems.Center">
-                        <RadzenIcon Icon="fiber_manual_record" IconStyle="@(Context.IsActive ? IconStyle.Success : IconStyle.Danger)" Style="font-size: 12px;filter: saturate(4) drop-shadow(1px 1px 2px var(--rz-success));" />
-                        <RadzenText Text="Online" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: 500" />
-                    </RadzenStack>
+                    <StatusComponent Status="@Context.IsActive" />
                 </RadzenStack>
                 <RadzenStack Gap="0" AlignItems="AlignItems.Start">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">

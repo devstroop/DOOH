@@ -116,7 +116,11 @@
     --rz-series-23: #3db845;
     --rz-series-24: #3db8a1;
     --rz-border-radius: 2px;
-    --rz-button-border-radius: 0.75rem;
+    --rz-button-border-radius: 0.5rem;
+    --rz-badge-border-radius: 6px;
+    --rz-badge-line-height: 1rem;
+    --rz-badge-font-weight: 600px;
+    --rz-switch-checked-background-color: green;
 }
 
 body {

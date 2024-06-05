@@ -68,13 +68,13 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<AddAdboardWifi>("Add AdboardWifi", null);
+            await DialogService.OpenAsync<AddAdboardWifi>("Add Adboard Wifi", null);
             await grid0.Reload();
         }
 
         protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.AdboardWifi> args)
         {
-            await DialogService.OpenAsync<EditAdboardWifi>("Edit AdboardWifi", new Dictionary<string, object> { {"AdboardId", args.Data.AdboardId} });
+            await DialogService.OpenAsync<ConfigureAdboardWifi>("Edit AdboardWifi", new Dictionary<string, object> { {"AdboardId", args.Data.AdboardId} });
             await grid0.Reload();
         }
 

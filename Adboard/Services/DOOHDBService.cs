@@ -52,7 +52,6 @@ namespace DOOH.Adboard
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
-            httpRequestMessage.Headers.Add("If-Match", adboardWifi.ETag);
 
             httpRequestMessage.Content = new StringContent(Extensions.ODataJsonSerializer.Serialize(adboardWifi), Encoding.UTF8, "application/json");
             OnUpdateAdboardWifiByAdboardId(httpRequestMessage);

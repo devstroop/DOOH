@@ -1,0 +1,11 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal" Gap="05" AlignItems="AlignItems.Center">
+    <RadzenIcon Icon="fiber_manual_record" IconStyle="@_iconStyle" Style="font-size: 14px;filter: saturate(4) drop-shadow(1px 1px 1px grey);" />
+    <RadzenText Text="@_text" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: 500" />
+</RadzenStack>
+@code {
+    [Parameter]
+    public bool? Status { get; set; }
+
+    private IconStyle _iconStyle => Status == null ? IconStyle.Light : Status.Value ? IconStyle.Success : IconStyle.Danger;
+    private string _text => Status == null ? "Unavailable" : Status.Value ? "Online" : "Offline";
+}

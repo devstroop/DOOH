@@ -9,6 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using DOOH.Client.Layout;
 using DOOH.Client.Templates;
+using DOOH.Client.Pages.Admin.Adboards.Wifis;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -61,45 +62,8 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         string SanitizeSearch(string input)
         {
-            // Basic sanitization by escaping single quotes
             return input?.Replace("'", "''");
         }
-        //protected async Task adboardsLoadData(LoadDataArgs args)
-        //{
-        //    try
-        //    {
-        //        isAdboardsLoading = true;
-
-        //        string sanitizedSearch = SanitizeSearch(search);
-
-        //        var searchFilter = !string.IsNullOrEmpty(sanitizedSearch) ? $@"(contains(Address,""{sanitizedSearch}"") or contains(CityName,""{sanitizedSearch}"") or contains(StateName,""{sanitizedSearch}"") or contains(CountryName,""{sanitizedSearch}"") and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)})" : null;
-        //        var combinedFilter = string.IsNullOrEmpty(searchFilter) ? args.Filter : $"{searchFilter} and {args.Filter}";
-
-        //        var result = await DOOHDBService.GetAdboards(
-        //            top: args.Top,
-        //            skip: args.Skip,
-        //            count: (args.Top != null && args.Skip != null),
-        //            filter: combinedFilter,
-        //            orderby: args.OrderBy,
-        //            expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks");
-        //        adboards = result.Value.AsODataEnumerable();
-
-        //        foreach (var adboard in adboards)
-        //        {
-        //            await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
-        //        }
-
-        //        adboardsCount = result.Count;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
-        //    }
-        //    finally
-        //    {
-        //        isAdboardsLoading = false;
-        //    }
-        //}
 
         protected async Task adboardsLoadData(LoadDataArgs args)
         {
@@ -168,6 +132,16 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected async void DetailsSplitButtonClicked(RadzenSplitButtonItem item, DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
+
+            if (item.Text == "Wifi")
+            {
+                var dialogResult = await DialogService.OpenAsync<ConfigureAdboardWifi>("Configure Wifi", new Dictionary<string, object>() { { "AdboardId", adboard.AdboardId } });
+                if (dialogResult != null)
+                {
+                    await adboardsLoadData(new LoadDataArgs() { });
+                    StateHasChanged();
+                }
+            }
 
             if (item.Text == "Edit")
             {
