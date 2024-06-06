@@ -37,6 +37,9 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         {
             brand = new DOOH.Server.Models.DOOHDB.Brand();
         }
+
+
+
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Brand brand;
 
@@ -46,6 +49,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         {
             try
             {
+                brand.BrandLogo = Images.FirstOrDefault();
                 var result = await DOOHDBService.CreateBrand(brand);
                 DialogService.Close(brand);
             }
@@ -63,17 +67,18 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected List<string> Images = new List<string>();
 
         protected void OnRefreshImage() => StateHasChanged();
 
         protected async void OnAddLogo(string image)
         {
-            brand.BrandLogo = image;
+            Images = new List<string> { image };
             StateHasChanged();
         }
         protected async void OnDeleteLogo(string image)
         {
-            brand.BrandLogo = image;
+            Images.Clear();
             StateHasChanged();
         }
 

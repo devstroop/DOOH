@@ -118,7 +118,17 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
 
         protected async void MoreVertClick(RadzenSplitButtonItem item, DOOH.Server.Models.DOOHDB.Brand brand)
         {
+            switch (item.Text)
+            {
+                case "Edit":
+                    await EditButtonClick(null, brand);
+                    break;
+                case "Delete":
+                    await DeleteButtonClick(null, brand);
+                    break;
+            }
 
+            StateHasChanged();
         }
     }
 }
