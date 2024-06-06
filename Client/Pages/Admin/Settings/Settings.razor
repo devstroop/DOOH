@@ -11,33 +11,41 @@
         </RadzenColumn>
     </RadzenRow>
     
-    <RadzenTabs @bind-SelectedIndex=@selectedIndex>
+    <RadzenTabs @bind-SelectedIndex=@selectedIndex TabPosition="Radzen.TabPosition.Left">
         <Tabs>
-            <RadzenTabsItem Text="Company">
+            <RadzenTabsItem Text="Company" Icon="business">
                 Company
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Categories">
+            <RadzenTabsItem Text="Categories" Icon="category">
                 <DOOH.Client.Pages.Admin.Settings.Categories.Categories />
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Brands">
+            <RadzenTabsItem Text="Brands" Icon="recommend">
                 <DOOH.Client.Pages.Admin.Settings.Brands.Brands />
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Taxes">
+            <RadzenTabsItem Text="Taxes" Icon="percent">
                 <DOOH.Client.Pages.Admin.Settings.Taxes.Taxes />
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Address">
+            <RadzenTabsItem Text="Region" Icon="explore">
                 <RadzenRow>
                     <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.Cities.Cities /></RadzenColumn>
                     <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.States.States /></RadzenColumn>
                     <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.Countries.Countries /></RadzenColumn>
                 </RadzenRow>
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Terms">
+            <RadzenTabsItem Text="Terms" Icon="policy">
                 <DOOH.Client.Pages.Admin.Settings.Terms />
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Privacy">
+            <RadzenTabsItem Text="Privacy" Icon="privacy_tip">
+                <DOOH.Client.Pages.Admin.Settings.Privacy />
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="About" Icon="info">
                 <DOOH.Client.Pages.Admin.Settings.Privacy />
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>
 </RadzenStack>
+<style>
+    .rz-tabview-left-icon .rzi {
+        font-size: 14px;
+    }
+</style>
