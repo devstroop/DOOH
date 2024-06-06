@@ -4,8 +4,9 @@
 @attribute [Authorize]
 
 <PageTitle>About</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="About" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-</RadzenRow>
+<RadzenStack>
+    @if (_page != null && !isLoading)
+    {
+        @((MarkupString)_page.Content)
+    }
+</RadzenStack>

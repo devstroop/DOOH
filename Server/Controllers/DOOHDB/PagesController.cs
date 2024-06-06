@@ -17,12 +17,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DOOH.Server.Controllers.DOOHDB
 {
-    [Route("odata/DOOHDB/Policies")]
-    public partial class PoliciesController : ODataController
+    [Route("odata/DOOHDB/Pages")]
+    public partial class PagesController : ODataController
     {
         private DOOH.Server.Data.DOOHDBContext context;
 
-        public PoliciesController(DOOH.Server.Data.DOOHDBContext context)
+        public PagesController(DOOH.Server.Data.DOOHDBContext context)
         {
             this.context = context;
         }
@@ -30,34 +30,34 @@ namespace DOOH.Server.Controllers.DOOHDB
     
         [HttpGet]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.Policy> GetPolicies()
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Page> GetPages()
         {
-            var items = this.context.Policies.AsQueryable<DOOH.Server.Models.DOOHDB.Policy>();
-            this.OnPoliciesRead(ref items);
+            var items = this.context.Pages.AsQueryable<DOOH.Server.Models.DOOHDB.Page>();
+            this.OnPagesRead(ref items);
 
             return items;
         }
 
-        partial void OnPoliciesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Policy> items);
+        partial void OnPagesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Page> items);
 
-        partial void OnPolicyGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Policy> item);
+        partial void OnPageGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Page> item);
 
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        [HttpGet("/odata/DOOHDB/Policies(Id={Id})")]
-        public SingleResult<DOOH.Server.Models.DOOHDB.Policy> GetPolicy(string key)
+        [HttpGet("/odata/DOOHDB/Pages(Slag={Slag})")]
+        public SingleResult<DOOH.Server.Models.DOOHDB.Page> GetPage(string key)
         {
-            var items = this.context.Policies.Where(i => i.Id == Uri.UnescapeDataString(key));
+            var items = this.context.Pages.Where(i => i.Slag == Uri.UnescapeDataString(key));
             var result = SingleResult.Create(items);
 
-            OnPolicyGet(ref result);
+            OnPageGet(ref result);
 
             return result;
         }
-        partial void OnPolicyDeleted(DOOH.Server.Models.DOOHDB.Policy item);
-        partial void OnAfterPolicyDeleted(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnPageDeleted(DOOH.Server.Models.DOOHDB.Page item);
+        partial void OnAfterPageDeleted(DOOH.Server.Models.DOOHDB.Page item);
 
-        [HttpDelete("/odata/DOOHDB/Policies(Id={Id})")]
-        public IActionResult DeletePolicy(string key)
+        [HttpDelete("/odata/DOOHDB/Pages(Slag={Slag})")]
+        public IActionResult DeletePage(string key)
         {
             try
             {
@@ -67,18 +67,18 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var item = this.context.Policies
-                    .Where(i => i.Id == Uri.UnescapeDataString(key))
+                var item = this.context.Pages
+                    .Where(i => i.Slag == Uri.UnescapeDataString(key))
                     .FirstOrDefault();
 
                 if (item == null)
                 {
                     return BadRequest();
                 }
-                this.OnPolicyDeleted(item);
-                this.context.Policies.Remove(item);
+                this.OnPageDeleted(item);
+                this.context.Pages.Remove(item);
                 this.context.SaveChanges();
-                this.OnAfterPolicyDeleted(item);
+                this.OnAfterPageDeleted(item);
 
                 return new NoContentResult();
 
@@ -90,12 +90,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnPolicyUpdated(DOOH.Server.Models.DOOHDB.Policy item);
-        partial void OnAfterPolicyUpdated(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnPageUpdated(DOOH.Server.Models.DOOHDB.Page item);
+        partial void OnAfterPageUpdated(DOOH.Server.Models.DOOHDB.Page item);
 
-        [HttpPut("/odata/DOOHDB/Policies(Id={Id})")]
+        [HttpPut("/odata/DOOHDB/Pages(Slag={Slag})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PutPolicy(string key, [FromBody]DOOH.Server.Models.DOOHDB.Policy item)
+        public IActionResult PutPage(string key, [FromBody]DOOH.Server.Models.DOOHDB.Page item)
         {
             try
             {
@@ -104,17 +104,17 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                if (item == null || (item.Id != Uri.UnescapeDataString(key)))
+                if (item == null || (item.Slag != Uri.UnescapeDataString(key)))
                 {
                     return BadRequest();
                 }
-                this.OnPolicyUpdated(item);
-                this.context.Policies.Update(item);
+                this.OnPageUpdated(item);
+                this.context.Pages.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Policies.Where(i => i.Id == Uri.UnescapeDataString(key));
+                var itemToReturn = this.context.Pages.Where(i => i.Slag == Uri.UnescapeDataString(key));
                 
-                this.OnAfterPolicyUpdated(item);
+                this.OnAfterPageUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -124,9 +124,9 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        [HttpPatch("/odata/DOOHDB/Policies(Id={Id})")]
+        [HttpPatch("/odata/DOOHDB/Pages(Slag={Slag})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PatchPolicy(string key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Policy> patch)
+        public IActionResult PatchPage(string key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Page> patch)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var item = this.context.Policies.Where(i => i.Id == Uri.UnescapeDataString(key)).FirstOrDefault();
+                var item = this.context.Pages.Where(i => i.Slag == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
@@ -143,13 +143,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
                 patch.Patch(item);
 
-                this.OnPolicyUpdated(item);
-                this.context.Policies.Update(item);
+                this.OnPageUpdated(item);
+                this.context.Pages.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Policies.Where(i => i.Id == Uri.UnescapeDataString(key));
+                var itemToReturn = this.context.Pages.Where(i => i.Slag == Uri.UnescapeDataString(key));
                 
-                this.OnAfterPolicyUpdated(item);
+                this.OnAfterPageUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -159,12 +159,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnPolicyCreated(DOOH.Server.Models.DOOHDB.Policy item);
-        partial void OnAfterPolicyCreated(DOOH.Server.Models.DOOHDB.Policy item);
+        partial void OnPageCreated(DOOH.Server.Models.DOOHDB.Page item);
+        partial void OnAfterPageCreated(DOOH.Server.Models.DOOHDB.Page item);
 
         [HttpPost]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Policy item)
+        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Page item)
         {
             try
             {
@@ -178,15 +178,15 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest();
                 }
 
-                this.OnPolicyCreated(item);
-                this.context.Policies.Add(item);
+                this.OnPageCreated(item);
+                this.context.Pages.Add(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Policies.Where(i => i.Id == item.Id);
+                var itemToReturn = this.context.Pages.Where(i => i.Slag == item.Slag);
 
                 
 
-                this.OnAfterPolicyCreated(item);
+                this.OnAfterPageCreated(item);
 
                 return new ObjectResult(SingleResult.Create(itemToReturn))
                 {

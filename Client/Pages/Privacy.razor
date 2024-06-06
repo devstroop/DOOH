@@ -4,20 +4,8 @@
 
 <PageTitle>Privacy</PageTitle>
 <RadzenStack>
-    @if (policy != null && !isLoading)
+    @if (_page != null && !isLoading)
     {
-        @((MarkupString)policy.Content)
-    }
-    else if (isLoading)
-    {
-        <RadzenPanel>
-            <RadzenText Text="Loading..." />
-        </RadzenPanel>
-    }
-    else
-    {
-        <RadzenPanel>
-            <RadzenText Text="No privacy policy found." />
-        </RadzenPanel>
+        @((MarkupString)_page.Content)
     }
 </RadzenStack>

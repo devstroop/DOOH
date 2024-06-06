@@ -1,0 +1,9 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NotFound> L
+@page "/404"
+
+<RadzenRow>
+    <RadzenColumn Size="12" style="margin-top: 5rem; margin-bottom: 5rem">
+        <RadzenText Text="Not Found" TextStyle="TextStyle.DisplayH1" style="margin: 0; margin-bottom: 2rem" TextAlign="TextAlign.Center" />
+        <RadzenText Text="This page is unavailable." TextStyle="TextStyle.H6" style="margin: 0" TextAlign="TextAlign.Center" TagName="Radzen.Blazor.TagName.P" />
+    </RadzenColumn>
+</RadzenRow>

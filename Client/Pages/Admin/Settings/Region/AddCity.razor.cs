@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings.Cities
+namespace DOOH.Client.Pages.Admin.Settings.Region
 {
     public partial class AddCity
     {
@@ -32,42 +32,19 @@ namespace DOOH.Client.Pages.Admin.Settings.Cities
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        [Parameter]
+        public string StateName { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            city = new DOOH.Server.Models.DOOHDB.City();
+            city = new DOOH.Server.Models.DOOHDB.City
+            {
+                StateName = StateName
+            };
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.City city;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.State> statesForStateName;
-
-
-        protected int statesForStateNameCount;
-        protected DOOH.Server.Models.DOOHDB.State statesForStateNameValue;
-        protected async Task statesForStateNameLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetStates(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(StateName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                statesForStateName = result.Value.AsODataEnumerable();
-                statesForStateNameCount = result.Count;
-
-                if (!object.Equals(city.StateName, null))
-                {
-                    var valueResult = await DOOHDBService.GetStates(filter: $"StateName eq '{city.StateName}'");
-                    var firstItem = valueResult.Value.FirstOrDefault();
-                    if (firstItem != null)
-                    {
-                        statesForStateNameValue = firstItem;
-                    }
-                }
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load State" });
-            }
-        }
         protected async Task FormSubmit()
         {
             try

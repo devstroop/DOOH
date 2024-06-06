@@ -1,0 +1,76 @@
+@layout AdminLayout
+@page "/admin/settings/region"
+
+@attribute [Authorize]
+
+<PageTitle>Region</PageTitle>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenBreadCrumb>
+                <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
+                <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
+                <RadzenBreadCrumbItem Path="/admin/settings/region" Text="Region" Icon="explore" />
+            </RadzenBreadCrumb>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTree>
+        @foreach (var country in countries)
+        {
+            <RadzenTreeItem Text="@country.CountryName">
+                <Template>
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
+                        <RadzenButton Icon="delete" Click="@((args) => DeleteCountryClick(args, country))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
+                        <RadzenButton Icon="add" Click="@((args) => AddStateClick(args, country))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                    </RadzenStack>
+                </Template>
+                <ChildContent>
+                    @foreach (var state in states.Where(x => x.CountryName == country.CountryName))
+                    {
+                        <RadzenTreeItem Text="@state.StateName">
+                            <Template>
+                                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
+                                   <RadzenButton Icon="delete" Click="@((args) => DeleteStateClick(args, state))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
+                                    <RadzenButton Icon="add" Click="@((args) => AddCityClick(args, state))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                                </RadzenStack>
+                            </Template>
+                            <ChildContent>
+                                @foreach (var city in cities.Where(x => x.StateName == state.StateName))
+                                {
+                                    <RadzenTreeItem Text="@city.CityName">
+                                        <Template>
+                                            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                                <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
+                                                <RadzenButton Icon="delete" Click="@((args) => DeleteCityClick(args, city))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
+                                            </RadzenStack>
+                                        </Template>
+                                    </RadzenTreeItem>
+                                }
+                            </ChildContent>
+                        </RadzenTreeItem>
+                    }
+                </ChildContent>
+            </RadzenTreeItem>
+        }
+        <RadzenTreeItem Text="Add Country">
+            <Template>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
+                    <RadzenButton Icon="add" Click="@((args) => AddCountryClick(args))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                </RadzenStack>
+            </Template>
+        </RadzenTreeItem>
+
+    </RadzenTree>
+</RadzenStack>
+<style>
+    .rz-treenode-content .rz-treenode-label .rzi:first-child {
+        margin-right: 0;
+    }
+
+    .rz-treenode-content .rz-treenode-label .rzi:first-child {
+        margin-right: 0;
+    }
+</style>

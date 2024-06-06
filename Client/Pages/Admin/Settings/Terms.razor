@@ -1,5 +1,5 @@
 @layout AdminLayout
-@* @page "/admin/settings/terms" *@
+@page "/admin/settings/terms"
 
 @attribute [Authorize]
 
@@ -10,7 +10,7 @@
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
                 <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
-                <RadzenBreadCrumbItem Text="Terms" />
+                <RadzenBreadCrumbItem Path="/admin/settings/terms" Text="Terms" Icon="policy" />
             </RadzenBreadCrumb>
         </RadzenColumn>
         <RadzenColumn Size="6">
@@ -21,9 +21,9 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenHtmlEditor @bind-Value=@policy.Content style="min-height: 400px;" Visible="@(policy != null && isEditing)"></RadzenHtmlEditor>
-    @if(policy != null && !isEditing)
+    <RadzenHtmlEditor @bind-Value=@_page.Content style="min-height: 400px;" Visible="@(_page != null && isEditing)"></RadzenHtmlEditor>
+    @if(_page != null && !isEditing)
     {
-        @((MarkupString)policy.Content)
+        @((MarkupString)_page.Content)
     }
 </RadzenStack>

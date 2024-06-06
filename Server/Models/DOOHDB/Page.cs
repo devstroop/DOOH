@@ -7,12 +7,12 @@ using System.Text.Json.Serialization;
 
 namespace DOOH.Server.Models.DOOHDB
 {
-    [Table("Policy", Schema = "dbo")]
-    public partial class Policy
+    [Table("Page", Schema = "dbo")]
+    public partial class Page
     {
         [Key]
         [Required]
-        public string Id { get; set; }
+        public string Slag { get; set; }
 
         public string Content { get; set; }
     }

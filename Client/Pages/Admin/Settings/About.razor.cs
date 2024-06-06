@@ -10,7 +10,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Admin.Settings
 {
-    public partial class Privacy
+    public partial class About
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -45,12 +45,12 @@ namespace DOOH.Client.Pages.Admin.Settings
         {
             try
             {
-                _page = await DOOHDBService.GetPageBySlag(slag: "privacy");
+                _page = await DOOHDBService.GetPageBySlag(slag: "about");
                 return;
             }
             catch { }
 
-            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "privacy" };
+            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "about" };
             isNew = true;
         }
 
@@ -68,7 +68,7 @@ namespace DOOH.Client.Pages.Admin.Settings
                 }
                 isNew = false;
                 isEditing = false;
-                NotificationService.Notify(NotificationSeverity.Success, "Success", "Privacy policy saved!");
+                NotificationService.Notify(NotificationSeverity.Success, "Success", "About page saved!");
             }
             catch (Exception ex)
             {

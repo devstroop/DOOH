@@ -36,7 +36,7 @@ namespace DOOH.Client.Pages
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        protected DOOH.Server.Models.DOOHDB.Policy policy;
+        protected DOOH.Server.Models.DOOHDB.Page _page;
         protected bool isLoading = true;
 
         protected override async Task OnInitializedAsync()
@@ -58,14 +58,17 @@ namespace DOOH.Client.Pages
             StateHasChanged();
             try
             {
-                policy = await DOOHDBService.GetPolicyById(id: "terms");
+                _page = await DOOHDBService.GetPageBySlag(slag: "terms");
             }
             catch { }
-            finally
+
+            if (_page == null)
             {
-                isLoading = false;
-                StateHasChanged();
+                NavigationManager.NavigateTo("/404");
             }
+
+            isLoading = false;
+            StateHasChanged();
         }
 
     }

@@ -32,5 +32,44 @@ namespace DOOH.Client.Pages
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        [Inject]
+        public DOOHDBService DOOHDBService { get; set; }
+
+
+        protected DOOH.Server.Models.DOOHDB.Page _page;
+        protected bool isLoading = true;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await Fetch();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Fetch();
+            }
+        }
+
+        private async Task Fetch()
+        {
+            isLoading = false;
+            StateHasChanged();
+            try
+            {
+                _page = await DOOHDBService.GetPageBySlag(slag: "about");
+            }
+            catch { }
+
+            if (_page == null)
+            {
+                NavigationManager.NavigateTo("/404");
+            }
+
+            isLoading = false;
+            StateHasChanged();
+        }
     }
 }

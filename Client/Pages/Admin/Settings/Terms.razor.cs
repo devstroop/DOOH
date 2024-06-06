@@ -39,18 +39,18 @@ namespace DOOH.Client.Pages.Admin.Settings
         protected bool isEditing = false;
         protected bool isNew = false;
 
-        protected DOOH.Server.Models.DOOHDB.Policy policy;
+        protected DOOH.Server.Models.DOOHDB.Page _page;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                policy = await DOOHDBService.GetPolicyById(id: "terms");
+                _page = await DOOHDBService.GetPageBySlag(slag: "terms");
                 return;
             }
             catch { }
 
-            policy = policy ?? new DOOH.Server.Models.DOOHDB.Policy { Id = "terms" };
+            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "terms" };
             isNew = true;
         }
 
@@ -60,11 +60,11 @@ namespace DOOH.Client.Pages.Admin.Settings
             {
                 if (isNew)
                 {
-                    await DOOHDBService.CreatePolicy(policy);
+                    await DOOHDBService.CreatePage(_page);
                 }
                 else
                 {
-                    await DOOHDBService.UpdatePolicy(policy.Id, policy);
+                    await DOOHDBService.UpdatePage(_page.Slag, _page);
                 }
                 isNew = false;
                 isEditing = false;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings.Countries
+namespace DOOH.Client.Pages.Admin.Settings.Region
 {
     public partial class AddCountry
     {
