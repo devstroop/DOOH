@@ -45,7 +45,5 @@ namespace DOOH.Server.Models.DOOHDB
         public decimal? Payable { get; set; }
 
         public int? TaxId { get; set; }
-
-        public Tax Tax { get; set; }
     }
 }

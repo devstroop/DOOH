@@ -116,12 +116,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.AnalyticId)
               .HasPrincipalKey(i => i.AnalyticId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Billing>()
-              .HasOne(i => i.Tax)
-              .WithMany(i => i.Billings)
-              .HasForeignKey(i => i.TaxId)
-              .HasPrincipalKey(i => i.TaxId);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.CampaignAdboards)

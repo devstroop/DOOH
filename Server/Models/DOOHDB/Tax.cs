@@ -23,8 +23,6 @@ namespace DOOH.Server.Models.DOOHDB
 
         public Tax Tax1 { get; set; }
 
-        public ICollection<Billing> Billings { get; set; }
-
         public ICollection<Tax> Taxes1 { get; set; }
     }
 }

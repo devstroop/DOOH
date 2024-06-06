@@ -35,50 +35,40 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Brand> brands;
 
-        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Brand> grid0;
+        protected RadzenDataList<DOOH.Server.Models.DOOHDB.Brand> list0;
         protected int count;
 
         protected string search = "";
+        protected bool isLoading = true;
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        protected int brandsCount;
 
         protected async Task Search(ChangeEventArgs args)
         {
             search = $"{args.Value}";
 
-            await grid0.GoToPage(0);
+            await list0.GoToPage(0);
 
-            await grid0.Reload();
+            await list0.Reload();
         }
 
-        protected async Task Grid0LoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetBrands(filter: $@"(contains(BrandName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-                brands = result.Value.AsODataEnumerable();
-                count = result.Count;
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Brands" });
-            }
-        }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
             await DialogService.OpenAsync<AddBrand>("Add Brand", null);
-            await grid0.Reload();
+            await list0.Reload();
         }
 
-        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Brand> args)
+        protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Brand brand)
         {
-            await DialogService.OpenAsync<EditBrand>("Edit Brand", new Dictionary<string, object> { {"BrandId", args.Data.BrandId} });
-            await grid0.Reload();
+            await DialogService.OpenAsync<EditBrand>("Edit Brand", new Dictionary<string, object> { {"BrandId", brand.BrandId} });
+            await list0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Brand brand)
+        protected async Task DeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Brand brand)
         {
             try
             {
@@ -88,7 +78,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
 
                     if (deleteResult != null)
                     {
-                        await grid0.Reload();
+                        await list0.Reload();
                     }
                 }
             }
@@ -103,29 +93,32 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
             }
         }
 
-        protected async Task ExportClick(RadzenSplitButtonItem args)
-        {
-            if (args?.Value == "csv")
-            {
-                await DOOHDBService.ExportBrandsToCSV(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Attachment",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Brands");
-            }
 
-            if (args == null || args.Value == "xlsx")
+        protected async Task brandsLoadData(LoadDataArgs args)
+        {
+            isLoading = true;
+            StateHasChanged();
+            try
             {
-                await DOOHDBService.ExportBrandsToExcel(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Attachment",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Brands");
+                var result = await DOOHDBService.GetBrands(filter: $@"(contains(BrandName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", expand: "", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null);
+                brands = result.Value.AsODataEnumerable();
+                count = result.Count;
             }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+            }
+            finally
+            {
+                isLoading = false;
+                StateHasChanged();
+            }
+        }
+
+
+        protected async void MoreVertClick(RadzenSplitButtonItem item, DOOH.Server.Models.DOOHDB.Brand brand)
+        {
+
         }
     }
 }

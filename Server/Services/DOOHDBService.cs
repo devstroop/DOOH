@@ -1251,7 +1251,6 @@ namespace DOOH.Server
             var items = Context.Billings.AsQueryable();
 
             items = items.Include(i => i.Analytic);
-            items = items.Include(i => i.Tax);
 
             if (query != null)
             {
@@ -1283,7 +1282,6 @@ namespace DOOH.Server
                               .Where(i => i.BillingId == billingid);
 
             items = items.Include(i => i.Analytic);
-            items = items.Include(i => i.Tax);
  
             OnGetBillingByBillingId(ref items);
 
@@ -3508,7 +3506,6 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Taxes
                               .Where(i => i.TaxId == taxid)
-                              .Include(i => i.Billings)
                               .Include(i => i.Taxes1)
                               .FirstOrDefault();
 

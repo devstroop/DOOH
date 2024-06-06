@@ -32,10 +32,11 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
 
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
+        protected bool isLoading = true;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Tax> taxes;
 
-        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Tax> grid0;
+        //protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Tax> grid0;
         protected int count;
 
         protected string search = "";
@@ -43,42 +44,86 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
         [Inject]
         protected SecurityService Security { get; set; }
 
-        protected async Task Search(ChangeEventArgs args)
+
+        protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            search = $"{args.Value}";
-
-            await grid0.GoToPage(0);
-
-            await grid0.Reload();
+            await Load();
         }
 
-        protected async Task Grid0LoadData(LoadDataArgs args)
+        protected async System.Threading.Tasks.Task Load()
         {
+            isLoading = true;
+            StateHasChanged();
+
             try
             {
-                var result = await DOOHDBService.GetTaxes(filter: $@"(contains(TaxName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "Tax1", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-                taxes = result.Value.AsODataEnumerable();
-                count = result.Count;
+                var doOHDBGetTaxesResult = await DOOHDBService.GetTaxes(filter: $@"(contains(TaxName,""{search}""))", orderby: $"", top: null, skip: null, count: true, expand: "Tax1");
+                count = doOHDBGetTaxesResult.Count;
+                taxes = doOHDBGetTaxesResult.Value.AsODataEnumerable();
             }
-            catch (System.Exception ex)
+            catch (System.Exception doOHDBGetTaxesException)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Taxes" });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Taxes" });
             }
+
+            isLoading = false;
+            StateHasChanged();
         }
 
-        protected async Task AddButtonClick(MouseEventArgs args)
+
+        //protected async Task Search(ChangeEventArgs args)
+        //{
+        //    search = $"{args.Value}";
+
+        //    await grid0.GoToPage(0);
+
+        //    await grid0.Reload();
+
+        //    StateHasChanged();
+        //}
+
+        //protected async Task Grid0LoadData(LoadDataArgs args)
+        //{
+        //    isLoading = true;
+        //    StateHasChanged();
+        //    try
+        //    {
+        //        var result = await DOOHDBService.GetTaxes(filter: $@"(contains(TaxName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "Tax1", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+        //        taxes = result.Value.AsODataEnumerable();
+        //        count = result.Count;
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //        NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Taxes" });
+        //    }
+        //    finally
+        //    {
+        //        isLoading = false;
+        //        StateHasChanged();
+        //    }
+        //}
+
+        protected async Task AddParentTaxClick(MouseEventArgs args)
         {
             await DialogService.OpenAsync<AddTax>("Add Tax", null);
-            await grid0.Reload();
+            await Load();
+
         }
 
-        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Tax> args)
+        protected async Task AddChildTaxClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Tax tax)
         {
-            await DialogService.OpenAsync<EditTax>("Edit Tax", new Dictionary<string, object> { {"TaxId", args.Data.TaxId} });
-            await grid0.Reload();
+            await DialogService.OpenAsync<AddTax>("Add Tax", new Dictionary<string, object> { { "ParentTaxId", tax.TaxId } });
+            await Load();
+
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Tax tax)
+        protected async Task EditTaxClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Tax tax)
+        {
+            await DialogService.OpenAsync<EditTax>("Edit Tax", new Dictionary<string, object> { {"TaxId", tax.TaxId} });
+            await Load();
+        }
+
+        protected async Task DeleteTaxClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Tax tax)
         {
             try
             {
@@ -88,7 +133,8 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
 
                     if (deleteResult != null)
                     {
-                        await grid0.Reload();
+                        //await grid0.Reload();
+                        await Load();
                     }
                 }
             }
@@ -102,30 +148,25 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
                 });
             }
         }
-
-        protected async Task ExportClick(RadzenSplitButtonItem args)
+        void Log(string eventName, string value)
         {
-            if (args?.Value == "csv")
-            {
-                await DOOHDBService.ExportTaxesToCSV(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Tax1",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Taxes");
-            }
+            //console.Log($"{eventName}: {value}");
+            JSRuntime.InvokeVoidAsync("console.log", $"{eventName}: {value}");
+        }
 
-            if (args == null || args.Value == "xlsx")
-            {
-                await DOOHDBService.ExportTaxesToExcel(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Tax1",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Taxes");
-            }
+        void OnChange(TreeEventArgs args)
+        {
+            Log("Change", $"Item Text: {args.Text}");
+        }
+
+        void OnExpand(TreeExpandEventArgs args)
+        {
+            Log("Expand", $"Text: {args.Text}");
+        }
+
+        void OnCollapse(TreeEventArgs args)
+        {
+            Log("Collapse", $"Text: {args.Text}");
         }
     }
 }

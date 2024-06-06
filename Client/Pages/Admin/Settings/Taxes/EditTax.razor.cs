@@ -95,5 +95,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
         [Inject]
         protected SecurityService Security { get; set; }
 
+
+
     }
 }

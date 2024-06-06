@@ -8,12 +8,16 @@
 <RadzenRow>
     <RadzenColumn Size="6">
         <RadzenStack Orientation="Orientation.Horizontal">
-            <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+            <RadzenBreadCrumb>
+                <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
+                <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
+                <RadzenBreadCrumbItem Text="Categories" />
+            </RadzenBreadCrumb>
         </RadzenStack>
     </RadzenColumn>
     <RadzenColumn Size="6">
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-            <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddCategoryClick" />
+            <RadzenButton Icon="add" Click="@AddCategoryClick" Size="ButtonSize.Medium" Variant="Variant.Flat" />
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
@@ -34,10 +38,20 @@
                     <RadzenText Text="@($"{(context.Commission ?? 0):F2}%")" TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-weight:500" />
                 </RadzenColumn>
                 <RadzenSplitButton Icon="more_vert" ButtonStyle="ButtonStyle.Light" Size="Radzen.ButtonSize.Small" Click="@((args) => MoreVertClick(args, context))">
-                    <RadzenSplitButtonItem Text="Edit" Icon="edit" />
-                    <RadzenSplitButtonItem Text="Delete" Icon="delete" />
+                    <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                    <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
                 </RadzenSplitButton>
             </RadzenStack>
         </RadzenStack>
     </Template>
 </RadzenDataList>
+<style>
+    .rz-menuitem {
+        padding: 0.5rem;
+    }
+
+        .rz-menuitem .rz-menuitem-icon {
+            font-size: 18px;
+        }
+
+</style>

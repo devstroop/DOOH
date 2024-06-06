@@ -13,14 +13,30 @@
     
     <RadzenTabs @bind-SelectedIndex=@selectedIndex>
         <Tabs>
-            <RadzenTabsItem Text="Customers">
-                Customers
+            <RadzenTabsItem Text="Company">
+                Company
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Orders">
-                Orders
+            <RadzenTabsItem Text="Categories">
+                <DOOH.Client.Pages.Admin.Settings.Categories.Categories />
             </RadzenTabsItem>
-            <RadzenTabsItem Text="Order Details">
-                Order Details
+            <RadzenTabsItem Text="Brands">
+                <DOOH.Client.Pages.Admin.Settings.Brands.Brands />
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Taxes">
+                <DOOH.Client.Pages.Admin.Settings.Taxes.Taxes />
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Address">
+                <RadzenRow>
+                    <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.Cities.Cities /></RadzenColumn>
+                    <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.States.States /></RadzenColumn>
+                    <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.Countries.Countries /></RadzenColumn>
+                </RadzenRow>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Terms">
+                <DOOH.Client.Pages.Admin.Settings.Terms />
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Privacy">
+                <DOOH.Client.Pages.Admin.Settings.Privacy />
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>
