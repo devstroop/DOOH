@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings
+namespace DOOH.Client.Pages.Admin.Pages
 {
-    public partial class Terms
+    public partial class Privacy
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -36,21 +36,21 @@ namespace DOOH.Client.Pages.Admin.Settings
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        protected DOOH.Server.Models.DOOHDB.Page _page;
+
         protected bool isEditing = false;
         protected bool isNew = false;
-
-        protected DOOH.Server.Models.DOOHDB.Page _page;
 
         protected override async Task OnInitializedAsync()
         {
             try
             {
-                _page = await DOOHDBService.GetPageBySlag(slag: "terms");
+                _page = await DOOHDBService.GetPageBySlag(slag: "privacy");
                 return;
             }
             catch { }
 
-            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "terms" };
+            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "privacy" };
             isNew = true;
         }
 
@@ -68,7 +68,7 @@ namespace DOOH.Client.Pages.Admin.Settings
                 }
                 isNew = false;
                 isEditing = false;
-                NotificationService.Notify(NotificationSeverity.Success, "Success", "Terms of use saved!");
+                NotificationService.Notify(NotificationSeverity.Success, "Success", "Privacy policy saved!");
             }
             catch (Exception ex)
             {
@@ -82,6 +82,7 @@ namespace DOOH.Client.Pages.Admin.Settings
             isEditing = false;
             StateHasChanged();
         }
+
         protected async Task EditClick(MouseEventArgs args)
         {
             isEditing = true;

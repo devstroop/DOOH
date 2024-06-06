@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings
+namespace DOOH.Client.Pages.Admin.Pages
 {
     public partial class About
     {
