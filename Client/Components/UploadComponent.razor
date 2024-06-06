@@ -18,7 +18,7 @@
             @* <RadzenProgressBarCircular class="progress-upload-image" Value="@progress" Size="ProgressBarCircularSize.Small" Visible="@(progress > 0 && progress < 100)" /> *@
         </RadzenStack>
     }
-    <RadzenUpload Id="ddUpload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" />
+    <RadzenUpload Id="ddUpload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" Visible="@((Items?.Count ?? 0) < Max)" />
 </RadzenStack>
 <style>
     .progress-upload-image {
@@ -60,6 +60,7 @@
     [Parameter] public Action<string> Add { get; set; }
     [Parameter] public Action<string> Delete { get; set; }
     [Parameter] public Action Refresh { get; set; }
+    [Parameter] public int Max { get; set; } = 5;
 
     [Inject] private IJSRuntime JSRuntime { get; set; }
     [Inject] private NavigationManager NavigationManager { get; set; }

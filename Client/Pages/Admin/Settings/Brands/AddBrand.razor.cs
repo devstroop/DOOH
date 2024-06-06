@@ -64,6 +64,18 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         protected SecurityService Security { get; set; }
 
 
+        protected void OnRefreshImage() => StateHasChanged();
+
+        protected async void OnAddLogo(string image)
+        {
+            brand.BrandLogo = image;
+            StateHasChanged();
+        }
+        protected async void OnDeleteLogo(string image)
+        {
+            brand.BrandLogo = image;
+            StateHasChanged();
+        }
 
     }
 }
