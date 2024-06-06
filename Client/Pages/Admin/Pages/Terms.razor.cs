@@ -43,6 +43,19 @@ namespace DOOH.Client.Pages.Admin.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            await Fetch();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Fetch();
+            }
+        }
+
+        private async Task Fetch()
+        {
             try
             {
                 _page = await DOOHDBService.GetPageBySlag(slag: "terms");

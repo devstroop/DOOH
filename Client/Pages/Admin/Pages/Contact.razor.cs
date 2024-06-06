@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages
+namespace DOOH.Client.Pages.Admin.Pages
 {
     public partial class Contact
     {
@@ -33,12 +33,16 @@ namespace DOOH.Client.Pages
         [Inject]
         protected SecurityService Security { get; set; }
 
+
+
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
 
         protected DOOH.Server.Models.DOOHDB.Page _page;
-        protected bool isLoading = true;
+
+        protected bool isEditing = false;
+        protected bool isNew = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -55,20 +59,49 @@ namespace DOOH.Client.Pages
 
         private async Task Fetch()
         {
-            isLoading = false;
-            StateHasChanged();
             try
             {
                 _page = await DOOHDBService.GetPageBySlag(slag: "contact");
+                return;
             }
             catch { }
 
-            if (_page == null)
-            {
-                NavigationManager.NavigateTo("/404");
-            }
+            _page = _page ?? new DOOH.Server.Models.DOOHDB.Page { Slag = "contact" };
+            isNew = true;
+        }
 
-            isLoading = false;
+        protected async Task SaveClick(MouseEventArgs args)
+        {
+            try
+            {
+                if (isNew)
+                {
+                    await DOOHDBService.CreatePage(_page);
+                }
+                else
+                {
+                    await DOOHDBService.UpdatePage(_page.Slag, _page);
+                }
+                isNew = false;
+                isEditing = false;
+                NotificationService.Notify(NotificationSeverity.Success, "Success", "About page saved!");
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Error", "An error has occurred");
+            }
+        }
+
+        protected async Task CancelClick(MouseEventArgs args)
+        {
+            await OnInitializedAsync();
+            isEditing = false;
+            StateHasChanged();
+        }
+
+        protected async Task EditClick(MouseEventArgs args)
+        {
+            isEditing = true;
             StateHasChanged();
         }
     }

@@ -1,16 +1,16 @@
 @layout AdminLayout
-@page "/admin/pages/terms"
+@page "/admin/pages/contact"
 
 @attribute [Authorize]
 
-<PageTitle>Terms</PageTitle>
+<PageTitle>Contact</PageTitle>
 <RadzenStack>
     <RadzenRow>
         <RadzenColumn Size="6">
             <RadzenBreadCrumb>
                 <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
                 <RadzenBreadCrumbItem Path="/admin/pages" Text="Pages" />
-                <RadzenBreadCrumbItem Path="/admin/pages/terms" Text="Terms" Icon="policy" />
+                <RadzenBreadCrumbItem Path="/admin/pages/contact" Text="Contact" Icon="info" />
             </RadzenBreadCrumb>
         </RadzenColumn>
         <RadzenColumn Size="6">
@@ -22,7 +22,7 @@
         </RadzenColumn>
     </RadzenRow>
     <RadzenHtmlEditor @bind-Value=@_page.Content style="min-height: 400px;" Visible="@(_page != null && isEditing)"></RadzenHtmlEditor>
-    @if(_page != null && !isEditing)
+    @if (_page != null && !isEditing)
     {
         @((MarkupString)_page.Content)
     }
