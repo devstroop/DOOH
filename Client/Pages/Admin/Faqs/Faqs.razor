@@ -1,0 +1,43 @@
+@layout AdminLayout
+@page "/admin/faqs"
+
+@attribute [Authorize]
+
+<PageTitle>Faqs</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="FAQs" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    @if (faqs.Count() == 0)
+    {
+        <RadzenText Text="No FAQs found" />
+    }
+    <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Faq" Data="@faqs" AllowPaging="true" LoadData="@faqsLoadData" Count="@faqsCount">
+        <Template>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Gap="0">
+                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                        <RadzenText Text="@($"#{context.FaqId}")" />
+                        <RadzenText Text="@context.Question" Style="font-weight: 500;" />
+                    </RadzenStack>
+                    <RadzenText Text="@context.Answer" TextStyle="Radzen.Blazor.TextStyle.Body2" class="rz-mb-0" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenSplitButton Icon="more_vert" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Light" Click="@((args) => SplitButtonClick(args, context))">
+                        <ChildContent>
+                            <RadzenMenuItem Text="Edit" Icon="edit"/>
+                            <RadzenMenuItem Text="Delete" Icon="delete" />
+                        </ChildContent>
+                    </RadzenSplitButton>
+                </RadzenStack>
+            </RadzenStack>
+        </Template>
+    </RadzenDataList>
+</RadzenStack>

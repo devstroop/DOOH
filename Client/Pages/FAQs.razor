@@ -1,0 +1,29 @@
+@layout PublicLayout
+@page "/faqs"
+
+
+
+<PageTitle>FAQs</PageTitle>
+
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenText Text="FAQs" TextStyle="TextStyle.H3" TagName="TagName.H1" />
+        </RadzenColumn>
+    </RadzenRow>
+    @if (faqs.Count() == 0)
+    {
+        <RadzenText Text="No FAQs found" />
+    }
+    <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Faq" Data="@faqs" AllowPaging="true" LoadData="@faqsLoadData" Count="@faqsCount">
+        <Template>
+            <RadzenStack Gap="0">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                    <RadzenText Text="@($"#{context.FaqId}")" />
+                    <RadzenText Text="@context.Question" Style="font-weight: 500;" />
+                </RadzenStack>
+                <RadzenText Text="@context.Answer" TextStyle="Radzen.Blazor.TextStyle.Body2" class="rz-mb-0" />
+            </RadzenStack>
+        </Template>
+    </RadzenDataList>
+</RadzenStack>

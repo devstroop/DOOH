@@ -194,6 +194,24 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.ParentTaxId)
               .HasPrincipalKey(i => i.TaxId);
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
+              .HasOne(i => i.City)
+              .WithMany(i => i.Companies)
+              .HasForeignKey(i => i.CityName)
+              .HasPrincipalKey(i => i.CityName);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
+              .HasOne(i => i.Country)
+              .WithMany(i => i.Companies)
+              .HasForeignKey(i => i.CountryName)
+              .HasPrincipalKey(i => i.CountryName);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
+              .HasOne(i => i.State)
+              .WithMany(i => i.Companies)
+              .HasForeignKey(i => i.StateName)
+              .HasPrincipalKey(i => i.StateName);
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
               .HasDefaultValueSql(@"((0.0))");
@@ -266,6 +284,14 @@ namespace DOOH.Server.Data
               .Property(p => p.TaxRate)
               .HasDefaultValueSql(@"((0.00))");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
+              .Property(p => p.Id)
+              .HasDefaultValueSql(@"((0))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Faq>()
+              .Property(p => p.UpdatedAt)
+              .HasDefaultValueSql(@"(sysdatetime())");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
@@ -333,6 +359,10 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Faq>()
+              .Property(p => p.UpdatedAt)
+              .HasColumnType("datetime");
             this.OnModelBuilding(builder);
         }
 
@@ -370,13 +400,17 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Motherboard> Motherboards { get; set; }
 
+        public DbSet<DOOH.Server.Models.DOOHDB.Page> Pages { get; set; }
+
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.State> States { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.Page> Pages { get; set; }
+        public DbSet<DOOH.Server.Models.DOOHDB.Company> Companies { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.Faq> Faqs { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

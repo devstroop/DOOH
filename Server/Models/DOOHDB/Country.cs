@@ -16,6 +16,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public ICollection<Adboard> Adboards { get; set; }
 
+        public ICollection<Company> Companies { get; set; }
+
         public ICollection<Provider> Providers { get; set; }
 
         public ICollection<State> States { get; set; }

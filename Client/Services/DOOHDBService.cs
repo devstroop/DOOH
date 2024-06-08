@@ -1629,6 +1629,100 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
+        public async System.Threading.Tasks.Task ExportPagesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/pages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/pages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportPagesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/pages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/pages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetPages(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>> GetPages(Query query)
+        {
+            return await GetPages(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>> GetPages(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"Pages");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetPages(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>>(response);
+        }
+
+        partial void OnCreatePage(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Page> CreatePage(DOOH.Server.Models.DOOHDB.Page page = default(DOOH.Server.Models.DOOHDB.Page))
+        {
+            var uri = new Uri(baseUri, $"Pages");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(page), Encoding.UTF8, "application/json");
+
+            OnCreatePage(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Page>(response);
+        }
+
+        partial void OnDeletePage(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeletePage(string slag = default(string))
+        {
+            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeletePage(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetPageBySlag(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Page> GetPageBySlag(string expand = default(string), string slag = default(string))
+        {
+            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetPageBySlag(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Page>(response);
+        }
+
+        partial void OnUpdatePage(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdatePage(string slag = default(string), DOOH.Server.Models.DOOHDB.Page page = default(DOOH.Server.Models.DOOHDB.Page))
+        {
+            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(page), Encoding.UTF8, "application/json");
+
+            OnUpdatePage(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
         public async System.Threading.Tasks.Task ExportProvidersToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/providers/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/providers/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -1911,96 +2005,190 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportPagesToExcel(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportCompaniesToExcel(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/pages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/pages/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/companies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/companies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        public async System.Threading.Tasks.Task ExportPagesToCSV(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportCompaniesToCSV(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/pages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/pages/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/companies/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/companies/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        partial void OnGetPages(HttpRequestMessage requestMessage);
+        partial void OnGetCompanies(HttpRequestMessage requestMessage);
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>> GetPages(Query query)
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Company>> GetCompanies(Query query)
         {
-            return await GetPages(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+            return await GetCompanies(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
         }
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>> GetPages(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Company>> GetCompanies(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
         {
-            var uri = new Uri(baseUri, $"Pages");
+            var uri = new Uri(baseUri, $"Companies");
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetPages(httpRequestMessage);
+            OnGetCompanies(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Page>>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Company>>(response);
         }
 
-        partial void OnCreatePage(HttpRequestMessage requestMessage);
+        partial void OnCreateCompany(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.Page> CreatePage(DOOH.Server.Models.DOOHDB.Page page = default(DOOH.Server.Models.DOOHDB.Page))
+        public async Task<DOOH.Server.Models.DOOHDB.Company> CreateCompany(DOOH.Server.Models.DOOHDB.Company company = default(DOOH.Server.Models.DOOHDB.Company))
         {
-            var uri = new Uri(baseUri, $"Pages");
+            var uri = new Uri(baseUri, $"Companies");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(page), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(company), Encoding.UTF8, "application/json");
 
-            OnCreatePage(httpRequestMessage);
+            OnCreateCompany(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Page>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Company>(response);
         }
 
-        partial void OnDeletePage(HttpRequestMessage requestMessage);
+        partial void OnDeleteCompany(HttpRequestMessage requestMessage);
 
-        public async Task<HttpResponseMessage> DeletePage(string slag = default(string))
+        public async Task<HttpResponseMessage> DeleteCompany(int id = default(int))
         {
-            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+            var uri = new Uri(baseUri, $"Companies({id})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
 
-            OnDeletePage(httpRequestMessage);
+            OnDeleteCompany(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        partial void OnGetPageBySlag(HttpRequestMessage requestMessage);
+        partial void OnGetCompanyById(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.Page> GetPageBySlag(string expand = default(string), string slag = default(string))
+        public async Task<DOOH.Server.Models.DOOHDB.Company> GetCompanyById(string expand = default(string), int id = default(int))
         {
-            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+            var uri = new Uri(baseUri, $"Companies({id})");
 
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetPageBySlag(httpRequestMessage);
+            OnGetCompanyById(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Page>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Company>(response);
         }
 
-        partial void OnUpdatePage(HttpRequestMessage requestMessage);
+        partial void OnUpdateCompany(HttpRequestMessage requestMessage);
         
-        public async Task<HttpResponseMessage> UpdatePage(string slag = default(string), DOOH.Server.Models.DOOHDB.Page page = default(DOOH.Server.Models.DOOHDB.Page))
+        public async Task<HttpResponseMessage> UpdateCompany(int id = default(int), DOOH.Server.Models.DOOHDB.Company company = default(DOOH.Server.Models.DOOHDB.Company))
         {
-            var uri = new Uri(baseUri, $"Pages('{Uri.EscapeDataString(slag.Trim().Replace("'", "''"))}')");
+            var uri = new Uri(baseUri, $"Companies({id})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(page), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(company), Encoding.UTF8, "application/json");
 
-            OnUpdatePage(httpRequestMessage);
+            OnUpdateCompany(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async System.Threading.Tasks.Task ExportFaqsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/faqs/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/faqs/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportFaqsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/faqs/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/faqs/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetFaqs(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Faq>> GetFaqs(Query query)
+        {
+            return await GetFaqs(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Faq>> GetFaqs(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"Faqs");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetFaqs(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Faq>>(response);
+        }
+
+        partial void OnCreateFaq(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Faq> CreateFaq(DOOH.Server.Models.DOOHDB.Faq faq = default(DOOH.Server.Models.DOOHDB.Faq))
+        {
+            var uri = new Uri(baseUri, $"Faqs");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(faq), Encoding.UTF8, "application/json");
+
+            OnCreateFaq(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Faq>(response);
+        }
+
+        partial void OnDeleteFaq(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteFaq(int faqId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Faqs({faqId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteFaq(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetFaqByFaqId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Faq> GetFaqByFaqId(string expand = default(string), int faqId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Faqs({faqId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetFaqByFaqId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Faq>(response);
+        }
+
+        partial void OnUpdateFaq(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateFaq(int faqId = default(int), DOOH.Server.Models.DOOHDB.Faq faq = default(DOOH.Server.Models.DOOHDB.Faq))
+        {
+            var uri = new Uri(baseUri, $"Faqs({faqId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(faq), Encoding.UTF8, "application/json");
+
+            OnUpdateFaq(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }

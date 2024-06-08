@@ -257,6 +257,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetMotherboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/pages/csv")]
+        [HttpGet("/export/DOOHDB/pages/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportPagesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetPages(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/pages/excel")]
+        [HttpGet("/export/DOOHDB/pages/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportPagesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetPages(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/providers/csv")]
         [HttpGet("/export/DOOHDB/providers/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportProvidersToCSV(string fileName = null)
@@ -299,18 +313,32 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/pages/csv")]
-        [HttpGet("/export/DOOHDB/pages/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportPagesToCSV(string fileName = null)
+        [HttpGet("/export/DOOHDB/companies/csv")]
+        [HttpGet("/export/DOOHDB/companies/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCompaniesToCSV(string fileName = null)
         {
-            return ToCSV(ApplyQuery(await service.GetPages(), Request.Query, false), fileName);
+            return ToCSV(ApplyQuery(await service.GetCompanies(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/pages/excel")]
-        [HttpGet("/export/DOOHDB/pages/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportPagesToExcel(string fileName = null)
+        [HttpGet("/export/DOOHDB/companies/excel")]
+        [HttpGet("/export/DOOHDB/companies/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCompaniesToExcel(string fileName = null)
         {
-            return ToExcel(ApplyQuery(await service.GetPages(), Request.Query, false), fileName);
+            return ToExcel(ApplyQuery(await service.GetCompanies(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/faqs/csv")]
+        [HttpGet("/export/DOOHDB/faqs/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportFaqsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetFaqs(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/faqs/excel")]
+        [HttpGet("/export/DOOHDB/faqs/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportFaqsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetFaqs(), Request.Query, false), fileName);
         }
     }
 }

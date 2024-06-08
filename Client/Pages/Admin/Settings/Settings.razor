@@ -14,7 +14,10 @@
     <RadzenTabs @bind-SelectedIndex=@selectedIndex TabPosition="Radzen.TabPosition.Left">
         <Tabs>
             <RadzenTabsItem Text="Company" Icon="business">
-                Company
+                <Company />
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Brands" Icon="recommend">
+                <DOOH.Client.Pages.Admin.Settings.Brands.Brands />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Categories" Icon="category">
                 <DOOH.Client.Pages.Admin.Settings.Categories.Categories />
@@ -26,9 +29,6 @@
                     <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.States.States /></RadzenColumn>
                     <RadzenColumn SizeMD="4"><DOOH.Client.Pages.Admin.Settings.Countries.Countries /></RadzenColumn>
                 </RadzenRow> *@
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Brands" Icon="recommend">
-                <DOOH.Client.Pages.Admin.Settings.Brands.Brands />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Taxes" Icon="percent">
                 <DOOH.Client.Pages.Admin.Settings.Taxes.Taxes />

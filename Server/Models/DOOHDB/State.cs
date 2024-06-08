@@ -23,6 +23,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public ICollection<City> Cities { get; set; }
 
+        public ICollection<Company> Companies { get; set; }
+
         public ICollection<Provider> Providers { get; set; }
     }
 }
