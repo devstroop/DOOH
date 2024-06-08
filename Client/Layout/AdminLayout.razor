@@ -14,7 +14,7 @@
                 </RadzenColumn>
                 <RadzenColumn Size="7">
                     <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                        <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick">
+                        <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                             <ChildContent>
 
                                 <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />

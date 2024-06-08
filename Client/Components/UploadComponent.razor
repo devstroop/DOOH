@@ -13,12 +13,11 @@
     @foreach (var image in Items ?? new List<string>())
     {
         <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
-            <RadzenImage Path="@_validatedImages.GetValueOrDefault(image, "/images/warning.png")" Style="@Style" />
+            <RadzenImage Path="@_validatedImages.GetValueOrDefault((image ?? string.Empty), "/images/warning.png")" Style="@Style" />
             <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@((args) => DeleteImageClick(args, image))" />
-            @* <RadzenProgressBarCircular class="progress-upload-image" Value="@progress" Size="ProgressBarCircularSize.Small" Visible="@(progress > 0 && progress < 100)" /> *@
         </RadzenStack>
     }
-    <RadzenUpload Id="ddUpload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" Visible="@((Items?.Count ?? 0) < Max)" />
+    <RadzenUpload id="@($"ddUpload_{id}")" class="dd-upload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" Visible="@((Items?.Count ?? 0) < Max)" />
 </RadzenStack>
 <style>
     .progress-upload-image {
@@ -34,17 +33,17 @@
         right: 0;
     }
 
-    #ddUpload {
+    .dd-upload {
         left: 0;
     }
 
-        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose .rzi {
+        .dd-upload .rz-fileupload-buttonbar .rz-fileupload-choose .rzi {
             font-size: 24px;
             align-self: center;
             color: #9f9f9f;
         }
 
-        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
+        .dd-upload .rz-fileupload-buttonbar .rz-fileupload-choose {
             height: 80px;
             width: 80px;
             text-align: center;
@@ -56,6 +55,7 @@
         }
 </style>
 @code {
+    [Parameter] public string id { get; set; } = "default";
     [Parameter] public List<string> Items { get; set; }
     [Parameter] public Action<string> Add { get; set; }
     [Parameter] public Action<string> Delete { get; set; }
@@ -88,15 +88,18 @@
     {
         foreach (var image in Items ?? new List<string>())
         {
-            var validImage = await GetValidImageAsync(image);
-            _validatedImages[image] = validImage;
+            if (!String.IsNullOrEmpty(image))
+            {
+                var validImage = await GetValidImageAsync(image);
+                _validatedImages[image] = validImage;
+            }
         }
         // Refresh?.Invoke();
     }
 
     private async Task<string> GetValidImageAsync(string image)
     {
-        if (string.IsNullOrEmpty(image))
+        if (String.IsNullOrEmpty(image))
         {
             return "/images/no-image.jpg";
         }
@@ -123,6 +126,7 @@
 
     private async Task DeleteImageClick(MouseEventArgs args, string image)
     {
+        image = image ?? string.Empty;
         Items = Items.Where(x => x != image).ToList();
 
         if (!image.Trim().StartsWith("http"))

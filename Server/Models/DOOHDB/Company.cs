@@ -11,7 +11,8 @@ namespace DOOH.Server.Models.DOOHDB
     public partial class Company
     {
         [Key]
-        public int Id { get; set; }
+        [Required]
+        public string Key { get; set; }
 
         [Required]
         public string CompanyName { get; set; }

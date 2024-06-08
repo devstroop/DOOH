@@ -33,20 +33,10 @@ namespace DOOH.Client.Pages.Admin.Settings
 
         [Inject]
         protected SecurityService Security { get; set; }
-
-
-
-
-
-
-
-
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        [Parameter]
-        public int Id { get; set; } = 1;
-
+        private string Key = "company";
         protected bool isLoading = true;
         protected bool isEditing = false;
         protected bool isNew = false;
@@ -61,8 +51,6 @@ namespace DOOH.Client.Pages.Admin.Settings
             if (firstRender)
             {
                 await Fetch();
-                isLoading = false;
-                StateHasChanged();
             }
         }
 
@@ -76,17 +64,21 @@ namespace DOOH.Client.Pages.Admin.Settings
         {
             try
             {
-                company = await DOOHDBService.GetCompanyById(id: Id);
+                company = await DOOHDBService.GetCompanyByKey(key: Key);
                 LogoDarkImages = new List<string> { company.LogoDark };
                 LogoLightImages = new List<string> { company.LogoLight };
                 FaviconImages = new List<string> { company.Favicon };
+                isLoading = false;
                 return;
             }
             catch { }
-            company = company ?? new DOOH.Server.Models.DOOHDB.Company() { Id=Id };
+            company = company ?? new DOOH.Server.Models.DOOHDB.Company() { Key=Key };
             LogoDarkImages = LogoDarkImages ?? new List<string>();
             LogoLightImages = LogoLightImages ?? new List<string>();
             FaviconImages = FaviconImages ?? new List<string>();
+            isNew = true;
+            isLoading = false;
+            StateHasChanged();
         }
 
         protected bool errorVisible;
@@ -159,15 +151,25 @@ namespace DOOH.Client.Pages.Admin.Settings
                 company.LogoDark = LogoDarkImages.FirstOrDefault();
                 company.LogoLight = LogoLightImages.FirstOrDefault();
                 company.Favicon = FaviconImages.FirstOrDefault();
-                await DOOHDBService.UpdateCompany(id: Id, company);
-                isEditing = false;
-                StateHasChanged();
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Success", Detail = $"Company updated" });
+                if (isNew)
+                {
+                    await DOOHDBService.CreateCompany(company);
+                }
+                else
+                {
+                    await DOOHDBService.UpdateCompany(key: Key, company);
+                }
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = $"Success", Detail = $"Company information updated!" });
             }
             catch (System.Exception doohDBServiceException)
             {
                 errorVisible = true;
                 NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update Company" });
+            }
+            finally
+            {
+                isEditing = false;
+                StateHasChanged();
             }
         }
 

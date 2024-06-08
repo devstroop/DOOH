@@ -53,7 +53,7 @@
                         <RadzenLabel Text="Logo (Dark)" Component="LogoDark" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent ObjectFit="contain" Items="@LogoDarkImages" Add="@OnAddDarkLogo" Delete="@OnDeleteDarkLogo" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="darkLogo" ObjectFit="contain" Items="@LogoDarkImages" Add="@OnAddDarkLogo" Delete="@OnDeleteDarkLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -61,7 +61,7 @@
                         <RadzenLabel Text="Logo (Light)" Component="LogoLight" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent ObjectFit="contain" Items="@LogoLightImages" Add="@OnAddLightLogo" Delete="@OnDeleteLightLogo" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="lightLogo" ObjectFit="contain" Items="@LogoLightImages" Add="@OnAddLightLogo" Delete="@OnDeleteLightLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -69,7 +69,7 @@
                         <RadzenLabel Text="Favicon" Component="Favicon" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent ObjectFit="contain" Items="@FaviconImages" Add="@OnAddFavicon" Delete="@OnDeleteFavicon" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="favicon" ObjectFit="contain" Items="@FaviconImages" Add="@OnAddFavicon" Delete="@OnDeleteFavicon" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">

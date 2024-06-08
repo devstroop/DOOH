@@ -43,10 +43,10 @@ namespace DOOH.Server.Controllers.DOOHDB
         partial void OnCompanyGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Company> item);
 
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        [HttpGet("/odata/DOOHDB/Companies(Id={Id})")]
-        public SingleResult<DOOH.Server.Models.DOOHDB.Company> GetCompany(int key)
+        [HttpGet("/odata/DOOHDB/Companies(Key={Key})")]
+        public SingleResult<DOOH.Server.Models.DOOHDB.Company> GetCompany(string key)
         {
-            var items = this.context.Companies.Where(i => i.Id == key);
+            var items = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key));
             var result = SingleResult.Create(items);
 
             OnCompanyGet(ref result);
@@ -56,8 +56,8 @@ namespace DOOH.Server.Controllers.DOOHDB
         partial void OnCompanyDeleted(DOOH.Server.Models.DOOHDB.Company item);
         partial void OnAfterCompanyDeleted(DOOH.Server.Models.DOOHDB.Company item);
 
-        [HttpDelete("/odata/DOOHDB/Companies(Id={Id})")]
-        public IActionResult DeleteCompany(int key)
+        [HttpDelete("/odata/DOOHDB/Companies(Key={Key})")]
+        public IActionResult DeleteCompany(string key)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
 
                 var item = this.context.Companies
-                    .Where(i => i.Id == key)
+                    .Where(i => i.Key == Uri.UnescapeDataString(key))
                     .FirstOrDefault();
 
                 if (item == null)
@@ -93,9 +93,9 @@ namespace DOOH.Server.Controllers.DOOHDB
         partial void OnCompanyUpdated(DOOH.Server.Models.DOOHDB.Company item);
         partial void OnAfterCompanyUpdated(DOOH.Server.Models.DOOHDB.Company item);
 
-        [HttpPut("/odata/DOOHDB/Companies(Id={Id})")]
+        [HttpPut("/odata/DOOHDB/Companies(Key={Key})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PutCompany(int key, [FromBody]DOOH.Server.Models.DOOHDB.Company item)
+        public IActionResult PutCompany(string key, [FromBody]DOOH.Server.Models.DOOHDB.Company item)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                if (item == null || (item.Id != key))
+                if (item == null || (item.Key != Uri.UnescapeDataString(key)))
                 {
                     return BadRequest();
                 }
@@ -112,7 +112,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.Companies.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Companies.Where(i => i.Id == key);
+                var itemToReturn = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key));
                 Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
                 this.OnAfterCompanyUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
@@ -124,9 +124,9 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        [HttpPatch("/odata/DOOHDB/Companies(Id={Id})")]
+        [HttpPatch("/odata/DOOHDB/Companies(Key={Key})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PatchCompany(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Company> patch)
+        public IActionResult PatchCompany(string key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Company> patch)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var item = this.context.Companies.Where(i => i.Id == key).FirstOrDefault();
+                var item = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key)).FirstOrDefault();
 
                 if (item == null)
                 {
@@ -147,7 +147,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.Companies.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Companies.Where(i => i.Id == key);
+                var itemToReturn = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key));
                 Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
                 this.OnAfterCompanyUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
@@ -182,7 +182,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.Companies.Add(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Companies.Where(i => i.Id == item.Id);
+                var itemToReturn = this.context.Companies.Where(i => i.Key == item.Key);
 
                 Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
 

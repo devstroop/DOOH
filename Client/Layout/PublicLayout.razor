@@ -20,7 +20,7 @@
                     <AuthorizeView>
                         <Authorized>
                             <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Small" />
-                            <RadzenProfileMenu Click="@ProfileMenuClick">
+                            <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                                 <ChildContent>
                                     @* <RadzenProfileMenuItem Path="/dashboard" Icon="dashboard" Text="Dashboard" /> *@
                                     <RadzenProfileMenuItem Path="/profile" Icon="settings" Text="Profile" />
