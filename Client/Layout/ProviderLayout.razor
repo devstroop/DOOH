@@ -10,7 +10,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
                     <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
                     <a href="/">
-                        <RadzenImage Path="@ProviderLogo" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+                        <LazyImageComponent DefaultImageUrl="/vectors/Provider-Blue.svg" ImageUrl="@Company?.ProviderLogo" Style="height: 40px;" />
                     </a>
                 </RadzenStack>
             </RadzenColumn>

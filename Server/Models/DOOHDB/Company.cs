@@ -27,6 +27,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public string ProviderLogo { get; set; }
 
+        public string LoginLogo { get; set; }
+
         public string Phone { get; set; }
 
         public string Email { get; set; }

@@ -36,8 +36,6 @@ namespace DOOH.Client.Layout
         [Inject]
         protected DOOHDBService DOOHDBService { get; set; }
         protected DOOH.Server.Models.DOOHDB.Company Company { get; set; }
-
-        protected string Logo { get; set; } = "vectors/Doohfy-Blue.svg";
         private bool showLoading = false;
         public bool ShowLoading
         {
@@ -96,16 +94,12 @@ namespace DOOH.Client.Layout
             {
                 Company = await DOOHDBService.GetCompanyByKey(key: "company");
                 ShowLoading = false;
+                StateHasChanged();
+                return;
             }
-            catch
-            {
-                Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
-                ShowLoading = false;
-            }
-            if (!String.IsNullOrEmpty(Company.AdminLogo))
-            {
-                Logo = Company.Logo;
-            }
+            catch { }
+            Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
+            ShowLoading = false;
             StateHasChanged();
 
         }

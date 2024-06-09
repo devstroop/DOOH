@@ -87,16 +87,12 @@ namespace DOOH.Client.Layout
             {
                 Company = await DOOHDBService.GetCompanyByKey(key: "company");
                 ShowLoading = false;
+                StateHasChanged();
+                return;
             }
-            catch
-            {
-                Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
-                ShowLoading = false;
-            }
-            if (!String.IsNullOrEmpty(Company.AdminLogo))
-            {
-                AdminLogo = Company.AdminLogo;
-            }
+            catch { }
+            Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
+            ShowLoading = false;
             StateHasChanged();
 
         }

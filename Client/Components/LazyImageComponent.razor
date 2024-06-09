@@ -1,0 +1,61 @@
+﻿@page "/radzen-image-overlay"
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+@if (Visible)
+{
+    <div class="image-container">
+        @if (isImageLoaded && isValidImage)
+        {
+            <RadzenImage Path="@ImageUrl" Style="@Style" />
+        }
+        else
+        {
+            <RadzenImage Path="@DefaultImageUrl" Style="@Style" />
+        }
+
+        @if (!isImageLoaded)
+        {
+            <RadzenProgressBarCircular Style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string DefaultImageUrl { get; set; }
+
+    [Parameter]
+    public string ImageUrl { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    [Parameter]
+    public bool Visible { get; set; } = true;
+
+    private bool isImageLoaded = false;
+    private bool isValidImage = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            isValidImage = await CheckImageUrlAsync(ImageUrl ?? string.Empty);
+            isImageLoaded = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task<bool> CheckImageUrlAsync(string url)
+    {
+        try
+        {
+            return await JSRuntime.InvokeAsync<bool>("checkImage", url);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+}

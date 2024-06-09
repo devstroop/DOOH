@@ -30,7 +30,7 @@
 
         <RadzenColumn SizeMD=12>
             <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Company</RadzenAlert>
-            <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Company" Data="@company" Visible="@(company != null)" >
+            <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Company" Data="@company" Visible="@(company != null)">
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Company Name" Component="CompanyName" style="width: 100%" />
@@ -78,6 +78,14 @@
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
                         <UploadComponent id="providerLogo" ObjectFit="contain" Items="@ProviderLogos" Add="@OnAddProviderLogo" Delete="@OnDeleteProviderLogo" Max="1" Refresh="@OnRefreshImage" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Text="Login Logo" Component="LoginLogo" style="width: 100%" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <UploadComponent id="loginLogo" ObjectFit="contain" Items="@LoginLogos" Add="@OnAddLoginLogo" Delete="@OnDeleteLoginLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -173,40 +181,40 @@
     {
 
 
-    <RadzenColumn SizeMD=12>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Company Name" Component="CompanyName" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CompanyName) ? "NA" : company.CompanyName)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Slogan" Component="Slogan" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Slogan) ? "NA" : company.Slogan)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Icon" Component="Icon" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenImage Path="@company.Icon" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Icon))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Icon)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Logo" Component="Logo" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenImage Path="@company.Logo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Logo))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Logo)" />
-            </RadzenColumn>
+        <RadzenColumn SizeMD=12>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Company Name" Component="CompanyName" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CompanyName) ? "NA" : company.CompanyName)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Slogan" Component="Slogan" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Slogan) ? "NA" : company.Slogan)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Icon" Component="Icon" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenImage Path="@company.Icon" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Icon))" />
+                    <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Icon)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Logo" Component="Logo" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenImage Path="@company.Logo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Logo))" />
+                    <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Logo)" />
+                </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
@@ -217,96 +225,105 @@
                     <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.AdminLogo)" />
                 </RadzenColumn>
             </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Provider Logo" Component="ProviderLogo" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Provider Logo" Component="ProviderLogo" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
                     <RadzenImage Path="@company.ProviderLogo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.ProviderLogo))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.ProviderLogo)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Phone" Component="Phone" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Phone) ? "NA" : company.Phone)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Email" Component="Email" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Email) ? "NA" : company.Email)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="GSTIN" Component="GSTIN" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.GSTIN) ? "NA" : company.GSTIN)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="PAN" Component="PAN" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.PAN) ? "NA" : company.PAN)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="CIN" Component="CIN" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CIN) ? "NA" : company.CIN)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Address Line1" Component="AddressLine1" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine1) ? "NA" : company.AddressLine1)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Address Line2" Component="AddressLine2" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine2) ? "NA" : company.AddressLine2)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="City" Component="City" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CityName) ? "NA" : company.CityName)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="State" Component="State" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.StateName) ? "NA" : company.StateName)" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CountryName) ? "NA" : company.CountryName)" />
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenColumn>
+                    <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.ProviderLogo)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Login Logo" Component="LoginLogo" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenImage Path="@company.LoginLogo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.LoginLogo))" />
+                    <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.LoginLogo)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Phone" Component="Phone" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Phone) ? "NA" : company.Phone)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Email" Component="Email" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Email) ? "NA" : company.Email)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="GSTIN" Component="GSTIN" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.GSTIN) ? "NA" : company.GSTIN)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="PAN" Component="PAN" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.PAN) ? "NA" : company.PAN)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="CIN" Component="CIN" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CIN) ? "NA" : company.CIN)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Address Line1" Component="AddressLine1" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine1) ? "NA" : company.AddressLine1)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Address Line2" Component="AddressLine2" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine2) ? "NA" : company.AddressLine2)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="City" Component="City" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CityName) ? "NA" : company.CityName)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="State" Component="State" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.StateName) ? "NA" : company.StateName)" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CountryName) ? "NA" : company.CountryName)" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenColumn>
     }
 </RadzenStack>
 

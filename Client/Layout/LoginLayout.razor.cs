@@ -11,7 +11,7 @@ using Radzen;
 using Radzen.Blazor;
 
 
-namespace DOOH.Client.Shared
+namespace DOOH.Client.Layout
 {
     public partial class LoginLayout
     {
@@ -35,5 +35,51 @@ namespace DOOH.Client.Shared
 
         [Inject]
         protected SecurityService Security { get; set; }
+        [Inject]
+        protected DOOHDBService DOOHDBService { get; set; }
+        protected DOOH.Server.Models.DOOHDB.Company Company { get; set; }
+        private bool showLoading = false;
+        public bool ShowLoading
+        {
+            get => showLoading; set
+            {
+                showLoading = value;
+                InvokeAsync(() => StateHasChanged());
+            }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await Fetch();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Fetch();
+            }
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await Fetch();
+        }
+
+        protected async Task Fetch()
+        {
+            try
+            {
+                Company = await DOOHDBService.GetCompanyByKey(key: "company");
+                ShowLoading = false;
+                StateHasChanged();
+                return;
+            }
+            catch { }
+            Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
+            ShowLoading = false;
+            StateHasChanged();
+
+        }
     }
 }

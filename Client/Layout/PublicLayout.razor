@@ -9,7 +9,7 @@
             <RadzenColumn Size="6">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="1rem">
                     <a href="/">
-                        <RadzenImage Path="@Logo" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+                        <LazyImageComponent DefaultImageUrl="/vectors/Doohfy-Blue.svg" ImageUrl="@Company?.Logo" Style="height: 40px;" />
                     </a>
 
                     @* <RadzenMenu>

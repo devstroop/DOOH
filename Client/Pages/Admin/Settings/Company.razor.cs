@@ -69,6 +69,7 @@ namespace DOOH.Client.Pages.Admin.Settings
                 Logos = new List<string> { company.Logo };
                 AdminLogos = new List<string> { company.AdminLogo };
                 ProviderLogos = new List<string> { company.ProviderLogo };
+                LoginLogos = new List<string> { company.LoginLogo };
                 isLoading = false;
                 return;
             }
@@ -78,6 +79,7 @@ namespace DOOH.Client.Pages.Admin.Settings
             Logos = Logos ?? new List<string>();
             AdminLogos = AdminLogos ?? new List<string>();
             ProviderLogos = ProviderLogos ?? new List<string>();
+            LoginLogos = LoginLogos ?? new List<string>();
             isNew = true;
             isLoading = false;
             StateHasChanged();
@@ -154,6 +156,7 @@ namespace DOOH.Client.Pages.Admin.Settings
                 company.Logo = Logos.FirstOrDefault();
                 company.AdminLogo = AdminLogos.FirstOrDefault();
                 company.ProviderLogo = ProviderLogos.FirstOrDefault();
+                company.LoginLogo = LoginLogos.FirstOrDefault();
                 if (isNew)
                 {
                     await DOOHDBService.CreateCompany(company);
@@ -195,10 +198,12 @@ namespace DOOH.Client.Pages.Admin.Settings
         protected List<string> Logos = new List<string>();
         protected List<string> AdminLogos = new List<string>();
         protected List<string> ProviderLogos = new List<string>();
+        protected List<string> LoginLogos = new List<string>();
 
 
         protected async void OnAddIcon(string image)
         {
+            if (String.IsNullOrEmpty(image)) { return; }
             Icons = new List<string> { image };
             StateHasChanged();
         }
@@ -207,8 +212,20 @@ namespace DOOH.Client.Pages.Admin.Settings
             Icons.Clear();
             StateHasChanged();
         }
+        protected async void OnAddLoginLogo(string image)
+        {
+            if (String.IsNullOrEmpty(image)) { return; }
+            LoginLogos = new List<string> { image };
+            StateHasChanged();
+        }
+        protected async void OnDeleteLoginLogo(string image)
+        {
+            LoginLogos.Clear();
+            StateHasChanged();
+        }
         protected async void OnAddLogo(string image)
         {
+            if (String.IsNullOrEmpty(image)) { return; }
             Logos = new List<string> { image };
             StateHasChanged();
         }
@@ -220,6 +237,7 @@ namespace DOOH.Client.Pages.Admin.Settings
 
         protected async void OnAddAdminLogo(string image)
         {
+            if (String.IsNullOrEmpty(image)) { return; }
             AdminLogos = new List<string> { image };
             StateHasChanged();
         }
@@ -231,6 +249,7 @@ namespace DOOH.Client.Pages.Admin.Settings
 
         protected async void OnAddProviderLogo(string image)
         {
+            if (String.IsNullOrEmpty(image)) { return; }
             ProviderLogos = new List<string> { image };
             StateHasChanged();
         }

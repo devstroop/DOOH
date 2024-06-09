@@ -38,7 +38,7 @@
         <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 255px">
             <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
                 <a href="/">
-                    <RadzenImage Path="@AdminLogo" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+                    <LazyImageComponent DefaultImageUrl="/vectors/Admin-Blue.svg" ImageUrl="@Company?.AdminLogo" Style="height: 40px;" />
                 </a>
             </RadzenStack>
             <RadzenPanelMenu>
