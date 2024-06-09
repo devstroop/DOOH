@@ -35,6 +35,12 @@ namespace DOOH.Client.Layout
         [Inject]
         protected SecurityService Security { get; set; }
 
+        [Inject]
+        protected DOOHDBService DOOHDBService { get; set; }
+        protected DOOH.Server.Models.DOOHDB.Company Company { get; set; }
+
+        protected string AdminLogo { get; set; } = "vectors/Admin-Blue.svg";
+
         private bool showLoading = false;
         public bool ShowLoading
         {
@@ -55,6 +61,44 @@ namespace DOOH.Client.Layout
             {
                 Security.Logout();
             }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await Fetch();
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await Fetch();
+            }
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await Fetch();
+        }
+
+        protected async Task Fetch()
+        {
+            try
+            {
+                Company = await DOOHDBService.GetCompanyByKey(key: "company");
+                ShowLoading = false;
+            }
+            catch
+            {
+                Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
+                ShowLoading = false;
+            }
+            if (!String.IsNullOrEmpty(Company.AdminLogo))
+            {
+                AdminLogo = Company.AdminLogo;
+            }
+            StateHasChanged();
+
         }
     }
 }

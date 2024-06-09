@@ -1,0 +1,32 @@
+﻿<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="width: 36px; height: 36px; background-color: #dfdfdf; border-radius: 18px">
+            <RadzenText Text="@($"{Campaign.CampaignId}")" style="margin: 0" TextStyle="TextStyle.DisplayH6" />
+        </RadzenStack>
+        <RadzenStack Gap="0">
+            <RadzenText Text="@Campaign.CampaignName" class="rz-mb-05" TextStyle="TextStyle.H6" />
+            <RadzenText Text="@($"{Campaign.StartDate.ToString("dd-MM-yyyy")} - {Campaign.EndDate?.ToString("dd-MM-yyyy") ?? "Never"}")" style="margin: 0" TextStyle="TextStyle.Caption" />
+        </RadzenStack>
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Start">
+        <RadzenBadge Text="@($"{Campaign.Advertisements?.Count ?? 0} ads")" />
+        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small">
+            <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+            <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+        </RadzenSplitButton>
+    </RadzenStack>
+</RadzenStack>
+<style>
+    .rz-menuitem {
+        padding: 0.5rem;
+    }
+
+        .rz-menuitem .rz-menuitem-icon {
+            font-size: 18px;
+        }
+
+</style>
+@code {
+    [Parameter] public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
+    [Parameter] public string Style { get; set; } = "width: 400px";
+}

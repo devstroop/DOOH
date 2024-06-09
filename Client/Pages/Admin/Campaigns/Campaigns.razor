@@ -1,3 +1,4 @@
+@layout AdminLayout
 @page "/admin/campaigns"
 
 @attribute [Authorize]
@@ -9,52 +10,20 @@
         </RadzenColumn>
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
-                    <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
-                    <RadzenSplitButtonItem Text="CSV" Value="csv" />
-                </RadzenSplitButton>
-                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
+                <RadzenTextBox Placeholder="Search ..." @bind-Value="@search" aria-label="Search" />
+                <RadzenButton Icon="search" Click="@Search" />
+                <RadzenButton Icon="refresh" ButtonStyle="ButtonStyle.Light" Click="@RefreshClick" />
+                <RadzenButton Icon="add" ButtonStyle="ButtonStyle.Primary" Click="@AddButtonClick" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
-    <RadzenRow>
-      <RadzenColumn SizeMD=12>
-        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
-            Data="@campaigns" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Campaign" RowDoubleClick="@EditRow">
-            <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignId" Title="Campaign Id">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignName" Title="Campaign Name">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StartDate" Title="Start Date">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="EndDate" Title="End Date">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="BudgetType" Title="Budget Type">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Budget" Title="Budget">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="IsActive" Title="Is Active">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="IsSuspended" Title="Is Suspended">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CreatedAt" Title="Created At">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UpdatedAt" Title="Updated At">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                    <Template Context="campaign">
+    <RadzenDataList @ref="@list0" IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" WrapItems="true" AllowPaging="true" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
+        <Template>
+            <CampaignTemplate Campaign="@context" />
+        </Template>
 
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
-                            Shade="Shade.Lighter" Variant="Variant.Flat"
-                            Click=@(args => GridDeleteButtonClick(args, campaign)) @onclick:stopPropagation="true" />
-                    </Template>
-                </RadzenDataGridColumn>
-            </Columns>
-
-        </RadzenDataGrid>
-
-    </RadzenColumn>
-  </RadzenRow>
+        <LoadingTemplate>
+            <RadzenText Text="Loading..." />
+        </LoadingTemplate>
+    </RadzenDataList>
 </RadzenStack>

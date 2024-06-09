@@ -35,50 +35,51 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Campaign> campaigns;
 
-        protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Campaign> grid0;
+        protected RadzenDataList<DOOH.Server.Models.DOOHDB.Campaign> list0;
         protected int count;
+        protected bool IsLoading = true;
 
-        protected string search = "";
+        protected string search { get; set; } = "";
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        protected int campaignsCount;
 
         protected async Task Search(ChangeEventArgs args)
         {
             search = $"{args.Value}";
 
-            await grid0.GoToPage(0);
+            await list0.GoToPage(0);
 
-            await grid0.Reload();
+            await list0.Reload();
+        }
+        protected async void RefreshClick(MouseEventArgs args)
+        {
+            await list0.Reload();
         }
 
-        protected async Task Grid0LoadData(LoadDataArgs args)
+        protected async Task Search(MouseEventArgs args)
         {
-            try
-            {
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"") or contains(BudgetType,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-                campaigns = result.Value.AsODataEnumerable();
-                count = result.Count;
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Campaigns" });
-            }
+
+            await list0.GoToPage(0);
+
+            await list0.Reload();
         }
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
             await DialogService.OpenAsync<AddCampaign>("Add Campaign", null);
-            await grid0.Reload();
+            await list0.Reload();
         }
 
-        protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Campaign> args)
+        protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
         {
-            await DialogService.OpenAsync<EditCampaign>("Edit Campaign", new Dictionary<string, object> { {"CampaignId", args.Data.CampaignId} });
-            await grid0.Reload();
+            await DialogService.OpenAsync<EditCampaign>("Edit Campaign", new Dictionary<string, object> { {"CampaignId", campaign.CampaignId} });
+            await list0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
+        protected async Task DeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
         {
             try
             {
@@ -88,7 +89,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
                     if (deleteResult != null)
                     {
-                        await grid0.Reload();
+                        await list0.Reload();
                     }
                 }
             }
@@ -103,28 +104,26 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             }
         }
 
-        protected async Task ExportClick(RadzenSplitButtonItem args)
+        protected async Task campaignsLoadData(LoadDataArgs args)
         {
-            if (args?.Value == "csv")
+            try
             {
-                await DOOHDBService.ExportCampaignsToCSV(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Campaigns");
-            }
+                IsLoading = true;
+                StateHasChanged();
+                //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
+                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"") or contains(BudgetType,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements, CampaignAdboards");
 
-            if (args == null || args.Value == "xlsx")
+                campaigns = result.Value.AsODataEnumerable();
+                campaignsCount = result.Count;
+            }
+            catch (Exception)
             {
-                await DOOHDBService.ExportCampaignsToExcel(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Campaigns");
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+            }
+            finally
+            {
+                IsLoading = false;
+                StateHasChanged();
             }
         }
     }

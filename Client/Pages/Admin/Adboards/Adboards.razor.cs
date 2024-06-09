@@ -209,7 +209,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected async Task Search(MouseEventArgs args)
         {
-
             await list0.GoToPage(0);
 
             await list0.Reload();

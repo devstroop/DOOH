@@ -16,7 +16,6 @@
                     <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
                         <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                             <ChildContent>
-
                                 <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
                                 <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
                             </ChildContent>
@@ -38,7 +37,9 @@
         </RadzenBody>
         <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 255px">
             <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-                <a href="/"><RadzenImage Path="vectors\Admin-Blue.svg" style="height: 40px;" AlternateText="Application logo"></RadzenImage></a>
+                <a href="/">
+                    <RadzenImage Path="@AdminLogo" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+                </a>
             </RadzenStack>
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />

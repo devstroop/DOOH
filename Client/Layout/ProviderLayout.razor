@@ -9,7 +9,9 @@
             <RadzenColumn Size="5">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
                     <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
-                    <a href="/"><RadzenImage Path="vectors\Provider-Blue.svg" style="height: 32px;" AlternateText="Application logo" /></a>
+                    <a href="/">
+                        <RadzenImage Path="@ProviderLogo" style="height: 40px;" AlternateText="Application logo"></RadzenImage>
+                    </a>
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="7">

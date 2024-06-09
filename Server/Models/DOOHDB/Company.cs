@@ -19,11 +19,13 @@ namespace DOOH.Server.Models.DOOHDB
 
         public string Slogan { get; set; }
 
-        public string LogoDark { get; set; }
+        public string Icon { get; set; }
 
-        public string LogoLight { get; set; }
+        public string Logo { get; set; }
 
-        public string Favicon { get; set; }
+        public string AdminLogo { get; set; }
+
+        public string ProviderLogo { get; set; }
 
         public string Phone { get; set; }
 

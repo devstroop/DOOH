@@ -50,26 +50,34 @@
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
-                        <RadzenLabel Text="Logo (Dark)" Component="LogoDark" style="width: 100%" />
+                        <RadzenLabel Text="Icon" Component="Icon" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent id="darkLogo" ObjectFit="contain" Items="@LogoDarkImages" Add="@OnAddDarkLogo" Delete="@OnDeleteDarkLogo" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="icon" ObjectFit="contain" Items="@Icons" Add="@OnAddIcon" Delete="@OnDeleteIcon" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
-                        <RadzenLabel Text="Logo (Light)" Component="LogoLight" style="width: 100%" />
+                        <RadzenLabel Text="Logo" Component="Logo" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent id="lightLogo" ObjectFit="contain" Items="@LogoLightImages" Add="@OnAddLightLogo" Delete="@OnDeleteLightLogo" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="logo" ObjectFit="contain" Items="@Logos" Add="@OnAddLogo" Delete="@OnDeleteLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
-                        <RadzenLabel Text="Favicon" Component="Favicon" style="width: 100%" />
+                        <RadzenLabel Text="Admin Logo" Component="AdminLogo" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <UploadComponent id="favicon" ObjectFit="contain" Items="@FaviconImages" Add="@OnAddFavicon" Delete="@OnDeleteFavicon" Max="1" Refresh="@OnRefreshImage" />
+                        <UploadComponent id="adminlogo" ObjectFit="contain" Items="@AdminLogos" Add="@OnAddAdminLogo" Delete="@OnDeleteAdminLogo" Max="1" Refresh="@OnRefreshImage" />
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenRow style="margin-bottom: 1rem">
+                    <RadzenColumn SizeMD="3">
+                        <RadzenLabel Text="Provider Logo" Component="ProviderLogo" style="width: 100%" />
+                    </RadzenColumn>
+                    <RadzenColumn SizeMD="9">
+                        <UploadComponent id="providerLogo" ObjectFit="contain" Items="@ProviderLogos" Add="@OnAddProviderLogo" Delete="@OnDeleteProviderLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -184,29 +192,38 @@
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Logo (Dark)" Component="LogoDark" style="width: 100%" />
+                <RadzenLabel Text="Icon" Component="Icon" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenImage Path="@company.LogoDark" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.LogoDark))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.LogoDark)" />
+                <RadzenImage Path="@company.Icon" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Icon))" />
+                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Icon)" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Logo (Light)" Component="LogoLight" style="width: 100%" />
+                <RadzenLabel Text="Logo" Component="Logo" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenImage Path="@company.LogoLight" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.LogoLight))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.LogoLight)" />
+                <RadzenImage Path="@company.Logo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Logo))" />
+                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Logo)" />
             </RadzenColumn>
-        </RadzenRow>
+            </RadzenRow>
+            <RadzenRow style="margin-bottom: 1rem">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Admin Logo" Component="AdminLogo" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenImage Path="@company.AdminLogo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.AdminLogo))" />
+                    <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.AdminLogo)" />
+                </RadzenColumn>
+            </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Favicon" Component="Favicon" style="width: 100%" />
+                <RadzenLabel Text="Provider Logo" Component="ProviderLogo" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenImage Path="@company.Favicon" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.Favicon))" />
-                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.Favicon)" />
+                    <RadzenImage Path="@company.ProviderLogo" style="width: auto; height: 32px" Visible="!(String.IsNullOrEmpty(company.ProviderLogo))" />
+                <RadzenText style="display: block; width: 100%" Text="NA" Visible="@String.IsNullOrEmpty(company.ProviderLogo)" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
