@@ -56,7 +56,9 @@
     private string Height = "100%";
 
     private string Width = "100%";
-    private string AspectRatio = "1:1";
+
+    [Parameter]
+    public string AspectRatio { get; set; } = "1:1";
 
     [Inject]
     protected Services.BrowserService BrowserService { get; set; }

@@ -3864,5 +3864,166 @@ namespace DOOH.Server
 
             return itemToDelete;
         }
+    
+        public async Task ExportStatusesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportStatusesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnStatusesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Status> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Status>> GetStatuses(Query query = null)
+        {
+            var items = Context.Statuses.AsQueryable();
+
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnStatusesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnStatusGet(DOOH.Server.Models.DOOHDB.Status item);
+        partial void OnGetStatusByStatusId(ref IQueryable<DOOH.Server.Models.DOOHDB.Status> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> GetStatusByStatusId(int statusid)
+        {
+            var items = Context.Statuses
+                              .AsNoTracking()
+                              .Where(i => i.StatusId == statusid);
+
+ 
+            OnGetStatusByStatusId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnStatusGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnStatusCreated(DOOH.Server.Models.DOOHDB.Status item);
+        partial void OnAfterStatusCreated(DOOH.Server.Models.DOOHDB.Status item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> CreateStatus(DOOH.Server.Models.DOOHDB.Status status)
+        {
+            OnStatusCreated(status);
+
+            var existingItem = Context.Statuses
+                              .Where(i => i.StatusId == status.StatusId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Statuses.Add(status);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(status).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterStatusCreated(status);
+
+            return status;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> CancelStatusChanges(DOOH.Server.Models.DOOHDB.Status item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnStatusUpdated(DOOH.Server.Models.DOOHDB.Status item);
+        partial void OnAfterStatusUpdated(DOOH.Server.Models.DOOHDB.Status item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> UpdateStatus(int statusid, DOOH.Server.Models.DOOHDB.Status status)
+        {
+            OnStatusUpdated(status);
+
+            var itemToUpdate = Context.Statuses
+                              .Where(i => i.StatusId == status.StatusId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(status);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterStatusUpdated(status);
+
+            return status;
+        }
+
+        partial void OnStatusDeleted(DOOH.Server.Models.DOOHDB.Status item);
+        partial void OnAfterStatusDeleted(DOOH.Server.Models.DOOHDB.Status item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> DeleteStatus(int statusid)
+        {
+            var itemToDelete = Context.Statuses
+                              .Where(i => i.StatusId == statusid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnStatusDeleted(itemToDelete);
+
+
+            Context.Statuses.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterStatusDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
         }
 }

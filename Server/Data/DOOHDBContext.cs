@@ -253,6 +253,10 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.IsDraft)
+              .HasDefaultValueSql(@"((1))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsActive)
               .HasDefaultValueSql(@"((0))");
 
@@ -407,6 +411,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.State> States { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.Status> Statuses { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

@@ -21,6 +21,7 @@
 	<ItemGroup>
 	  <Folder Include="Pages\Adboard\" />
 	  <Folder Include="Pages\Admin\Faqs\" />
+	  <Folder Include="Pages\Admin\Settings\Statuses\" />
 	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>

@@ -1,5 +1,4 @@
-﻿@page "/radzen-image-overlay"
-@using Microsoft.JSInterop
+﻿@using Microsoft.JSInterop
 
 @inject IJSRuntime JSRuntime
 @if (Visible)
@@ -37,14 +36,13 @@
     private bool isImageLoaded = false;
     private bool isValidImage = false;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+
+    protected override async Task OnParametersSetAsync()
     {
-        if (firstRender)
-        {
-            isValidImage = await CheckImageUrlAsync(ImageUrl ?? string.Empty);
-            isImageLoaded = true;
-            StateHasChanged();
-        }
+        isValidImage = await CheckImageUrlAsync(ImageUrl ?? string.Empty);
+        isImageLoaded = true;
+        StateHasChanged();
     }
 
     private async Task<bool> CheckImageUrlAsync(string url)

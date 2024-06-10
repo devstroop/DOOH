@@ -104,6 +104,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             }
         }
 
+        protected int selectedIndex { get; set; } = 2;
+
         protected async Task campaignsLoadData(LoadDataArgs args)
         {
             try
@@ -111,7 +113,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 IsLoading = true;
                 StateHasChanged();
                 //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"") or contains(BudgetType,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements, CampaignAdboards");
+                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"") or contains(BudgetType,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Attachment), CampaignAdboards($expand=Adboard)");
 
                 campaigns = result.Value.AsODataEnumerable();
                 campaignsCount = result.Count;

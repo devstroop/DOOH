@@ -21,11 +21,7 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    @if (isLoading)
-    {
-        <RadzenProgressBarCircular Visible="@isLoading" />
-    }
-    else if (company != null && isEditing)
+    @if (company != null && isEditing)
     {
 
         <RadzenColumn SizeMD=12>
@@ -48,6 +44,8 @@
                         <RadzenTextBox style="display: block; width: 100%" @bind-Value="@company.Slogan" Name="Slogan" />
                     </RadzenColumn>
                 </RadzenRow>
+
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Icon" Component="Icon" style="width: 100%" />
@@ -56,6 +54,7 @@
                         <UploadComponent id="icon" ObjectFit="contain" Items="@Icons" Add="@OnAddIcon" Delete="@OnDeleteIcon" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Logo" Component="Logo" style="width: 100%" />
@@ -64,6 +63,7 @@
                         <UploadComponent id="logo" ObjectFit="contain" Items="@Logos" Add="@OnAddLogo" Delete="@OnDeleteLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Admin Logo" Component="AdminLogo" style="width: 100%" />
@@ -72,6 +72,7 @@
                         <UploadComponent id="adminlogo" ObjectFit="contain" Items="@AdminLogos" Add="@OnAddAdminLogo" Delete="@OnDeleteAdminLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Provider Logo" Component="ProviderLogo" style="width: 100%" />
@@ -80,6 +81,7 @@
                         <UploadComponent id="providerLogo" ObjectFit="contain" Items="@ProviderLogos" Add="@OnAddProviderLogo" Delete="@OnDeleteProviderLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Login Logo" Component="LoginLogo" style="width: 100%" />
@@ -88,6 +90,8 @@
                         <UploadComponent id="loginLogo" ObjectFit="contain" Items="@LoginLogos" Add="@OnAddLoginLogo" Delete="@OnDeleteLoginLogo" Max="1" Refresh="@OnRefreshImage" />
                     </RadzenColumn>
                 </RadzenRow>
+
+
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
                         <RadzenLabel Text="Phone" Component="Phone" style="width: 100%" />

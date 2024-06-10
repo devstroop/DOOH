@@ -340,5 +340,19 @@ namespace DOOH.Server.Controllers
         {
             return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
         }
+
+        [HttpGet("/export/DOOHDB/statuses/csv")]
+        [HttpGet("/export/DOOHDB/statuses/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportStatusesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetStatuses(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/statuses/excel")]
+        [HttpGet("/export/DOOHDB/statuses/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportStatusesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetStatuses(), Request.Query, false), fileName);
+        }
     }
 }

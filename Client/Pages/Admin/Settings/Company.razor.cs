@@ -54,10 +54,10 @@ namespace DOOH.Client.Pages.Admin.Settings
             }
         }
 
-        protected override async Task OnParametersSetAsync()
-        {
-            await Fetch();
-        }
+        //protected override async Task OnParametersSetAsync()
+        //{
+        //    await Fetch();
+        //}
 
 
         protected async Task Fetch()
@@ -209,7 +209,7 @@ namespace DOOH.Client.Pages.Admin.Settings
         }
         protected async void OnDeleteIcon(string image)
         {
-            Icons.Clear();
+            Icons = new List<string>();
             StateHasChanged();
         }
         protected async void OnAddLoginLogo(string image)
@@ -220,7 +220,7 @@ namespace DOOH.Client.Pages.Admin.Settings
         }
         protected async void OnDeleteLoginLogo(string image)
         {
-            LoginLogos.Clear();
+            LoginLogos = new List<string>();
             StateHasChanged();
         }
         protected async void OnAddLogo(string image)
@@ -231,7 +231,7 @@ namespace DOOH.Client.Pages.Admin.Settings
         }
         protected async void OnDeleteLogo(string image)
         {
-            Logos.Clear();
+            Logos = new List<string>();
             StateHasChanged();
         }
 
@@ -243,7 +243,7 @@ namespace DOOH.Client.Pages.Admin.Settings
         }
         protected async void OnDeleteAdminLogo(string image)
         {
-            AdminLogos.Clear();
+            AdminLogos = new List<string>();
             StateHasChanged();
         }
 
@@ -255,8 +255,24 @@ namespace DOOH.Client.Pages.Admin.Settings
         }
         protected async void OnDeleteProviderLogo(string image)
         {
-            ProviderLogos.Clear();
+            ProviderLogos = new List<string>();
             StateHasChanged();
+        }
+
+
+
+
+
+        private async Task<bool> CheckImageUrlAsync(string url)
+        {
+            try
+            {
+                return await JSRuntime.InvokeAsync<bool>("checkImage", url);
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

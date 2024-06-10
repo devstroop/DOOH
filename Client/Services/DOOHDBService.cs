@@ -2192,5 +2192,99 @@ namespace DOOH.Client
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
+
+        public async System.Threading.Tasks.Task ExportStatusesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportStatusesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetStatuses(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>> GetStatuses(Query query)
+        {
+            return await GetStatuses(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>> GetStatuses(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"Statuses");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetStatuses(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>>(response);
+        }
+
+        partial void OnCreateStatus(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> CreateStatus(DOOH.Server.Models.DOOHDB.Status status = default(DOOH.Server.Models.DOOHDB.Status))
+        {
+            var uri = new Uri(baseUri, $"Statuses");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(status), Encoding.UTF8, "application/json");
+
+            OnCreateStatus(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Status>(response);
+        }
+
+        partial void OnDeleteStatus(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteStatus(int statusId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Statuses({statusId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteStatus(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetStatusByStatusId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Status> GetStatusByStatusId(string expand = default(string), int statusId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Statuses({statusId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetStatusByStatusId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Status>(response);
+        }
+
+        partial void OnUpdateStatus(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateStatus(int statusId = default(int), DOOH.Server.Models.DOOHDB.Status status = default(DOOH.Server.Models.DOOHDB.Status))
+        {
+            var uri = new Uri(baseUri, $"Statuses({statusId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(status), Encoding.UTF8, "application/json");
+
+            OnUpdateStatus(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
     }
 }

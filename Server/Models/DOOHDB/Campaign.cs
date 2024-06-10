@@ -25,6 +25,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public decimal? Budget { get; set; }
 
+        public bool? IsDraft { get; set; }
+
         public bool IsActive { get; set; }
 
         public bool IsSuspended { get; set; }

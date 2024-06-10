@@ -10,14 +10,14 @@
 @using System.Text.Json
 
 <RadzenStack Wrap="FlexWrap.Wrap" Orientation="Orientation.Horizontal" Gap="0">
-    @foreach (var image in Items ?? new List<string>())
+    @foreach (var image in Items?.Where(x => !String.IsNullOrEmpty(x)) ?? new List<string>())
     {
         <RadzenStack Style="width: 96px; height: 96px; position: relative;" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
             <RadzenImage Path="@_validatedImages.GetValueOrDefault((image ?? string.Empty), "/images/warning.png")" Style="@Style" />
             <RadzenButton Class="delete-upload-image" Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@((args) => DeleteImageClick(args, image))" />
         </RadzenStack>
     }
-    <RadzenUpload id="@($"ddUpload_{id}")" class="dd-upload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" Visible="@((Items?.Count ?? 0) < Max)" />
+    <RadzenUpload id="@($"ddUpload_{id}")" class="dd-upload" Icon="@uploadIcon" ChooseText="@uploadText" Url="upload/multiple" Progress="@OnProgress" Auto="true" Multiple="true" Complete="@OnComplete" Visible="@((Items?.Where(x => !String.IsNullOrEmpty(x))?.Count() ?? 0) < Max)" />
 </RadzenStack>
 <style>
     .progress-upload-image {
@@ -74,11 +74,6 @@
     private string uploadText => progress > 0 && progress < 100 ? $"{progress}%" : string.Empty;
     private string uploadIcon => progress > 0 && progress < 100 ? string.Empty : "add";
 
-    protected override async Task OnInitializedAsync()
-    {
-        await ValidateImages();
-    }
-
     protected override async Task OnParametersSetAsync()
     {
         await ValidateImages();
@@ -94,7 +89,6 @@
                 _validatedImages[image] = validImage;
             }
         }
-        // Refresh?.Invoke();
     }
 
     private async Task<string> GetValidImageAsync(string image)
@@ -106,22 +100,33 @@
 
         var absoluteUri = image.Trim().StartsWith("http") ? image : $"{NavigationManager.BaseUri}{image}";
 
-
+        bool flag = false;
         try
         {
-            var response = await HttpClient.SendAsync(new HttpRequestMessage(HttpMethod.Head, absoluteUri));
-
-            if (!response.IsSuccessStatusCode)
-            {
-                return "/images/warning.png";
-            }
+            var result = await CheckImageUrlAsync(absoluteUri);
+            flag = result;
         }
         catch
+        {
+            flag = false;
+        }
+        if (!flag)
         {
             return "/images/warning.png";
         }
 
         return image;
+    }
+    private async Task<bool> CheckImageUrlAsync(string url)
+    {
+        try
+        {
+            return await JSRuntime.InvokeAsync<bool>("checkImage", url);
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     private async Task DeleteImageClick(MouseEventArgs args, string image)
@@ -139,8 +144,6 @@
         }
 
         Delete?.Invoke(image);
-
-        // await ValidateImages();
     }
 
     private void OnProgress(UploadProgressArgs args)
@@ -154,9 +157,7 @@
 
         foreach (var url in urls["urls"])
         {
-            // Items.Add(url);
             Add?.Invoke(url);
         }
-        // await ValidateImages();
     }
 }
