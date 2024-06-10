@@ -2099,100 +2099,6 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportTaxesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async System.Threading.Tasks.Task ExportTaxesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/taxes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/taxes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnGetTaxes(HttpRequestMessage requestMessage);
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>> GetTaxes(Query query)
-        {
-            return await GetTaxes(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
-        }
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>> GetTaxes(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
-        {
-            var uri = new Uri(baseUri, $"Taxes");
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetTaxes(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>>(response);
-        }
-
-        partial void OnCreateTax(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Tax> CreateTax(DOOH.Server.Models.DOOHDB.Tax tax = default(DOOH.Server.Models.DOOHDB.Tax))
-        {
-            var uri = new Uri(baseUri, $"Taxes");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(tax), Encoding.UTF8, "application/json");
-
-            OnCreateTax(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Tax>(response);
-        }
-
-        partial void OnDeleteTax(HttpRequestMessage requestMessage);
-
-        public async Task<HttpResponseMessage> DeleteTax(int taxId = default(int))
-        {
-            var uri = new Uri(baseUri, $"Taxes({taxId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
-
-            OnDeleteTax(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
-        partial void OnGetTaxByTaxId(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Tax> GetTaxByTaxId(string expand = default(string), int taxId = default(int))
-        {
-            var uri = new Uri(baseUri, $"Taxes({taxId})");
-
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetTaxByTaxId(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Tax>(response);
-        }
-
-        partial void OnUpdateTax(HttpRequestMessage requestMessage);
-        
-        public async Task<HttpResponseMessage> UpdateTax(int taxId = default(int), DOOH.Server.Models.DOOHDB.Tax tax = default(DOOH.Server.Models.DOOHDB.Tax))
-        {
-            var uri = new Uri(baseUri, $"Taxes({taxId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
-
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(tax), Encoding.UTF8, "application/json");
-
-            OnUpdateTax(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
         public async System.Threading.Tasks.Task ExportStatusesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -2283,6 +2189,100 @@ namespace DOOH.Client
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(status), Encoding.UTF8, "application/json");
 
             OnUpdateStatus(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async System.Threading.Tasks.Task ExportTaxesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportTaxesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/taxes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/taxes/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetTaxes(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>> GetTaxes(Query query)
+        {
+            return await GetTaxes(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>> GetTaxes(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"Taxes");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetTaxes(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Tax>>(response);
+        }
+
+        partial void OnCreateTax(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Tax> CreateTax(DOOH.Server.Models.DOOHDB.Tax tax = default(DOOH.Server.Models.DOOHDB.Tax))
+        {
+            var uri = new Uri(baseUri, $"Taxes");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(tax), Encoding.UTF8, "application/json");
+
+            OnCreateTax(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Tax>(response);
+        }
+
+        partial void OnDeleteTax(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteTax(int taxId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Taxes({taxId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteTax(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetTaxByTaxId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Tax> GetTaxByTaxId(string expand = default(string), int taxId = default(int))
+        {
+            var uri = new Uri(baseUri, $"Taxes({taxId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetTaxByTaxId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Tax>(response);
+        }
+
+        partial void OnUpdateTax(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateTax(int taxId = default(int), DOOH.Server.Models.DOOHDB.Tax tax = default(DOOH.Server.Models.DOOHDB.Tax))
+        {
+            var uri = new Uri(baseUri, $"Taxes({taxId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(tax), Encoding.UTF8, "application/json");
+
+            OnUpdateTax(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }

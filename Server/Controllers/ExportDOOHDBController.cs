@@ -327,20 +327,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/taxes/csv")]
-        [HttpGet("/export/DOOHDB/taxes/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportTaxesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/taxes/excel")]
-        [HttpGet("/export/DOOHDB/taxes/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportTaxesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/statuses/csv")]
         [HttpGet("/export/DOOHDB/statuses/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportStatusesToCSV(string fileName = null)
@@ -353,6 +339,20 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportStatusesToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetStatuses(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/taxes/csv")]
+        [HttpGet("/export/DOOHDB/taxes/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportTaxesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/taxes/excel")]
+        [HttpGet("/export/DOOHDB/taxes/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportTaxesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
         }
     }
 }
