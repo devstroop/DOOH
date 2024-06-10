@@ -1,12 +1,17 @@
 @using Radzen
 @using Microsoft.AspNetCore.Components
 
-<div class="carousel-container" style="@(combinedStyle)">
-    <RadzenImage Path="@currentImage" alt="Image" style="@imageStyle" Visible="!(String.IsNullOrEmpty(currentImage))" />
-    <RadzenImage Path="/images/no-image.png" alt="Image" style="@imageStyle" Visible="@(String.IsNullOrEmpty(currentImage))" />
+<div class="carousel-container" style="@CarouselContainerStyle">
+    <RadzenImage Path="@CurrentImage" alt="Image" style="@ImageStyle" Visible="IsCurrentImageVisible" />
+    <RadzenImage Path="/images/no-image.png" alt="Image" style="@ImageStyle" Visible="IsCurrentImageNotVisible" />
 
-    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="@(currentIndex > 0)"/>
-    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="@(Images.Count() - 1 > currentIndex)" />
+    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible" />
+    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible" />
+
+    @if (ShowHoverIcon && IsCurrentImageVisible)
+    {
+        <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="@HoverIcon" class="hover-icon" Click="HandleHoverIconClick" />
+    }
 </div>
 
 <style>
@@ -16,7 +21,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
     }
 
     .nav-button {
@@ -41,6 +45,24 @@
         transform: translateY(-50%);
     }
 
+    .hover-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        border-radius: 50%;
+        padding: 10px;
+        visibility: hidden;
+    }
+
+
+    .carousel-container:hover .hover-icon {
+        visibility: visible;
+    }
+
     .carousel-container img {
         width: 100%;
         height: 100%;
@@ -50,32 +72,33 @@
 </style>
 
 @code {
-    [Parameter]
-    public IEnumerable<string> Images { get; set; }
-
-    private string Height = "100%";
-
-    private string Width = "100%";
-
-    [Parameter]
-    public string AspectRatio { get; set; } = "1:1";
-
-    [Inject]
-    protected Services.BrowserService BrowserService { get; set; }
-
-
-    [Parameter]
-    public string Style { get; set; } = "border-radius: 4px; border: 1px solid #dfdfdf;";
-
-    [Parameter]
-    public string Class { get; set; }
+    [Parameter] public IEnumerable<string> Images { get; set; }
+    [Parameter] public string AspectRatio { get; set; } = "1:1";
+    [Parameter] public string Style { get; set; } = "border-radius: 4px; border: 1px solid #dfdfdf;";
+    [Parameter] public string Class { get; set; }
+    [Parameter] public string HoverIcon { get; set; } = "visibility";
+    [Parameter] public bool ShowHoverIcon { get; set; } = false;
+    [Parameter] public Action<string> OnHoverClick { get; set; }
 
     private int currentIndex = 0;
+    private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
+    private string CarouselContainerStyle => $"width: {Width}; height: {Height}; aspect-ratio: {AspectRatio}";
+    private string ImageStyle => $"width: 100%; height: 100%; {Style};";
+    private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
+    private bool IsCurrentImageNotVisible => string.IsNullOrEmpty(CurrentImage);
+    private bool IsPreviousButtonVisible => currentIndex > 0;
+    private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
 
-    private string currentImage => Images.ElementAtOrDefault(currentIndex);
+    private string Height = "100%";
+    private string Width = "100%";
 
-    private string combinedStyle => $"width: {Width}; height: {Height}; aspect-ratio: {AspectRatio}";
-    private string imageStyle => $"width: 100%; height: 100%; {Style};";
+    [Inject] protected Services.BrowserService BrowserService { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        BrowserService.OnViewportChanged += OnViewportChanged;
+        return base.OnInitializedAsync();
+    }
 
     private void NextImage()
     {
@@ -103,9 +126,11 @@
         }
     }
 
-    protected override Task OnInitializedAsync()
+    private async Task HandleHoverIconClick()
     {
-        BrowserService.OnViewportChanged += OnViewportChanged;
-        return base.OnInitializedAsync();
+        if (ShowHoverIcon && IsCurrentImageVisible)
+        {
+            OnHoverClick?.Invoke(CurrentImage);
+        }
     }
 }

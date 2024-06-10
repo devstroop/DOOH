@@ -1576,6 +1576,8 @@ namespace DOOH.Server
         {
             var items = Context.Campaigns.AsQueryable();
 
+            items = items.Include(i => i.Schedule);
+            items = items.Include(i => i.Status);
 
             if (query != null)
             {
@@ -1606,6 +1608,8 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.CampaignId == campaignid);
 
+            items = items.Include(i => i.Schedule);
+            items = items.Include(i => i.Status);
  
             OnGetCampaignByCampaignId(ref items);
 
@@ -3534,6 +3538,168 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
+        public async Task ExportSchedulesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/schedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/schedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportSchedulesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/schedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/schedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnSchedulesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Schedule> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Schedule>> GetSchedules(Query query = null)
+        {
+            var items = Context.Schedules.AsQueryable();
+
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnSchedulesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnScheduleGet(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnGetScheduleByScheduleId(ref IQueryable<DOOH.Server.Models.DOOHDB.Schedule> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> GetScheduleByScheduleId(int scheduleid)
+        {
+            var items = Context.Schedules
+                              .AsNoTracking()
+                              .Where(i => i.ScheduleId == scheduleid);
+
+ 
+            OnGetScheduleByScheduleId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnScheduleGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnScheduleCreated(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleCreated(DOOH.Server.Models.DOOHDB.Schedule item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> CreateSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
+        {
+            OnScheduleCreated(schedule);
+
+            var existingItem = Context.Schedules
+                              .Where(i => i.ScheduleId == schedule.ScheduleId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Schedules.Add(schedule);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(schedule).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterScheduleCreated(schedule);
+
+            return schedule;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> CancelScheduleChanges(DOOH.Server.Models.DOOHDB.Schedule item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnScheduleUpdated(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleUpdated(DOOH.Server.Models.DOOHDB.Schedule item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> UpdateSchedule(int scheduleid, DOOH.Server.Models.DOOHDB.Schedule schedule)
+        {
+            OnScheduleUpdated(schedule);
+
+            var itemToUpdate = Context.Schedules
+                              .Where(i => i.ScheduleId == schedule.ScheduleId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(schedule);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterScheduleUpdated(schedule);
+
+            return schedule;
+        }
+
+        partial void OnScheduleDeleted(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleDeleted(DOOH.Server.Models.DOOHDB.Schedule item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> DeleteSchedule(int scheduleid)
+        {
+            var itemToDelete = Context.Schedules
+                              .Where(i => i.ScheduleId == scheduleid)
+                              .Include(i => i.Campaigns)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnScheduleDeleted(itemToDelete);
+
+
+            Context.Schedules.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterScheduleDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportStatesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/states/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/states/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -3835,6 +4001,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.Statuses
                               .Where(i => i.StatusId == statusid)
+                              .Include(i => i.Campaigns)
                               .FirstOrDefault();
 
             if (itemToDelete == null)

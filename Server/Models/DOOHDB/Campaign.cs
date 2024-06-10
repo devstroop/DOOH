@@ -17,17 +17,19 @@ namespace DOOH.Server.Models.DOOHDB
         [Required]
         public string CampaignName { get; set; }
 
-        public DateTime StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
-
         public string BudgetType { get; set; }
 
         public decimal? Budget { get; set; }
 
-        public bool? IsDraft { get; set; }
+        public int? ScheduleId { get; set; }
 
-        public bool IsActive { get; set; }
+        public Schedule Schedule { get; set; }
+
+        public int? StatusId { get; set; }
+
+        public Status Status { get; set; }
+
+        public bool IsDraft { get; set; }
 
         public bool IsSuspended { get; set; }
 

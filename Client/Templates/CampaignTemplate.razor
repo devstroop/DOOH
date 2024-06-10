@@ -1,17 +1,17 @@
 ﻿<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
         <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="width: 96px;">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" AspectRatio="9:16" />
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" AspectRatio="9:16" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenStack>
         <RadzenStack Gap="1rem">
             <RadzenText Text="@($"#{Campaign.CampaignId} {Campaign.CampaignName}")" class="rz-mb-05" TextStyle="TextStyle.H6" />
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="1rem">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="calendar_today" Style="font-size: 16px" />
                     <RadzenText Text="@(Campaign.StartDate.ToString("dd/MM/yyyy") + (Campaign.EndDate != null ? $" - {Campaign.EndDate?.ToString("dd/MM/yyyy")}" : ""))" style="margin: 0" TextStyle="TextStyle.Caption" />
                     <RadzenText Text="-" style="margin: 0" TextStyle="TextStyle.Caption" Visible="@(Campaign.EndDate == null)" />
                     <RadzenIcon Icon="all_inclusive" Style="font-size: 16px" Visible="@(Campaign.EndDate == null)" />
-                </RadzenStack>
+                </RadzenStack> *@
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="featured_video" Style="font-size: 16px" />
                     <RadzenText Text="@($"{Campaign.Advertisements.Count}")" style="margin: 0" TextStyle="TextStyle.Caption" />
@@ -23,7 +23,7 @@
         </RadzenStack>
     </RadzenStack>
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Start">
-        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@(Campaign.IsDraft ?? false)" />
+        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" />
         <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small">
             <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
             <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
@@ -54,6 +54,7 @@
     [Parameter] public string Style { get; set; } = "width: 100%; box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #bfbfbf;";
 
     [Inject] private DialogService DialogService { get; set; }
+    [Inject] private NotificationService NotificationService { get; set; }
 
     private async Task OnLocationClick(MouseEventArgs args)
     {
@@ -77,5 +78,10 @@
         parameters.Add("Zoom", 12);
         var options = new DialogOptions() { Width = "800px", Height = "600px", Draggable = true, CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true };
         await DialogService.OpenAsync<GoogleMapTemplate>("Map", parameters, options);
+    }
+
+    private void OnHoverClick(string image)
+    {
+        NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = image });
     }
 }

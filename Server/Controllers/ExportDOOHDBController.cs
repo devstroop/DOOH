@@ -313,6 +313,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetProviders(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/schedules/csv")]
+        [HttpGet("/export/DOOHDB/schedules/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportSchedulesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/schedules/excel")]
+        [HttpGet("/export/DOOHDB/schedules/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportSchedulesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/states/csv")]
         [HttpGet("/export/DOOHDB/states/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportStatesToCSV(string fileName = null)

@@ -50,6 +50,7 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Motherboard>("Motherboards");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Page>("Pages");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Provider>("Providers");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Schedule>("Schedules");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.State>("States");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Status>("Statuses");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");

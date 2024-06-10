@@ -17,12 +17,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DOOH.Server.Controllers.DOOHDB
 {
-    [Route("odata/DOOHDB/Campaigns")]
-    public partial class CampaignsController : ODataController
+    [Route("odata/DOOHDB/Schedules")]
+    public partial class SchedulesController : ODataController
     {
         private DOOH.Server.Data.DOOHDBContext context;
 
-        public CampaignsController(DOOH.Server.Data.DOOHDBContext context)
+        public SchedulesController(DOOH.Server.Data.DOOHDBContext context)
         {
             this.context = context;
         }
@@ -30,34 +30,34 @@ namespace DOOH.Server.Controllers.DOOHDB
     
         [HttpGet]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.Campaign> GetCampaigns()
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Schedule> GetSchedules()
         {
-            var items = this.context.Campaigns.AsQueryable<DOOH.Server.Models.DOOHDB.Campaign>();
-            this.OnCampaignsRead(ref items);
+            var items = this.context.Schedules.AsQueryable<DOOH.Server.Models.DOOHDB.Schedule>();
+            this.OnSchedulesRead(ref items);
 
             return items;
         }
 
-        partial void OnCampaignsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Campaign> items);
+        partial void OnSchedulesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Schedule> items);
 
-        partial void OnCampaignGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Campaign> item);
+        partial void OnScheduleGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Schedule> item);
 
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        [HttpGet("/odata/DOOHDB/Campaigns(CampaignId={CampaignId})")]
-        public SingleResult<DOOH.Server.Models.DOOHDB.Campaign> GetCampaign(int key)
+        [HttpGet("/odata/DOOHDB/Schedules(ScheduleId={ScheduleId})")]
+        public SingleResult<DOOH.Server.Models.DOOHDB.Schedule> GetSchedule(int key)
         {
-            var items = this.context.Campaigns.Where(i => i.CampaignId == key);
+            var items = this.context.Schedules.Where(i => i.ScheduleId == key);
             var result = SingleResult.Create(items);
 
-            OnCampaignGet(ref result);
+            OnScheduleGet(ref result);
 
             return result;
         }
-        partial void OnCampaignDeleted(DOOH.Server.Models.DOOHDB.Campaign item);
-        partial void OnAfterCampaignDeleted(DOOH.Server.Models.DOOHDB.Campaign item);
+        partial void OnScheduleDeleted(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleDeleted(DOOH.Server.Models.DOOHDB.Schedule item);
 
-        [HttpDelete("/odata/DOOHDB/Campaigns(CampaignId={CampaignId})")]
-        public IActionResult DeleteCampaign(int key)
+        [HttpDelete("/odata/DOOHDB/Schedules(ScheduleId={ScheduleId})")]
+        public IActionResult DeleteSchedule(int key)
         {
             try
             {
@@ -67,18 +67,18 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var item = this.context.Campaigns
-                    .Where(i => i.CampaignId == key)
+                var item = this.context.Schedules
+                    .Where(i => i.ScheduleId == key)
                     .FirstOrDefault();
 
                 if (item == null)
                 {
                     return BadRequest();
                 }
-                this.OnCampaignDeleted(item);
-                this.context.Campaigns.Remove(item);
+                this.OnScheduleDeleted(item);
+                this.context.Schedules.Remove(item);
                 this.context.SaveChanges();
-                this.OnAfterCampaignDeleted(item);
+                this.OnAfterScheduleDeleted(item);
 
                 return new NoContentResult();
 
@@ -90,12 +90,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnCampaignUpdated(DOOH.Server.Models.DOOHDB.Campaign item);
-        partial void OnAfterCampaignUpdated(DOOH.Server.Models.DOOHDB.Campaign item);
+        partial void OnScheduleUpdated(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleUpdated(DOOH.Server.Models.DOOHDB.Schedule item);
 
-        [HttpPut("/odata/DOOHDB/Campaigns(CampaignId={CampaignId})")]
+        [HttpPut("/odata/DOOHDB/Schedules(ScheduleId={ScheduleId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PutCampaign(int key, [FromBody]DOOH.Server.Models.DOOHDB.Campaign item)
+        public IActionResult PutSchedule(int key, [FromBody]DOOH.Server.Models.DOOHDB.Schedule item)
         {
             try
             {
@@ -104,17 +104,17 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                if (item == null || (item.CampaignId != key))
+                if (item == null || (item.ScheduleId != key))
                 {
                     return BadRequest();
                 }
-                this.OnCampaignUpdated(item);
-                this.context.Campaigns.Update(item);
+                this.OnScheduleUpdated(item);
+                this.context.Schedules.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
-                this.OnAfterCampaignUpdated(item);
+                var itemToReturn = this.context.Schedules.Where(i => i.ScheduleId == key);
+                
+                this.OnAfterScheduleUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -124,9 +124,9 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        [HttpPatch("/odata/DOOHDB/Campaigns(CampaignId={CampaignId})")]
+        [HttpPatch("/odata/DOOHDB/Schedules(ScheduleId={ScheduleId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PatchCampaign(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Campaign> patch)
+        public IActionResult PatchSchedule(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Schedule> patch)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var item = this.context.Campaigns.Where(i => i.CampaignId == key).FirstOrDefault();
+                var item = this.context.Schedules.Where(i => i.ScheduleId == key).FirstOrDefault();
 
                 if (item == null)
                 {
@@ -143,13 +143,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
                 patch.Patch(item);
 
-                this.OnCampaignUpdated(item);
-                this.context.Campaigns.Update(item);
+                this.OnScheduleUpdated(item);
+                this.context.Schedules.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
-                this.OnAfterCampaignUpdated(item);
+                var itemToReturn = this.context.Schedules.Where(i => i.ScheduleId == key);
+                
+                this.OnAfterScheduleUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -159,12 +159,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnCampaignCreated(DOOH.Server.Models.DOOHDB.Campaign item);
-        partial void OnAfterCampaignCreated(DOOH.Server.Models.DOOHDB.Campaign item);
+        partial void OnScheduleCreated(DOOH.Server.Models.DOOHDB.Schedule item);
+        partial void OnAfterScheduleCreated(DOOH.Server.Models.DOOHDB.Schedule item);
 
         [HttpPost]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Campaign item)
+        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Schedule item)
         {
             try
             {
@@ -178,15 +178,15 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest();
                 }
 
-                this.OnCampaignCreated(item);
-                this.context.Campaigns.Add(item);
+                this.OnScheduleCreated(item);
+                this.context.Schedules.Add(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == item.CampaignId);
+                var itemToReturn = this.context.Schedules.Where(i => i.ScheduleId == item.ScheduleId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
+                
 
-                this.OnAfterCampaignCreated(item);
+                this.OnAfterScheduleCreated(item);
 
                 return new ObjectResult(SingleResult.Create(itemToReturn))
                 {

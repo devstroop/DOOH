@@ -116,6 +116,18 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.AnalyticId)
               .HasPrincipalKey(i => i.AnalyticId);
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .HasOne(i => i.Schedule)
+              .WithMany(i => i.Campaigns)
+              .HasForeignKey(i => i.ScheduleId)
+              .HasPrincipalKey(i => i.ScheduleId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .HasOne(i => i.Status)
+              .WithMany(i => i.Campaigns)
+              .HasForeignKey(i => i.StatusId)
+              .HasPrincipalKey(i => i.StatusId);
+
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.CampaignAdboards)
@@ -249,16 +261,8 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"(sysdatetime())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.StartDate)
-              .HasDefaultValueSql(@"(getdate())");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsDraft)
               .HasDefaultValueSql(@"((1))");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.IsActive)
-              .HasDefaultValueSql(@"((0))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsSuspended)
@@ -287,6 +291,10 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.StartDate)
+              .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .Property(p => p.TaxRate)
@@ -407,6 +415,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Page> Pages { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.State> States { get; set; }
 
