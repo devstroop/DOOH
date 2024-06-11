@@ -21,10 +21,6 @@ namespace DOOH.Server.Models.DOOHDB
 
         public decimal? Budget { get; set; }
 
-        public int? ScheduleId { get; set; }
-
-        public Schedule Schedule { get; set; }
-
         public int? StatusId { get; set; }
 
         public Status Status { get; set; }
@@ -42,5 +38,7 @@ namespace DOOH.Server.Models.DOOHDB
         public ICollection<Advertisement> Advertisements { get; set; }
 
         public ICollection<CampaignAdboard> CampaignAdboards { get; set; }
+
+        public ICollection<CampaignSchedule> CampaignSchedules { get; set; }
     }
 }

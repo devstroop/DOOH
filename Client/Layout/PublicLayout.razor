@@ -9,7 +9,7 @@
             <RadzenColumn Size="6">
                 <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" Gap="1rem">
                     <a href="/">
-                        <LazyImageComponent DefaultImageUrl="/vectors/Doohfy-Blue.svg" ImageUrl="@Company?.Logo" Style="height: 40px;" />
+                        <LazyImageComponent DefaultImageUrl="/vectors/Doohfy-Blue.svg" ImageUrl="@Company?.Logo" Style="height: 32px;" />
                     </a>
 
                     @* <RadzenMenu>
@@ -21,7 +21,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
                     <AuthorizeView>
                         <Authorized>
-                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Small" />
+                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Medium" />
                             <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                                 <ChildContent>
                                     @* <RadzenProfileMenuItem Path="/dashboard" Icon="dashboard" Text="Dashboard" /> *@

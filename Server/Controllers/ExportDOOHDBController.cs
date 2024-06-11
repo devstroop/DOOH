@@ -173,6 +173,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetCampaignAdboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/campaignschedules/csv")]
+        [HttpGet("/export/DOOHDB/campaignschedules/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignSchedulesToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCampaignSchedules(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/campaignschedules/excel")]
+        [HttpGet("/export/DOOHDB/campaignschedules/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignSchedulesToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCampaignSchedules(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/categories/csv")]
         [HttpGet("/export/DOOHDB/categories/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCategoriesToCSV(string fileName = null)
@@ -311,20 +325,6 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportProvidersToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetProviders(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/schedules/csv")]
-        [HttpGet("/export/DOOHDB/schedules/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportSchedulesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/schedules/excel")]
-        [HttpGet("/export/DOOHDB/schedules/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportSchedulesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/DOOHDB/states/csv")]

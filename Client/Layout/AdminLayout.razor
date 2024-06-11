@@ -29,13 +29,13 @@
             </RadzenRow>
         </RadzenHeader>
         <RadzenBody Expanded="@sidebarExpanded">
-            <RadzenRow class="rz-mx-auto rz-px-4 rz-pt-2 rz-pt-md-4 rz-pt-lg-6 rz-pt-xl-12 rz-pb-2 rz-pb-lg-12" Style="max-width: 1440px;">
+            <RadzenRow class="rz-mx-auto rz-px-4 rz-pt-2 rz-pt-md-2 rz-pt-lg-2 rz-pt-xl-4 rz-pb-2 rz-pb-lg-12" Style="max-width: 1920px;">
                 <RadzenColumn Size="12">
                     @Body
                 </RadzenColumn>
             </RadzenRow>
         </RadzenBody>
-        <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 255px">
+        <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 240px">
             <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
                 <a href="/">
                     <LazyImageComponent DefaultImageUrl="/vectors/Admin-Blue.svg" ImageUrl="@Company?.AdminLogo" Style="height: 40px;" />

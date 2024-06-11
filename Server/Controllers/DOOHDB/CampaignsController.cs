@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Status,AspNetUser");
                 this.OnAfterCampaignUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Status,AspNetUser");
                 this.OnAfterCampaignUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Campaigns.Where(i => i.CampaignId == item.CampaignId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Schedule,Status,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Status,AspNetUser");
 
                 this.OnAfterCampaignCreated(item);
 

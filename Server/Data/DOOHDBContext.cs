@@ -117,12 +117,6 @@ namespace DOOH.Server.Data
               .HasPrincipalKey(i => i.AnalyticId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .HasOne(i => i.Schedule)
-              .WithMany(i => i.Campaigns)
-              .HasForeignKey(i => i.ScheduleId)
-              .HasPrincipalKey(i => i.ScheduleId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .HasOne(i => i.Status)
               .WithMany(i => i.Campaigns)
               .HasForeignKey(i => i.StatusId)
@@ -137,6 +131,12 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Campaign)
               .WithMany(i => i.CampaignAdboards)
+              .HasForeignKey(i => i.CampaignId)
+              .HasPrincipalKey(i => i.CampaignId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
+              .HasOne(i => i.Campaign)
+              .WithMany(i => i.CampaignSchedules)
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
@@ -272,6 +272,14 @@ namespace DOOH.Server.Data
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
+              .Property(p => p.Rotation)
+              .HasDefaultValueSql(@"((1))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
+              .Property(p => p.Start)
+              .HasDefaultValueSql(@"(getdate())");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Category>()
               .Property(p => p.Commission)
               .HasDefaultValueSql(@"((0.00))");
@@ -291,10 +299,6 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
-              .Property(p => p.StartDate)
-              .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .Property(p => p.TaxRate)
@@ -396,6 +400,8 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.CampaignAdboard> CampaignAdboards { get; set; }
 
+        public DbSet<DOOH.Server.Models.DOOHDB.CampaignSchedule> CampaignSchedules { get; set; }
+
         public DbSet<DOOH.Server.Models.DOOHDB.Category> Categories { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.City> Cities { get; set; }
@@ -415,8 +421,6 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Page> Pages { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.State> States { get; set; }
 

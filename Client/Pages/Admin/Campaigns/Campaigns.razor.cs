@@ -69,8 +69,15 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<AddCampaign>("Add Campaign", null);
-            await list0.Reload();
+            //await DialogService.OpenAsync<NewCampaign>("New Campaign", null, options: new DialogOptions
+            //{
+            //    Width = "800px",
+            //    Height = "600px",
+            //    ShowClose = true
+            //});
+            //await list0.Reload();
+
+            NavigationManager.NavigateTo("admin/campaigns/new");
         }
 
         protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)

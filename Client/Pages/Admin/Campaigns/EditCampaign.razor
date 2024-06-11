@@ -53,30 +53,6 @@
                 <RadzenCheckBox @bind-Value="@campaign.IsDraft" Name="IsDraft" />
             </RadzenColumn>
         </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Is Suspended" Component="IsSuspended" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenCheckBox @bind-Value="@campaign.IsSuspended" Name="IsSuspended" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Created At" Component="CreatedAt" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@campaign.CreatedAt" Name="CreatedAt" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="3">
-                <RadzenLabel Text="Updated At" Component="UpdatedAt" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="9">
-                <RadzenDatePicker DateFormat="MM/dd/yyyy" style="display: block; width: 100%" @bind-Value="@campaign.UpdatedAt" Name="UpdatedAt" />
-            </RadzenColumn>
-        </RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
             <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
             <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick" />

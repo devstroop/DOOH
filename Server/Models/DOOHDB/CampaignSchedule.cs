@@ -7,17 +7,24 @@ using System.Text.Json.Serialization;
 
 namespace DOOH.Server.Models.DOOHDB
 {
-    [Table("Schedule", Schema = "dbo")]
-    public partial class Schedule
+    [Table("CampaignSchedule", Schema = "dbo")]
+    public partial class CampaignSchedule
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ScheduleId { get; set; }
 
-        public DateTime StartDate { get; set; }
+        [Required]
+        public int CampaignId { get; set; }
 
-        public DateTime? EndDate { get; set; }
+        public Campaign Campaign { get; set; }
 
-        public ICollection<Campaign> Campaigns { get; set; }
+        public string Label { get; set; }
+
+        public int Rotation { get; set; }
+
+        public DateTime Start { get; set; }
+
+        public DateTime? End { get; set; }
     }
 }
