@@ -9,6 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using System.Collections;
 using Radzen.Blazor.Rendering;
+using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Campaigns
 {
@@ -41,7 +42,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Campaign campaign;
 
-        protected int selectedTabIndex { get; set; } = 2;
+        protected int selectedTabIndex { get; set; } = 1;
         protected bool isAdboardsLoading = false;
         protected string search { get; set; } = "";
         RadzenScheduler<DOOH.Server.Models.DOOHDB.CampaignSchedule> scheduler;
@@ -153,9 +154,19 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             await list0.GoToPage(0);
 
             await list0.Reload();
+
+
         }
 
-
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                var result = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
+                CenterPosition = new GoogleMapPosition() { Lat = Convert.ToDouble(result[0]), Lng = Convert.ToDouble(result[1]) };
+                await JSRuntime.InvokeVoidAsync("console.log", result);
+            }
+        }
 
 
         void OnSlotRender(SchedulerSlotRenderEventArgs args)
@@ -175,7 +186,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
         {
-
+            // Console Log, after Serialize
+            await JSRuntime.InvokeVoidAsync("console.log", args.Start.ToString("yyyy-MM-ddTHH:mm:ss"), args.End.ToString("yyyy-MM-ddTHH:mm:ss"));
             if (args.View.Text != "Year")
             {
                 DOOH.Server.Models.DOOHDB.CampaignSchedule data = await DialogService.OpenAsync<AddCampaignSchedule>("Add Schedule",
@@ -231,6 +243,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
             if (draggedAppointment != null)
             {
+                draggedAppointment.Rotation = draggedAppointment.Rotation;
+
                 draggedAppointment.Start = draggedAppointment.Start + args.TimeSpan;
 
                 draggedAppointment.End = draggedAppointment.End + args.TimeSpan;

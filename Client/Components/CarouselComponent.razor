@@ -1,9 +1,9 @@
 @using Radzen
 @using Microsoft.AspNetCore.Components
 
-<div class="carousel-container" style="@CarouselContainerStyle">
-    <RadzenImage Path="@CurrentImage" alt="Image" style="@ImageStyle" Visible="IsCurrentImageVisible" />
-    <RadzenImage Path="/images/no-image.png" alt="Image" style="@ImageStyle" Visible="IsCurrentImageNotVisible" />
+<div class="carousel-container" style="@($"border-radius: {BorderRadius};")">
+    <RadzenImage Path="@CurrentImage" alt="Image" Style="@($"border-radius: {BorderRadius}; {Style}")" Visible="IsCurrentImageVisible" />
+    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; {Style}")" Visible="IsCurrentImageNotVisible" />
 
     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible" />
     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible" />
@@ -73,8 +73,8 @@
 
 @code {
     [Parameter] public IEnumerable<string> Images { get; set; }
-    [Parameter] public string AspectRatio { get; set; } = "1:1";
-    [Parameter] public string Style { get; set; } = "border-radius: 4px; border: 1px solid #dfdfdf;";
+    [Parameter] public string BorderRadius { get; set; } = "4px";
+    [Parameter] public string Style { get; set; } = "width: 120px; height: 150px";
     [Parameter] public string Class { get; set; }
     [Parameter] public string HoverIcon { get; set; } = "visibility";
     [Parameter] public bool ShowHoverIcon { get; set; } = false;
@@ -82,21 +82,19 @@
 
     private int currentIndex = 0;
     private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
-    private string CarouselContainerStyle => $"width: {Width}; height: {Height}; aspect-ratio: {AspectRatio}";
-    private string ImageStyle => $"width: 100%; height: 100%; {Style};";
     private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
     private bool IsCurrentImageNotVisible => string.IsNullOrEmpty(CurrentImage);
     private bool IsPreviousButtonVisible => currentIndex > 0;
     private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
 
-    private string Height = "100%";
-    private string Width = "100%";
+    // private string Height = "100%";
+    // private string Width = "100%";
 
     [Inject] protected Services.BrowserService BrowserService { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        BrowserService.OnViewportChanged += OnViewportChanged;
+        // BrowserService.OnViewportChanged += OnViewportChanged;
         return base.OnInitializedAsync();
     }
 
@@ -110,21 +108,21 @@
         currentIndex = (currentIndex - 1 + Images.Count()) % Images.Count();
     }
 
-    protected void OnViewportChanged(Services.WindowDimension dimension)
-    {
-        if (dimension.Width >= 1024)
-        {
-            Height = "100%";
-            Width = "auto";
-            AspectRatio = "16:9";
-        }
-        else
-        {
-            Width = "100%";
-            Height = "auto";
-            AspectRatio = "9:16";
-        }
-    }
+    // protected void OnViewportChanged(Services.WindowDimension dimension)
+    // {
+    //     if (dimension.Width >= 1024)
+    //     {
+    //         Height = "100%";
+    //         Width = "auto";
+    //         AspectRatio = "16:9";
+    //     }
+    //     else
+    //     {
+    //         Width = "100%";
+    //         Height = "auto";
+    //         AspectRatio = "9:16";
+    //     }
+    // }
 
     private async Task HandleHoverIconClick()
     {

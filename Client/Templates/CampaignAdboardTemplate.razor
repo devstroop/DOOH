@@ -1,0 +1,36 @@
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Style="" @onclick="@OnClick" class="rz-p-1">
+    <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" />
+    <RadzenStack Gap="0">
+        <RadzenRow>
+            <RadzenColumn Size="12">
+                <RadzenStack Gap="0" AlignItems="AlignItems.Start">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="0.5rem">
+                        <RadzenText Text="@(String.IsNullOrEmpty(Context.Address) ? "NA" : Context.Address)" TextStyle="TextStyle.Subtitle1" class="rz-mb-0 rz-mr-2" />
+                        <RadzenBadge Text="@Context.Category.CategoryName" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}"))" class="rz-py-05 rz-px-1" />
+                    </RadzenStack>
+                    <RadzenText Text="@($"#{Context.AdboardId}")" TextStyle="TextStyle.H5" class="rz-mb-0" />
+                    <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="0" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.End">
+                <RadzenText Text="@($"₹{(Context.BaseRatePerSecond ?? 0):F2}")" TextStyle="TextStyle.Body1" class="rz-mb-05" Style="font-weight:600" />
+                <RadzenText Text="/sec" TextStyle="TextStyle.Body1" class="rz-mb-05" Style="font-weight:300; font-size: 12px" />
+            </RadzenStack>
+            <RadzenStack Gap="0.5rem" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.End">
+                <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" />
+            </RadzenStack>
+        </RadzenRow>
+    </RadzenStack>
+</RadzenStack>
+<style>
+    .rz-menuitem {
+        padding: 0.5rem;
+    }
+
+        .rz-menuitem .rz-menuitem-icon {
+            font-size: 18px;
+        }
+
+</style>

@@ -11,7 +11,7 @@
     </RadzenColumn>
     <RadzenColumn Size="8">
         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
-            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Text="Save" Click="@FormSubmit" class="rz-px-3" />
+            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Success" Text="Save" Click="@FormSubmit" class="rz-px-3" Visible="false" />
             <RadzenButton Icon="close" ButtonStyle="ButtonStyle.Light" Text="Discard" Click="@CancelButtonClick" class="rz-px-3" />
         </RadzenStack>
     </RadzenColumn>
@@ -63,10 +63,14 @@
                 </RadzenTemplateForm>
             </RadzenColumn>
         </RadzenTabsItem>
-        <RadzenTabsItem Text="Adboards (Locations)">
-            <RadzenRow >
-                <RadzenColumn SizeMD="8" Size="12">
-                    <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @bind-Zoom="@Zoom" @bind-Center="@CenterPosition" Style="min-width: 100%; height: 768px;">
+        <RadzenTabsItem Text="Location" Icon="location_on">
+            <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%" class="rz-mb-2">
+                <RadzenTextBox Placeholder="Search City, State or Sign Name" @bind-Value=@search aria-label="Search by address" Style="display: flex; width:100%" />
+                <RadzenButton Icon="search" Click="@Search" />
+            </RadzenStack>
+            <RadzenRow>
+                <RadzenColumn SizeSM="12" SizeMD="7" SizeLG="8">
+                    <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @bind-Zoom="@Zoom" @bind-Center="@CenterPosition" Style="min-width: 100%; height: 600px;">
                         <Markers>
                             @foreach (var each in adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
                             {
@@ -75,17 +79,10 @@
                         </Markers>
                     </RadzenGoogleMap>
                 </RadzenColumn>
-                <RadzenColumn Style="min-width: 400px; height: 600px" SizeMD="4" Size="12">
-                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mx-2 rz-mb-1" Style="width: 100%">
-                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Stretch">
-                            <RadzenTextBox Placeholder="Search ..." @bind-Value=@search aria-label="Search by address" Style="width:100%" />
-                        </RadzenStack>
-                        <RadzenButton Icon="search" Click="@Search" />
-                    </RadzenStack>
-                    <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" WrapItems="true" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Style="height: 100%" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
+                <RadzenColumn SizeSM="12" SizeMD="5" SizeLG="4">
+                    <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Style="height: 600px">
                         <Template>
-                            <AdboardTemplate Context="@context">
-                            </AdboardTemplate>
+                            <CampaignAdboardTemplate Context="@context"/>
                         </Template>
                     </RadzenDataList>
                 </RadzenColumn>

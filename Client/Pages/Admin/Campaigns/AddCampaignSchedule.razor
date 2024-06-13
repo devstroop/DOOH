@@ -37,6 +37,9 @@
 </RadzenTemplateForm>
 @code {
     [Parameter]
+    public int Rotation { get; set; } = 1;
+
+    [Parameter]
     public DateTime Start { get; set; }
 
     [Parameter]
@@ -46,13 +49,15 @@
 
     protected override void OnParametersSet()
     {
+        _schedule.Rotation = Rotation;
+        _schedule.Label = $"{Rotation} {(Rotation > 1 ? "rotations" : "rotation")}";
         _schedule.Start = Start;
         _schedule.End = End;
     }
 
     void OnSubmit(DOOH.Server.Models.DOOHDB.CampaignSchedule schedule)
     {
-        schedule.Label = $"{schedule.Rotation} rotations";
+        schedule.Label = $"{schedule.Rotation} {(schedule.Rotation > 1 ? "rotations" : "rotation")}";
         DialogService.Close(schedule);
     }
 }

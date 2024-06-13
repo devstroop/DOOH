@@ -20,7 +20,6 @@ namespace DOOH.Client.Templates
 
         protected override void OnInitialized()
         {
-            //JSRuntime.InvokeVoidAsync("console.log", gMapApiKey);
             base.OnInitialized();
         }
 

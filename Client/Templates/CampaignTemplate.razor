@@ -1,7 +1,7 @@
-﻿<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
+<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
         <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="width: 96px;">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" AspectRatio="9:16" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenStack>
         <RadzenStack Gap="1rem">
             <RadzenText Text="@($"#{Campaign.CampaignId} {Campaign.CampaignName}")" class="rz-mb-05" TextStyle="TextStyle.H6" />
