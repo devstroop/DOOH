@@ -11,9 +11,9 @@ using System.Collections;
 using Radzen.Blazor.Rendering;
 using System.Text.Json.Nodes;
 
-namespace DOOH.Client.Pages.Admin.Campaigns.New
+namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class Index
+    public partial class New
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }

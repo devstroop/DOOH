@@ -261,6 +261,14 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"(sysdatetime())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.BudgetType)
+              .HasDefaultValueSql(@"((0))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.Budget)
+              .HasDefaultValueSql(@"((0))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsDraft)
               .HasDefaultValueSql(@"((1))");
 

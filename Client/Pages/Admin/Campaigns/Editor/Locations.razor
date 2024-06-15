@@ -1,0 +1,64 @@
+@attribute [Authorize]
+<RadzenRow class="rz-mb-4">
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-1">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                <RadzenTextBox Placeholder="Search City, State or Sign Name" @bind-Value=@search aria-label="Search by address" Style="width: 300px" />
+                <RadzenButton Icon="search" Click="@Search" />
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                <RadzenCheckBox @bind-Value=@showSelectedAdboardsOnly Name="CheckBoxAdboardOnly" />
+                <RadzenLabel Text="Selected Only" Component="CheckBoxAdboardOnly" Style="font-size: 14px" />
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
+        <RadzenRow class="rz-mx-2" JustifyContent="JustifyContent.SpaceBetween" Gap="0.5rem" AlignItems="AlignItems.Center" Visible="@showSelectedAdboardLabel">
+            <RadzenColumn>
+                <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-2 rz-py-2" Gap="2rem">
+                    <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                        <RadzenIcon Icon="info" IconColor="white" />
+                        <RadzenText class="rz-mb-0" Text="@selectedAdboardLabel" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
+                    </RadzenRow>
+                    <RadzenButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Shade="Shade.Lighter" Text="Clear" Click="@ClearSelectedAdboards" />
+                </RadzenRow>
+            </RadzenColumn>
+            
+        </RadzenRow>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8">
+        <RadzenRow>
+            <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="min-width: 100%; height: 600px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+                <Markers>
+                    @if (showSelectedAdboardsOnly && selectedAdboardIds.Any())
+                    {
+                        @foreach (var each in adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)))
+                        {
+                            <RadzenGoogleMapMarker Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" />
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var each in adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
+                        {
+                            <RadzenGoogleMapMarker Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" />
+                        }
+                    }
+                </Markers>
+            </RadzenGoogleMap>
+        </RadzenRow>
+    </RadzenColumn>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
+        <RadzenRow>
+            <RadzenColumn Size="12" Style="height: 600px; display: flex; flex-direction: column; overflow-y: auto;">
+                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && selectedAdboardIds.Any() ? adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)) : adboards)" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount">
+                    <Template>
+                        <CampaignAdboardTemplate Context="@context" Selected="@selectedAdboardIds.Any(x => x == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard" />
+                    </Template>
+                </RadzenDataList>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenColumn>
+</RadzenRow>

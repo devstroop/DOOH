@@ -5,7 +5,7 @@ using Radzen;
 using Radzen.Blazor;
 using System.Text.Json.Nodes;
 
-namespace DOOH.Client.Pages.Admin.Campaigns.New
+namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class Locations
     {

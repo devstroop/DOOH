@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Campaigns.New
+namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class Scheduling
     {

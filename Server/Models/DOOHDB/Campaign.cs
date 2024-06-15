@@ -17,9 +17,9 @@ namespace DOOH.Server.Models.DOOHDB
         [Required]
         public string CampaignName { get; set; }
 
-        public string BudgetType { get; set; }
+        public int BudgetType { get; set; }
 
-        public decimal? Budget { get; set; }
+        public decimal Budget { get; set; }
 
         public int? StatusId { get; set; }
 
