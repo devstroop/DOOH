@@ -81,6 +81,16 @@
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
+                <RadzenLabel Text="Location" Component="Location" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="8">
+                <RadzenNumeric @bind-Value="@adboard.Latitude" Name="Latitude" Placeholder="Lattitude" />
+                <RadzenNumeric @bind-Value="@adboard.Longitude" Name="Longitude" Placeholder="Longitude" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Click="@GetLocation" />
+            </RadzenColumn>
+        </RadzenRow>
+        @* <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Latitude" Component="Latitude" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
@@ -94,7 +104,7 @@
             <RadzenColumn SizeMD="8">
                 <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Longitude" Name="Longitude" />
             </RadzenColumn>
-        </RadzenRow>
+        </RadzenRow> *@
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Address" Component="Address" style="width: 100%" />

@@ -1,6 +1,8 @@
 <RadzenRow Style="width: 400px; box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1); border: 1px solid #e9e9e9; border-radius: 4px">
     <RadzenColumn SizeMD="4">
-        <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)"/>
+        <RadzenStack JustifyContent="JustifyContent.Stretch">
+            <CarouselComponent Id="@($"adb-car-{Context.AdboardId}")" Images="@Context.AdboardImages.Select(x => x.Image)" Style="object-fit: cover;" Height="210px" Width="100%" />
+        </RadzenStack>
     </RadzenColumn>
     <RadzenColumn SizeMD="8">
         <RadzenRow>
@@ -12,7 +14,7 @@
                 <RadzenStack Gap="0" AlignItems="AlignItems.Start">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
                         <RadzenText Text="@(String.IsNullOrEmpty(Context.Address) ? "NA" : Context.Address)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0 rz-mr-2" />
-                        <RadzenBadge Text="@Context.Category.CategoryName" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}"))" class="rz-py-05 rz-px-1" />
+                        <RadzenBadge Text="@Context.Category.CategoryName.ToUpper()" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}") + ";font-weight:600")" class="rz-py-05 rz-px-1" />
                     </RadzenStack>
                     <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
 

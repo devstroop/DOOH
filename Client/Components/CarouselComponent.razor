@@ -1,9 +1,9 @@
 @using Radzen
 @using Microsoft.AspNetCore.Components
 
-<div class="carousel-container" style="@($"border-radius: {BorderRadius};")">
-    <RadzenImage Path="@CurrentImage" alt="Image" Style="@($"border-radius: {BorderRadius}; {Style}")" Visible="IsCurrentImageVisible" />
-    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; {Style}")" Visible="IsCurrentImageNotVisible" />
+<div class="carousel-container" id="@Id" style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; ")">
+    <RadzenImage Path="@CurrentImage" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="@IsCurrentImageVisible" />
+    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="!IsCurrentImageVisible" />
 
     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible" />
     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible" />
@@ -72,9 +72,12 @@
 </style>
 
 @code {
+    [Parameter] public string Id { get; set; } = "default";
     [Parameter] public IEnumerable<string> Images { get; set; }
     [Parameter] public string BorderRadius { get; set; } = "4px";
-    [Parameter] public string Style { get; set; } = "width: 120px; height: 150px";
+    [Parameter] public string Style { get; set; } = "";
+    [Parameter] public string Height { get; set; } = "auto";
+    [Parameter] public string Width { get; set; } = "auto";
     [Parameter] public string Class { get; set; }
     [Parameter] public string HoverIcon { get; set; } = "visibility";
     [Parameter] public bool ShowHoverIcon { get; set; } = false;
@@ -83,7 +86,6 @@
     private int currentIndex = 0;
     private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
     private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
-    private bool IsCurrentImageNotVisible => string.IsNullOrEmpty(CurrentImage);
     private bool IsPreviousButtonVisible => currentIndex > 0;
     private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
 

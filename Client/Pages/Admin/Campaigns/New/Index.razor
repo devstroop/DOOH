@@ -1,0 +1,62 @@
+@layout AdminLayout
+@page "/admin/campaigns/new"
+@attribute [Authorize]
+<PageTitle>New Campaign</PageTitle>
+<RadzenRow class="rz-mb-1">
+    <RadzenColumn Size="4">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+            <RadzenIcon Icon="campaign" Style="font-size: 28px" />
+            <RadzenText Text="New Campaign" TextStyle="TextStyle.H4" TagName="TagName.H1" style="margin: 0" Visible="!CampaignNameEditable" />
+            <RadzenTextBox style="width: 100%" @bind-Value="@campaign.CampaignName" Name="CampaignName" Visible="@CampaignNameEditable" />
+            <RadzenButton Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="!CampaignNameEditable" Click="@((args) => CampaignNameEditable=true)" />
+            <RadzenButton Icon="check" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Visible="@CampaignNameEditable" Click="@((args) => CampaignNameEditable=false)"  />
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="8">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenLabel Text="Budget" class="rz-mb-0" />
+                    <RadzenSelectBar TValue="string" Size="ButtonSize.Small" @bind-Value="@campaign.BudgetType">
+                        <Items>
+                            <RadzenSelectBarItem Value="1" Text="Total" />
+                            <RadzenSelectBarItem Value="2" Text="Daily" />
+                        </Items>
+                    </RadzenSelectBar>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenButton Icon="remove" Size="ButtonSize.Small" />
+                    <RadzenNumeric @bind-Value="@campaign.Budget" Name="Budget" Style="width: 96px; appearance: none; font-weight: 500;" />
+                    <RadzenButton Icon="add" Size="ButtonSize.Small" />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenColumn>
+</RadzenRow>
+
+<RadzenTabs @bind-SelectedIndex="@selectedTabIndex">
+    <Tabs>
+        @* <RadzenTabsItem Text="Basic Details" Icon="label">
+            <BasicDetails Campaign=@campaign />
+        </RadzenTabsItem> *@
+        <RadzenTabsItem Text="Locations" Icon="location_on">
+            <Locations />
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Advertisements" Icon="featured_video">
+
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Schedule" Icon="schedule">
+            <Scheduling />
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Review" Icon="grading">
+
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+<style>
+    .rz-spinner-button{
+        display: none;
+    }
+</style>
+

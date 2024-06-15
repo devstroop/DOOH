@@ -9,6 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
 using Microsoft.EntityFrameworkCore.Update.Internal;
+using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -313,5 +314,16 @@ namespace DOOH.Client.Pages.Admin.Adboards
             StateHasChanged();
         }
         protected void OnRefreshImage() => StateHasChanged();
+
+        //GetLocation
+        protected async Task GetLocation()
+        {
+            var position = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
+            if (position != null)
+            {
+                adboard.Latitude = (double)position[0];
+                adboard.Longitude = (double)position[1];
+            }
+        }
     }
 }

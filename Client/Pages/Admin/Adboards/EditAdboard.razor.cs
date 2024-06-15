@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using DOOH.Server.Models.DOOHDB;
+using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Adboards
 {
@@ -314,5 +315,15 @@ namespace DOOH.Client.Pages.Admin.Adboards
         }
 
         protected void OnRefreshImage() => StateHasChanged();
+
+        protected async Task GetLocation()
+        {
+            var position = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
+            if (position != null)
+            {
+                adboard.Latitude = (double)position[0];
+                adboard.Longitude = (double)position[1];
+            }
+        }
     }
 }

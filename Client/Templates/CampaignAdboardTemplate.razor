@@ -1,5 +1,5 @@
 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" @onclick="@OnClick">
-    <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" />
+    <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" Style="object-fit: cover; min-width: 120px;" Height="180px" Width="150px" />
     <RadzenStack Gap="0" JustifyContent="JustifyContent.SpaceBetween" Style="height: 100%">
         <RadzenStack>
             <RadzenRow>
