@@ -31,7 +31,7 @@
                         <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
                         <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
                     </RadzenSplitButton>
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Size="Radzen.ButtonSize.Small" Click="@((args) => MapClick(args, context))" Visible="@(((context.Latitude ?? 0) != 0) && ((context.Longitude ?? 0) != 0))" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Size="Radzen.ButtonSize.Small" Click="@((args) => MapClick(args, context))" Visible="@(((context.Latitude) != 0) && ((context.Longitude) != 0))" />
                     <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="public" Size="Radzen.ButtonSize.Small" Click="@((args) => NetworkClick(args, context))" Visible="@(context.AdboardNetworks.Count > 0)" />
                 </Actions>
             </AdboardTemplate>

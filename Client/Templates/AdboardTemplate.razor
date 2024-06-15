@@ -66,9 +66,9 @@
         </RadzenRow>
     </RadzenColumn>
     @* <RadzenColumn>
-        <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" Zoom="15" Center="@(new GoogleMapPosition() { Lat = Context.Latitude ?? 0, Lng = Context.Longitude ?? 0 })">
+        <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" Zoom="15" Center="@(new GoogleMapPosition() { Lat = Context.Latitude, Lng = Context.Longitude })">
             <Markers>
-                <RadzenGoogleMapMarker Title="@($"#{Context.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = Context.Latitude ?? 0, Lng = Context.Longitude ?? 0 })" />
+                <RadzenGoogleMapMarker Title="@($"#{Context.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = Context.Latitude, Lng = Context.Longitude })" />
             </Markers>
         </RadzenGoogleMap>
     </RadzenColumn> *@

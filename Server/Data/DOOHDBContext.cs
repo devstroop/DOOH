@@ -230,7 +230,7 @@ namespace DOOH.Server.Data
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Longitude)
-              .HasDefaultValueSql(@"((0.00))");
+              .HasDefaultValueSql(@"((0.0))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.IsActive)

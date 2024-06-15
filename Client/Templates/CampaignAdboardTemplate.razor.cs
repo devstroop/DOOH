@@ -22,6 +22,12 @@ namespace DOOH.Client.Templates
         public EventCallback<MouseEventArgs> OnClick { get; set; }
 
         [Parameter]
+        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> OnSelect { get; set; }
+
+        [Parameter]
+        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> OnUnselect { get; set; }
+
+        [Parameter]
         public bool Selected { get; set; }
 
         [Inject]
@@ -44,5 +50,21 @@ namespace DOOH.Client.Templates
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        protected async System.Threading.Tasks.Task SelectClick(MouseEventArgs args)
+        {
+            if (OnSelect.HasDelegate)
+            {
+                await OnSelect.InvokeAsync(Context);
+            }
+        }
+
+        protected async System.Threading.Tasks.Task UnselectClick(MouseEventArgs args)
+        {
+            if (OnUnselect.HasDelegate)
+            {
+                await OnUnselect.InvokeAsync(Context);
+            }
+        }
     }
 }

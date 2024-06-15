@@ -225,7 +225,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
         protected async Task MapClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
             var markers = new List<Tuple<string, GoogleMapPosition>>();
-            var position = new GoogleMapPosition() { Lat = adboard.Latitude ?? 0, Lng = adboard.Longitude ?? 0 };
+            var position = new GoogleMapPosition() { Lat = adboard.Latitude, Lng = adboard.Longitude };
             markers.Add(new Tuple<string, GoogleMapPosition>($"#{adboard.AdboardId}", position));
             var parameters = new Dictionary<string, object>();
             parameters.Add("Markers", markers);
