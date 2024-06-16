@@ -1,10 +1,10 @@
 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
-        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="width: 96px;">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+        <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="96px" Height="auto" Style="aspect-ratio: 9/16" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenStack>
         <RadzenStack Gap="1rem">
-            <RadzenText Text="@($"#{Campaign.CampaignId} {Campaign.CampaignName}")" class="rz-mb-05" TextStyle="TextStyle.H6" />
+            <RadzenText Text="@($"#{Campaign.CampaignId} {Campaign.CampaignName}")" TextStyle="TextStyle.H6" />
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="1rem">
                 @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="calendar_today" Style="font-size: 16px" />

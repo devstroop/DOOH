@@ -3,7 +3,7 @@
 
 @attribute [Authorize]
 <PageTitle>Campaigns</PageTitle>
-<RadzenStack Gap="1rem">
+<RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
         <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
@@ -26,12 +26,14 @@
             <RadzenTabsItem Text="Unverified" Icon="fiber_manual_record" IconColor="darkgoldenrod">
             </RadzenTabsItem>
             <RadzenTabsItem Text="Active" Icon="fiber_manual_record" IconColor="green">
-                <RadzenDataList @ref="@list0" IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="true" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
+                <RadzenDataList @ref="@list0" IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="true" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
                     <Template>
                         <CampaignTemplate Campaign="@context" />
                     </Template>
                     <LoadingTemplate>
-                        <RadzenText Text="Loading..." />
+                        <RadzenStack Style="min-height: 300px;">
+                            <LoadingComponent />
+                        </RadzenStack>
                     </LoadingTemplate>
                 </RadzenDataList>
             </RadzenTabsItem>

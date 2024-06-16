@@ -69,15 +69,16 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            //await DialogService.OpenAsync<NewCampaign>("New Campaign", null, options: new DialogOptions
-            //{
-            //    Width = "800px",
-            //    Height = "600px",
-            //    ShowClose = true
-            //});
-            //await list0.Reload();
+            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>("New Campaign", null, options: new DialogOptions
+            {
+                Width = "100%",
+                Height = "100%",
+                ShowClose = true,
+                ShowTitle = false
+            });
+            await list0.Reload();
 
-            NavigationManager.NavigateTo("admin/campaigns/editor");
+            //NavigationManager.NavigateTo("admin/campaigns/editor");
         }
 
         protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
@@ -120,7 +121,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 IsLoading = true;
                 StateHasChanged();
                 //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"") or contains(BudgetType,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Attachment), CampaignAdboards($expand=Adboard)");
+                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Attachment), CampaignAdboards($expand=Adboard)");
 
                 campaigns = result.Value.AsODataEnumerable();
                 campaignsCount = result.Count;

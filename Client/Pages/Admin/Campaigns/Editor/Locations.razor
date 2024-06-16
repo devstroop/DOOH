@@ -29,7 +29,7 @@
 <RadzenRow>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8">
         <RadzenRow>
-            <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; height: 600px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+            <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; height: 640px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
                 <Markers>
                     @if (showSelectedAdboardsOnly && selectedAdboardIds.Any())
                     {
@@ -51,8 +51,13 @@
     </RadzenColumn>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
         <RadzenRow>
-            <RadzenColumn Size="12" Style="height: 600px; display: flex; flex-direction: column; overflow-y: auto;">
+            <RadzenColumn Size="12" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto;">
                 <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && selectedAdboardIds.Any() ? adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)) : adboards)" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount">
+                    <LoadingTemplate>
+                        <RadzenStack Style="min-height: 300px;">
+                            <LoadingComponent />
+                        </RadzenStack>
+                    </LoadingTemplate>
                     <Template>
                         <CampaignAdboardTemplate Context="@context" Selected="@selectedAdboardIds.Any(x => x == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard" />
                     </Template>

@@ -10,10 +10,16 @@
         <RadzenHeader>
             <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
                 <RadzenColumn Size="5">
-                    <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
+                        <RadzenSplitButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Light" Text="New">
+                            <RadzenSplitButtonItem Text="Campaign" />
+                        </RadzenSplitButton>
+                    </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
                     <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                        <RadzenButton Icon="notifications" Style="margin-right: 1rem" Variant="Variant.Text" />
                         <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                             <ChildContent>
                                 <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
@@ -44,7 +50,7 @@
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
                 <RadzenPanelMenuItem Text="Campaigns" Icon="campaign" Path="/admin/campaigns">
-                    <RadzenPanelMenuItem Text="New" Icon="add" Path="/admin/campaigns/editor" />
+                    @* <RadzenPanelMenuItem Text="New" Icon="add" Path="/admin/campaigns/editor" /> *@
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
                     <RadzenPanelMenuItem Text="Motherboards" Path="/admin/adboards/motherboards" />
@@ -71,7 +77,7 @@
                 </RadzenPanelMenuItem>
             </RadzenPanelMenu>
             @* <RadzenStack AlignItems="AlignItems.Center">
-                <CulturePicker></CulturePicker>
+            <CulturePicker></CulturePicker>
             </RadzenStack> *@
             <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
                 <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />

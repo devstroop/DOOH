@@ -13,7 +13,7 @@ using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class Index
+    public partial class CampaignEditor
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -49,7 +49,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected int selectedTabIndex { get; set; } = 0;
 
-        protected async Task FormSubmit()
+        protected async Task SaveCampaign(MouseEventArgs args)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        protected async Task CancelButtonClick(MouseEventArgs args)
+        protected async Task Cancel(MouseEventArgs args)
         {
             DialogService.Close(null);
         }
