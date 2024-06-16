@@ -69,44 +69,19 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, null, options: new DialogOptions
-            {
-                Width = "100%",
-                Height = "100%",
-                ShowClose = true,
-                ShowTitle = false,
-                Style = "border-radius: 0px;"
-            });
-            await list0.Reload();
-
-            //NavigationManager.NavigateTo("admin/campaigns/editor");
-        }
-
-        protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
-        {
-            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, new Dictionary<string, object> { { "CampaignId", campaign.CampaignId } }, options: new DialogOptions
-            {
-                Width = "100%",
-                Height = "100%",
-                ShowClose = true,
-                ShowTitle = false,
-                Style = "border-radius: 0px;"
-            });
-            await list0.Reload();
-        }
-
-        protected async Task DeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
-        {
             try
             {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                if (await DialogService.Confirm("Are you sure you want to create this record?") == true)
                 {
-                    var deleteResult = await DOOHDBService.DeleteCampaign(campaignId:campaign.CampaignId);
-
-                    if (deleteResult != null)
+                    await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, null, options: new DialogOptions
                     {
-                        await list0.Reload();
-                    }
+                        Width = "100%",
+                        Height = "100%",
+                        ShowClose = true,
+                        ShowTitle = false,
+                        Style = "border-radius: 0px;"
+                    });
+                    await list0.Reload();
                 }
             }
             catch (Exception ex)
@@ -115,10 +90,12 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 {
                     Severity = NotificationSeverity.Error,
                     Summary = $"Error",
-                    Detail = $"Unable to delete Campaign"
+                    Detail = $"Unable to create Campaign"
                 });
             }
+
         }
+
 
         protected int selectedIndex { get; set; } = 2;
 
@@ -142,6 +119,68 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 IsLoading = false;
             }
 
+        }
+
+
+
+        // OnEdit
+        protected async Task OnEdit(DOOH.Server.Models.DOOHDB.Campaign campaign)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to edit this record?") == true)
+                {
+                    await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, new Dictionary<string, object> { { "Campaign", campaign } }, options: new DialogOptions
+                    {
+                        Width = "100%",
+                        Height = "100%",
+                        ShowClose = true,
+                        ShowTitle = false,
+                        Style = "border-radius: 0px;"
+                    });
+                    await list0.Reload();
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = $"Error",
+                    Detail = $"Unable to edit Campaign"
+                });
+            }
+        }
+
+        protected async Task OnDelete(DOOH.Server.Models.DOOHDB.Campaign campaign)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var deleteResult = await DOOHDBService.DeleteCampaign(campaignId: campaign.CampaignId);
+
+                    if (deleteResult != null)
+                    {
+                        await list0.Reload();
+                        NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Success,
+                            Summary = $"Success",
+                            Detail = $"Campaign deleted successfully"
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = $"Error",
+                    Detail = $"Unable to delete Campaign"
+                });
+            }
         }
     }
 }

@@ -27,7 +27,7 @@
         <RadzenTabsItem Text="Active" Icon="fiber_manual_record" IconColor="green">
             <RadzenDataList @bind-IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="@(campaignsCount > 0)" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
                 <Template>
-                    <CampaignTemplate Campaign="@context" />
+                    <CampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete" />
                 </Template>
             </RadzenDataList>
         </RadzenTabsItem>

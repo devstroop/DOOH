@@ -16,7 +16,12 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
     public partial class CampaignEditor
     {
         [Parameter]
-        public int CampaignId { get; set; } = 0;
+        public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
+        private int CampaignId { get; set; } = 0;
+        private string CampaignName { get; set; } = "Unnamed Campaign";
+        private int BudgetType { get; set; } = 1;
+        private decimal Budget { get; set; } = 0;
+        private bool IsDraft { get; set; } = true;
 
 
         [Inject]
@@ -43,44 +48,20 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected bool CampaignNameEditable { get; set; } = false;
 
 
-        protected async override Task OnParametersSetAsync()
+        protected override Task OnParametersSetAsync()
         {
-            if(campaign == null)
+            if (Campaign != null)
             {
-                await LoadCampaign();
+                CampaignId = Campaign.CampaignId;
+                CampaignName = Campaign.CampaignName;
+                Budget = Campaign.Budget;
+                BudgetType = Campaign.BudgetType;
+                IsDraft = Campaign.IsDraft;
             }
-        }
-
-        private async Task LoadCampaign()
-        {
-            if (CampaignId > 0)
-            {
-                var confirm = await DialogService.Confirm("Are you sure you want to edit this campaign?", "Confirm", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
-                if (confirm != true)
-                {
-                    DialogService.Close(null);
-                }
-                var result = DOOHDBService.GetCampaignByCampaignId(campaignId: CampaignId);
-                campaign = result.Result;
-            }
-            else
-            {
-                var confirm = await DialogService.Confirm("Are you sure you want to create a new campaign?", "Confirm", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
-                if (confirm != true)
-                {
-                    DialogService.Close(null);
-                }
-                campaign = new DOOH.Server.Models.DOOHDB.Campaign();
-                campaign.CampaignName = "Unnamed Campaign";
-                campaign.IsDraft = true;
-                campaign.Budget = 0;
-
-                campaign = await DOOHDBService.CreateCampaign(campaign);
-            }
+            return base.OnParametersSetAsync();
         }
 
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Campaign campaign;
 
         protected int selectedTabIndex { get; set; } = 0;
 
@@ -88,9 +69,28 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
-                //campaign.CampaignSchedules = campaignSchedules;
-                var result = await DOOHDBService.CreateCampaign(campaign);
-                DialogService.Close(campaign);
+                Campaign.CampaignId = CampaignId;
+                Campaign.CampaignName = CampaignName;
+                Campaign.Budget = Budget;
+                Campaign.BudgetType = BudgetType;
+                Campaign.IsDraft = IsDraft;
+                if (CampaignId == 0)
+                {
+                    var result = await DOOHDBService.CreateCampaign(Campaign);
+                    if(result != null)
+                    {
+                        Campaign.CampaignId = result.CampaignId;
+                        DialogService.Close(Campaign);
+                    }
+                }
+                else
+                {
+                    var result = await DOOHDBService.UpdateCampaign(Campaign.CampaignId, Campaign);
+                    if (result != null)
+                    {
+                        DialogService.Close(Campaign);
+                    }
+                }
             }
             catch (Exception ex)
             {

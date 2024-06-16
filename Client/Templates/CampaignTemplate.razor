@@ -1,30 +1,46 @@
-<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
+﻿<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
         <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="96px" Height="auto" Style="aspect-ratio: 9/16" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="96px" Height="auto" Style="aspect-ratio: 9/16; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenStack>
-        <RadzenStack Gap="1rem">
-            <RadzenText Text="@($"#{Campaign.CampaignId} {Campaign.CampaignName}")" TextStyle="TextStyle.H6" />
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="1rem">
-                @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenIcon Icon="calendar_today" Style="font-size: 16px" />
-                    <RadzenText Text="@(Campaign.StartDate.ToString("dd/MM/yyyy") + (Campaign.EndDate != null ? $" - {Campaign.EndDate?.ToString("dd/MM/yyyy")}" : ""))" style="margin: 0" TextStyle="TextStyle.Caption" />
-                    <RadzenText Text="-" style="margin: 0" TextStyle="TextStyle.Caption" Visible="@(Campaign.EndDate == null)" />
-                    <RadzenIcon Icon="all_inclusive" Style="font-size: 16px" Visible="@(Campaign.EndDate == null)" />
-                </RadzenStack> *@
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenIcon Icon="featured_video" Style="font-size: 16px" />
-                    <RadzenText Text="@($"{Campaign.Advertisements.Count}")" style="margin: 0" TextStyle="TextStyle.Caption" />
-                </RadzenStack>
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenButton Icon="location_on" Text="@($" {Campaign.CampaignAdboards.Count}")" Click="@OnLocationClick" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Light" class="rz-px-1"/>
-                </RadzenStack>
-            </RadzenStack>
+        <RadzenStack Gap="0.5rem">
+            <RadzenRow AlignItems="AlignItems.Center" Gap="2rem">
+                <RadzenRow AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
+                    <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H6" class="rz-mb-0" Style="font-size: 16px;" />
+                </RadzenRow>
+                <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenIcon Icon="money" Style="font-size: 16px" />
+                <RadzenText Text="Budget" TextStyle="TextStyle.Body2" class="rz-mb-0 rz-mr-2" />
+                <RadzenRow Gap="0">
+                    <RadzenText Text="@($"₹{Campaign.Budget}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                    <RadzenText Text="@(Campaign.BudgetType == 1 ? "per day" : "")" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                </RadzenRow>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenIcon Icon="tv" Style="font-size: 16px" />
+                <RadzenText Text="No of adboards" TextStyle="TextStyle.Body2" class="rz-mb-0 rz-mr-2" />
+                <RadzenText Text="@($"{Campaign.CampaignAdboards.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                <RadzenButton Icon="more" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" Click="@OnLocationClick" />
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenIcon Icon="featured_video" Style="font-size: 16px" />
+                <RadzenText Text="No of media" TextStyle="TextStyle.Body2" class="rz-mb-0 rz-mr-2" />
+                <RadzenText Text="@($"{Campaign.Advertisements.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                <RadzenButton Icon="more" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center">
+                <RadzenIcon Icon="watch" Style="font-size: 16px" />
+                <RadzenText Text="Total Duration" TextStyle="TextStyle.Body2" class="rz-mb-0 rz-mr-2" />
+                <RadzenText Text="@($"{Campaign.Advertisements.Select(x => Math.Round(x.Duration)).Sum()} sec")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                <RadzenButton Icon="more" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+            </RadzenRow>
         </RadzenStack>
     </RadzenStack>
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Start">
-        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" />
-        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small">
+        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
             <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
             <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
         </RadzenSplitButton>
@@ -52,6 +68,8 @@
 @code {
     [Parameter] public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
     [Parameter] public string Style { get; set; } = "width: 100%; box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1); padding: 1rem; border-radius: 8px; border: 1px solid #bfbfbf;";
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Edit { get; set; }
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Delete { get; set; }
 
     [Inject] private DialogService DialogService { get; set; }
     [Inject] private NotificationService NotificationService { get; set; }
@@ -83,5 +101,18 @@
     private void OnHoverClick(string image)
     {
         NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = image });
+    }
+
+    private async Task SplitBtnClick(RadzenSplitButtonItem item)
+    {
+        switch (item.Text)
+        {
+            case "Edit":
+                await Edit.InvokeAsync(Campaign);
+                break;
+            case "Delete":
+                await Delete.InvokeAsync(Campaign);
+                break;
+        }
     }
 }
