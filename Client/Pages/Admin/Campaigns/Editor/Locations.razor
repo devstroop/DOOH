@@ -1,7 +1,7 @@
 @attribute [Authorize]
 <RadzenRow class="rz-mb-4">
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-1">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+        <RadzenRow AlignItems="AlignItems.Center">
             <RadzenColumn>
                 <RadzenRow AlignItems="AlignItems.Center">
                     <RadzenColumn>
@@ -14,7 +14,7 @@
                 <RadzenCheckBox @bind-Value=@showSelectedAdboardsOnly Name="CheckBoxAdboardOnly" />
                 <RadzenLabel Text="Selected Only" Component="CheckBoxAdboardOnly" Style="font-size: 14px" />
             </RadzenStack>
-        </RadzenStack>
+        </RadzenRow>
     </RadzenColumn>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
         <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-3 rz-py-3 rz-mx-2" Gap="2rem" Visible="@showSelectedAdboardLabel">
@@ -35,14 +35,14 @@
                     {
                         @foreach (var each in adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)))
                         {
-                            <RadzenGoogleMapMarker Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" />
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
                         }
                     }
                     else
                     {
                         @foreach (var each in adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
                         {
-                            <RadzenGoogleMapMarker Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" />
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
                         }
                     }
                 </Markers>
