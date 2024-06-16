@@ -13,7 +13,7 @@ using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class New
+    public partial class Index
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }

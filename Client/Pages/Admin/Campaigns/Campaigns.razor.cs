@@ -77,7 +77,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             //});
             //await list0.Reload();
 
-            NavigationManager.NavigateTo("admin/campaigns/new");
+            NavigationManager.NavigateTo("admin/campaigns/editor");
         }
 
         protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
