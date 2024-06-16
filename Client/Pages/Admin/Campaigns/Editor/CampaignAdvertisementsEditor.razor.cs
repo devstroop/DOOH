@@ -7,7 +7,7 @@ using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class CampaignAdvertisements
+    public partial class CampaignAdvertisementsEditor
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -31,6 +31,17 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
                 advertisements = result.Value.AsODataEnumerable();
                 advertisementsCount = result.Count;
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+            }
+        }
+
+        protected async Task OnAdMediaClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
+        {
+            try
+            {
             }
             catch (Exception)
             {

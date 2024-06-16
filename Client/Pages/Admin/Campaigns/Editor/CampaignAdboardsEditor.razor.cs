@@ -7,7 +7,7 @@ using System.Text.Json.Nodes;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class CampaignAdboards
+    public partial class CampaignAdboardsEditor
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }

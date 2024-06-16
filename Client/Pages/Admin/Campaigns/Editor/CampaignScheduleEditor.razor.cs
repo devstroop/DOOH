@@ -5,7 +5,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class CampaignSchedule
+    public partial class CampaignScheduleEditor
     {
         [Inject]
         protected DialogService DialogService { get; set; }
@@ -41,7 +41,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             await JSRuntime.InvokeVoidAsync("console.log", args.Start.ToString("yyyy-MM-ddTHH:mm:ss"), args.End.ToString("yyyy-MM-ddTHH:mm:ss"));
             if (args.View.Text != "Year")
             {
-                DOOH.Server.Models.DOOHDB.CampaignSchedule data = await DialogService.OpenAsync<AddCampaignSchedule>("Add Schedule",
+                DOOH.Server.Models.DOOHDB.CampaignSchedule data = await DialogService.OpenAsync<CampaignScheduleEditor>("Add Schedule",
                     new Dictionary<string, object> { { "Start", args.Start }, { "End", args.End } });
 
                 if (data != null)
@@ -64,7 +64,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 Label = args.Data.Label
             };
 
-            var data = await DialogService.OpenAsync<EditCampaignSchedule>("Edit Schedule", new Dictionary<string, object> { { "Schedule", copy } });
+            var data = await DialogService.OpenAsync<CampaignScheduleEditor>("Edit Schedule", new Dictionary<string, object> { { "Schedule", copy } });
 
             if (data != null)
             {

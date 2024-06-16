@@ -2,7 +2,7 @@
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class ScheduleEditor
+    public partial class CampaignScheduleValueEditor
     {
         [Parameter]
         public int ScheduleId { get; set; } = 0;

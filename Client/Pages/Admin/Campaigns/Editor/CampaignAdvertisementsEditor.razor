@@ -2,7 +2,9 @@
     <RadzenColumn SizeMD="6">
         <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount">
             <Template>
-                @context
+                <RadzenStack>
+                    <RadzenImage Path="@context.Attachment.GetThumbnail()" style="max-width: 100px; border: 1px solid #dfdfdf; border-radius: 4px" Visible="@(context.Attachment != null)" Click="@((args) => OnAdMediaClick(args, context))" />
+                </RadzenStack>
             </Template>
             
         </RadzenDataList>
