@@ -5,7 +5,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class Scheduling
+    public partial class CampaignSchedule
     {
         [Inject]
         protected DialogService DialogService { get; set; }

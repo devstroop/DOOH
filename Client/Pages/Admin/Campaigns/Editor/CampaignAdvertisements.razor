@@ -1,5 +1,11 @@
-﻿<RadzenRow>
+<RadzenRow>
     <RadzenColumn SizeMD="6">
+        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount">
+            <Template>
+                @context
+            </Template>
+            
+        </RadzenDataList>
 
     </RadzenColumn>
     <RadzenColumn SizeMD="6">

@@ -15,6 +15,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class CampaignEditor
     {
+        [Parameter]
+        public int CampaignId { get; set; } = 0;
+
+
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
@@ -37,13 +41,24 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected bool CampaignNameEditable { get; set; } = false;
 
-        protected override async Task OnInitializedAsync()
+
+        protected override Task OnParametersSetAsync()
         {
-            campaign = new DOOH.Server.Models.DOOHDB.Campaign();
-            campaign.CampaignName = "New Campaign";
-            campaign.IsDraft = true;
-            campaign.Budget = 0;
+            if (CampaignId > 0)
+            {
+                var result = DOOHDBService.GetCampaignByCampaignId(campaignId: CampaignId);
+                campaign = result.Result;
+            }
+            else
+            {
+                campaign = new DOOH.Server.Models.DOOHDB.Campaign();
+                campaign.CampaignName = "Unnamed Campaign";
+                campaign.IsDraft = true;
+                campaign.Budget = 0;
+            }
+            return base.OnParametersSetAsync();
         }
+
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Campaign campaign;
 

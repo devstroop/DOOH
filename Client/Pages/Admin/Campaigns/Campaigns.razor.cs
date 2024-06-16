@@ -69,7 +69,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>("New Campaign", null, options: new DialogOptions
+            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, null, options: new DialogOptions
             {
                 Width = "100%",
                 Height = "100%",
@@ -83,7 +83,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Campaign campaign)
         {
-            await DialogService.OpenAsync<EditCampaign>("Edit Campaign", new Dictionary<string, object> { {"CampaignId", campaign.CampaignId} });
+            await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, new Dictionary<string, object> { { "CampaignId", campaign.CampaignId } }, options: new DialogOptions
+            {
+                Width = "100%",
+                Height = "100%",
+                ShowClose = true,
+                ShowTitle = false
+            });
             await list0.Reload();
         }
 
