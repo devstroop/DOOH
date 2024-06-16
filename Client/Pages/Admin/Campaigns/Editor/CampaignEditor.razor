@@ -8,7 +8,7 @@
         <RadzenStack Orientation="Orientation.Horizontal" Wrap="FlexWrap.Wrap" AlignItems="AlignItems.Center" Gap="2rem">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="campaign" Style="font-size: 28px" />
-                    <RadzenText Text="New Campaign" TextStyle="TextStyle.H5" style="margin: 0" Visible="!CampaignNameEditable" />
+                    <RadzenText Text="@campaign.CampaignName" TextStyle="TextStyle.H5" style="margin: 0" Visible="!CampaignNameEditable" />
                     <RadzenTextBox style="appearance: none; font-weight: 500; border: none; text-align: start; font-size: 16px; padding-inline: 6px" @bind-Value="@campaign.CampaignName" Name="CampaignName" Visible="@CampaignNameEditable" />
                     <RadzenButton class="rz-ml-2" Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="!CampaignNameEditable" Click="@((args) => CampaignNameEditable=true)" />
                     <RadzenButton class="rz-ml-2" Icon="check" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Visible="@CampaignNameEditable" Click="@((args) => CampaignNameEditable=false)" />
@@ -58,7 +58,10 @@
 </RadzenStack>
 
 <style>
-    .rz-dialog-wrapper .rz-dialog {
+    .rz-dialog-titlebar {
+        background-color: #fff;
+    }
+    .rz-dialog-content {
         background-color: #fff;
     }
     .rz-spinner-button{

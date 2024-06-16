@@ -74,7 +74,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 Width = "100%",
                 Height = "100%",
                 ShowClose = true,
-                ShowTitle = false
+                ShowTitle = false,
+                Style = "border-radius: 0px;"
             });
             await list0.Reload();
 
@@ -88,7 +89,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                 Width = "100%",
                 Height = "100%",
                 ShowClose = true,
-                ShowTitle = false
+                ShowTitle = false,
+                Style = "border-radius: 0px;"
             });
             await list0.Reload();
         }
@@ -125,7 +127,6 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             try
             {
                 IsLoading = true;
-                StateHasChanged();
                 //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
                 var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Attachment), CampaignAdboards($expand=Adboard)");
 
@@ -139,8 +140,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             finally
             {
                 IsLoading = false;
-                StateHasChanged();
             }
+
         }
     }
 }

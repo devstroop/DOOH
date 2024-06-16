@@ -2,15 +2,36 @@
     <RadzenColumn SizeMD="6">
         <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount">
             <Template>
-                <RadzenStack>
-                    <RadzenImage Path="@context.Attachment.GetThumbnail()" style="max-width: 100px; border: 1px solid #dfdfdf; border-radius: 4px" Visible="@(context.Attachment != null)" Click="@((args) => OnAdMediaClick(args, context))" />
-                </RadzenStack>
+                <RadzenRow class="rz-p-2">
+                    <RadzenImage Path="@context.Attachment.GetThumbnail()" style="border: 1px solid #dfdfdf; border-radius: 4px; width: 84px; height: 120px" Click="@((args) => OnAdMediaClick(args, context))" />
+                    <RadzenColumn>
+                        <RadzenText Text="@context.AttachmentKey" />
+                        <RadzenText TextStyle="TextStyle.Caption" Text="@($"Duration: {(int)Math.Round(context.Duration)}s")" />
+                        <RadzenText Text="@context.Attachment?.GetThumbnail()" />
+                    </RadzenColumn>
+                </RadzenRow>
             </Template>
-            
+
         </RadzenDataList>
 
     </RadzenColumn>
     <RadzenColumn SizeMD="6">
-
+        <RadzenUpload id="ddUpload" @ref="uploadDD" ChooseText="Drag and drop here or click to choose files" Auto="false" Multiple="true" Url="upload/multiple" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
+                      Progress=@(args => OnProgress(args, "Drag and drop media to upload")) class="w-100" />
+        <RadzenProgressBar Value="@progress" />
+        @* <RadzenButton Text="Upload" Click=@(args => uploadDD.Upload()) class="d-block mt-4" /> *@
     </RadzenColumn>
 </RadzenRow>
+<style>
+    #ddUpload {
+        left: 0;
+    }
+
+        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            padding: 100px 0;
+            border-radius: 0;
+        }
+</style>

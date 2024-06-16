@@ -3,46 +3,39 @@
 
 @attribute [Authorize]
 <PageTitle>Campaigns</PageTitle>
-<RadzenStack>
-    <RadzenRow AlignItems="AlignItems.Center">
-        <RadzenColumn Size="12" SizeMD="6">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenIcon Icon="campaign" Style="font-size: 28px" />
-                <RadzenText Text="Campaigns" TextStyle="TextStyle.H4" TagName="TagName.H1" style="margin: 0" />
-            </RadzenStack>
-        </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="6">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenTextBox Placeholder="Search ..." @bind-Value="@search" aria-label="Search" />
-                <RadzenButton Icon="search" Click="@Search" />
-                <RadzenButton Icon="add" Text="New" ButtonStyle="ButtonStyle.Primary" Click="@AddButtonClick" class="rz-px-3" />
-            </RadzenStack>
-        </RadzenColumn>
-    </RadzenRow>
-    <RadzenTabs @bind-SelectedIndex="@selectedIndex" Style="margin-top: 1rem;">
-        <Tabs>
-            <RadzenTabsItem Text="Draft" Icon="fiber_manual_record" IconColor="grey">
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Unverified" Icon="fiber_manual_record" IconColor="darkgoldenrod">
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Active" Icon="fiber_manual_record" IconColor="green">
-                <RadzenDataList @ref="@list0" IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="true" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
-                    <Template>
-                        <CampaignTemplate Campaign="@context" />
-                    </Template>
-                    <LoadingTemplate>
-                        <RadzenStack Style="min-height: 300px;">
-                            <LoadingComponent />
-                        </RadzenStack>
-                    </LoadingTemplate>
-                </RadzenDataList>
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Expired" Icon="fiber_manual_record" IconColor="indianred" Style="display: flex; align-items: center" class="rz-mb-0">
+<RadzenRow AlignItems="AlignItems.Center">
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+            <RadzenIcon Icon="campaign" Style="font-size: 28px" />
+            <RadzenText Text="Campaigns" TextStyle="TextStyle.H4" TagName="TagName.H1" style="margin: 0" />
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn Size="12" SizeMD="6">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+            <RadzenTextBox Placeholder="Search ..." @bind-Value="@search" aria-label="Search" />
+            <RadzenButton Icon="search" Click="@Search" />
+            <RadzenButton Icon="add" Text="New" ButtonStyle="ButtonStyle.Primary" Click="@AddButtonClick" class="rz-px-3" />
+        </RadzenStack>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenTabs @bind-SelectedIndex="@selectedIndex" Style="margin-top: 1rem;">
+    <Tabs>
+        <RadzenTabsItem Text="Draft" Icon="fiber_manual_record" IconColor="grey">
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Unverified" Icon="fiber_manual_record" IconColor="darkgoldenrod">
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Active" Icon="fiber_manual_record" IconColor="green">
+            <RadzenDataList @bind-IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="@(campaignsCount > 0)" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
+                <Template>
+                    <CampaignTemplate Campaign="@context" />
+                </Template>
+            </RadzenDataList>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Expired" Icon="fiber_manual_record" IconColor="indianred" Style="display: flex; align-items: center" class="rz-mb-0">
 
-            </RadzenTabsItem>
-        </Tabs>
-    </RadzenTabs>
-</RadzenStack>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
 
 <style>
     .rz-tabview-left-icon {

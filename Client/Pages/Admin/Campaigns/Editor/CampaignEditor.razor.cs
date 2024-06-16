@@ -39,24 +39,44 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+
         protected bool CampaignNameEditable { get; set; } = false;
 
 
-        protected override Task OnParametersSetAsync()
+        protected async override Task OnParametersSetAsync()
+        {
+            if(campaign == null)
+            {
+                await LoadCampaign();
+            }
+        }
+
+        private async Task LoadCampaign()
         {
             if (CampaignId > 0)
             {
+                var confirm = await DialogService.Confirm("Are you sure you want to edit this campaign?", "Confirm", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+                if (confirm != true)
+                {
+                    DialogService.Close(null);
+                }
                 var result = DOOHDBService.GetCampaignByCampaignId(campaignId: CampaignId);
                 campaign = result.Result;
             }
             else
             {
+                var confirm = await DialogService.Confirm("Are you sure you want to create a new campaign?", "Confirm", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+                if (confirm != true)
+                {
+                    DialogService.Close(null);
+                }
                 campaign = new DOOH.Server.Models.DOOHDB.Campaign();
                 campaign.CampaignName = "Unnamed Campaign";
                 campaign.IsDraft = true;
                 campaign.Budget = 0;
+
+                campaign = await DOOHDBService.CreateCampaign(campaign);
             }
-            return base.OnParametersSetAsync();
         }
 
         protected bool errorVisible;
