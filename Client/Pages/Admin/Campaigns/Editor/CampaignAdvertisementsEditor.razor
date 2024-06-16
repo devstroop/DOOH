@@ -3,12 +3,12 @@
         <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount">
             <Template>
                 <RadzenRow class="rz-p-2">
-                    <RadzenImage Path="@context.Attachment.GetThumbnail()" style="border: 1px solid #dfdfdf; border-radius: 4px; width: 84px; height: 120px" Click="@((args) => OnAdMediaClick(args, context))" />
-                    <RadzenColumn>
-                        <RadzenText Text="@context.AttachmentKey" />
-                        <RadzenText TextStyle="TextStyle.Caption" Text="@($"Duration: {(int)Math.Round(context.Duration)}s")" />
-                        <RadzenText Text="@context.Attachment?.GetThumbnail()" />
-                    </RadzenColumn>
+                    <RadzenImage Path="@context.Attachment.GetThumbnail()" style="border: 1px solid #dfdfdf; border-radius: 4px; width: 96px; height: auto; aspect-ratio: 3/4" Click="@((args) => OnAdMediaClick(args, context))" />
+                    <RadzenStack Gap="0">
+                        <RadzenText Text="@context.AttachmentKey" class="rz-mb-0" />
+                        <RadzenText TextStyle="TextStyle.Caption" Text="@($"Duration: {(int)Math.Round(context.Duration)}s")" class="rz-mb-0" />
+                        <RadzenText Text="@context.Attachment.GetThumbnail()" class="rz-mb-0" />
+                    </RadzenStack>
                 </RadzenRow>
             </Template>
 

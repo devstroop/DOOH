@@ -7,6 +7,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class CampaignScheduleEditor
     {
+        [Parameter]
+        public int CampaignId { get; set; }
+
         [Inject]
         protected DialogService DialogService { get; set; }
 

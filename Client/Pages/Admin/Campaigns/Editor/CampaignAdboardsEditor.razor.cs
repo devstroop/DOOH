@@ -9,6 +9,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class CampaignAdboardsEditor
     {
+        [Parameter]
+        public int CampaignId { get; set; }
+
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
@@ -95,6 +98,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
                 // Process the result
                 adboards = result.Value.AsODataEnumerable();
+                selectedAdboardIds = selectedAdboardIds.Where(x => adboards.Any(y => y.AdboardId == x)).ToList();
 
                 foreach (var adboard in adboards)
                 {

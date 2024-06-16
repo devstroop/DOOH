@@ -42,16 +42,16 @@
     <RadzenTabs @bind-SelectedIndex="@selectedTabIndex">
         <Tabs>
             <RadzenTabsItem Text="Locations" Icon="location_on">
-                <CampaignAdboardsEditor />
+                <CampaignAdboardsEditor CampaignId="@Campaign.CampaignId" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor />
+                <CampaignAdvertisementsEditor CampaignId="@Campaign.CampaignId"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Schedule" Icon="schedule">
-                <CampaignScheduleEditor />
+                <CampaignScheduleEditor CampaignId="@Campaign.CampaignId" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Review" Icon="grading">
-                <Review />
+                <Review CampaignId="@Campaign.CampaignId" />
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

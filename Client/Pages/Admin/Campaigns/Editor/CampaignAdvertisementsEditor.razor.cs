@@ -10,6 +10,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class CampaignAdvertisementsEditor
     {
+        [Parameter]
+        public int CampaignId { get; set; }
+
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
 
@@ -28,7 +31,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
-                var result = await DOOHDBService.GetAdvertisements(new Query { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy, Expand = "Attachments"});
+                var result = await DOOHDBService.GetAdvertisements(new Query { Top = args.Top, Skip = args.Skip, Filter = $@"(CampaignId eq {CampaignId}) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", OrderBy = args.OrderBy, Expand = "Attachment" });
 
                 advertisements = result.Value.AsODataEnumerable();
                 advertisementsCount = result.Count;
