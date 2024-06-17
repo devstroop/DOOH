@@ -31,7 +31,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
-                var result = await DOOHDBService.GetAdvertisements(new Query { Top = args.Top, Skip = args.Skip, Filter = $@"(CampaignId eq {CampaignId}) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", OrderBy = args.OrderBy, Expand = "Attachment" });
+                var result = await DOOHDBService.GetAdvertisements(top: args.Top, skip: args.Skip, filter: $@"(CampaignId eq {CampaignId}) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: args.OrderBy, expand: "Attachment");
 
                 advertisements = result.Value.AsODataEnumerable();
                 advertisementsCount = result.Count;
@@ -147,5 +147,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 }
             }
         }
+
+        // OnHoverClick
+        void OnHoverClick(string args)
+        {
+            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Hover", Detail = args });
+        }
+
+        protected string selectedAdvertisementsLabel => $"{advertisementsCount} advertisements!";
     }
 }

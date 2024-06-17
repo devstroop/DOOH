@@ -8,13 +8,17 @@ namespace DOOH.Client.Extensions
         {
             try
             {
+                if (attachment == null)
+                {
+                    return string.Empty;
+                }
                 if (attachment.ContentType.Contains("video"))
                 {
                     return $"/api/cdn/object/{attachment.Thumbnail ?? attachment.AttachmentKey}";
                 }
                 return $"/api/cdn/object/{attachment.AttachmentKey}";
             }
-            catch
+            catch (Exception exception)
             {
                 return string.Empty;
             }
