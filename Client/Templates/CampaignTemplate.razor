@@ -1,7 +1,7 @@
 ﻿<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="@Style">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
         <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="150px" Height="auto" Style="aspect-ratio: 3/4; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="135px" Height="auto" Style="aspect-ratio: 3/4; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenStack>
         <RadzenStack Gap="1rem">
             <RadzenRow AlignItems="AlignItems.Center" Gap="2rem">
@@ -9,7 +9,7 @@
                     <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                     <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
                 </RadzenRow>
-                <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
             </RadzenRow>
             <RadzenStack Gap="0.25rem">
                 <RadzenRow AlignItems="AlignItems.Center" Gap="0.5rem">
@@ -42,16 +42,23 @@
             </RadzenStack>
         </RadzenStack>
     </RadzenStack>
-    <RadzenStack JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Start">
+    <RadzenStack JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.End">
         <RadzenRow>
-            <RadzenBadge Text="Recurring" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Secondary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
+            <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
             <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
                 <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
                 <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
             </RadzenSplitButton>
         </RadzenRow>
         <RadzenRow>
-            
+            <RadzenColumn>
+                <RadzenText Text="Statistics 1" />
+                <RadzenText Text="1000" TextStyle="TextStyle.H3" />
+            </RadzenColumn>
+            <RadzenColumn>
+                <RadzenText Text="Statistics 1" />
+                <RadzenText Text="1000" TextStyle="TextStyle.H3" />
+            </RadzenColumn>
         </RadzenRow>
     </RadzenStack>
 </RadzenStack>
