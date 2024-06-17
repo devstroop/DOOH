@@ -19,7 +19,7 @@
                         <RadzenText Text="@($"{Campaign.Budget}")" TextStyle="TextStyle.Body1" class="rz-mb-0" Style="font-weight: bold;" />
                         <RadzenText Text="@(Campaign.BudgetType == 2 ? "/day" : "")" TextStyle="TextStyle.Body1" class="rz-mb-0" />
                     </RadzenRow>
-                    <RadzenIcon Icon="all_inclusive" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
+                    @* <RadzenIcon Icon="all_inclusive" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
                 </RadzenRow>
                 <RadzenRow AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="tv" Style="font-size: 16px" />
@@ -43,10 +43,13 @@
         </RadzenStack>
     </RadzenStack>
     <RadzenStack JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Start">
-        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
-            <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
-            <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
-        </RadzenSplitButton>
+        <RadzenRow>
+            <RadzenBadge Text="Recurring" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Secondary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
+            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
+                <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+            </RadzenSplitButton>
+        </RadzenRow>
         <RadzenRow>
             
         </RadzenRow>

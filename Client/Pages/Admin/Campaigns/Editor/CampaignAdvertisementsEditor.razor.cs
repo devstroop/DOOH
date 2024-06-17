@@ -154,6 +154,5 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Hover", Detail = args });
         }
 
-        protected string selectedAdvertisementsLabel => $"{advertisementsCount} advertisements!";
     }
 }

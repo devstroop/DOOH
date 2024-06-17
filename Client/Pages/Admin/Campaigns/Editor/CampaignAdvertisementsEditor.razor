@@ -1,13 +1,13 @@
 <RadzenRow>
     <RadzenColumn SizeMD="6">
-        <RadzenStack Orientation="Orientation.Horizontal" class="rz-p-2 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(advertisementsCount > 0)">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" >
             <RadzenIcon Icon="info" IconColor="white" />
-            <RadzenText class="rz-mb-0" Text="@selectedAdvertisementsLabel" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
+            <RadzenText class="rz-mb-0" Text="@($"{advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
         </RadzenStack>
         <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount">
             <Template>
                 <RadzenRow class="rz-p-2">
-                    <CarouselComponent Images="@(new List<string>{context.Attachment.GetThumbnail()})" Width="150px" Height="auto" Style="aspect-ratio: 3/4; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+                    <CarouselComponent Images="@(new List<string>{context.Attachment.GetThumbnail()})" Width="150px" Height="auto" Style="aspect-ratio: 3/4; object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
                     @* <RadzenImage Path="@context.Attachment.GetThumbnail()" style="border: 1px solid #d5d5d5; border-radius: 6px; width: 180px; height: auto; aspect-ratio: 3/4; object-fit: cover;" Click="@((args) => OnAdMediaClick(args, context))" /> *@
                     <RadzenStack Gap="0">
                         <RadzenText Text="@context.AttachmentKey" class="rz-mb-0" />
@@ -16,6 +16,9 @@
                             <RadzenText TextStyle="TextStyle.Body2" Text="@($"{(int)Math.Round(context.Duration)} sec")" class="rz-mb-0" />
                         </RadzenRow>
                         @* <RadzenText Text="@context.Attachment.GetThumbnail()" class="rz-mb-0" /> *@
+                        <RadzenRow>
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" />
+                        </RadzenRow>
                     </RadzenStack>
                 </RadzenRow>
             </Template>
