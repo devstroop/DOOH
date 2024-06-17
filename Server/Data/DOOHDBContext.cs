@@ -269,6 +269,10 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"((0))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.StartDate)
+              .HasDefaultValueSql(@"(getdate())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsDraft)
               .HasDefaultValueSql(@"((1))");
 

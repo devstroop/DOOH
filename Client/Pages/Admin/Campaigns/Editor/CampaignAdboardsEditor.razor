@@ -53,11 +53,6 @@
         <RadzenRow>
             <RadzenColumn Size="12" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
                 <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && selectedAdboardIds.Any() ? adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)) : adboards)" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount">
-                    <LoadingTemplate>
-                        <RadzenStack Style="height: 300px;">
-                            <LoadingComponent />
-                        </RadzenStack>
-                    </LoadingTemplate>
                     <Template>
                         <CampaignAdboardTemplate Context="@context" Selected="@selectedAdboardIds.Any(x => x == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard" />
                     </Template>

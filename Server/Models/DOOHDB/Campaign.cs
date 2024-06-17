@@ -21,6 +21,10 @@ namespace DOOH.Server.Models.DOOHDB
 
         public decimal Budget { get; set; }
 
+        public DateTime StartDate { get; set; }
+
+        public DateTime? EndDate { get; set; }
+
         public int? StatusId { get; set; }
 
         public Status Status { get; set; }
