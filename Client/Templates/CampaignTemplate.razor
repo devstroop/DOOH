@@ -1,12 +1,12 @@
 <RadzenColumn Size="12" Style="@Style">
     <RadzenRow>
         <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="4" SizeLG="3" SizeXL="2">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="100%" Height="200px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="100%" Height="100%" Style="display: block; min-height: 150px; max-height: 300px; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenColumn>
         <RadzenColumn>
-            <RadzenStack Style="height: 100%; width: 100%">
+            <RadzenStack Style="height: 100%; width: 100%" JustifyContent="Radzen.JustifyContent.Stretch">
                 <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%; display: block" JustifyContent="Radzen.JustifyContent.SpaceBetween" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
-                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="1rem">
+                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="0.5rem">
                         <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                         <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
                     </RadzenStack>
@@ -19,18 +19,18 @@
                         </RadzenSplitButton>
                     </RadzenStack>
                 </RadzenStack>
-                <RadzenRow Style="width: 100%; display: block; height: 100%">
+                <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
                     <RadzenColumn>
                         <RadzenStack Gap="0.5rem" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.25rem">
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.5rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                                     <RadzenIcon Icon="date_range" Style="font-size: 16px" />
                                     <RadzenText Text="Date" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                                 </RadzenStack>
-                                <RadzenText Text="@($"{Campaign.StartDate:d} - {(Campaign.EndDate != null ? $"{Campaign.EndDate:d}" : "Ongoing")}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                                <RadzenText Text="@($"{Campaign.StartDate:d} to {(Campaign.EndDate != null ? $"{Campaign.EndDate:d}" : "Ongoing")}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
                             </RadzenStack>
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem">
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                                     <RadzenIcon Icon="currency_rupee" Style="font-size: 16px" />
                                     <RadzenText Text="Budget" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                                 </RadzenStack>
@@ -39,23 +39,23 @@
                                     <RadzenText Text="@(Campaign.BudgetType == 2 ? "per day" : "total")" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-px-2 rz-py-05" Style="font-size: 12px; font-weight: 500; border-radius: 4px; background-color: grey; color: #ffffff" />
                                 </RadzenStack>
                             </RadzenStack>
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" @onclick="@OnLocationClick" Style="cursor: pointer;">
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" @onclick="@OnLocationClick" Style="cursor: pointer;">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                                     <RadzenIcon Icon="location_on" Style="font-size: 16px" />
                                     <RadzenText Text="Locations" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                                 </RadzenStack>
                                 <RadzenText Text="@($"{Campaign.CampaignAdboards.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
                             </RadzenStack>
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem">
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                                     <RadzenIcon Icon="attach_file" Style="font-size: 16px" />
                                     <RadzenText Text="Ads" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                                 </RadzenStack>
                                 <RadzenText Text="@($"{Campaign.Advertisements.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
                                 @* <RadzenButton Icon="info" Variant="Variant.Text" Size="ButtonSize.Small" Style="padding: 2px" /> *@
                             </RadzenStack>
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem">
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                                     <RadzenIcon Icon="browse_gallery" Style="font-size: 16px" />
                                     <RadzenText Text="Duration" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                                 </RadzenStack>
@@ -64,7 +64,7 @@
                             </RadzenStack>
                         </RadzenStack>
                     </RadzenColumn>
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.End" Style="height: 100%">
+                    <RadzenStack JustifyContent="Radzen.JustifyContent.End">
                         <RadzenFieldset Text="Analytics">
                             <RadzenStack Orientation="Orientation.Horizontal">
                                 <RadzenStack Gap="0">
