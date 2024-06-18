@@ -45,16 +45,24 @@ namespace DOOH.Client.Pages.Admin.Settings.Region
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.City city;
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var result = await DOOHDBService.CreateCity(city);
                 DialogService.Close(city);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

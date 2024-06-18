@@ -148,10 +148,14 @@ namespace DOOH.Client.Pages.Admin.Settings
             }
         }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task SaveClick(MouseEventArgs args)
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
+
                 company.Icon = Icons.FirstOrDefault();
                 company.Logo = Logos.FirstOrDefault();
                 company.AdminLogo = AdminLogos.FirstOrDefault();
@@ -175,6 +179,7 @@ namespace DOOH.Client.Pages.Admin.Settings
             finally
             {
                 isEditing = false;
+                IsSaving = false;
                 StateHasChanged();
             }
         }

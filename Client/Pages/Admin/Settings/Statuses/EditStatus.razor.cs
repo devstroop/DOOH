@@ -45,16 +45,24 @@ namespace DOOH.Client.Pages.Admin.Settings.Statuses
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 await DOOHDBService.UpdateStatus(statusId:StatusId, status);
                 DialogService.Close(status);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

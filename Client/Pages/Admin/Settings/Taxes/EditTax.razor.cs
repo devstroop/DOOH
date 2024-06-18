@@ -37,7 +37,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
 
         protected override async Task OnInitializedAsync()
         {
-            tax = await DOOHDBService.GetTaxByTaxId(taxId:TaxId);
+            tax = await DOOHDBService.GetTaxByTaxId(taxId: TaxId);
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Tax tax;
@@ -51,7 +51,7 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
         {
             try
             {
-                var result = await DOOHDBService.GetTaxes(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(TaxName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
+                var result = await DOOHDBService.GetTaxes(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(TaxName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
                 taxesForParentTaxId = result.Value.AsODataEnumerable();
                 taxesForParentTaxIdCount = result.Count;
 
@@ -68,14 +68,17 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
             }
             catch (System.Exception ex)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Tax1" });
+                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Tax1" });
             }
         }
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
-                var result = await DOOHDBService.UpdateTax(taxId:TaxId, tax);
+                IsSaving = true;
+                StateHasChanged();
+                var result = await DOOHDBService.UpdateTax(taxId: TaxId, tax);
                 if (result != null)
                 {
                     DialogService.Close(tax);
@@ -84,6 +87,11 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 
@@ -94,8 +102,6 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
 
         [Inject]
         protected SecurityService Security { get; set; }
-
-
 
     }
 }

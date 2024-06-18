@@ -42,10 +42,13 @@ namespace DOOH.Client.Pages.Admin.Users
             role = new DOOH.Server.Models.ApplicationRole();
         }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit(DOOH.Server.Models.ApplicationRole role)
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 await Security.CreateRole(role);
 
                 DialogService.Close(null);
@@ -54,6 +57,11 @@ namespace DOOH.Client.Pages.Admin.Users
             {
                 errorVisible = true;
                 error = ex.Message;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

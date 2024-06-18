@@ -72,16 +72,24 @@ namespace DOOH.Client.Pages.Admin.Settings.Taxes
         //        NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Tax1" });
         //    }
         //}
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var result = await DOOHDBService.CreateTax(tax);
                 DialogService.Close(tax);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

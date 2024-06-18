@@ -42,16 +42,24 @@ namespace DOOH.Client.Pages.Admin.Settings.Region
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.State state;
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var result = await DOOHDBService.CreateState(state);
                 DialogService.Close(state);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

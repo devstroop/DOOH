@@ -46,10 +46,13 @@ namespace DOOH.Client.Pages.Admin.Users
             roles = await Security.GetRoles();
         }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit(DOOH.Server.Models.ApplicationUser user)
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 user.Roles = roles.Where(role => userRoles.Contains(role.Id)).ToList();
                 await Security.CreateUser(user);
                 DialogService.Close(null);
@@ -58,6 +61,11 @@ namespace DOOH.Client.Pages.Admin.Users
             {
                 errorVisible = true;
                 error = ex.Message;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

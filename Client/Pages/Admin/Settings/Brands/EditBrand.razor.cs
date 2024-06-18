@@ -44,11 +44,14 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Brand brand;
 
-        
+
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 brand.BrandLogo = Images.FirstOrDefault();
                 var result = await DOOHDBService.UpdateBrand(brandId:BrandId, brand);
                 if (result != null)
@@ -59,6 +62,11 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

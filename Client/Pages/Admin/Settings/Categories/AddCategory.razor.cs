@@ -39,16 +39,24 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Category category;
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var result = await DOOHDBService.CreateCategory(category);
                 DialogService.Close(category);
             }
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 
