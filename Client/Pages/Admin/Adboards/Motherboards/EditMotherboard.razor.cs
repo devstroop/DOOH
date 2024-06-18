@@ -71,10 +71,13 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
                 NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Brand" });
             }
         }
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var result = await DOOHDBService.UpdateMotherboard(motherboardId:MotherboardId, motherboard);
                 if (result != null)
                 {
@@ -84,6 +87,11 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

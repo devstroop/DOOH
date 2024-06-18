@@ -192,10 +192,13 @@ namespace DOOH.Client.Pages.Admin.Adboards
                 NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Country" });
             }
         }
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 var adboardResult = await DOOHDBService.CreateAdboard(adboard);
                 if(adboardResult != null)
                 {
@@ -223,6 +226,11 @@ namespace DOOH.Client.Pages.Admin.Adboards
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

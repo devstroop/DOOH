@@ -16,7 +16,7 @@
         </RadzenColumn>
         <RadzenColumn Size="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenButton Text="Save" Icon="save" Click="@SaveClick" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Visible="@isEditing" />
+                <RadzenButton Text="Save" Icon="save" Click="@SaveClick" ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Visible="@isEditing" IsBusy="@IsSaving" BusyText="Saving" />
                 <RadzenButton Text="Cancel" Click="@CancelClick" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="@isEditing" />
                 <RadzenButton Text="Edit" Icon="edit" Click="@EditClick" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="!isEditing" />
             </RadzenStack>

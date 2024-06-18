@@ -22,6 +22,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private int BudgetType { get; set; } = 1;
         private decimal Budget { get; set; } = 0;
         private bool IsDraft { get; set; } = true;
+        private bool IsSaving { get; set; } = false;
         private bool Continuous { get; set; } = true;
         private DateTime StartDate { get; set; } = DateTime.Today;
         private DateTime? EndDate { get; set; }
@@ -51,7 +52,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected bool CampaignNameEditable { get; set; } = false;
 
 
-        protected override Task OnParametersSetAsync()
+        protected async override Task OnParametersSetAsync()
         {
             if (Campaign != null)
             {
@@ -64,7 +65,6 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 BudgetType = Campaign.BudgetType;
                 IsDraft = Campaign.IsDraft;
             }
-            return base.OnParametersSetAsync();
         }
 
         protected bool errorVisible;
@@ -75,6 +75,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
+
                 Campaign.CampaignId = CampaignId;
                 Campaign.CampaignName = CampaignName;
                 Campaign.StartDate = StartDate;
@@ -103,6 +106,11 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

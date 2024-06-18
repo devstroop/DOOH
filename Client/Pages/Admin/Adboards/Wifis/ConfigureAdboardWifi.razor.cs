@@ -54,10 +54,13 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
             } 
         }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 if (isNew)
                 {
                     adboardWifi = await DOOHDBService.CreateAdboardWifi(adboardWifi);
@@ -79,6 +82,11 @@ namespace DOOH.Client.Pages.Admin.Adboards.Wifis
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

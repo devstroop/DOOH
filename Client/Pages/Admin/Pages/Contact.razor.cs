@@ -70,10 +70,14 @@ namespace DOOH.Client.Pages.Admin.Pages
             isNew = true;
         }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task SaveClick(MouseEventArgs args)
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
+
                 if (isNew)
                 {
                     await DOOHDBService.CreatePage(_page);
@@ -89,6 +93,11 @@ namespace DOOH.Client.Pages.Admin.Pages
             catch (Exception ex)
             {
                 NotificationService.Notify(NotificationSeverity.Error, "Error", "An error has occurred");
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 

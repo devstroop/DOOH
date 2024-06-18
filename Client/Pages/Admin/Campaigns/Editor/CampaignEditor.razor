@@ -17,7 +17,7 @@
         </RadzenColumn>
         <RadzenColumn SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" Click="@SaveCampaign" />
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" Click="@SaveCampaign" IsBusy="@IsSaving" BusyText="Saving" />
                 <RadzenButton Icon="cancel" Text="Cancel" ButtonStyle="ButtonStyle.Secondary" Click="@Cancel" />
             </RadzenStack>
         </RadzenColumn>
@@ -36,8 +36,8 @@
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
                 <RadzenSelectBar TValue="int" Size="ButtonSize.Small" @bind-Value="@BudgetType">
                     <Items>
-                        <RadzenSelectBarItem Value="1" Text="Total" />
-                        <RadzenSelectBarItem Value="2" Text="Daily" />
+                        <RadzenSelectBarItem Value="@((int)Server.Models.Enums.BudgetType.Total)" Text="Total" />
+                        <RadzenSelectBarItem Value="@((int)Server.Models.Enums.BudgetType.Daily)" Text="Daily" />
                     </Items>
                 </RadzenSelectBar>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">

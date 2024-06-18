@@ -42,10 +42,13 @@ namespace DOOH.Client.Pages.Admin.Faqs
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
         {
             try
             {
+                IsSaving = true;
+                StateHasChanged();
                 faq.UpdatedAt = DateTime.Now;
                 await DOOHDBService.CreateFaq(faq);
                 DialogService.Close(faq);
@@ -53,6 +56,11 @@ namespace DOOH.Client.Pages.Admin.Faqs
             catch (Exception ex)
             {
                 errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 
