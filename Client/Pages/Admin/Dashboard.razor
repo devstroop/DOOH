@@ -20,7 +20,18 @@
     <RadzenRow>
         <RadzenColumn SizeMD="3">
             <RadzenCard>
-                <RadzenStack Orientation="Orientation.Horizontal" Gap="1.5rem">
+                <RadzenChart>
+                    <RadzenLineSeries Smooth="true" Data="@revenue2024" CategoryProperty="Date" Title="2024" ValueProperty="Revenue">
+                        <RadzenMarkers Visible="false" MarkerType="MarkerType.Circle" />
+                        <RadzenSeriesDataLabels Visible="@false" />
+                    </RadzenLineSeries>
+                    <RadzenCategoryAxis Padding="20" />
+                    <RadzenValueAxis>
+                        <RadzenGridLines Visible="true" />
+                        <RadzenAxisTitle Text="Revenue in USD" />
+                    </RadzenValueAxis>
+                </RadzenChart>
+                @* <RadzenStack Orientation="Orientation.Horizontal" Gap="1.5rem">
                     <RadzenStack>
                         <RadzenIcon Icon="people" Style="font-size:3rem" class="rz-p-5" />
                     </RadzenStack>
@@ -28,7 +39,7 @@
                         <RadzenText Text="Users" TextStyle="TextStyle.H5" class="rz-mb-0" />
                         <RadzenText Text="100" TextStyle="TextStyle.DisplayH5" class="rz-mb-0" />
                     </RadzenStack>
-                </RadzenStack>
+                </RadzenStack> *@
             </RadzenCard>
         </RadzenColumn>
         <RadzenColumn SizeMD="3"></RadzenColumn>

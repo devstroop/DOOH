@@ -32,5 +32,15 @@ namespace DOOH.Client.Pages.Admin
 
         [Inject]
         protected SecurityService Security { get; set; }
+
+        [Inject]
+        protected DOOHDBService DOOHDBService { get; set; }
+
+        protected async override Task OnInitializedAsync()
+        {
+
+        }
+
+
     }
 }
