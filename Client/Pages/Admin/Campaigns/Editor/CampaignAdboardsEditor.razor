@@ -1,13 +1,13 @@
 @attribute [Authorize]
 <RadzenRow class="rz-mb-4">
-    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-1">
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-2">
         <RadzenRow AlignItems="AlignItems.Center">
             <RadzenColumn>
                 <RadzenRow AlignItems="AlignItems.Center">
                     <RadzenColumn>
                         <RadzenTextBox Placeholder="Search City, State or Sign Name" @bind-Value=@search aria-label="Search by address" Style="display: block; width: 100%" />
                     </RadzenColumn>
-                    <RadzenButton Icon="search" Click="@Search" />
+                    <RadzenButton Icon="search" Text="Search" Click="@Search" />
                 </RadzenRow>
             </RadzenColumn>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Visible="@showSelectedAdboardLabel">
@@ -17,12 +17,12 @@
         </RadzenRow>
     </RadzenColumn>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
-        <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-3 rz-py-3 rz-mx-2" Gap="2rem" Visible="@showSelectedAdboardLabel">
+        <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-2 rz-py-2 rz-mx-2" Gap="2rem" Visible="@showSelectedAdboardLabel">
             <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
                 <RadzenIcon Icon="info" IconColor="white" />
                 <RadzenText class="rz-mb-0" Text="@selectedAdboardLabel" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
             </RadzenRow>
-            <RadzenButton Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Light" Shade="Shade.Lighter" Text="Clear" Click="@ClearSelectedAdboards" />
+            <RadzenButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Shade="Shade.Lighter" Text="Clear" Click="@ClearSelectedAdboards" />
         </RadzenRow>
     </RadzenColumn>
 </RadzenRow>
