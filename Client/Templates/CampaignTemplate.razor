@@ -4,24 +4,22 @@
             <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="100%" Height="200px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenColumn>
         <RadzenColumn>
-            <RadzenStack JustifyContent="Radzen.JustifyContent.SpaceBetween" Style="height: 100%; width: 100%">
-                <RadzenStack Style="width: 100%; display: block" Gap="1rem">
-                    <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%; display: block" JustifyContent="Radzen.JustifyContent.SpaceBetween" AlignItems="Radzen.AlignItems.Start" Wrap="FlexWrap.Wrap">
-                        <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Start" Gap="1rem">
-                            <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
-                            <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
-                        </RadzenStack>
-                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                            <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
-                            <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
-                            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
-                                <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
-                                <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
-                            </RadzenSplitButton>
-                        </RadzenStack>
+            <RadzenStack Style="height: 100%; width: 100%">
+                <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%; display: block" JustifyContent="Radzen.JustifyContent.SpaceBetween" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="1rem">
+                        <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
+                        <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                        <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
+                        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
+                            <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                            <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+                        </RadzenSplitButton>
                     </RadzenStack>
                 </RadzenStack>
-                <RadzenRow Style="width: 100%; display: block">
+                <RadzenRow Style="width: 100%; display: block; height: 100%">
                     <RadzenColumn>
                         <RadzenStack Gap="0.5rem" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
                             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.25rem">
@@ -67,14 +65,18 @@
                         </RadzenStack>
                     </RadzenColumn>
                     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.End" Style="height: 100%">
-                        <RadzenStack Gap="0">
-                            <RadzenText Text="Rotation" class="rz-mb-0" TextStyle="TextStyle.Caption" />
-                            <RadzenText Text="15" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
-                        </RadzenStack>
-                        <RadzenStack Gap="0">
-                            <RadzenText Text="Playtime" class="rz-mb-0" TextStyle="TextStyle.Caption" />
-                            <RadzenText Text="00:00:00" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
-                        </RadzenStack>
+                        <RadzenFieldset Text="Analytics">
+                            <RadzenStack Orientation="Orientation.Horizontal">
+                                <RadzenStack Gap="0">
+                                    <RadzenText Text="Rotation" class="rz-mb-0" TextStyle="TextStyle.Caption" />
+                                    <RadzenText Text="15" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenStack Gap="0">
+                                    <RadzenText Text="Playtime" class="rz-mb-0" TextStyle="TextStyle.Caption" />
+                                    <RadzenText Text="00:00:00" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
+                                </RadzenStack>
+                            </RadzenStack>
+                        </RadzenFieldset>
                     </RadzenStack>
                 </RadzenRow>
             </RadzenStack>
