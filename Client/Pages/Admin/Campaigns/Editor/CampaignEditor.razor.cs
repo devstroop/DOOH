@@ -22,6 +22,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private int BudgetType { get; set; } = 1;
         private decimal Budget { get; set; } = 0;
         private bool IsDraft { get; set; } = true;
+        private bool Continuous { get; set; } = true;
+        private DateTime StartDate { get; set; } = DateTime.Today;
+        private DateTime? EndDate { get; set; }
 
 
         [Inject]
@@ -54,6 +57,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 CampaignId = Campaign.CampaignId;
                 CampaignName = Campaign.CampaignName;
+                StartDate = Campaign.StartDate;
+                EndDate = Campaign.EndDate;
+                Continuous = Campaign.EndDate == null;
                 Budget = Campaign.Budget;
                 BudgetType = Campaign.BudgetType;
                 IsDraft = Campaign.IsDraft;
@@ -71,6 +77,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 Campaign.CampaignId = CampaignId;
                 Campaign.CampaignName = CampaignName;
+                Campaign.StartDate = StartDate;
+                Campaign.EndDate = Continuous ? null : EndDate;
                 Campaign.Budget = Budget;
                 Campaign.BudgetType = BudgetType;
                 Campaign.IsDraft = IsDraft;

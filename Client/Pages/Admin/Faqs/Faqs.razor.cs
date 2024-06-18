@@ -33,6 +33,8 @@ namespace DOOH.Client.Pages.Admin.Faqs
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
+        protected bool IsLoading { get; set; } = false;
+
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Faq> faqs;
 
         protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Faq> grid0;

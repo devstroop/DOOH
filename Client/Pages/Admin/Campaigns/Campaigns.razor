@@ -14,7 +14,7 @@
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
             <RadzenTextBox Placeholder="Search ..." @bind-Value="@search" aria-label="Search" />
             <RadzenButton Icon="search" Click="@Search" />
-            <RadzenButton Icon="add" Text="New" ButtonStyle="ButtonStyle.Primary" Click="@AddButtonClick" class="rz-px-3" />
+            <RadzenButton Icon="add" Text="New Campaign" ButtonStyle="ButtonStyle.Primary" Click="@AddButtonClick" class="rz-px-3" />
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
@@ -25,7 +25,7 @@
         <RadzenTabsItem Text="Unverified" Icon="fiber_manual_record" IconColor="darkgoldenrod">
         </RadzenTabsItem>
         <RadzenTabsItem Text="Active" Icon="fiber_manual_record" IconColor="green">
-            <RadzenDataList @bind-IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="@(campaignsCount > 0)" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
+            <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="@(campaignsCount > 0)" LoadData="@campaignsLoadData" Count="@campaignsCount" ShowPagingSummary="@(campaignsCount > 0)" PageSizeOptions=@(new int[]{5, 10, 20, 30})>
                 <Template>
                     <CampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete" />
                 </Template>

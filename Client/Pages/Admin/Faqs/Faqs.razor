@@ -3,34 +3,37 @@
 
 @attribute [Authorize]
 
-<PageTitle>Faqs</PageTitle>
+<PageTitle>FAQs</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
-        <RadzenColumn Size="12" SizeMD="6">
+        <RadzenColumn Size="6" SizeMD="6">
             <RadzenText Text="FAQs" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="6">
+        <RadzenColumn Size="6" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@AddButtonClick" Variant="Variant.Flat" />
+                <RadzenButton Icon="add" Text="Add" Size="ButtonSize.Small" Click="@AddButtonClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    @if (faqs.Count() == 0)
+    @if (faqs?.Count() == 0)
     {
-        <RadzenText Text="No FAQs found" />
+        <RadzenCard>
+            <RadzenText Text="No FAQs found" />
+        </RadzenCard>
     }
-    <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Faq" Data="@faqs" AllowPaging="true" LoadData="@faqsLoadData" Count="@faqsCount">
+    <RadzenDataList @bind-IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Faq" Data="@faqs" AllowPaging="true" LoadData="@faqsLoadData" Count="@faqsCount">
         <Template>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceBetween">
-                <RadzenStack Gap="0">
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
-                        <RadzenText Text="@($"#{context.FaqId}")" />
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="1rem">
+                    <RadzenText Text="@($"{context.FaqId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 14px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
+                    <RadzenStack Gap="0">
                         <RadzenText Text="@context.Question" Style="font-weight: 500;" />
+                        <RadzenText Text="@context.Answer" TextStyle="Radzen.Blazor.TextStyle.Body2" class="rz-mb-0" />
                     </RadzenStack>
-                    <RadzenText Text="@context.Answer" TextStyle="Radzen.Blazor.TextStyle.Body2" class="rz-mb-0" />
                 </RadzenStack>
+                
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                    <RadzenSplitButton Icon="more_vert" Variant="Variant.Flat" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Light" Click="@((args) => SplitButtonClick(args, context))">
+                    <RadzenSplitButton Icon="more_vert" Variant="Variant.Flat" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Light" Click="@((args) => SplitButtonClick(args, context))">
                         <ChildContent>
                             <RadzenMenuItem Text="Edit" Icon="edit"/>
                             <RadzenMenuItem Text="Delete" Icon="delete" />
@@ -41,3 +44,8 @@
         </Template>
     </RadzenDataList>
 </RadzenStack>
+<style>
+    .rz-datalist-data{
+        padding: 0;
+    }
+</style>
