@@ -65,9 +65,12 @@ namespace DOOH.Client.Pages.Admin
 
         protected int adboardsCount;
         
-        protected override async Task OnInitializedAsync()
+        protected async override Task OnAfterRenderAsync(bool firstRender)
         {
-        
+            if (firstRender)
+            {
+                await adboardsLoadData(new LoadDataArgs());
+            }
         }
 
 
@@ -75,7 +78,8 @@ namespace DOOH.Client.Pages.Admin
         {
             try
             {
-                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
+                var expand = $"Category, City, State, Country, Motherboard($expand=Brand), Provider, Display($expand=Brand), AdboardImages";
+                var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: expand);
 
                 adboards = result.Value.AsODataEnumerable();
                 adboardsCount = result.Count;
@@ -85,7 +89,6 @@ namespace DOOH.Client.Pages.Admin
                 NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
             }
         }
-
 
     }
 }

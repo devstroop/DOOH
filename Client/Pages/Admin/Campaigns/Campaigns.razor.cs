@@ -34,9 +34,12 @@ namespace DOOH.Client.Pages.Admin.Campaigns
         public DOOHDBService DOOHDBService { get; set; }
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Campaign> campaigns;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Status> statuses;
+        
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Campaign> list0;
         protected int count;
+        protected int statusesCount;
         protected bool IsLoading = true;
 
         protected string search { get; set; } = "";
@@ -97,7 +100,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
         }
 
 
-        protected int selectedIndex { get; set; } = 2;
+        protected int selectedIndex { get; set; } = 0;
 
         protected async Task campaignsLoadData(LoadDataArgs args)
         {
@@ -180,6 +183,36 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                     Summary = $"Error",
                     Detail = $"Unable to delete Campaign"
                 });
+            }
+        }
+        
+        
+        
+        protected async Task statusesLoadData(LoadDataArgs args)
+        {
+            try
+            {
+                var result = await DOOHDBService.GetStatuses(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
+
+                statuses = result.Value.AsODataEnumerable();
+                statusesCount = result.Count;
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+            }
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            await statusesLoadData(new LoadDataArgs());
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await campaignsLoadData(new LoadDataArgs());
             }
         }
     }

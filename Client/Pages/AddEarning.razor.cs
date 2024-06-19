@@ -52,7 +52,7 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.GetProviders(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(ProviderName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
+                var result = await DOOHDBService.GetProviders(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(ContactName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
                 providersForProviderId = result.Value.AsODataEnumerable();
                 providersForProviderIdCount = result.Count;
 

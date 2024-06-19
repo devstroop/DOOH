@@ -56,7 +56,7 @@ namespace DOOH.Client.Pages.Admin.Providers
         {
             try
             {
-                var result = await DOOHDBService.GetProviders(filter: $@"(contains(ProviderName,""{search}"") or contains(ProviderCompany,""{search}"") or contains(ProviderEmail,""{search}"") or contains(ProviderPhone,""{search}"") or contains(Address,""{search}"") or contains(CityName,""{search}"") or contains(StateName,""{search}"") or contains(CountryName,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "City,State,Country", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+                var result = await DOOHDBService.GetProviders(filter: $@"(contains(ContactName,""{search}"") or contains(CompanyName,""{search}"") or contains(Email,""{search}"") or contains(Phone,""{search}"") or contains(Address,""{search}"") or contains(CityName,""{search}"") or contains(StateName,""{search}"") or contains(CountryName,""{search}"") or contains(UserId,""{search}"")) and {(string.IsNullOrEmpty(args.Filter)? "true" : args.Filter)}", expand: "City,State,Country", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
                 providers = result.Value.AsODataEnumerable();
                 count = result.Count;
             }

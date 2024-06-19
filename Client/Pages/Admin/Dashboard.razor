@@ -10,7 +10,7 @@
     <RadzenStack>
         <RadzenRow>
             <RadzenColumn Size="6">
-                <RadzenText Text="Admin Dashboard" TextStyle="TextStyle.H4" TagName="TagName.H1" />
+                <RadzenText Text="Admin Dashboard" TextStyle="TextStyle.H4" TagName="TagName.H1"/>
             </RadzenColumn>
             <RadzenColumn Size="6">
                 <RadzenStack Orientation="Orientation.Horizontal">
@@ -26,15 +26,15 @@
                         <RadzenText Text="Campaigns" TextStyle="TextStyle.H4" class="rz-mb-0"></RadzenText>
                     </RadzenStack>
                     <RadzenChart>
-                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends" CategoryProperty="Name" Title="2024" ValueProperty="Value">
-                            <RadzenMarkers Visible="false" MarkerType="MarkerType.Circle" />
-                            <RadzenSeriesDataLabels Visible="@false" />
+                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends" CategoryProperty="Name" Title="Campaigns" ValueProperty="Value">
+                            <RadzenMarkers Visible="false" MarkerType="MarkerType.Circle"/>
+                            <RadzenSeriesDataLabels Visible="@false"/>
                         </RadzenLineSeries>
-                        <RadzenCategoryAxis Padding="20" />
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true" />
-                            <RadzenAxisTitle Text="Test Title" />
-                        </RadzenValueAxis>
+                        @* <RadzenCategoryAxis Padding="20"/> *@
+                        @* <RadzenValueAxis> *@
+                        @*     <RadzenGridLines Visible="true"/> *@
+                        @*     <RadzenAxisTitle Text="Test Title"/> *@
+                        @* </RadzenValueAxis> *@
                     </RadzenChart>
                 </RadzenCard>
             </RadzenColumn>
@@ -45,15 +45,15 @@
                         <RadzenText Text="Adboards" TextStyle="TextStyle.H4" class="rz-mb-0"></RadzenText>
                     </RadzenStack>
                     <RadzenChart>
-                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends" CategoryProperty="Name" Title="2024" ValueProperty="Value">
+                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends" CategoryProperty="Name" Title="Adboards" ValueProperty="Value">
                             <RadzenMarkers Visible="false" MarkerType="MarkerType.Circle"/>
                             <RadzenSeriesDataLabels Visible="@false"/>
                         </RadzenLineSeries>
-                        <RadzenCategoryAxis Padding="20"/>
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true"/>
-                            <RadzenAxisTitle Text="Test Title"/>
-                        </RadzenValueAxis>
+                        @* <RadzenCategoryAxis Padding="20"/> *@
+                        @* <RadzenValueAxis> *@
+                        @*     <RadzenGridLines Visible="true"/> *@
+                        @*     <RadzenAxisTitle Text="Test Title"/> *@
+                        @* </RadzenValueAxis> *@
                     </RadzenChart>
                 </RadzenCard>
             </RadzenColumn>
@@ -68,47 +68,84 @@
                             <RadzenMarkers Visible="false" MarkerType="MarkerType.Square"/>
                             <RadzenSeriesDataLabels Visible="@false"/>
                         </RadzenLineSeries>
-                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends" CategoryProperty="Name" Title="Provider" ValueProperty="Value">
+                        <RadzenLineSeries Smooth="true" Data="@UserRegistrationTrends.Reverse()" CategoryProperty="Name" Title="Provider" ValueProperty="Value">
                             <RadzenMarkers Visible="false" MarkerType="MarkerType.Circle"/>
                             <RadzenSeriesDataLabels Visible="@false"/>
                         </RadzenLineSeries>
-                        <RadzenCategoryAxis Padding="20"/>
-                        <RadzenValueAxis>
-                            <RadzenGridLines Visible="true"/>
-                            <RadzenAxisTitle Text="Test Title"/>
-                        </RadzenValueAxis>
+                        @* <RadzenCategoryAxis Padding="20"/> *@
+                        @* <RadzenValueAxis> *@
+                        @*     <RadzenGridLines Visible="true"/> *@
+                        @*     <RadzenAxisTitle Text="Test Title"/> *@
+                        @* </RadzenValueAxis> *@
                     </RadzenChart>
                 </RadzenCard>
             </RadzenColumn>
         </RadzenRow>
 
-        <RadzenRow>
-            <RadzenColumn Size="6">
-                <RadzenText Text="Adboards" TextStyle="TextStyle.H5" TagName="TagName.H1" />
-            </RadzenColumn>
-            <RadzenColumn Size="6">
-                <RadzenStack Orientation="Orientation.Horizontal">
+        <RadzenCard>
+            <RadzenRow class="rz-mb-2">
+                <RadzenColumn Size="6">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenIcon Icon="tv" Style="font-size: 20px"></RadzenIcon>
+                        <RadzenText Text="Adboards" TextStyle="TextStyle.H5" TagName="TagName.H1" class="rz-mb-0"/>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn Size="6">
+                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                        <RadzenButton Icon="refresh" Click="@((args) => adboardsLoadData(new LoadDataArgs()))"></RadzenButton>
+                    </RadzenStack>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="120px" AllowSorting="true" AllowPaging="true" AllowFiltering="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
+                <Columns>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" Width="48px"/>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="SignName" Title="Sign Name" />
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Provider" Title="Provider">
+                        <Template>
+                            @context.Provider.CompanyName
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Category" Title="Category" Width="84px">
+                        <Template>
+                            @context.Category.CategoryName
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="BaseRatePerSecond" Title="Rate" Width="72px">
+                        <Template>
+                            @($"{context.BaseRatePerSecond:C}/s")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Display" Title="Display"> *@
+                    @*     <Template> *@
+                    @*         @context.Display.Brand.BrandName *@
+                    @*         @context.Display.Model *@
+                    @*     </Template> *@
+                    @* </RadzenDataGridColumn> *@
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Motherboard" Title="Motherboard"> *@
+                    @*     <Template> *@
+                    @*         @context.Motherboard.Brand.BrandName *@
+                    @*         @context.Motherboard.Model *@
+                    @*     </Template> *@
+                    @* </RadzenDataGridColumn> *@
 
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="200px" AllowSorting="true" AllowPaging="true" AllowFiltering="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
-            <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="AdboardId" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Address" Title="Address" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="BaseRatePerSecond" Title="BaseRatePerSecond" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Category" Title="Category" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CityName" Title="CityName" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CreatedAt" Title="CreatedAt" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Display" Title="Display" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="IsActive" Title="IsActive" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Motherboard" Title="Motherboard" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Provider" Title="Provider" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="City" Title="City" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Country" Title="Country" />
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="State" Title="State" />
-            </Columns>
-        </RadzenDataGrid>
-
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="IsActive" Title="Active" Width="48px">
+                        <Template>
+                            @if (context.IsActive)
+                            {
+                            <RadzenIcon Icon="check" IconColor="green"/>
+                            }
+                            else
+                            {
+                            <RadzenIcon Icon="close" IconColor="red"/>
+                            }
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CreatedAt" Title="Created At" Width="96px"/>
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="City" Title="City" /> *@
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Country" Title="Country" /> *@
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="State" Title="State" /> *@
+                </Columns>
+            </RadzenDataGrid>
+        </RadzenCard>
     </RadzenStack>
 </RadzenStack>

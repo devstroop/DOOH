@@ -15,15 +15,15 @@ namespace DOOH.Server.Models.DOOHDB
         public int ProviderId { get; set; }
 
         [Required]
-        public string ProviderName { get; set; }
+        public string ContactName { get; set; }
 
-        public string ProviderCompany { get; set; }
-
-        [Required]
-        public string ProviderEmail { get; set; }
+        public string CompanyName { get; set; }
 
         [Required]
-        public string ProviderPhone { get; set; }
+        public string Email { get; set; }
+
+        [Required]
+        public string Phone { get; set; }
 
         [Required]
         public string Address { get; set; }

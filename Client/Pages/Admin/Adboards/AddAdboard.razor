@@ -8,7 +8,7 @@
                 <RadzenLabel Text="Provider" Component="Provider" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ProviderName" ValueProperty="ProviderId" AllowClear=true
+                <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ContactName" ValueProperty="ProviderId" AllowClear=true
                                         Placeholder="Choose Provider" style="display: block; width: 100%" @bind-Value="@adboard.ProviderId" Name="ProviderId"
                                         SelectedValue=@providersForProviderIdValue Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData />
                                         @if(providersForProviderIdValue != null)
@@ -20,15 +20,15 @@
                         </tr>
                         <tr>
                             <td>Name</td>
-                            <td>@providersForProviderIdValue.ProviderName</td>
+                            <td>@providersForProviderIdValue.ContactName</td>
                         </tr>
                         <tr>
                             <td>Email</td>
-                            <td>@providersForProviderIdValue.ProviderEmail</td>
+                            <td>@providersForProviderIdValue.Email</td>
                         </tr>
                         <tr>
                             <td>Phone</td>
-                            <td>@providersForProviderIdValue.ProviderPhone</td>
+                            <td>@providersForProviderIdValue.Phone</td>
                         </tr>
                         <tr>
                             <td>Address</td>
@@ -134,10 +134,10 @@
         </RadzenRow> *@
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
-                <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
+                <RadzenLabel Text="SignName" Component="SignName" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" />
+                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.SignName" Name="SignName" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

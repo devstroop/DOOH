@@ -135,7 +135,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 $"<br/><br/>" +
                 $"ID: {adboardId}" +
                 $"<br/>" +
-                $"{adboard.Address.Trim()}" +
+                $"{adboard.SignName.Trim()}" +
                 $"<br/>" +
                 $"Price <b>₹{adboard.BaseRatePerSecond ?? 0}</b>/sec";
 

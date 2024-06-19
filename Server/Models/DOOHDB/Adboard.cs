@@ -36,7 +36,7 @@ namespace DOOH.Server.Models.DOOHDB
 
         public double Longitude { get; set; }
 
-        public string Address { get; set; }
+        public string SignName { get; set; }
 
         public string CityName { get; set; }
 

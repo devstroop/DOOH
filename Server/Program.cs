@@ -1,3 +1,4 @@
+using System.Globalization;
 using Radzen;
 using DOOH.Server.Components;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,7 @@ builder.Services.AddControllers().AddOData(o =>
 builder.Services.AddScoped<AuthenticationStateProvider, DOOH.Client.ApplicationAuthenticationStateProvider>();
 builder.Services.AddLocalization();
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -105,4 +107,5 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(DOOH.Client._Imports).Assembly);
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
+app.UseRequestLocalization("en-IN");
 app.Run();

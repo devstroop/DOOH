@@ -1,3 +1,5 @@
+@using DOOH.Client.Pages.Admin.Settings.Statuses
+@using DOOH.Server.Models.DOOHDB
 <RadzenColumn Size="12" Style="@Style">
     <RadzenRow>
         <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="4" SizeLG="3" SizeXL="2">
@@ -11,8 +13,9 @@
                         <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
                     </RadzenStack>
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Secondary" Shade="Shade.Lighter" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
-                        <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" />
+                        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                        @* <RadzenDropDown TValue="Status" TextProperty="StatusName"  ValueProperty="StatusId" Data=@Statuses Change="@(args => StateHasChanged())" Style="width: 100%; max-width: 400px;" Name="DropDownChangeEvent" /> *@
+                        @* <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
                         <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
                             <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
                             <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
@@ -107,6 +110,7 @@
     [Parameter] public string Style { get; set; } = "width: 100%; padding: 1rem;";
     [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Edit { get; set; }
     [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Delete { get; set; }
+    [Parameter] public IEnumerable<Status> Statuses { get; set; }
 
     [Inject] private DialogService DialogService { get; set; }
     [Inject] private NotificationService NotificationService { get; set; }
