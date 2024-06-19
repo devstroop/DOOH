@@ -316,6 +316,10 @@ namespace DOOH.Server.Data
               .Property(p => p.TaxRate)
               .HasDefaultValueSql(@"((0.00))");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
+              .Property(p => p.CreatedAt)
+              .HasDefaultValueSql(@"(sysdatetime())");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
@@ -387,6 +391,18 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
+              .Property(p => p.CreatedAt)
+              .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
+              .Property(p => p.UpdatedAt)
+              .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
+              .Property(p => p.SuspendedAt)
+              .HasColumnType("datetime");
             this.OnModelBuilding(builder);
         }
 
@@ -439,6 +455,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Status> Statuses { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

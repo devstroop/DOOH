@@ -4192,5 +4192,166 @@ namespace DOOH.Server
 
             return itemToDelete;
         }
+    
+        public async Task ExportUserInformationsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/userinformations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/userinformations/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportUserInformationsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/userinformations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/userinformations/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnUserInformationsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.UserInformation> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.UserInformation>> GetUserInformations(Query query = null)
+        {
+            var items = Context.UserInformations.AsQueryable();
+
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnUserInformationsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnUserInformationGet(DOOH.Server.Models.DOOHDB.UserInformation item);
+        partial void OnGetUserInformationByUserId(ref IQueryable<DOOH.Server.Models.DOOHDB.UserInformation> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.UserInformation> GetUserInformationByUserId(string userid)
+        {
+            var items = Context.UserInformations
+                              .AsNoTracking()
+                              .Where(i => i.UserId == userid);
+
+ 
+            OnGetUserInformationByUserId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnUserInformationGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnUserInformationCreated(DOOH.Server.Models.DOOHDB.UserInformation item);
+        partial void OnAfterUserInformationCreated(DOOH.Server.Models.DOOHDB.UserInformation item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.UserInformation> CreateUserInformation(DOOH.Server.Models.DOOHDB.UserInformation userinformation)
+        {
+            OnUserInformationCreated(userinformation);
+
+            var existingItem = Context.UserInformations
+                              .Where(i => i.UserId == userinformation.UserId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.UserInformations.Add(userinformation);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(userinformation).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterUserInformationCreated(userinformation);
+
+            return userinformation;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.UserInformation> CancelUserInformationChanges(DOOH.Server.Models.DOOHDB.UserInformation item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnUserInformationUpdated(DOOH.Server.Models.DOOHDB.UserInformation item);
+        partial void OnAfterUserInformationUpdated(DOOH.Server.Models.DOOHDB.UserInformation item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.UserInformation> UpdateUserInformation(string userid, DOOH.Server.Models.DOOHDB.UserInformation userinformation)
+        {
+            OnUserInformationUpdated(userinformation);
+
+            var itemToUpdate = Context.UserInformations
+                              .Where(i => i.UserId == userinformation.UserId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(userinformation);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterUserInformationUpdated(userinformation);
+
+            return userinformation;
+        }
+
+        partial void OnUserInformationDeleted(DOOH.Server.Models.DOOHDB.UserInformation item);
+        partial void OnAfterUserInformationDeleted(DOOH.Server.Models.DOOHDB.UserInformation item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.UserInformation> DeleteUserInformation(string userid)
+        {
+            var itemToDelete = Context.UserInformations
+                              .Where(i => i.UserId == userid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnUserInformationDeleted(itemToDelete);
+
+
+            Context.UserInformations.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterUserInformationDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
         }
 }
