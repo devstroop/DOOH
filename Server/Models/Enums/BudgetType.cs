@@ -2,7 +2,6 @@
 {
     public enum BudgetType
     {
-        Undefined = 0,
         Total = 1,
         Daily = 2
     }

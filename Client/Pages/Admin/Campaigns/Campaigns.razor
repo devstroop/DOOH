@@ -4,7 +4,7 @@
 
 @attribute [Authorize]
 <PageTitle>Campaigns</PageTitle>
-<RadzenRow AlignItems="AlignItems.Center">
+<RadzenRow AlignItems="AlignItems.Center" class="rz-mb-3">
     <RadzenColumn Size="12" SizeMD="6">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
             <RadzenIcon Icon="campaign" Style="font-size: 28px" />
@@ -19,34 +19,22 @@
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
-<RadzenTabs @bind-SelectedIndex="@selectedIndex" Style="margin-top: 1rem;">
-    <Tabs>
-        <RadzenTabsItem Text="All" Icon="fiber_manual_record" IconColor="black">            
-            <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowPaging="false" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount">
-                <Template>
-                    <CampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete" />
-                </Template>
-            </RadzenDataList>
-        </RadzenTabsItem>
-        @foreach (var each in statuses ?? new List<Status>())
-        {
-            <RadzenTabsItem Text="@each.StatusName" Icon="fiber_manual_record" IconColor="@each.StatusColor" Visible="@(campaigns != null)">
-                <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns.Where(x => x.StatusId == each.StatusId)" AllowPaging="false" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount" >
-                    <Template>
-                        <CampaignTemplate Statuses="@statuses" Campaign="@context" Edit="@OnEdit" Delete="@OnDelete" />
-                    </Template>
-                </RadzenDataList>
-                @if (!(campaigns.Where(x => x.StatusId == each.StatusId)).Any())
-                {
-                    <RadzenCard>
-                        <RadzenText Text="No campaigns found" />
-                    </RadzenCard>
-                }
-            </RadzenTabsItem>
-        }
-    </Tabs>
-</RadzenTabs>
-
+<RadzenRow>
+    <RadzenColumn Visible="@(campaigns != null && !campaigns.Any())">
+        <RadzenCard>
+            <RadzenText Text="No campaigns found"  />
+        </RadzenCard>
+    </RadzenColumn>
+</RadzenRow>
+<RadzenRow>
+    <RadzenColumn>
+        <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount">
+            <Template>
+                <CampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete"/>
+            </Template>
+        </RadzenDataList>
+    </RadzenColumn>
+</RadzenRow>
 <style>
     ul.rz-tabview-nav{
         width: 100%;

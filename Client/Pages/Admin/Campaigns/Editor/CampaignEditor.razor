@@ -1,7 +1,9 @@
+@using DOOH.Server.Models.DOOHDB
 @layout AdminLayout
-@* @page "/admin/campaigns/editor" *@
+@page "/admin/campaigns/editor/{CampaignId}"
+@page "/admin/campaigns/editor"
 @attribute [Authorize]
-<PageTitle>New Campaign</PageTitle>
+<PageTitle>Campaign Editor</PageTitle>
 <RadzenStack>
     <RadzenRow class="rz-mb-2" AlignItems="AlignItems.Center" Gap="1rem" RowGap="1rem">
         <RadzenColumn SizeMD="6">
@@ -34,10 +36,12 @@
         </RadzenFieldset>
         <RadzenFieldset Text="Budget">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
-                <RadzenSelectBar TValue="int" Size="ButtonSize.Small" @bind-Value="@BudgetType">
+                <RadzenSelectBar TValue="BudgetType" Size="ButtonSize.Small" @bind-Value="@BudgetType">
                     <Items>
-                        <RadzenSelectBarItem Value="@((int)Server.Models.Enums.BudgetType.Total)" Text="Total" />
-                        <RadzenSelectBarItem Value="@((int)Server.Models.Enums.BudgetType.Daily)" Text="Daily" />
+                        @foreach(var each in Enum.GetValues(typeof(BudgetType)).Cast<BudgetType>())
+                        {
+                            <RadzenSelectBarItem Value="@each" Text="@each.ToString()" />
+                        }
                     </Items>
                 </RadzenSelectBar>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
@@ -47,20 +51,32 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenFieldset>
+        <RadzenFieldset Text="Status">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount">
+                    <Template>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
+                            <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                        </RadzenStack>
+                    </Template>
+                </RadzenDropDown>
+            </RadzenStack>
+        </RadzenFieldset>
     </RadzenRow>
     <RadzenTabs @bind-SelectedIndex="@selectedTabIndex">
         <Tabs>
             <RadzenTabsItem Text="Locations" Icon="location_on">
-                <CampaignAdboardsEditor CampaignId="@Campaign.CampaignId" />
+                <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="SelectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor CampaignId="@Campaign.CampaignId" />
+                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Schedule" Icon="schedule">
-                <CampaignScheduleEditor CampaignId="@Campaign.CampaignId" />
+                <CampaignScheduleEditor CampaignId="@CampaignIdInt" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Review" Icon="grading">
-                <Review CampaignId="@Campaign.CampaignId" />
+                <Review CampaignId="@CampaignIdInt" />
             </RadzenTabsItem>
         </Tabs>
     </RadzenTabs>

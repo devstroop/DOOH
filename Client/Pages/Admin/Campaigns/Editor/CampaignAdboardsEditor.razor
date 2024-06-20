@@ -31,16 +31,16 @@
         <RadzenRow>
             <RadzenGoogleMap ApiKey="AIzaSyB2xbs8gsQDznVLM0diiR89jQ19t-JSabg" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; height: 640px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
                 <Markers>
-                    @if (showSelectedAdboardsOnly && selectedAdboardIds.Any())
+                    @if (showSelectedAdboardsOnly && SelectedAdboardIds.Any())
                     {
-                        @foreach (var each in adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)))
+                        @foreach (var each in Adboards.Where(x => SelectedAdboardIds.Contains(x.AdboardId)))
                         {
                             <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
                         }
                     }
                     else
                     {
-                        @foreach (var each in adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
+                        @foreach (var each in Adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
                         {
                             <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
                         }
@@ -52,9 +52,9 @@
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
         <RadzenRow>
             <RadzenColumn Size="12" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
-                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && selectedAdboardIds.Any() ? adboards.Where(x => selectedAdboardIds.Contains(x.AdboardId)) : adboards)" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount">
+                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && SelectedAdboardIds.Any() ? Adboards.Where(x => SelectedAdboardIds.Contains(x.AdboardId)) : Adboards)" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount">
                     <Template>
-                        <CampaignAdboardTemplate Context="@context" Selected="@selectedAdboardIds.Any(x => x == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard" />
+                        <CampaignAdboardTemplate Context="@context" Selected="@SelectedAdboardIds.Any(x => x == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard" />
                     </Template>
                 </RadzenDataList>
             </RadzenColumn>

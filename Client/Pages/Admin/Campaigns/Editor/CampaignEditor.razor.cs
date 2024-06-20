@@ -10,23 +10,30 @@ using Radzen.Blazor;
 using System.Collections;
 using Radzen.Blazor.Rendering;
 using System.Text.Json.Nodes;
+using DOOH.Server.Models.DOOHDB;
+using DOOH.Server.Models.Enums;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
     public partial class CampaignEditor
     {
         [Parameter]
-        public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
-        private int CampaignId { get; set; } = 0;
+        public object CampaignId { get; set; }
+        private int CampaignIdInt => Convert.ToInt32(CampaignId);
         private string CampaignName { get; set; } = "Unnamed Campaign";
-        private int BudgetType { get; set; } = 1;
+        private BudgetType BudgetType { get; set; } = BudgetType.Total;
         private decimal Budget { get; set; } = 0;
         private bool IsDraft { get; set; } = true;
         private bool IsSaving { get; set; } = false;
         private bool Continuous { get; set; } = true;
         private DateTime StartDate { get; set; } = DateTime.Today;
-        private DateTime? EndDate { get; set; }
+        private DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
+        private int StatusId { get; set; }
+        
+        private IList<int> SelectedAdboardIds = new List<int>();
 
+        private DOOH.Server.Models.DOOHDB.Campaign campaign;
+        
 
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -52,18 +59,49 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected bool CampaignNameEditable { get; set; } = false;
 
 
-        protected async override Task OnParametersSetAsync()
+        protected async override Task OnInitializedAsync()
         {
-            if (Campaign != null)
+            await LoadCampaign();
+        }
+
+        protected async override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
             {
-                CampaignId = Campaign.CampaignId;
-                CampaignName = Campaign.CampaignName;
-                StartDate = Campaign.StartDate;
-                EndDate = Campaign.EndDate;
-                Continuous = Campaign.EndDate == null;
-                Budget = Campaign.Budget;
-                BudgetType = Campaign.BudgetType;
-                IsDraft = Campaign.IsDraft;
+                await LoadCampaign();
+            }
+        }
+
+        protected async Task LoadCampaign()
+        {
+            try
+            {
+                if (CampaignIdInt != 0)
+                {
+                    campaign = await DOOHDBService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard)");
+                    if (campaign != null)
+                    {
+                        CampaignId = campaign.CampaignId.ToString();
+                        CampaignName = campaign.CampaignName;
+                        StartDate = campaign.StartDate;
+                        EndDate = campaign.EndDate ?? DateTime.Today.AddDays(30);
+                        Continuous = campaign.EndDate == null;
+                        Budget = campaign.Budget;
+                        BudgetType = (BudgetType)campaign.BudgetType;
+                        IsDraft = campaign.IsDraft;
+                        StatusId = campaign.StatusId ?? 0;
+                        SelectedAdboardIds = campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                errorVisible = true;
+            }
+            finally
+            {
+                IsSaving = false;
+                StateHasChanged();
             }
         }
 
@@ -78,28 +116,31 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 IsSaving = true;
                 StateHasChanged();
 
-                Campaign.CampaignId = CampaignId;
-                Campaign.CampaignName = CampaignName;
-                Campaign.StartDate = StartDate;
-                Campaign.EndDate = Continuous ? null : EndDate;
-                Campaign.Budget = Budget;
-                Campaign.BudgetType = BudgetType;
-                Campaign.IsDraft = IsDraft;
-                if (CampaignId == 0)
+                campaign = campaign ?? new DOOH.Server.Models.DOOHDB.Campaign();
+                campaign.CampaignId = CampaignIdInt;
+                campaign.CampaignName = CampaignName;
+                campaign.StartDate = StartDate;
+                campaign.EndDate = Continuous ? null : EndDate;
+                campaign.Budget = Budget;
+                campaign.BudgetType = (int)BudgetType;
+                campaign.IsDraft = IsDraft;
+                campaign.StatusId = StatusId;
+                
+                if (campaign.CampaignId == 0)
                 {
-                    var result = await DOOHDBService.CreateCampaign(Campaign);
+                    var result = await DOOHDBService.CreateCampaign(campaign);
                     if(result != null)
                     {
-                        Campaign.CampaignId = result.CampaignId;
-                        DialogService.Close(Campaign);
+                        campaign.CampaignId = result.CampaignId;
+                        DialogService.Close(campaign);
                     }
                 }
                 else
                 {
-                    var result = await DOOHDBService.UpdateCampaign(Campaign.CampaignId, Campaign);
+                    var result = await DOOHDBService.UpdateCampaign(campaign.CampaignId, campaign);
                     if (result != null)
                     {
-                        DialogService.Close(Campaign);
+                        NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }
             }
@@ -116,13 +157,58 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected async Task Cancel(MouseEventArgs args)
         {
-            DialogService.Close(null);
+            var result = await DialogService.Confirm("Are you sure you want to cancel?");
+            if (result == true)
+            {
+                NavigationManager.NavigateTo("admin/campaigns");
+            }
         }
 
 
         [Inject]
         protected SecurityService Security { get; set; }
 
+        
+        private IEnumerable<DOOH.Server.Models.DOOHDB.Status> statuses;
+        private int statusesCount;
 
+
+        protected async Task statusesLoadData(LoadDataArgs args)
+        {
+            try
+            {
+                var result = await DOOHDBService.GetStatuses(filter: $"{args.Filter}", orderby: $"{args.OrderBy}",
+                    top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null);
+                statuses = result.Value.AsODataEnumerable();
+                statusesCount = result.Count;
+            }
+            catch (System.Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage()
+                    { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Statuses" });
+            }
+        }
+
+
+        protected async Task OnAddAdboard(int adboardId)
+        {
+            if (!SelectedAdboardIds.Contains(adboardId))
+            {
+                SelectedAdboardIds.Add(adboardId);
+            }
+        }
+        protected async Task OnRemoveAdboard(int adboardId)
+        {
+            if (SelectedAdboardIds.Contains(adboardId))
+            {
+                SelectedAdboardIds.Remove(adboardId);
+            }
+        }
+        protected async Task OnClearAdboards()
+        {
+            SelectedAdboardIds.Clear();
+        }
+        
+        
     }
 }

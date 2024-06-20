@@ -2,7 +2,7 @@
 @using DOOH.Server.Models.DOOHDB
 <RadzenColumn Size="12" Style="@Style">
     <RadzenRow>
-        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="4" SizeLG="3" SizeXL="2">
+        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="1">
             <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="100%" Height="180px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
         </RadzenColumn>
         <RadzenColumn>
@@ -12,18 +12,28 @@
                         <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                         <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
                     </RadzenStack>
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="display: block" class="flex-grow-1" JustifyContent="Radzen.JustifyContent.SpaceBetween">
                         @* <RadzenDropDown TValue="Status" TextProperty="StatusName"  ValueProperty="StatusId" Data=@Statuses Change="@(args => StateHasChanged())" Style="width: 100%; max-width: 400px;" Name="DropDownChangeEvent" /> *@
                         @* <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
-                        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
-                            <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
-                            <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
-                        </RadzenSplitButton>
+                        <RadzenDropDown TValue="int" @bind-Value="@CurrentStatusId" ValueProperty="StatusId" TextProperty="StatusName" Change="@OnStatusChange" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount" Style="border: 0px none #dfe5ec; background-color: transparent" AllowSelectAll="false" class="justify-content-center">
+                            <Template>
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                    <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
+                                    <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                                </RadzenStack>
+                            </Template>
+                        </RadzenDropDown>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
+                                <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                                <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+                            </RadzenSplitButton>
+                        </RadzenStack>
                     </RadzenStack>
                 </RadzenStack>
                 <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenColumn>
+                    <RadzenColumn SizeMD="6">
                         <RadzenStack Gap="0.5rem" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
                             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.5rem">
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
@@ -104,14 +114,22 @@
         margin-bottom: 0.5rem;
         margin-right: 0;
     }
+    div.rz-dropdown-trigger.rz-corner-right {
+        display: none;
+    }
 </style>
 @code {
     [Parameter] public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
     [Parameter] public string Style { get; set; } = "width: 100%; padding: 1rem;";
     [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Edit { get; set; }
     [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Delete { get; set; }
-    [Parameter] public IEnumerable<Status> Statuses { get; set; }
+    [Parameter] public IEnumerable<Status> statuses { get; set; }
 
+    private int CurrentStatusId { get; set; }
+    
+    private int statusesCount { get; set; } = 0;
+    
+    [Inject] private DOOHDBService DOOHDBService { get; set; }
     [Inject] private DialogService DialogService { get; set; }
     [Inject] private NotificationService NotificationService { get; set; }
 
@@ -154,6 +172,57 @@
             case "Delete":
                 await Delete.InvokeAsync(Campaign);
                 break;
+        }
+    }
+    
+    // statusesLoadData
+    protected async Task statusesLoadData(LoadDataArgs args)
+    {
+        try
+        {
+            var result = await DOOHDBService.GetStatuses(filter: $"{args.Filter}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
+            statuses = result.Value.AsODataEnumerable();
+            statusesCount = result.Count;
+            if (Campaign.StatusId != null)
+            {
+                CurrentStatusId = (int)Campaign.StatusId;
+            }
+        }
+        catch (System.Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Statuses" });
+        }
+    }
+    
+    // OnStatusChange
+    protected async Task OnStatusChange(object statusId)
+    {
+        try
+        {
+            var existing = await DOOHDBService.GetCampaignByCampaignId(campaignId: Campaign.CampaignId);
+            
+            var confirmmationResult = await DialogService.Confirm("Are you sure you want to change the status?");
+            if (confirmmationResult != true)
+            {
+                CurrentStatusId = existing.StatusId ?? 0;
+                StateHasChanged();
+                return;
+            }
+            
+            existing.StatusId = (int)statusId;
+            var result = await DOOHDBService.UpdateCampaign(Campaign.CampaignId, existing);
+            if (result != null && result.IsSuccessStatusCode)
+            {
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Info, Summary = $"Status", Detail = $"Status changed to {statuses.FirstOrDefault(x => x.StatusId == (int)statusId)?.StatusName}" });
+            }
+            else
+            {
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status" });
+            }
+        }
+        catch (System.Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status" });
         }
     }
 }

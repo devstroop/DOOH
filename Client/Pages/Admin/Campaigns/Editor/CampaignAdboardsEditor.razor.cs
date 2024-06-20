@@ -11,6 +11,18 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
     {
         [Parameter]
         public int CampaignId { get; set; }
+        
+        [Parameter]
+        public IList<int> SelectedAdboardIds { get; set; } = new List<int>();
+        
+        [Parameter]
+        public EventCallback<int> Add { get; set; }
+        
+        [Parameter]
+        public EventCallback<int> Remove { get; set; }
+        
+        [Parameter]
+        public EventCallback Clear { get; set; }
 
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -22,8 +34,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected NotificationService NotificationService { get; set; }
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Adboard> list0;
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
-        protected IEnumerable<int> selectedAdboardIds = new List<int>();
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards;
         protected int Zoom { get; set; } = 12;
         protected bool showSelectedAdboardsOnly { get; set; } = false;
 
@@ -97,10 +108,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 );
 
                 // Process the result
-                adboards = result.Value.AsODataEnumerable();
-                selectedAdboardIds = selectedAdboardIds.Where(x => adboards.Any(y => y.AdboardId == x)).ToList();
+                Adboards = result.Value.AsODataEnumerable();
+                // selectedAdboardIds = selectedAdboardIds.Where(x => Adboards.Any(y => y.AdboardId == x)).ToList();
 
-                foreach (var adboard in adboards)
+                foreach (var adboard in Adboards)
                 {
                     await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
                 }
@@ -130,7 +141,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         async Task OnMarkerClick(RadzenGoogleMapMarker marker)
         {
             var adboardId = Convert.ToInt32(marker.Title);
-            var adboard = adboards.FirstOrDefault(x => x.AdboardId == adboardId);
+            var adboard = Adboards.FirstOrDefault(x => x.AdboardId == adboardId);
             var message = $"<img src=\"{adboard.AdboardImages.FirstOrDefault().Image}\" class=\"\" style=\"height: 120px; width: auto; object-fit: cover; border-radius: 4px;\"/>" +
                 $"<br/><br/>" +
                 $"ID: {adboardId}" +
@@ -152,31 +163,28 @@ setTimeout(() => window.infoWindow.open(map, marker), 200);
 
         protected async Task OnSelectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (!selectedAdboardIds.Contains(adboard.AdboardId))
+            if (!SelectedAdboardIds.Contains(adboard.AdboardId))
             {
-                selectedAdboardIds = selectedAdboardIds.Append(adboard.AdboardId).ToList();
-                StateHasChanged();
+                await Add.InvokeAsync(adboard.AdboardId);
             }
         }
 
         protected async Task OnUnselectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (selectedAdboardIds.Contains(adboard.AdboardId))
+            if (SelectedAdboardIds.Contains(adboard.AdboardId))
             {
-                selectedAdboardIds = selectedAdboardIds.Where(x => x != adboard.AdboardId).ToList();
-                StateHasChanged();
+                await Remove.InvokeAsync(adboard.AdboardId);
             }
         }
 
         protected async Task ClearSelectedAdboards()
         {
-            selectedAdboardIds = new List<int>();
-            StateHasChanged();
+            await Clear.InvokeAsync();
         }
 
 
-        protected string selectedAdboardLabel => $"{selectedAdboardIds.Count()} selected!";
+        protected string selectedAdboardLabel => $"{SelectedAdboardIds.Count()} selected!";
 
-        protected bool showSelectedAdboardLabel => selectedAdboardIds.Count() > 0;
+        protected bool showSelectedAdboardLabel => SelectedAdboardIds.Count() > 0;
     }
 }
