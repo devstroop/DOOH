@@ -5,6 +5,7 @@ using Radzen;
 using Radzen.Blazor;
 using System;
 using System.Text.Json.Nodes;
+using FFmpegBlazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
@@ -21,11 +22,54 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         [Inject]
         protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
+        
+        [Inject]
+        protected DialogService DialogService { get; set; }
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> advertisements;
 
         protected int advertisementsCount;
 
+
+        
+        FFMPEG ffMpeg;
+        byte[] videoBuffer;
+        string logMessages = string.Empty;
+        string progressMessage = string.Empty;
+        protected override async Task OnInitializedAsync()
+        {
+            // Wire-up events
+            if (FFmpegFactory.Runtime == null)
+            {
+                FFmpegFactory.Logger += LogToConsole;
+                FFmpegFactory.Progress += ProgressChange;
+            }
+
+            // Initialize Library
+            await FFmpegFactory.Init(JSRuntime);
+        }
+        private void LogToConsole(Logs message)
+        {
+            var logMessage = $"{message.Type} {message.Message}";
+            Console.WriteLine(logMessage);
+            LogToUi(logMessage);
+        }
+
+        private void LogToUi(string message)
+        {
+            logMessages += $"{message}\r\n";
+            // Re-render DOM
+            StateHasChanged();
+        }
+
+        private async void ProgressChange(Progress message)
+        {
+        }
+        public void Dispose()
+        {
+            FFmpegFactory.Logger -= LogToConsole;
+            FFmpegFactory.Progress -= ProgressChange;
+        }
 
         protected async Task advertisementsLoadData(LoadDataArgs args)
         {
@@ -154,5 +198,27 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Hover", Detail = args });
         }
 
+        // DeleteAdvertisement
+        protected async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var result = await DOOHDBService.DeleteAdvertisement(advertisement.AdvertisementId);
+                    if (result != null)
+                    {
+                        await advertisementsLoadData(new LoadDataArgs { Top = 10 });
+                        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Advertisement deleted successfully" });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete" });
+            }
+        }
+        
+        
     }
 }

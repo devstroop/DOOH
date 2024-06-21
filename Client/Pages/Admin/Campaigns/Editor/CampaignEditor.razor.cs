@@ -109,10 +109,41 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected int selectedTabIndex { get; set; } = 0;
 
+
+        protected async Task SaveCampaignAdboards()
+        {
+            var existing = campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
+            var toAdd = SelectedAdboardIds.Except(existing).ToList();
+            var toRemove = existing.Except(SelectedAdboardIds).ToList();
+            
+            foreach (var adboardId in toAdd)
+            {
+                var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard();
+                campaignAdboard.CampaignId = campaign.CampaignId;
+                campaignAdboard.AdboardId = adboardId;
+                await DOOHDBService.CreateCampaignAdboard(campaignAdboard);
+            }
+            
+            foreach (var adboardId in toRemove)
+            {
+                var campaignAdboard = campaign.CampaignAdboards.FirstOrDefault(ca => ca.AdboardId == adboardId);
+                if (campaignAdboard != null)
+                {
+                    await DOOHDBService.DeleteCampaignAdboard(campaignAdboard.CampaignId, campaignAdboard.AdboardId);
+                }
+            }
+        }
+        
         protected async Task SaveCampaign(MouseEventArgs args)
         {
             try
             {
+                var confirmariotnResult = await DialogService.Confirm("Are you sure you want to save?");
+                if (confirmariotnResult != true)
+                {
+                    return;
+                }
+                
                 IsSaving = true;
                 StateHasChanged();
 
@@ -132,7 +163,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                     if(result != null)
                     {
                         campaign.CampaignId = result.CampaignId;
-                        DialogService.Close(campaign);
+                        await SaveCampaignAdboards();
+                        NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }
                 else
@@ -140,6 +172,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                     var result = await DOOHDBService.UpdateCampaign(campaign.CampaignId, campaign);
                     if (result != null)
                     {
+                        await SaveCampaignAdboards();
                         NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }

@@ -46,7 +46,7 @@
                 </RadzenSelectBar>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Budget -= 100)" />
-                    <RadzenNumeric @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="display: inline-flex; flex-wrap:wrap; width: 84px; appearance: none; font-weight: bolder; border: none; text-align: center; font-size: 16px;" />
+                    <RadzenNumeric class="budget-input" @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" />
                     <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Budget += 100)" />
                 </RadzenStack>
             </RadzenStack>
@@ -93,6 +93,15 @@
 
     .rz-spinner-button {
         display: none;
+    }
+    .budget-input input{
+        border: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .budget-input .rz-spinner input[type=number], .rz-spinner input[type=text] {
+        padding: 0;
     }
 </style>
 
