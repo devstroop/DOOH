@@ -67,10 +67,10 @@
     <RadzenTabs @bind-SelectedIndex="@selectedTabIndex">
         <Tabs>
             <RadzenTabsItem Text="Locations" Icon="location_on">
-                <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="SelectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
+                <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" />
+                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Refresh="@OnRefresh" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Schedule" Icon="schedule">
                 <CampaignScheduleEditor CampaignId="@CampaignIdInt" />

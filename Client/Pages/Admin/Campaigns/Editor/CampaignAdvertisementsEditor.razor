@@ -1,10 +1,11 @@
+@using DOOH.Server.Models.DOOHDB
 <RadzenRow>
     <RadzenColumn SizeMD="6">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" >
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(advertisements != null)" >
             <RadzenIcon Icon="info" IconColor="white" />
-            <RadzenText class="rz-mb-0" Text="@($"{advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
+            <RadzenText class="rz-mb-0" Text="@($"{advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
         </RadzenStack>
-        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@advertisements" LoadData="@advertisementsLoadData" Count="@advertisementsCount" WrapItems="true">
+        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@(advertisements ?? new List<Advertisement>())" LoadData="@AdvertisementsLoadData" Count="@advertisementsCount" WrapItems="true">
             <Template>
                 <RadzenStack class="rz-p-2" Gap="0.5rem">
                     <CarouselComponent Images="@(new List<string>{context.Attachment.GetThumbnail()})" Width="100%" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
@@ -23,8 +24,8 @@
 
     </RadzenColumn>
     <RadzenColumn SizeMD="6">
-        <RadzenUpload id="ddUpload" @ref="uploadDD" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="upload/multiple" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
-                      Progress=@(args => OnProgress(args, "Drop media to upload")) class="w-100" />
+        <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="upload/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
+                      Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" class="w-100" />
         <RadzenProgressBar Value="@progress" class="rz-mx-2" Visible="@showProgress"/>
     </RadzenColumn>
 
