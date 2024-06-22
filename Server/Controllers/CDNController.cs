@@ -14,6 +14,7 @@ namespace DOOH.Server.Controllers
         private readonly Services.CDNService CDNService;
         private readonly ApplicationIdentityDbContext IdentityContext;
         private readonly Services.FFMPEGService FFMPEGService;
+        
 
         public CDNController(Services.CDNService CDNService, DOOHDBService DOOHDBService, ApplicationIdentityDbContext identityContext, Services.FFMPEGService FFMPEGService)
         {
@@ -23,7 +24,6 @@ namespace DOOH.Server.Controllers
             this.FFMPEGService = FFMPEGService ?? throw new ArgumentNullException(nameof(FFMPEGService));
         }
 
-        //[Authorize]
         [HttpGet("objects")] // List objects in S3.
         public async Task<IActionResult> ListObjectsAsync()
         {
@@ -84,7 +84,6 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        //[Authorize]
         [HttpGet("object/presigned/{**key}")] // Get a presigned URL for an object in S3.
         public IActionResult GetPresignedObjectUrlAsync(string key)
         {
@@ -107,7 +106,7 @@ namespace DOOH.Server.Controllers
             string bucket = (User.Identity.Name == "admin" ? "admin" : userId);
             ProbeData probe = null;
             List<Stream> streams;
-            string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
+            string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
             string attachmentKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
             bool isVideo = file.ContentType.Contains("video");
 
@@ -146,6 +145,7 @@ namespace DOOH.Server.Controllers
                 BitRate = probe != null ? (int.TryParse(probe.Format.BitRate, out int bitRate) ? bitRate : 0) : null,
                 CodecName = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
                 FrameRate = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
+                Owner = userId
             };
 
             // commit then return attachment, user needs to be notified new key assigned
@@ -164,7 +164,7 @@ namespace DOOH.Server.Controllers
                 string bucket = (User.Identity.Name == "admin" ? "admin" : userId);
                 ProbeData probe = null;
                 List<Stream> streams;
-                string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
+                string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
                 string attachmentKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
                 bool isVideo = file.ContentType.Contains("video");
 
@@ -203,6 +203,7 @@ namespace DOOH.Server.Controllers
                     BitRate = probe != null ? (int.TryParse(probe.Format.BitRate, out int bitRate) ? bitRate : 0) : null,
                     CodecName = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
                     FrameRate = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
+                    Owner = userId
                 };
 
                 // commit then return attachment, user needs to be notified new key assigned

@@ -1,24 +1,60 @@
 @using Blazored.Video
-<RadzenStack AlignItems="AlignItems.Start" JustifyContent="JustifyContent.Start">
-    <BlazoredVideo @ref="video"
-                   CanPlay=@(s=>OnEvent(ref PausePlayText,s))
-                   Ended=@(s=>OnEvent(ref PausePlayText,s))
-                   Pause=@(s=>OnEvent(ref PausePlayText,s))
-                   Play=@(s=>OnEvent(ref PausePlayText,s))
-                   VideoEventOptions="options"
+
+<RadzenStack AlignItems="Radzen.AlignItems.Stretch" JustifyContent="Radzen.JustifyContent.Stretch" Style="">
+    <BlazoredVideo @ref="videoPlayer"
+                   CanPlay="@(s => HandleVideoEvent(s))"
+                   Ended="@(s => HandleVideoEvent(s))"
+                   Pause="@(s => HandleVideoEvent(s))"
+                   Play="@(s => HandleVideoEvent(s))"
+                   VideoEventOptions="videoEventOptions"
                    class="video-container"
-                   autoplay="autoplay"
-                   loop="loop">
+                   autoplay
+                   loop>
         <source src="@Src" type="video/mp4" />
+        <div class="video-container-overlay">
+            @Overlay
+        </div>
     </BlazoredVideo>
 </RadzenStack>
 
 <style>
-    .video-container {
-        max-width: 100%;
-        max-height: 100%;
-        cursor: pointer; /* To indicate the video is clickable */
-        transform: rotate(270deg); /* Rotate the video 90 degrees */
-        transform-origin: center center; /* Ensure the video rotates around its center */
+    
+    .video-container-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
     }
+    
+    .video-container {
+        position: relative;
+        cursor: pointer; /* Indicate the video is clickable */
+        transform: rotate(90deg); /* Rotate the video 90 degrees */
+        transform-origin: center; /* Rotate the video from the center */
+        margin: 40% -40% 40% -40%;
+        height: fit-content;
+        /*white-space: nowrap;*/
+        /*display: flex;*/
+        /*height: auto;*/
+    }
+    /*.video-container {*/
+    /*    cursor: pointer; !* Indicate the video is clickable *!*/
+    /*    transform: scale(1, 1) rotate(90deg); !* Rotate the video 90 degrees *!*/
+    /*    margin: 0 0 0 0;*/
+    /*    white-space: nowrap;*/
+    /*    display:  flex;*/
+    /*    transform-origin: center; !* Rotate the video from the center *!*/
+    /*    aspect-ratio: 9 / 16; !* Maintain 9:16 aspect ratio *!*/
+    /*    height: auto;*/
+    /*    width: 600px;*/
+    /*    */
+    
+    /*}*/
 </style>

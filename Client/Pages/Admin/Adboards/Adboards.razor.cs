@@ -106,7 +106,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
                     count: (args.Top != null && args.Skip != null),
                     filter: combinedFilter,
                     orderby: args.OrderBy,
-                    expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks"
+                    expand: "AdboardImages,Category,Display($expand=Brand),Motherboard($expand=Brand),AdboardWifis,AdboardNetworks,AdboardStatuses"
                 );
 
                 // Process the result

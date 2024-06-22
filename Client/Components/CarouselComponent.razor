@@ -2,19 +2,38 @@
 @using Microsoft.AspNetCore.Components
 
 <div class="carousel-container" id="@Id" style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; ")">
-    <RadzenImage Path="@CurrentImage" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="@IsCurrentImageVisible" />
-    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="!IsCurrentImageVisible" />
+    <RadzenImage Path="@Images.ElementAtOrDefault(CurrentIndex)" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="!(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
+    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="@(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
 
-    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible" />
-    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible" />
+    <div class="overlay">
+        @Overlay
+    </div>
 
-    @if (ShowHoverIcon && IsCurrentImageVisible)
-    {
-        <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="@HoverIcon" class="hover-icon" Click="HandleHoverIconClick" />
-    }
+    @* @if (ShowHoverIcon && IsCurrentImageVisible) *@
+    @* { *@
+    @*     <RadzenButton Size="ButtonSize.Medium" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="@HoverIcon" class="hover-icon opacity-75" Click="HandleHoverIconClick"/> *@
+    @* } *@
+
+
 </div>
 
 <style>
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom:  0;
+        right: 0;
+        /*width: 100%;*/
+        /*height: 100%;*/
+        /*background-color: rgba(0, 0, 0, 0.5);*/
+        display: block;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
     .carousel-container {
         position: relative;
         overflow: hidden;
@@ -35,32 +54,14 @@
 
     .left-button {
         left: 10px;
-        bottom: 0px;
+        bottom: 0;
         transform: translateY(-50%);
     }
 
     .right-button {
         right: 10px;
-        bottom: 0px;
+        bottom: 0;
         transform: translateY(-50%);
-    }
-
-    .hover-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        background-color: rgba(0, 0, 0, 0.5);
-        border: none;
-        border-radius: 50%;
-        padding: 10px;
-        visibility: hidden;
-    }
-
-
-    .carousel-container:hover .hover-icon {
-        visibility: visible;
     }
 
     .carousel-container img {
@@ -74,25 +75,22 @@
 @code {
     [Parameter] public string Id { get; set; } = "default";
     [Parameter] public IEnumerable<string> Images { get; set; }
+    [Parameter] public int CurrentIndex { get; set; } = 0;
     [Parameter] public string BorderRadius { get; set; } = "4px";
     [Parameter] public string Style { get; set; } = "";
     [Parameter] public string Height { get; set; } = "auto";
     [Parameter] public string Width { get; set; } = "auto";
     [Parameter] public string Class { get; set; }
-    [Parameter] public string HoverIcon { get; set; } = "visibility";
-    [Parameter] public bool ShowHoverIcon { get; set; } = false;
-    [Parameter] public Action<string> OnHoverClick { get; set; }
+    // [Parameter] public string HoverIcon { get; set; } = "visibility";
+    // [Parameter] public bool ShowHoverIcon { get; set; } = false;
+    // [Parameter] public Action<string> OnHoverClick { get; set; }
+    [Parameter] public RenderFragment Overlay { get; set; }
 
-    private int currentIndex = 0;
-    private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
-    private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
-    private bool IsPreviousButtonVisible => currentIndex > 0;
-    private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
 
     // private string Height = "100%";
     // private string Width = "100%";
 
-    [Inject] protected Services.BrowserService BrowserService { get; set; }
+    // [Inject] protected Services.BrowserService BrowserService { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -100,15 +98,6 @@
         return base.OnInitializedAsync();
     }
 
-    private void NextImage()
-    {
-        currentIndex = (currentIndex + 1) % Images.Count();
-    }
-
-    private void PreviousImage()
-    {
-        currentIndex = (currentIndex - 1 + Images.Count()) % Images.Count();
-    }
 
     // protected void OnViewportChanged(Services.WindowDimension dimension)
     // {
@@ -126,11 +115,12 @@
     //     }
     // }
 
-    private async Task HandleHoverIconClick()
-    {
-        if (ShowHoverIcon && IsCurrentImageVisible)
-        {
-            OnHoverClick?.Invoke(CurrentImage);
-        }
-    }
+    // private async Task HandleHoverIconClick()
+    // {
+    //     if (ShowHoverIcon && IsCurrentImageVisible)
+    //     {
+    //         OnHoverClick?.Invoke(CurrentImage);
+    //     }
+    // }
+
 }

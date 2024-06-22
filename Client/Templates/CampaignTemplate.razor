@@ -2,13 +2,19 @@
 @using DOOH.Server.Models.DOOHDB
 <RadzenColumn Size="12" Style="@Style">
     <RadzenRow>
-        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="1">
-            <CarouselComponent Images="@Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail())" Width="100%" Height="180px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
+        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="1" Visible="@(Campaign?.Advertisements != null)">
+            <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="100%" Height="180px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
+                <Overlay>
+                    <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible" />
+                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>
+                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible"/>
+                </Overlay>
+            </CarouselComponent>
         </RadzenColumn>
         <RadzenColumn>
             <RadzenStack Style="height: 100%; width: 100%" JustifyContent="Radzen.JustifyContent.Stretch">
                 <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%; display: block" JustifyContent="Radzen.JustifyContent.SpaceBetween" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
-                    <RadzenStack Orientation="Radzen.Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="0.5rem">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="0.5rem">
                         <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                         <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
                     </RadzenStack>
@@ -106,16 +112,42 @@
         }
 
     .rz-g > div, .rz-datalist-data > li {
-        padding: 0px;
+        padding: 0;
     }
 
     .rz-datalist-data {
-        padding: 0px;
+        padding: 0;
         margin-bottom: 0.5rem;
         margin-right: 0;
     }
     div.rz-dropdown-trigger.rz-corner-right {
         display: none;
+    }
+    
+    .custom-center-icon-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .nav-button {
+        position: absolute;
+        bottom: 0;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 50%;
+        padding: 0.5rem;
+    }
+    
+    
+    .left-button {
+        left: 10px;
+    }
+    
+    .right-button {
+        right: 10px;
     }
 </style>
 @code {
@@ -147,7 +179,7 @@
             }
         }
 
-
+ 
 
         var parameters = new Dictionary<string, object>();
         parameters.Add("Markers", markers);
@@ -157,9 +189,15 @@
         await DialogService.OpenAsync<GoogleMapTemplate>("Map", parameters, options);
     }
 
-    private void OnHoverClick(string image)
+    private async Task OnHoverClick(MouseEventArgs args, string image)
     {
-        NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = image });
+        var advertisement = Campaign.Advertisements.Where(x => CurrentImage.Contains(x.Attachment.Thumbnail)).FirstOrDefault();
+        if (advertisement != null)
+        {
+            var url = advertisement.Attachment.GetUrl();
+            await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
+        }
+        // NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = url });
     }
 
     private async Task SplitBtnClick(RadzenSplitButtonItem item)
@@ -224,5 +262,22 @@
         {
             NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status" });
         }
+    }
+    
+    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Attachment.GetThumbnail());
+    
+    private int currentIndex = 0;
+    private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
+    private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
+    private bool IsPreviousButtonVisible => currentIndex > 0;
+    private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
+    private void NextImage()
+    {
+        currentIndex = (currentIndex + 1) % Images.Count();
+    }
+
+    private void PreviousImage()
+    {
+        currentIndex = (currentIndex - 1 + Images.Count()) % Images.Count();
     }
 }

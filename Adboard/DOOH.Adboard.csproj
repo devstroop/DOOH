@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.39" />
 	  <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.SignalR.Common" Version="9.0.0-preview.5.24306.11" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <!--<PackageReference Include="Microsoft.ML" Version="3.0.1" />
@@ -43,5 +44,8 @@
 	  <Content Include="model.onnx">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Server\DOOH.Server.csproj" />
 	</ItemGroup>
 </Project>

@@ -65,6 +65,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected async Task adboardsLoadData(LoadDataArgs args)
         {
+            bool flag = Adboards == null || Adboards?.Count() == 0;
             try
             {
                 isAdboardsLoading = true;
@@ -125,6 +126,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             finally
             {
                 isAdboardsLoading = false;
+                if (flag)
+                {
+                    StateHasChanged(); // Refresh the component
+                }
             }
         }
 

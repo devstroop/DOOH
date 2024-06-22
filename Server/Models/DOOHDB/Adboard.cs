@@ -60,6 +60,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public ICollection<AdboardNetwork> AdboardNetworks { get; set; }
 
+        public ICollection<AdboardStatus> AdboardStatuses { get; set; }
+
         public ICollection<AdboardWifi> AdboardWifis { get; set; }
 
         public ICollection<Analytic> Analytics { get; set; }

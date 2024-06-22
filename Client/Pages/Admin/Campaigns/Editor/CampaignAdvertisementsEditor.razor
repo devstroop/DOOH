@@ -1,45 +1,86 @@
 @using DOOH.Server.Models.DOOHDB
 <RadzenRow>
-    <RadzenColumn SizeMD="6">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(advertisements != null)" >
+    <RadzenColumn SizeMD="8">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(Advertisements != null && Advertisements.Any())" >
             <RadzenIcon Icon="info" IconColor="white" />
-            <RadzenText class="rz-mb-0" Text="@($"{advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
+            <RadzenText class="rz-mb-0" Text="@($"{Advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
         </RadzenStack>
-        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@(advertisements ?? new List<Advertisement>())" LoadData="@AdvertisementsLoadData" Count="@advertisementsCount" WrapItems="true">
+        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Advertisements" Count="@AdvertisementsCount" WrapItems="true">
             <Template>
-                <RadzenStack class="rz-p-2" Gap="0.5rem">
-                    <CarouselComponent Images="@(new List<string>{context.Attachment.GetThumbnail()})" Width="100%" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick" />
-                    <RadzenText Text="@context.AttachmentKey" TextStyle="TextStyle.Body2" class="rz-mb-0" />
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
-                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                            <RadzenIcon Icon="browse_gallery" Style="font-size: 18px" />
-                            <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration)} sec")" class="rz-mb-0" />
+                <CarouselComponent Images="@(new List<string> { context.Attachment.GetThumbnail() })"  Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
+                    <Overlay>
+                        <RadzenStack>
+                            <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" />
+                            <RadzenButton Icon="close" Click="@((args) => DeleteAdvertisement(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75" />
+                            <RadzenText Text="@context.AttachmentKey.Replace("\\", "/").Split('/').LastOrDefault()" TextStyle="TextStyle.Caption" class="rz-mb-0 custom-bottomStart" />
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" class="opacity-50 custom-topLeft">
+                                <RadzenIcon Icon="browse_gallery" Style="font-size: 16px" />
+                                <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration)} sec")" class="rz-mb-0" Style="color: #fff" />
+                            </RadzenStack>
                         </RadzenStack>
-                        <RadzenButton Icon="delete" Text="Remove" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" Click="@((args) => DeleteAdvertisement(args, context))" />
-                    </RadzenStack>
-                </RadzenStack>
+                    </Overlay>
+                </CarouselComponent>
             </Template>
 
         </RadzenDataList>
 
     </RadzenColumn>
-    <RadzenColumn SizeMD="6">
-        <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="upload/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "select file" }})"
-                      Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" class="w-100" />
+    <RadzenColumn SizeMD="4">
+        <RadzenStack class="rz-mx-2" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" >
+            <RadzenButton Text="Import" Click="@ImportClick"></RadzenButton>
+        </RadzenStack>
+        <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="api/cdn/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select file" } })"
+                      Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" class="w-100"/>
         <RadzenProgressBar Value="@progress" class="rz-mx-2" Visible="@showProgress"/>
+        
     </RadzenColumn>
 
 </RadzenRow>
 <style>
     #ddUpload {
         left: 0;
+        right: 0;
     }
 
         #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
             width: 100%;
             text-align: center;
             font-size: 16px;
-            padding: 100px 0;
+            padding: 150px 0;
             border-radius: 0;
         }
+        
+        .close-button {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            padding: 0.5rem;
+            background-color: var(--rz-danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+        }
+        .custom-topLeft {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            color:  #fff;
+        }
+        .custom-bottomStart{
+            position: absolute;
+            bottom: 0.5rem;
+            left: 0.5rem;
+            color:  #fff;
+        }
+    .custom-center-icon-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .custom-center-icon-button .rz-button-icon-left .rzi {
+            font-size: 32px;
+        }
+
+
 </style>

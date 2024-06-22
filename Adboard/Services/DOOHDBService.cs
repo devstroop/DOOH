@@ -86,5 +86,87 @@ namespace DOOH.Adboard
 
             return await response.Content.ReadAsStringAsync();
         }
+        
+        
+        // AdboardStatuses
+        
+        partial void OnGetAdboardStatuses(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardStatus>> GetAdboardStatuses(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(httpClient.BaseAddress, $"AdboardStatuses");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetAdboardStatuses(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.AdboardStatus>>(response);
+        }
+
+        partial void OnCreateAdboardStatus(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> CreateAdboardStatus(DOOH.Server.Models.DOOHDB.AdboardStatus adboardStatus = default(DOOH.Server.Models.DOOHDB.AdboardStatus))
+        {
+            var uri = new Uri(httpClient.BaseAddress, $"AdboardStatuses");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardStatus), Encoding.UTF8, "application/json");
+
+            OnCreateAdboardStatus(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardStatus>(response);
+        }
+
+        partial void OnDeleteAdboardStatus(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteAdboardStatus(int adboardId = default(int))
+        {
+            var uri = new Uri(httpClient.BaseAddress, $"AdboardStatuses({adboardId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteAdboardStatus(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetAdboardStatusByAdboardId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> GetAdboardStatusByAdboardId(string expand = default(string), int adboardId = default(int))
+        {
+            var uri = new Uri(httpClient.BaseAddress, $"AdboardStatuses({adboardId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetAdboardStatusByAdboardId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.AdboardStatus>(response);
+        }
+
+        partial void OnUpdateAdboardStatus(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateAdboardStatus(int adboardId = default(int), DOOH.Server.Models.DOOHDB.AdboardStatus adboardStatus = default(DOOH.Server.Models.DOOHDB.AdboardStatus))
+        {
+            var uri = new Uri(httpClient.BaseAddress, $"AdboardStatuses({adboardId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(adboardStatus), Encoding.UTF8, "application/json");
+
+            OnUpdateAdboardStatus(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
     }
 }

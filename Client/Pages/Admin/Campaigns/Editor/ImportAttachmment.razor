@@ -1,0 +1,22 @@
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Attachment" Data="@attachments" LoadData="@AttachmentsLoadData" Count="@attachmentsCount" AllowVirtualization="false" Style="min-height: 200px" WrapItems="true">
+    <Template>
+        <RadzenStack class="rz-p-2" Gap="0.5rem">
+            <CarouselComponent Images="@(new List<string> { context.GetThumbnail() })" Width="100%" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px" ShowHoverIcon="true" HoverIcon="play_arrow" OnHoverClick="@OnHoverClick">
+                <Overlay>
+                    <RadzenStack Style="background: #0a53be; width: 100%; height: 100%;"></RadzenStack>
+                </Overlay>
+            </CarouselComponent>
+            <RadzenText Text="@context.AttachmentKey" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenIcon Icon="browse_gallery" Style="font-size: 18px" />
+                    <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration ?? 0)} sec")" class="rz-mb-0" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                    <RadzenButton Icon="download" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.ExtraSmall" Variant="Variant.Text"  />
+                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" Variant="Variant.Text"  />
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenStack>
+    </Template>
+</RadzenDataList>

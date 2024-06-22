@@ -10,6 +10,7 @@ using DOOH.Server.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Amazon.Runtime;
 using Amazon.S3;
+using DOOH.Server.Hubs;
 using DOOH.Server.Services;
 //using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -33,6 +34,7 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Adboard>("Adboards");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardImage>("AdboardImages");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardNetwork>("AdboardNetworks");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardStatus>("AdboardStatuses");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardWifi>("AdboardWifis");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Advertisement>("Advertisements");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Analytic>("Analytics");
@@ -83,7 +85,6 @@ builder.Services.AddControllers().AddOData(o =>
 builder.Services.AddScoped<AuthenticationStateProvider, DOOH.Client.ApplicationAuthenticationStateProvider>();
 builder.Services.AddLocalization();
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
-
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -96,6 +97,7 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 // app.Use(async (context, next) =>
 // {
 //     context.Response.Headers.Append("Cross-Origin-Embedder-Policy", "require-corp");
@@ -112,5 +114,6 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(DOOH.Client._Imports).Assembly);
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
+app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
 app.UseRequestLocalization("en-IN");
 app.Run();

@@ -40,6 +40,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public DateTime? UpdatedAt { get; set; }
 
+        public string Owner { get; set; }
+
         public ICollection<Advertisement> Advertisements { get; set; }
     }
 }

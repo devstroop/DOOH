@@ -10,6 +10,9 @@ namespace DOOH.Client.Components
     {
         [Parameter]
         public string Src { get; set; }
+        
+        [Parameter]
+        public RenderFragment Overlay { get; set; }
 
         [Inject]
         private DialogService DialogService { get; set; }
@@ -17,56 +20,37 @@ namespace DOOH.Client.Components
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
 
-
-        Dictionary<VideoEvents, VideoStateOptions> options = new Dictionary<VideoEvents, VideoStateOptions>();
-        VideoState videoState { get; set; }
-        string PausePlayText = "Pause";
-        BlazoredVideo video { get; set; }
-        string id;
+        private Dictionary<VideoEvents, VideoStateOptions> videoEventOptions = new();
+        private VideoState currentVideoState { get; set; }
+        private string pausePlayButtonText = "Pause";
+        private BlazoredVideo videoPlayer { get; set; }
+        private string videoId;
 
         [Inject]
-        protected SecurityService Security { get; set; }
+        protected SecurityService SecurityService { get; set; }
 
-
-        protected override void OnInitialized()
+        protected override async Task OnParametersSetAsync()
         {
             var pausedOption = new VideoStateOptions() { Paused = true };
-            options[VideoEvents.CanPlay] = pausedOption;
-            options[VideoEvents.Ended] = pausedOption;
-            options[VideoEvents.Pause] = pausedOption;
-            options[VideoEvents.Play] = pausedOption;
+            videoEventOptions[VideoEvents.CanPlay] = pausedOption;
+            videoEventOptions[VideoEvents.Ended] = pausedOption;
+            videoEventOptions[VideoEvents.Pause] = pausedOption;
+            videoEventOptions[VideoEvents.Play] = pausedOption;
         }
-        void OnEvent(ref string PausePlayText, VideoState videoState)
+
+        private void HandleVideoEvent(VideoState videoState)
         {
-            id = videoState.Id;
-            PausePlayText = videoState.Paused switch
-            {
-                true => "Play",
-                _ => "Pause"
-            };
-            this.videoState = videoState;
+            videoId = videoState.Id;
+            pausePlayButtonText = videoState.Paused ? "Play" : "Pause";
+            currentVideoState = videoState;
             StateHasChanged();
         }
-
-        //async Task PlayOrPause(BlazoredVideo video)
-        //{
-        //    if (await video.GetPausedAsync())
-        //    {
-        //        await video.StartPlayback();
-        //    }
-        //    else
-        //    {
-        //        await video.PausePlayback();
-        //        DialogService.Close(id);
-        //    }
-        //}
-
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await JSRuntime.InvokeVoidAsync("videoHandler.initialize");
+                
             }
         }
     }

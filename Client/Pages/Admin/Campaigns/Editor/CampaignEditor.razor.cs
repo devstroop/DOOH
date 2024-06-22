@@ -31,6 +31,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private int StatusId { get; set; }
         
         private IList<int> selectedAdboardIds = new List<int>();
+        private IEnumerable<Advertisement> advertisements = new List<Advertisement>();
 
         private DOOH.Server.Models.DOOHDB.Campaign campaign;
         
@@ -78,7 +79,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 if (CampaignIdInt != 0)
                 {
-                    campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard)");
+                    campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard),Advertisements($expand=Attachment)");
                     if (campaign != null)
                     {
                         CampaignId = campaign.CampaignId.ToString();
@@ -91,6 +92,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                         IsDraft = campaign.IsDraft;
                         StatusId = campaign.StatusId ?? 0;
                         selectedAdboardIds = campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
+                        advertisements = campaign.Advertisements;
                     }
                 }
             }
@@ -107,7 +109,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         protected bool errorVisible;
 
-        private int selectedTabIndex { get; set; } = 0;
+        private int SelectedTabIndex { get; set; } = 0;
 
 
         private async Task SaveCampaignAdboards()
@@ -188,7 +190,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        protected async Task Cancel(MouseEventArgs args)
+        private async Task Cancel(MouseEventArgs args)
         {
             var result = await DialogService.Confirm("Are you sure you want to cancel?");
             if (result == true)
@@ -206,7 +208,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private int statusesCount;
 
 
-        protected async Task statusesLoadData(LoadDataArgs args)
+        private async Task statusesLoadData(LoadDataArgs args)
         {
             try
             {
@@ -223,21 +225,23 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         }
 
 
-        protected async Task OnAddAdboard(int adboardId)
+        private async Task OnAddAdboard(int adboardId)
         {
             if (!selectedAdboardIds.Contains(adboardId))
             {
                 selectedAdboardIds.Add(adboardId);
             }
         }
-        protected async Task OnRemoveAdboard(int adboardId)
+
+        private async Task OnRemoveAdboard(int adboardId)
         {
             if (selectedAdboardIds.Contains(adboardId))
             {
                 selectedAdboardIds.Remove(adboardId);
             }
         }
-        protected async Task OnClearAdboards()
+
+        private async Task OnClearAdboards()
         {
             selectedAdboardIds.Clear();
         }
@@ -245,6 +249,56 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         // OnRefresh
         private void OnRefresh(){
             StateHasChanged();
+        }
+        
+        // OnDeleteAdvertisement
+        private async Task OnDeleteAdvertisement(int advertisementId)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var result = await DoohdbService.DeleteAdvertisement(advertisementId);
+                    if (result != null)
+                    {
+                        NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Success, Summary = "Success",
+                            Detail = "Advertisement deleted successfully"
+                        });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete" });
+            }
+        }
+        
+        // OnAddAttachment
+        private async Task OnAddAttachment(Attachment attachment)
+        {
+            try
+            {
+                var advertisement = new Advertisement();
+                advertisement.CampaignId = CampaignIdInt;
+                advertisement.Attachment = attachment;
+                var result = await DoohdbService.CreateAdvertisement(advertisement);
+                if (result != null)
+                {
+                    NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Success, Summary = "Success",
+                        Detail = "Advertisement added successfully"
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to add" });
+            }
         }
     }
 }

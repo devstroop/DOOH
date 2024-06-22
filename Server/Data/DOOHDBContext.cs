@@ -80,6 +80,12 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.AdboardId)
               .HasPrincipalKey(i => i.AdboardId);
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardStatus>()
+              .HasOne(i => i.Adboard)
+              .WithMany(i => i.AdboardStatuses)
+              .HasForeignKey(i => i.AdboardId)
+              .HasPrincipalKey(i => i.AdboardId);
+
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardWifi>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.AdboardWifis)
@@ -240,6 +246,18 @@ namespace DOOH.Server.Data
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardStatus>()
+              .Property(p => p.Connected)
+              .HasDefaultValueSql(@"((0))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardStatus>()
+              .Property(p => p.ConnectedAt)
+              .HasDefaultValueSql(@"(sysdatetime())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardStatus>()
+              .Property(p => p.Delay)
+              .HasDefaultValueSql(@"((10000))");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardWifi>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
@@ -328,6 +346,10 @@ namespace DOOH.Server.Data
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.AdboardStatus>()
+              .Property(p => p.ConnectedAt)
+              .HasColumnType("datetime");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardWifi>()
               .Property(p => p.ConnectedAt)
               .HasColumnType("datetime");
@@ -411,6 +433,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardImage> AdboardImages { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardNetwork> AdboardNetworks { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.AdboardStatus> AdboardStatuses { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.AdboardWifi> AdboardWifis { get; set; }
 

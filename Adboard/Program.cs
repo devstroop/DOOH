@@ -53,5 +53,7 @@ builder.Services.AddSingleton<AdService>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddMemoryCache();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<StatusWorker>();
 var host = builder.Build();
 host.Run();

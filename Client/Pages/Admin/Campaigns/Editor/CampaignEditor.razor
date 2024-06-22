@@ -64,13 +64,13 @@
             </RadzenStack>
         </RadzenFieldset>
     </RadzenRow>
-    <RadzenTabs @bind-SelectedIndex="@selectedTabIndex">
+    <RadzenTabs @bind-SelectedIndex="@SelectedTabIndex">
         <Tabs>
             <RadzenTabsItem Text="Locations" Icon="location_on">
                 <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Refresh="@OnRefresh" />
+                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@advertisements" AddAttachment="@OnAddAttachment" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Schedule" Icon="schedule">
                 <CampaignScheduleEditor CampaignId="@CampaignIdInt" />

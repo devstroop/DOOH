@@ -219,6 +219,7 @@ namespace DOOH.Server
                               .Where(i => i.AdboardId == adboardid)
                               .Include(i => i.AdboardImages)
                               .Include(i => i.AdboardNetworks)
+                              .Include(i => i.AdboardStatuses)
                               .Include(i => i.AdboardWifis)
                               .Include(i => i.Analytics)
                               .Include(i => i.CampaignAdboards)
@@ -572,6 +573,169 @@ namespace DOOH.Server
             }
 
             OnAfterAdboardNetworkDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportAdboardStatusesToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardstatuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardstatuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportAdboardStatusesToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/adboardstatuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/adboardstatuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnAdboardStatusesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardStatus> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.AdboardStatus>> GetAdboardStatuses(Query query = null)
+        {
+            var items = Context.AdboardStatuses.AsQueryable();
+
+            items = items.Include(i => i.Adboard);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnAdboardStatusesRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnAdboardStatusGet(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+        partial void OnGetAdboardStatusByAdboardId(ref IQueryable<DOOH.Server.Models.DOOHDB.AdboardStatus> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> GetAdboardStatusByAdboardId(int adboardid)
+        {
+            var items = Context.AdboardStatuses
+                              .AsNoTracking()
+                              .Where(i => i.AdboardId == adboardid);
+
+            items = items.Include(i => i.Adboard);
+ 
+            OnGetAdboardStatusByAdboardId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnAdboardStatusGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnAdboardStatusCreated(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+        partial void OnAfterAdboardStatusCreated(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> CreateAdboardStatus(DOOH.Server.Models.DOOHDB.AdboardStatus adboardstatus)
+        {
+            OnAdboardStatusCreated(adboardstatus);
+
+            var existingItem = Context.AdboardStatuses
+                              .Where(i => i.AdboardId == adboardstatus.AdboardId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.AdboardStatuses.Add(adboardstatus);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(adboardstatus).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterAdboardStatusCreated(adboardstatus);
+
+            return adboardstatus;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> CancelAdboardStatusChanges(DOOH.Server.Models.DOOHDB.AdboardStatus item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnAdboardStatusUpdated(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+        partial void OnAfterAdboardStatusUpdated(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> UpdateAdboardStatus(int adboardid, DOOH.Server.Models.DOOHDB.AdboardStatus adboardstatus)
+        {
+            OnAdboardStatusUpdated(adboardstatus);
+
+            var itemToUpdate = Context.AdboardStatuses
+                              .Where(i => i.AdboardId == adboardstatus.AdboardId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(adboardstatus);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterAdboardStatusUpdated(adboardstatus);
+
+            return adboardstatus;
+        }
+
+        partial void OnAdboardStatusDeleted(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+        partial void OnAfterAdboardStatusDeleted(DOOH.Server.Models.DOOHDB.AdboardStatus item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.AdboardStatus> DeleteAdboardStatus(int adboardid)
+        {
+            var itemToDelete = Context.AdboardStatuses
+                              .Where(i => i.AdboardId == adboardid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnAdboardStatusDeleted(itemToDelete);
+
+
+            Context.AdboardStatuses.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterAdboardStatusDeleted(itemToDelete);
 
             return itemToDelete;
         }

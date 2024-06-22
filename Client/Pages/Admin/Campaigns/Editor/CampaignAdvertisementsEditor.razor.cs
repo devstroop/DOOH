@@ -5,6 +5,7 @@ using Radzen;
 using Radzen.Blazor;
 using System;
 using System.Text.Json.Nodes;
+using DOOH.Server.Models.DOOHDB;
 using FFmpegBlazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
@@ -15,7 +16,15 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public int CampaignId { get; set; }
         
         [Parameter]
+        public EventCallback<Attachment> AddAttachment { get; set; }
+        [Parameter]
+        public EventCallback<int> DeleteAdvertisementByAdvertisementId { get; set; }
+        
+        [Parameter]
         public Action Refresh { get; set; }
+        
+        [Parameter]
+        public IEnumerable<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
 
         [Inject]
         protected IJSRuntime Runtime { get; set; }
@@ -29,25 +38,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Inject]
         protected DialogService DialogService { get; set; }
 
-        private IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> advertisements;
 
-        private int advertisementsCount;
-
-
-        private async Task AdvertisementsLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DbService.GetAdvertisements(top: args.Top, skip: args.Skip, filter: $@"(CampaignId eq {CampaignId}) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: args.OrderBy, expand: "Attachment");
-
-                advertisements = result.Value.AsODataEnumerable();
-                advertisementsCount = result.Count;
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
-            }
-        }
+        private int AdvertisementsCount => Advertisements?.Count() ?? 0;
 
         private RadzenUpload upload;
         private RadzenUpload uploadDd;
@@ -56,6 +48,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private string progressMessage = string.Empty;
         private bool showProgress;
         private bool cancelUpload;
+
+        [Inject]
+        protected DOOH.Client.DOOHDBService DoohdbService { get; set; }
+
 
         private void OnChange(UploadChangeEventArgs args)
         {
@@ -81,10 +77,14 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             showProgress = false;
             progress = 100;
             progressMessage = !args.Cancelled ? "Upload Complete!" : "Upload Cancelled!";
+
+            var rawResponse = args.RawResponse;
+            // log
+            Runtime.InvokeVoidAsync("console.log", rawResponse);
+            // TODO: Deserialize
             Refresh?.Invoke();
         }
-
-
+        
         private void OnHoverClick(string args)
         {
             NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Hover", Detail = args });
@@ -92,33 +92,23 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
         {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
-                {
-                    var result = await DbService.DeleteAdvertisement(advertisement.AdvertisementId);
-                    if (result != null)
-                    {
-                        await AdvertisementsLoadData(new LoadDataArgs { Top = 10 });
-                        NotificationService.Notify(new NotificationMessage
-                        {
-                            Severity = NotificationSeverity.Success, Summary = "Success",
-                            Detail = "Advertisement deleted successfully"
-                        });
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage
-                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete" });
-            }
-            finally
-            {
-                Refresh?.Invoke();
-            }
+            await DeleteAdvertisementByAdvertisementId.InvokeAsync(advertisement.AdvertisementId);
+        }
+
+
+        // ImportClick
+        private async Task ImportClick(MouseEventArgs args)
+        {
+            // OpenDialog
+            await DialogService.OpenAsync<ImportAttachmment>("Import Attachmment", new Dictionary<string, object>() { { "Import", EventCallback.Factory.Create<Attachment>(this, OnImportAttachment) } });
+            Refresh?.Invoke();
         }
         
+        // ImportAttachment
+        private async Task OnImportAttachment(Attachment attachment)
+        {
+            await AddAttachment.InvokeAsync(attachment);
+        }
         
     }
 }

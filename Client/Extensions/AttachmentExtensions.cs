@@ -23,5 +23,21 @@ namespace DOOH.Client.Extensions
                 return string.Empty;
             }
         }
+        
+        public static string GetUrl(this Attachment attachment)
+        {
+            try
+            {
+                if (attachment == null)
+                {
+                    return string.Empty;
+                }
+                return $"/api/cdn/object/{attachment.AttachmentKey}";
+            }
+            catch (Exception exception)
+            {
+                return string.Empty;
+            }
+        }
     }
 }
