@@ -17,12 +17,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DOOH.Server.Controllers.DOOHDB
 {
-    [Route("odata/DOOHDB/Attachments")]
-    public partial class AttachmentsController : ODataController
+    [Route("odata/DOOHDB/Advertisements")]
+    public partial class AdvertisementsController : ODataController
     {
         private DOOH.Server.Data.DOOHDBContext context;
 
-        public AttachmentsController(DOOH.Server.Data.DOOHDBContext context)
+        public AdvertisementsController(DOOH.Server.Data.DOOHDBContext context)
         {
             this.context = context;
         }
@@ -30,34 +30,34 @@ namespace DOOH.Server.Controllers.DOOHDB
     
         [HttpGet]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.Attachment> GetAttachments()
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> GetAdvertisements()
         {
-            var items = this.context.Attachments.AsQueryable<DOOH.Server.Models.DOOHDB.Attachment>();
-            this.OnAttachmentsRead(ref items);
+            var items = this.context.Advertisements.AsQueryable<DOOH.Server.Models.DOOHDB.Advertisement>();
+            this.OnAdvertisementsRead(ref items);
 
             return items;
         }
 
-        partial void OnAttachmentsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Attachment> items);
+        partial void OnAdvertisementsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Advertisement> items);
 
-        partial void OnAttachmentGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Attachment> item);
+        partial void OnAdvertisementGet(ref SingleResult<DOOH.Server.Models.DOOHDB.Advertisement> item);
 
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        [HttpGet("/odata/DOOHDB/Attachments(AttachmentKey={AttachmentKey})")]
-        public SingleResult<DOOH.Server.Models.DOOHDB.Attachment> GetAttachment(string key)
+        [HttpGet("/odata/DOOHDB/Advertisements(AdvertisementId={AdvertisementId})")]
+        public SingleResult<DOOH.Server.Models.DOOHDB.Advertisement> GetAdvertisement(int key)
         {
-            var items = this.context.Attachments.Where(i => i.AttachmentKey == Uri.UnescapeDataString(key));
+            var items = this.context.Advertisements.Where(i => i.AdvertisementId == key);
             var result = SingleResult.Create(items);
 
-            OnAttachmentGet(ref result);
+            OnAdvertisementGet(ref result);
 
             return result;
         }
-        partial void OnAttachmentDeleted(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentDeleted(DOOH.Server.Models.DOOHDB.Attachment item);
+        partial void OnAdvertisementDeleted(DOOH.Server.Models.DOOHDB.Advertisement item);
+        partial void OnAfterAdvertisementDeleted(DOOH.Server.Models.DOOHDB.Advertisement item);
 
-        [HttpDelete("/odata/DOOHDB/Attachments(AttachmentKey={AttachmentKey})")]
-        public IActionResult DeleteAttachment(string key)
+        [HttpDelete("/odata/DOOHDB/Advertisements(AdvertisementId={AdvertisementId})")]
+        public IActionResult DeleteAdvertisement(int key)
         {
             try
             {
@@ -67,18 +67,18 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
 
 
-                var item = this.context.Attachments
-                    .Where(i => i.AttachmentKey == Uri.UnescapeDataString(key))
+                var item = this.context.Advertisements
+                    .Where(i => i.AdvertisementId == key)
                     .FirstOrDefault();
 
                 if (item == null)
                 {
                     return BadRequest();
                 }
-                this.OnAttachmentDeleted(item);
-                this.context.Attachments.Remove(item);
+                this.OnAdvertisementDeleted(item);
+                this.context.Advertisements.Remove(item);
                 this.context.SaveChanges();
-                this.OnAfterAttachmentDeleted(item);
+                this.OnAfterAdvertisementDeleted(item);
 
                 return new NoContentResult();
 
@@ -90,12 +90,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnAttachmentUpdated(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentUpdated(DOOH.Server.Models.DOOHDB.Attachment item);
+        partial void OnAdvertisementUpdated(DOOH.Server.Models.DOOHDB.Advertisement item);
+        partial void OnAfterAdvertisementUpdated(DOOH.Server.Models.DOOHDB.Advertisement item);
 
-        [HttpPut("/odata/DOOHDB/Attachments(AttachmentKey={AttachmentKey})")]
+        [HttpPut("/odata/DOOHDB/Advertisements(AdvertisementId={AdvertisementId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PutAttachment(string key, [FromBody]DOOH.Server.Models.DOOHDB.Attachment item)
+        public IActionResult PutAdvertisement(int key, [FromBody]DOOH.Server.Models.DOOHDB.Advertisement item)
         {
             try
             {
@@ -104,17 +104,17 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                if (item == null || (item.AttachmentKey != Uri.UnescapeDataString(key)))
+                if (item == null || (item.AdvertisementId != key))
                 {
                     return BadRequest();
                 }
-                this.OnAttachmentUpdated(item);
-                this.context.Attachments.Update(item);
+                this.OnAdvertisementUpdated(item);
+                this.context.Advertisements.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Attachments.Where(i => i.AttachmentKey == Uri.UnescapeDataString(key));
-                
-                this.OnAfterAttachmentUpdated(item);
+                var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == key);
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
+                this.OnAfterAdvertisementUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -124,9 +124,9 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        [HttpPatch("/odata/DOOHDB/Attachments(AttachmentKey={AttachmentKey})")]
+        [HttpPatch("/odata/DOOHDB/Advertisements(AdvertisementId={AdvertisementId})")]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult PatchAttachment(string key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Attachment> patch)
+        public IActionResult PatchAdvertisement(int key, [FromBody]Delta<DOOH.Server.Models.DOOHDB.Advertisement> patch)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest(ModelState);
                 }
 
-                var item = this.context.Attachments.Where(i => i.AttachmentKey == Uri.UnescapeDataString(key)).FirstOrDefault();
+                var item = this.context.Advertisements.Where(i => i.AdvertisementId == key).FirstOrDefault();
 
                 if (item == null)
                 {
@@ -143,13 +143,13 @@ namespace DOOH.Server.Controllers.DOOHDB
                 }
                 patch.Patch(item);
 
-                this.OnAttachmentUpdated(item);
-                this.context.Attachments.Update(item);
+                this.OnAdvertisementUpdated(item);
+                this.context.Advertisements.Update(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Attachments.Where(i => i.AttachmentKey == Uri.UnescapeDataString(key));
-                
-                this.OnAfterAttachmentUpdated(item);
+                var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == key);
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
+                this.OnAfterAdvertisementUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
             catch(Exception ex)
@@ -159,12 +159,12 @@ namespace DOOH.Server.Controllers.DOOHDB
             }
         }
 
-        partial void OnAttachmentCreated(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentCreated(DOOH.Server.Models.DOOHDB.Attachment item);
+        partial void OnAdvertisementCreated(DOOH.Server.Models.DOOHDB.Advertisement item);
+        partial void OnAfterAdvertisementCreated(DOOH.Server.Models.DOOHDB.Advertisement item);
 
         [HttpPost]
         [EnableQuery(MaxExpansionDepth=10,MaxAnyAllExpressionDepth=10,MaxNodeCount=1000)]
-        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Attachment item)
+        public IActionResult Post([FromBody] DOOH.Server.Models.DOOHDB.Advertisement item)
         {
             try
             {
@@ -178,15 +178,15 @@ namespace DOOH.Server.Controllers.DOOHDB
                     return BadRequest();
                 }
 
-                this.OnAttachmentCreated(item);
-                this.context.Attachments.Add(item);
+                this.OnAdvertisementCreated(item);
+                this.context.Advertisements.Add(item);
                 this.context.SaveChanges();
 
-                var itemToReturn = this.context.Attachments.Where(i => i.AttachmentKey == item.AttachmentKey);
+                var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == item.AdvertisementId);
 
-                
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
 
-                this.OnAfterAttachmentCreated(item);
+                this.OnAfterAdvertisementCreated(item);
 
                 return new ObjectResult(SingleResult.Create(itemToReturn))
                 {

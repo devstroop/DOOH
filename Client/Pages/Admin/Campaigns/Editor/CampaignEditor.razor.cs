@@ -79,7 +79,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 if (CampaignIdInt != 0)
                 {
-                    campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard),Advertisements($expand=Attachment)");
+                    campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard),Advertisements($expand=Upload)");
                     if (campaign != null)
                     {
                         CampaignId = campaign.CampaignId.ToString();
@@ -256,7 +256,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                if (await DialogService.Confirm("Are you sure you want to delete this advertisement?") == true)
                 {
                     var result = await DoohdbService.DeleteAdvertisement(advertisementId);
                     if (result != null)
@@ -274,31 +274,15 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 NotificationService.Notify(new NotificationMessage
                     { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete" });
             }
+            finally
+            {
+                await LoadCampaign();
+            }
         }
         
-        // OnAddAttachment
-        private async Task OnAddAttachment(Attachment attachment)
+        private async Task OnAddAdvertisement(Advertisement advertisement)
         {
-            try
-            {
-                var advertisement = new Advertisement();
-                advertisement.CampaignId = CampaignIdInt;
-                advertisement.Attachment = attachment;
-                var result = await DoohdbService.CreateAdvertisement(advertisement);
-                if (result != null)
-                {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Success, Summary = "Success",
-                        Detail = "Advertisement added successfully"
-                    });
-                }
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage
-                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to add" });
-            }
+            await LoadCampaign();
         }
     }
 }

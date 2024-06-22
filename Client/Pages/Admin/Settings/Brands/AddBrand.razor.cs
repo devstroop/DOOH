@@ -43,7 +43,6 @@ namespace DOOH.Client.Pages.Admin.Settings.Brands
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Brand brand;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Attachment> attachmentsForBrandLogoAttachmentKey;
 
         protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()

@@ -38,7 +38,7 @@ namespace DOOH.Adboard.Services
 
         public async Task Sync(CancellationToken cancellationToken)
         {
-            var advertisements = await _doohdbService.GetAdvertisements(expand: "Attachment");
+            var advertisements = await _doohdbService.GetAdvertisements(expand: "Upload");
             await UpdateAdvertisements(advertisements.Value, cancellationToken);
         }
     }

@@ -76,9 +76,9 @@ namespace DOOH.Adboard
             return await Extensions.HttpResponseMessageExtensions.ReadAsync<Models.ODataServiceResult<DOOH.Server.Models.DOOHDB.Advertisement>>(response);
         }
 
-        public async Task<string> GetPresignedUrl(string attachmentKey)
+        public async Task<string> GetPresignedUrl(string key)
         {
-            var uri = new Uri(httpClient.BaseAddress, $"api/cdn/object/presigned/{attachmentKey}");
+            var uri = new Uri(httpClient.BaseAddress, $"api/cdn/object/presigned/{key}");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 

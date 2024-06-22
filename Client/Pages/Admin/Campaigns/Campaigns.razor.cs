@@ -109,7 +109,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             {
                 IsLoading = true;
                 //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Attachment), CampaignAdboards($expand=Adboard)");
+                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements($expand=Upload), CampaignAdboards($expand=Adboard)");
 
                 campaigns = result.Value.AsODataEnumerable();
                 campaignsCount = result.Count;

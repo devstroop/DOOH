@@ -50,8 +50,6 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Category> categoriesForCategoryId;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Attachment> attachmentsForAttachmentKey;
-
         protected IEnumerable<DOOH.Server.Models.DOOHDB.City> citiesForCityName;
 
         protected IEnumerable<DOOH.Server.Models.DOOHDB.State> statesForStateName;

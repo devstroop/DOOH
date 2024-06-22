@@ -20,7 +20,7 @@
                     <RadzenLabel Text="Advertisement" Component="Advertisement" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenDropDownDataGrid Data="@advertisementsForAdvertisementId" TextProperty="AttachmentKey" ValueProperty="AdvertisementId" AllowClear=true
+                    <RadzenDropDownDataGrid Data="@advertisementsForAdvertisementId" TextProperty="UploadKey" ValueProperty="AdvertisementId" AllowClear=true
                          Placeholder="Choose Advertisement" style="display: block; width: 100%" @bind-Value="@analytic.AdvertisementId" Name="AdvertisementId"
                         SelectedValue=@advertisementsForAdvertisementIdValue Count=@advertisementsForAdvertisementIdCount LoadData=@advertisementsForAdvertisementIdLoadData />
                 </RadzenColumn>

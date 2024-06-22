@@ -7,12 +7,12 @@ using System.Text.Json.Serialization;
 
 namespace DOOH.Server.Models.DOOHDB
 {
-    [Table("Attachment", Schema = "dbo")]
-    public partial class Attachment
+    [Table("Upload", Schema = "dbo")]
+    public partial class Upload
     {
         [Key]
         [Required]
-        public string AttachmentKey { get; set; }
+        public string Key { get; set; }
 
         public string FileName { get; set; }
 
@@ -41,6 +41,8 @@ namespace DOOH.Server.Models.DOOHDB
         public DateTime? UpdatedAt { get; set; }
 
         public string Owner { get; set; }
+
+        public UserInformation UserInformation { get; set; }
 
         public ICollection<Advertisement> Advertisements { get; set; }
     }

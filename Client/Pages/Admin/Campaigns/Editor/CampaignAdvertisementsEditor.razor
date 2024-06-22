@@ -1,54 +1,35 @@
 @using DOOH.Server.Models.DOOHDB
 <RadzenRow>
-    <RadzenColumn SizeMD="8">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(Advertisements != null && Advertisements.Any())" >
-            <RadzenIcon Icon="info" IconColor="white" />
+    <RadzenColumn SizeMD="6">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(Advertisements != null && Advertisements.Any())">
+            <RadzenIcon Icon="info" IconColor="white"/>
             <RadzenText class="rz-mb-0" Text="@($"{Advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
         </RadzenStack>
-        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Advertisements" Count="@AdvertisementsCount" WrapItems="true">
-            <Template>
-                <CarouselComponent Images="@(new List<string> { context.Attachment.GetThumbnail() })"  Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
-                    <Overlay>
-                        <RadzenStack>
-                            <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" />
-                            <RadzenButton Icon="close" Click="@((args) => DeleteAdvertisement(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75" />
-                            <RadzenText Text="@context.AttachmentKey.Replace("\\", "/").Split('/').LastOrDefault()" TextStyle="TextStyle.Caption" class="rz-mb-0 custom-bottomStart" />
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" class="opacity-50 custom-topLeft">
-                                <RadzenIcon Icon="browse_gallery" Style="font-size: 16px" />
-                                <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration)} sec")" class="rz-mb-0" Style="color: #fff" />
-                            </RadzenStack>
-                        </RadzenStack>
-                    </Overlay>
-                </CarouselComponent>
-            </Template>
-
-        </RadzenDataList>
-
     </RadzenColumn>
-    <RadzenColumn SizeMD="4">
-        <RadzenStack class="rz-mx-2" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" >
+    <RadzenColumn SizeMD="6">
+        <RadzenStack class="rz-mx-2" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
             <RadzenButton Text="Import" Click="@ImportClick"></RadzenButton>
         </RadzenStack>
-        <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="api/cdn/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select file" } })"
-                      Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" class="w-100"/>
-        <RadzenProgressBar Value="@progress" class="rz-mx-2" Visible="@showProgress"/>
-        
     </RadzenColumn>
-
 </RadzenRow>
-<style>
-    #ddUpload {
-        left: 0;
-        right: 0;
-    }
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Advertisements" Count="@AdvertisementsCount" WrapItems="true">
+    <Template>
+        <CarouselComponent Images="@(new List<string> { context.Upload.GetThumbnail() })" Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
+            <Overlay>
+                <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, context))"/>
+                <RadzenButton Icon="close" Click="@((args) => DeleteAdvertisement(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75"/>
+                <RadzenText Text="@context.UploadKey.Replace("\\", "/").Split('/').LastOrDefault()" TextStyle="TextStyle.Caption" class="rz-mb-0 custom-bottomStart"/>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" class="opacity-50 custom-topLeft">
+                    <RadzenIcon Icon="browse_gallery" Style="font-size: 16px"/>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration)} sec")" class="rz-mb-0" Style="color: #fff"/>
+                </RadzenStack>
+            </Overlay>
+        </CarouselComponent>
+    </Template>
 
-        #ddUpload .rz-fileupload-buttonbar .rz-fileupload-choose {
-            width: 100%;
-            text-align: center;
-            font-size: 16px;
-            padding: 150px 0;
-            border-radius: 0;
-        }
+</RadzenDataList>
+
+<style>
         
         .close-button {
             position: absolute;
@@ -82,5 +63,7 @@
             font-size: 32px;
         }
 
-
+    .rz-g>div, .rz-datalist-data>li{
+        padding: 0;
+    }
 </style>

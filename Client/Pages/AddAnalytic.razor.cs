@@ -77,7 +77,7 @@ namespace DOOH.Client.Pages
         {
             try
             {
-                var result = await DOOHDBService.GetAdvertisements(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(AttachmentKey, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
+                var result = await DOOHDBService.GetAdvertisements(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: $"contains(UploadKey, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
                 advertisementsForAdvertisementId = result.Value.AsODataEnumerable();
                 advertisementsForAdvertisementIdCount = result.Count;
 

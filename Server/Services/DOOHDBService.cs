@@ -919,8 +919,8 @@ namespace DOOH.Server
         {
             var items = Context.Advertisements.AsQueryable();
 
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Campaign);
+            items = items.Include(i => i.Upload);
 
             if (query != null)
             {
@@ -951,8 +951,8 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.AdvertisementId == advertisementid);
 
-            items = items.Include(i => i.Attachment);
             items = items.Include(i => i.Campaign);
+            items = items.Include(i => i.Upload);
  
             OnGetAdvertisementByAdvertisementId(ref items);
 
@@ -1232,168 +1232,6 @@ namespace DOOH.Server
             }
 
             OnAfterAnalyticDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportAttachmentsToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/attachments/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/attachments/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportAttachmentsToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/attachments/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/attachments/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnAttachmentsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Attachment> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Attachment>> GetAttachments(Query query = null)
-        {
-            var items = Context.Attachments.AsQueryable();
-
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnAttachmentsRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnAttachmentGet(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnGetAttachmentByAttachmentKey(ref IQueryable<DOOH.Server.Models.DOOHDB.Attachment> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> GetAttachmentByAttachmentKey(string attachmentkey)
-        {
-            var items = Context.Attachments
-                              .AsNoTracking()
-                              .Where(i => i.AttachmentKey == attachmentkey);
-
- 
-            OnGetAttachmentByAttachmentKey(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnAttachmentGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnAttachmentCreated(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentCreated(DOOH.Server.Models.DOOHDB.Attachment item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> CreateAttachment(DOOH.Server.Models.DOOHDB.Attachment attachment)
-        {
-            OnAttachmentCreated(attachment);
-
-            var existingItem = Context.Attachments
-                              .Where(i => i.AttachmentKey == attachment.AttachmentKey)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.Attachments.Add(attachment);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(attachment).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterAttachmentCreated(attachment);
-
-            return attachment;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> CancelAttachmentChanges(DOOH.Server.Models.DOOHDB.Attachment item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnAttachmentUpdated(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentUpdated(DOOH.Server.Models.DOOHDB.Attachment item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> UpdateAttachment(string attachmentkey, DOOH.Server.Models.DOOHDB.Attachment attachment)
-        {
-            OnAttachmentUpdated(attachment);
-
-            var itemToUpdate = Context.Attachments
-                              .Where(i => i.AttachmentKey == attachment.AttachmentKey)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(attachment);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterAttachmentUpdated(attachment);
-
-            return attachment;
-        }
-
-        partial void OnAttachmentDeleted(DOOH.Server.Models.DOOHDB.Attachment item);
-        partial void OnAfterAttachmentDeleted(DOOH.Server.Models.DOOHDB.Attachment item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> DeleteAttachment(string attachmentkey)
-        {
-            var itemToDelete = Context.Attachments
-                              .Where(i => i.AttachmentKey == attachmentkey)
-                              .Include(i => i.Advertisements)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnAttachmentDeleted(itemToDelete);
-
-
-            Context.Attachments.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterAttachmentDeleted(itemToDelete);
 
             return itemToDelete;
         }
@@ -4491,6 +4329,7 @@ namespace DOOH.Server
         {
             var itemToDelete = Context.UserInformations
                               .Where(i => i.UserId == userid)
+                              .Include(i => i.Uploads)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -4514,6 +4353,170 @@ namespace DOOH.Server
             }
 
             OnAfterUserInformationDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportUploadsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/uploads/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/uploads/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportUploadsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/uploads/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/uploads/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnUploadsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Upload> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Upload>> GetUploads(Query query = null)
+        {
+            var items = Context.Uploads.AsQueryable();
+
+            items = items.Include(i => i.UserInformation);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnUploadsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnUploadGet(DOOH.Server.Models.DOOHDB.Upload item);
+        partial void OnGetUploadByKey(ref IQueryable<DOOH.Server.Models.DOOHDB.Upload> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> GetUploadByKey(string key)
+        {
+            var items = Context.Uploads
+                              .AsNoTracking()
+                              .Where(i => i.Key == key);
+
+            items = items.Include(i => i.UserInformation);
+ 
+            OnGetUploadByKey(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnUploadGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnUploadCreated(DOOH.Server.Models.DOOHDB.Upload item);
+        partial void OnAfterUploadCreated(DOOH.Server.Models.DOOHDB.Upload item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> CreateUpload(DOOH.Server.Models.DOOHDB.Upload upload)
+        {
+            OnUploadCreated(upload);
+
+            var existingItem = Context.Uploads
+                              .Where(i => i.Key == upload.Key)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.Uploads.Add(upload);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(upload).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterUploadCreated(upload);
+
+            return upload;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> CancelUploadChanges(DOOH.Server.Models.DOOHDB.Upload item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnUploadUpdated(DOOH.Server.Models.DOOHDB.Upload item);
+        partial void OnAfterUploadUpdated(DOOH.Server.Models.DOOHDB.Upload item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> UpdateUpload(string key, DOOH.Server.Models.DOOHDB.Upload upload)
+        {
+            OnUploadUpdated(upload);
+
+            var itemToUpdate = Context.Uploads
+                              .Where(i => i.Key == upload.Key)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(upload);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterUploadUpdated(upload);
+
+            return upload;
+        }
+
+        partial void OnUploadDeleted(DOOH.Server.Models.DOOHDB.Upload item);
+        partial void OnAfterUploadDeleted(DOOH.Server.Models.DOOHDB.Upload item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> DeleteUpload(string key)
+        {
+            var itemToDelete = Context.Uploads
+                              .Where(i => i.Key == key)
+                              .Include(i => i.Advertisements)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnUploadDeleted(itemToDelete);
+
+
+            Context.Uploads.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterUploadDeleted(itemToDelete);
 
             return itemToDelete;
         }

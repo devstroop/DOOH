@@ -70,7 +70,7 @@
                 <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@advertisements" AddAttachment="@OnAddAttachment" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
+                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@advertisements" Add="@OnAddAdvertisement" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
             </RadzenTabsItem>
             <RadzenTabsItem Text="Schedule" Icon="schedule">
                 <CampaignScheduleEditor CampaignId="@CampaignIdInt" />

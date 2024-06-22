@@ -20,9 +20,9 @@ namespace DOOH.Server.Models.DOOHDB
         public Campaign Campaign { get; set; }
 
         [Required]
-        public string AttachmentKey { get; set; }
+        public string UploadKey { get; set; }
 
-        public Attachment Attachment { get; set; }
+        public Upload Upload { get; set; }
 
         [Required]
         public double Duration { get; set; }

@@ -117,20 +117,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetAnalytics(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/attachments/csv")]
-        [HttpGet("/export/DOOHDB/attachments/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAttachmentsToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetAttachments(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/attachments/excel")]
-        [HttpGet("/export/DOOHDB/attachments/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportAttachmentsToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetAttachments(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/billings/csv")]
         [HttpGet("/export/DOOHDB/billings/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportBillingsToCSV(string fileName = null)
@@ -395,6 +381,20 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/uploads/csv")]
+        [HttpGet("/export/DOOHDB/uploads/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportUploadsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetUploads(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/uploads/excel")]
+        [HttpGet("/export/DOOHDB/uploads/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportUploadsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetUploads(), Request.Query, false), fileName);
         }
     }
 }

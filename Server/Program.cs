@@ -38,7 +38,6 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.AdboardWifi>("AdboardWifis");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Advertisement>("Advertisements");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Analytic>("Analytics");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Attachment>("Attachments");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Billing>("Billings");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Brand>("Brands");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Campaign>("Campaigns");
@@ -58,6 +57,7 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Status>("Statuses");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Upload>("Uploads");
     opt.AddRouteComponents("odata/DOOHDB", oDataBuilderDOOHDB.GetEdmModel()).Count().Filter().OrderBy().Expand().Select().SetMaxTop(null).TimeZone = TimeZoneInfo.Utc;
 });
 //builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();

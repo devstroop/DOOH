@@ -130,7 +130,7 @@ namespace DOOH.Adboard.Workers
 
                 try
                 {
-                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.AttachmentKey}");
+                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.UploadKey}");
                     var media = new Media(libvlc, mediaUri);
 
                     if (await Task.Run(() => player.Play(media), cancellationToken))
@@ -328,7 +328,7 @@ namespace DOOH.Adboard.Workers
 //            {
 //                try
 //                {
-//                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.AttachmentKey}");
+//                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.UploadKey}");
 //                    string[] option = new string[]
 //                    {
 //                        //"--video-filter=transform",

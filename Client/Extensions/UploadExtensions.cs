@@ -2,21 +2,21 @@
 
 namespace DOOH.Client.Extensions
 {
-    public static class AttachmentExtensions
+    public static class UploadExtensions
     {
-        public static string GetThumbnail(this Attachment attachment)
+        public static string GetThumbnail(this Upload upload)
         {
             try
             {
-                if (attachment == null)
+                if (upload == null)
                 {
                     return string.Empty;
                 }
-                if (attachment.ContentType.Contains("video"))
+                if (upload.ContentType.Contains("video"))
                 {
-                    return $"/api/cdn/object/{attachment.Thumbnail ?? attachment.AttachmentKey}";
+                    return $"/api/cdn/object/{upload.Thumbnail ?? upload.Key}";
                 }
-                return $"/api/cdn/object/{attachment.AttachmentKey}";
+                return $"/api/cdn/object/{upload.Key}";
             }
             catch (Exception exception)
             {
@@ -24,15 +24,15 @@ namespace DOOH.Client.Extensions
             }
         }
         
-        public static string GetUrl(this Attachment attachment)
+        public static string GetUrl(this Upload upload)
         {
             try
             {
-                if (attachment == null)
+                if (upload == null)
                 {
                     return string.Empty;
                 }
-                return $"/api/cdn/object/{attachment.AttachmentKey}";
+                return $"/api/cdn/object/{upload.Key}";
             }
             catch (Exception exception)
             {

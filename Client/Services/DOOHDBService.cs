@@ -689,100 +689,6 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportAttachmentsToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/attachments/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/attachments/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async System.Threading.Tasks.Task ExportAttachmentsToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/attachments/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/attachments/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnGetAttachments(HttpRequestMessage requestMessage);
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Attachment>> GetAttachments(Query query)
-        {
-            return await GetAttachments(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
-        }
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Attachment>> GetAttachments(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
-        {
-            var uri = new Uri(baseUri, $"Attachments");
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetAttachments(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Attachment>>(response);
-        }
-
-        partial void OnCreateAttachment(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> CreateAttachment(DOOH.Server.Models.DOOHDB.Attachment attachment = default(DOOH.Server.Models.DOOHDB.Attachment))
-        {
-            var uri = new Uri(baseUri, $"Attachments");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(attachment), Encoding.UTF8, "application/json");
-
-            OnCreateAttachment(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Attachment>(response);
-        }
-
-        partial void OnDeleteAttachment(HttpRequestMessage requestMessage);
-
-        public async Task<HttpResponseMessage> DeleteAttachment(string attachmentKey = default(string))
-        {
-            var uri = new Uri(baseUri, $"Attachments('{Uri.EscapeDataString(attachmentKey.Trim().Replace("'", "''"))}')");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
-
-            OnDeleteAttachment(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
-        partial void OnGetAttachmentByAttachmentKey(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Attachment> GetAttachmentByAttachmentKey(string expand = default(string), string attachmentKey = default(string))
-        {
-            var uri = new Uri(baseUri, $"Attachments('{Uri.EscapeDataString(attachmentKey.Trim().Replace("'", "''"))}')");
-
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetAttachmentByAttachmentKey(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Attachment>(response);
-        }
-
-        partial void OnUpdateAttachment(HttpRequestMessage requestMessage);
-        
-        public async Task<HttpResponseMessage> UpdateAttachment(string attachmentKey = default(string), DOOH.Server.Models.DOOHDB.Attachment attachment = default(DOOH.Server.Models.DOOHDB.Attachment))
-        {
-            var uri = new Uri(baseUri, $"Attachments('{Uri.EscapeDataString(attachmentKey.Trim().Replace("'", "''"))}')");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
-
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(attachment), Encoding.UTF8, "application/json");
-
-            OnUpdateAttachment(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
         public async System.Threading.Tasks.Task ExportBillingsToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/billings/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/billings/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -2565,6 +2471,100 @@ namespace DOOH.Client
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(userInformation), Encoding.UTF8, "application/json");
 
             OnUpdateUserInformation(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async System.Threading.Tasks.Task ExportUploadsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/uploads/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/uploads/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportUploadsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/uploads/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/uploads/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetUploads(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Upload>> GetUploads(Query query)
+        {
+            return await GetUploads(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Upload>> GetUploads(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"Uploads");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetUploads(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Upload>>(response);
+        }
+
+        partial void OnCreateUpload(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> CreateUpload(DOOH.Server.Models.DOOHDB.Upload upload = default(DOOH.Server.Models.DOOHDB.Upload))
+        {
+            var uri = new Uri(baseUri, $"Uploads");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(upload), Encoding.UTF8, "application/json");
+
+            OnCreateUpload(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Upload>(response);
+        }
+
+        partial void OnDeleteUpload(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteUpload(string key = default(string))
+        {
+            var uri = new Uri(baseUri, $"Uploads('{Uri.EscapeDataString(key.Trim().Replace("'", "''"))}')");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteUpload(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetUploadByKey(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.Upload> GetUploadByKey(string expand = default(string), string key = default(string))
+        {
+            var uri = new Uri(baseUri, $"Uploads('{Uri.EscapeDataString(key.Trim().Replace("'", "''"))}')");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetUploadByKey(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Upload>(response);
+        }
+
+        partial void OnUpdateUpload(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateUpload(string key = default(string), DOOH.Server.Models.DOOHDB.Upload upload = default(DOOH.Server.Models.DOOHDB.Upload))
+        {
+            var uri = new Uri(baseUri, $"Uploads('{Uri.EscapeDataString(key.Trim().Replace("'", "''"))}')");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(upload), Encoding.UTF8, "application/json");
+
+            OnUpdateUpload(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }

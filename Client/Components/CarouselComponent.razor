@@ -2,22 +2,16 @@
 @using Microsoft.AspNetCore.Components
 
 <div class="carousel-container" id="@Id" style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; ")">
-    <RadzenImage Path="@Images.ElementAtOrDefault(CurrentIndex)" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="!(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
-    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; {Style}; ")" Visible="@(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
+    <RadzenImage Path="@Images.ElementAtOrDefault(CurrentIndex)" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style};")" Visible="!(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
+    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style}; ")" Visible="@(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
 
     <div class="overlay">
         @Overlay
     </div>
-
-    @* @if (ShowHoverIcon && IsCurrentImageVisible) *@
-    @* { *@
-    @*     <RadzenButton Size="ButtonSize.Medium" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="@HoverIcon" class="hover-icon opacity-75" Click="HandleHoverIconClick"/> *@
-    @* } *@
-
-
 </div>
 
 <style>
+    
     .overlay {
         position: absolute;
         top: 0;
@@ -37,7 +31,7 @@
     .carousel-container {
         position: relative;
         overflow: hidden;
-        display: flex;
+        display: block;
         align-items: center;
         justify-content: center;
     }
@@ -48,7 +42,7 @@
         color: white;
         border: none;
         border-radius: 50%;
-        padding: 10px;
+        /*padding: 10px;*/
         opacity: 50%;
     }
 

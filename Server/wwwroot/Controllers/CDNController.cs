@@ -100,14 +100,14 @@ namespace DOOH.Server.Controllers
 
         [Authorize]
         [HttpPost("single")] // Upload an object to S3.
-        public async Task<Server.Models.DOOHDB.Attachment> UploadObjectAsync(IFormFile file)
+        public async Task<Server.Models.DOOHDB.Upload> UploadObjectAsync(IFormFile file)
         {
             var userId = IdentityContext.Users.Where(x => x.UserName.Equals(User.Identity.Name)).FirstOrDefault()?.Id;
             string bucket = (User.Identity.Name == "admin" ? "admin" : userId);
             ProbeData probe = null;
             List<Stream> streams;
             string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
-            string attachmentKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
+            string key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
             bool isVideo = file.ContentType.Contains("video");
 
 
@@ -115,7 +115,7 @@ namespace DOOH.Server.Controllers
             var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
 
             using var stream1 = out0;
-            await CDNService.UploadObjectAsync(attachmentKey, stream1);
+            await CDNService.UploadObjectAsync(key, stream1);
 
             if (isVideo)
             {
@@ -131,9 +131,9 @@ namespace DOOH.Server.Controllers
             }
 
             // prepare attachment from probe data
-            var attachment = new Models.DOOHDB.Attachment
+            var upload = new Models.DOOHDB.Upload
             {
-                AttachmentKey = attachmentKey,
+                Key = key,
                 FileName = file.FileName,
                 Thumbnail = isVideo ? thumbnailKey : null,
                 Size = file.Length,
@@ -149,15 +149,15 @@ namespace DOOH.Server.Controllers
             };
 
             // commit then return attachment, user needs to be notified new key assigned
-            return await DOOHDBService.CreateAttachment(attachment);
+            return await DOOHDBService.CreateUpload(upload);
         }
 
         [Authorize]
         [HttpPost("multiple")] // Upload multiple objects to S3.
-        public async Task<List<Models.DOOHDB.Attachment>> UploadObjectsAsync(IEnumerable<IFormFile> files)
+        public async Task<List<Models.DOOHDB.Upload>> UploadObjectsAsync(IEnumerable<IFormFile> files)
         {
             var userId = IdentityContext.Users.Where(x => x.UserName.Equals(User.Identity.Name)).FirstOrDefault()?.Id;
-            List<Models.DOOHDB.Attachment> attachments = new List<Models.DOOHDB.Attachment>();
+            List<Models.DOOHDB.Upload> uploads = new List<Models.DOOHDB.Upload>();
             foreach (var file in files)
             {
 
@@ -165,7 +165,7 @@ namespace DOOH.Server.Controllers
                 ProbeData probe = null;
                 List<Stream> streams;
                 string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
-                string attachmentKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
+                string key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
                 bool isVideo = file.ContentType.Contains("video");
 
 
@@ -173,7 +173,7 @@ namespace DOOH.Server.Controllers
                 var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
 
                 using var stream1 = out0;
-                await CDNService.UploadObjectAsync(attachmentKey, stream1);
+                await CDNService.UploadObjectAsync(key, stream1);
 
                 if (isVideo)
                 {
@@ -189,9 +189,9 @@ namespace DOOH.Server.Controllers
                 }
 
                 // prepare attachment from probe data
-                var attachment = new Models.DOOHDB.Attachment
+                var upload = new Models.DOOHDB.Upload
                 {
-                    AttachmentKey = attachmentKey,
+                    Key = key,
                     FileName = file.FileName,
                     Thumbnail = isVideo ? thumbnailKey : null,
                     Size = file.Length,
@@ -207,10 +207,10 @@ namespace DOOH.Server.Controllers
                 };
 
                 // commit then return attachment, user needs to be notified new key assigned
-                attachment = await DOOHDBService.CreateAttachment(attachment);
-                attachments.Add(attachment);
+                upload = await DOOHDBService.CreateUpload(upload);
+                uploads.Add(upload);
             }
-            return attachments;
+            return uploads;
         }
 
         [Authorize]
@@ -219,7 +219,7 @@ namespace DOOH.Server.Controllers
         {
             try
             {
-                await DOOHDBService.DeleteAttachment(key);
+                await DOOHDBService.DeleteUpload(key);
                 await CDNService.DeleteObjectAsync(key);
 
                 return Ok();

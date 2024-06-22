@@ -5,6 +5,8 @@ using Radzen;
 using Radzen.Blazor;
 using System;
 using System.Text.Json.Nodes;
+using DOOH.Client.Components;
+using DOOH.Client.Extensions;
 using DOOH.Server.Models.DOOHDB;
 using FFmpegBlazor;
 
@@ -16,7 +18,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public int CampaignId { get; set; }
         
         [Parameter]
-        public EventCallback<Attachment> AddAttachment { get; set; }
+        public EventCallback<Advertisement> Add { get; set; }
         [Parameter]
         public EventCallback<int> DeleteAdvertisementByAdvertisementId { get; set; }
         
@@ -41,53 +43,16 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private int AdvertisementsCount => Advertisements?.Count() ?? 0;
 
-        private RadzenUpload upload;
-        private RadzenUpload uploadDd;
-
-        private int progress;
-        private string progressMessage = string.Empty;
-        private bool showProgress;
-        private bool cancelUpload;
 
         [Inject]
         protected DOOH.Client.DOOHDBService DoohdbService { get; set; }
 
 
-        private void OnChange(UploadChangeEventArgs args)
+        private async Task OnHoverClick(MouseEventArgs args, Advertisement advertisement)
         {
-            foreach (var file in args.Files)
-            {
-                //console.Log($"File: {file.Name} / {file.Size} bytes");
-            }
-
-            //console.Log($"{name} changed");
-        }
-
-        private void OnProgress(UploadProgressArgs args)
-        {
-            showProgress = true;
-            progress = args.Progress;
-            progressMessage = $"{args.Progress}% / {args.Loaded} of {args.Total} bytes.";
-            args.Cancel = cancelUpload;
-            Refresh?.Invoke();
-        }
-
-        private void OnComplete(UploadCompleteEventArgs args)
-        {
-            showProgress = false;
-            progress = 100;
-            progressMessage = !args.Cancelled ? "Upload Complete!" : "Upload Cancelled!";
-
-            var rawResponse = args.RawResponse;
-            // log
-            Runtime.InvokeVoidAsync("console.log", rawResponse);
-            // TODO: Deserialize
-            Refresh?.Invoke();
-        }
-        
-        private void OnHoverClick(string args)
-        {
-            NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Hover", Detail = args });
+            
+            var url = advertisement.Upload.GetUrl();
+            await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
         }
 
         private async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
@@ -100,14 +65,26 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private async Task ImportClick(MouseEventArgs args)
         {
             // OpenDialog
-            await DialogService.OpenAsync<ImportAttachmment>("Import Attachmment", new Dictionary<string, object>() { { "Import", EventCallback.Factory.Create<Attachment>(this, OnImportAttachment) } });
-            Refresh?.Invoke();
-        }
-        
-        // ImportAttachment
-        private async Task OnImportAttachment(Attachment attachment)
-        {
-            await AddAttachment.InvokeAsync(attachment);
+            var result = await DialogService.OpenAsync<ImportFromUploads>("Import from Uploads", options: new DialogOptions()
+            {
+                Width = "100%",
+                Height = "100%"
+            });
+            if (result != null)
+            {
+                if (result is Upload upload)
+                {
+                    var advertisement = new Advertisement
+                    {
+                        AdvertisementId = 0,
+                        CampaignId = CampaignId,
+                        UploadKey = upload.Key,
+                        Upload = upload
+                    };
+                    advertisement = await DoohdbService.CreateAdvertisement(advertisement);
+                    await Add.InvokeAsync(advertisement);
+                }
+            }
         }
         
     }
