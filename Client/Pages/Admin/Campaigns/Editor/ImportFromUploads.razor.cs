@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using DOOH.Client.Components;
 using DOOH.Client.Extensions;
 using DOOH.Server.Models.DOOHDB;
@@ -145,11 +146,20 @@ public partial class ImportFromUploads
     
     private void OnError(UploadErrorEventArgs args)
     {
-        // progressMessage = $"Error: {args.Message}";
+        // args.Message
+        /*
+         Drag and drop here or click to choose files
+           Error {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"":["Failed to read the request form. Request body too large. The max request body size is 30000000 bytes."]},"traceId":"00-e2b33179b9477f55d0fd84643b5efa4d-60c85108740884bf-00"}
+         */
+        // Exract the error message 'Failed to read the request form. Request body too large. The max request body size is 30000000 bytes.'
+        var error = args.Message;
+        // Filter with regex
+        var match = Regex.Match(error, @"(?<=\["").*?(?=""\])");
+        var message = match.Success ? match.Value : error;
         NotificationService.Notify(new NotificationMessage
         {
             Severity = NotificationSeverity.Error, Summary = "Error",
-            Detail = args.Message
+            Detail = message
         });
         showProgress = false;
         StateHasChanged();

@@ -6,6 +6,42 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\geoHandler.js" />
+    <Content Include="Controllers\AccountController.cs" />
+    <Content Include="Controllers\ApplicationRolesController.cs" />
+    <Content Include="Controllers\ApplicationUsersController.cs" />
+    <Content Include="Controllers\CDNController.cs" />
+    <Content Include="Controllers\CultureController.cs" />
+    <Content Include="Controllers\DOOHDB\AdboardImagesController.cs" />
+    <Content Include="Controllers\DOOHDB\AdboardNetworksController.cs" />
+    <Content Include="Controllers\DOOHDB\AdboardsController.cs" />
+    <Content Include="Controllers\DOOHDB\AdboardStatusesController.cs" />
+    <Content Include="Controllers\DOOHDB\AdboardWifisController.cs" />
+    <Content Include="Controllers\DOOHDB\AdvertisementsController.cs" />
+    <Content Include="Controllers\DOOHDB\AnalyticsController.cs" />
+    <Content Include="Controllers\DOOHDB\BillingsController.cs" />
+    <Content Include="Controllers\DOOHDB\BrandsController.cs" />
+    <Content Include="Controllers\DOOHDB\CampaignAdboardsController.cs" />
+    <Content Include="Controllers\DOOHDB\CampaignSchedulesController.cs" />
+    <Content Include="Controllers\DOOHDB\CampaignsController.cs" />
+    <Content Include="Controllers\DOOHDB\CategoriesController.cs" />
+    <Content Include="Controllers\DOOHDB\CitiesController.cs" />
+    <Content Include="Controllers\DOOHDB\CompaniesController.cs" />
+    <Content Include="Controllers\DOOHDB\CountriesController.cs" />
+    <Content Include="Controllers\DOOHDB\DisplaysController.cs" />
+    <Content Include="Controllers\DOOHDB\EarningsController.cs" />
+    <Content Include="Controllers\DOOHDB\FaqsController.cs" />
+    <Content Include="Controllers\DOOHDB\MotherboardsController.cs" />
+    <Content Include="Controllers\DOOHDB\PagesController.cs" />
+    <Content Include="Controllers\DOOHDB\ProvidersController.cs" />
+    <Content Include="Controllers\DOOHDB\StatesController.cs" />
+    <Content Include="Controllers\DOOHDB\StatusesController.cs" />
+    <Content Include="Controllers\DOOHDB\TaxesController.cs" />
+    <Content Include="Controllers\DOOHDB\UploadsController.cs" />
+    <Content Include="Controllers\DOOHDB\UserInformationsController.cs" />
+    <Content Include="Controllers\ExportController.cs" />
+    <Content Include="Controllers\ExportDOOHDBController.cs" />
+    <Content Include="Controllers\ReportController.cs" />
+    <Content Include="Controllers\UploadController.cs" />
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\geoHandler.js" />
@@ -32,43 +68,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="wwwroot\js\geoHandler.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="wwwroot\Controllers\AccountController.cs" />
-    <Compile Include="wwwroot\Controllers\ApplicationRolesController.cs" />
-    <Compile Include="wwwroot\Controllers\ApplicationUsersController.cs" />
-    <Compile Include="wwwroot\Controllers\CDNController.cs" />
-    <Compile Include="wwwroot\Controllers\CultureController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdboardImagesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdboardNetworksController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdboardsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdboardStatusesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdboardWifisController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AdvertisementsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\AnalyticsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\BillingsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\BrandsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CampaignAdboardsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CampaignSchedulesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CampaignsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CategoriesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CitiesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CompaniesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\CountriesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\DisplaysController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\EarningsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\FaqsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\MotherboardsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\PagesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\ProvidersController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\StatesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\StatusesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\TaxesController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\UploadsController.cs" />
-    <Compile Include="wwwroot\Controllers\DOOHDB\UserInformationsController.cs" />
-    <Compile Include="wwwroot\Controllers\ExportController.cs" />
-    <Compile Include="wwwroot\Controllers\ExportDOOHDBController.cs" />
-    <Compile Include="wwwroot\Controllers\ReportController.cs" />
-    <Compile Include="wwwroot\Controllers\UploadController.cs" />
   </ItemGroup>
 </Project>
