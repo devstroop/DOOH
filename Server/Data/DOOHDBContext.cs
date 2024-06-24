@@ -336,11 +336,11 @@ namespace DOOH.Server.Data
               .Property(p => p.TaxRate)
               .HasDefaultValueSql(@"((0.00))");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
+            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
+            builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
 
@@ -412,6 +412,14 @@ namespace DOOH.Server.Data
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
+              .Property(p => p.CreatedAt)
+              .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
+              .Property(p => p.UpdatedAt)
+              .HasColumnType("datetime");
+
             builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
@@ -422,14 +430,6 @@ namespace DOOH.Server.Data
 
             builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
               .Property(p => p.SuspendedAt)
-              .HasColumnType("datetime");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .Property(p => p.CreatedAt)
-              .HasColumnType("datetime");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
             this.OnModelBuilding(builder);
         }
@@ -484,9 +484,9 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
-
         public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

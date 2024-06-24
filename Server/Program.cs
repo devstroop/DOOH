@@ -56,8 +56,8 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.State>("States");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Status>("Statuses");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Upload>("Uploads");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
     opt.AddRouteComponents("odata/DOOHDB", oDataBuilderDOOHDB.GetEdmModel()).Count().Filter().OrderBy().Expand().Select().SetMaxTop(null).TimeZone = TimeZoneInfo.Utc;
 });
 //builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();

@@ -369,20 +369,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/userinformations/csv")]
-        [HttpGet("/export/DOOHDB/userinformations/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportUserInformationsToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/userinformations/excel")]
-        [HttpGet("/export/DOOHDB/userinformations/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/uploads/csv")]
         [HttpGet("/export/DOOHDB/uploads/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportUploadsToCSV(string fileName = null)
@@ -395,6 +381,20 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUploadsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUploads(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/userinformations/csv")]
+        [HttpGet("/export/DOOHDB/userinformations/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportUserInformationsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/userinformations/excel")]
+        [HttpGet("/export/DOOHDB/userinformations/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
         }
     }
 }

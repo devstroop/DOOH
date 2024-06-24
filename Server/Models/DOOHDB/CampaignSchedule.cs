@@ -14,7 +14,8 @@ namespace DOOH.Server.Models.DOOHDB
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ScheduleId { get; set; }
 
-        public int? CampaignId { get; set; }
+        [Required]
+        public int CampaignId { get; set; }
 
         public Campaign Campaign { get; set; }
 
@@ -24,6 +25,7 @@ namespace DOOH.Server.Models.DOOHDB
 
         public DateTime Start { get; set; }
 
-        public DateTime? End { get; set; }
+        [Required]
+        public DateTime End { get; set; }
     }
 }
