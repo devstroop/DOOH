@@ -45,13 +45,30 @@ namespace DOOH.Client.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            await LoadProfile();
+        }
+        
+        // After Render
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await LoadProfile();
+            }
+        }
+        
+        protected async Task LoadProfile()
+        {
             if (String.IsNullOrEmpty(Security.User.Id) && Security.User.Name == "admin" && Security.User.Email == "admin")
             {
                 isDeveloper = true;
-                return;
+                // StateHasChanged();
             }
-            user = await Security.GetUserById($"{Security.User.Id}");
-            twoFactorEnabled = Security.User.TwoFactorEnabled;
+            else
+            {
+                user = await Security.GetUserById($"{Security.User.Id}");
+                twoFactorEnabled = Security.User.TwoFactorEnabled;
+            }
         }
 
         protected async Task FormSubmit()
