@@ -293,16 +293,16 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.CreatedAt)
+              .HasDefaultValueSql(@"(sysdatetime())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsDraft)
               .HasDefaultValueSql(@"((1))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.IsSuspended)
               .HasDefaultValueSql(@"((0))");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.CreatedAt)
-              .HasDefaultValueSql(@"(sysdatetime())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
               .Property(p => p.Rotation)

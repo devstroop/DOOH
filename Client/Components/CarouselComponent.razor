@@ -2,8 +2,8 @@
 @using Microsoft.AspNetCore.Components
 
 <div class="carousel-container" id="@Id" style="@($"border-radius: {BorderRadius}; width: {Width}; height: {Height}; ")">
-    <RadzenImage Path="@Images.ElementAtOrDefault(CurrentIndex)" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style};")" Visible="!(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
-    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style}; ")" Visible="@(String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
+    <RadzenImage Path="@(CurrentIndex >= 0 ? (Images.ElementAtOrDefault(CurrentIndex) ?? string.Empty) : string.Empty)" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style};")" Visible="@(CurrentIndex >= 0 && !String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
+    <RadzenImage Path="/images/no-image.png" alt="Image" Style="@($"border-radius: {BorderRadius}; width: 100%; height: 100%; {Style}; ")" Visible="!(CurrentIndex >= 0 && !String.IsNullOrEmpty(Images.ElementAtOrDefault(CurrentIndex)))"/>
 
     <div class="overlay">
         @Overlay
@@ -79,6 +79,8 @@
     // [Parameter] public bool ShowHoverIcon { get; set; } = false;
     // [Parameter] public Action<string> OnHoverClick { get; set; }
     [Parameter] public RenderFragment Overlay { get; set; }
+    
+    // private string CurrentImage => CurrentIndex >= 0 ? Images.ElementAtOrDefault(CurrentIndex) : null;
 
 
     // private string Height = "100%";

@@ -19,67 +19,93 @@
         </RadzenColumn>
         <RadzenColumn SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenButton Icon="save" Text="Save" ButtonStyle="ButtonStyle.Primary" Click="@SaveCampaign" IsBusy="@IsSaving" BusyText="Saving" />
+                <RadzenButton Icon="save" Text="Save" ButtonStyle="Radzen.ButtonStyle.Primary" Click="@SaveCampaign" IsBusy="@IsSaving" BusyText="Saving" />
                 <RadzenButton Icon="cancel" Text="Cancel" ButtonStyle="ButtonStyle.Secondary" Click="@Cancel" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
     <RadzenRow JustifyContent="JustifyContent.Stretch">
-        <RadzenFieldset Text="Date">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenDatePicker @bind-Value="@StartDate" DateFormat="d" Style="width: 150px" />
-                <RadzenText Text="to" class="rz-mb-0" />
-                <RadzenDatePicker @bind-Value="@EndDate" DateFormat="d" Style="width: 150px" Visible="!Continuous" />
-                <RadzenCheckBox Placeholder="Continuous" @bind-Value="@Continuous" />
-                <RadzenText Text="Continuous" class="rz-mb-0" Style="font-size: 14px; font-weight: 500;" />
-            </RadzenStack>
-        </RadzenFieldset>
-        <RadzenFieldset Text="Budget">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
-                <RadzenSelectBar TValue="BudgetType" Size="ButtonSize.Small" @bind-Value="@BudgetType">
-                    <Items>
-                        @foreach(var each in Enum.GetValues(typeof(BudgetType)).Cast<BudgetType>())
-                        {
-                            <RadzenSelectBarItem Value="@each" Text="@each.ToString()" />
-                        }
-                    </Items>
-                </RadzenSelectBar>
+        <RadzenCard>
+            <RadzenStack Gap="0.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenIcon Icon="date_range"></RadzenIcon>
+                    <RadzenText Text="Date" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
+                </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Budget -= 100)" />
-                    <RadzenNumeric class="budget-input" @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" />
-                    <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Budget += 100)" />
+                    <RadzenDatePicker @bind-Value="@StartDate" DateFormat="d" Style="width: 120px" />
+                    <RadzenText Text="to" class="rz-mb-0" />
+                    <RadzenDatePicker @bind-Value="@EndDate" DateFormat="d" Style="width: 120px" />
+                    @* <RadzenCheckBox Placeholder="Continuous" @bind-Value="@Continuous" /> *@
+                    @* <RadzenText Text="Continuous" class="rz-mb-0" Style="font-size: 14px; font-weight: 500;" /> *@
                 </RadzenStack>
             </RadzenStack>
-        </RadzenFieldset>
-        <RadzenFieldset Text="Status">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount">
-                    <Template>
-                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                            <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
-                            <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
-                        </RadzenStack>
-                    </Template>
-                </RadzenDropDown>
+            @* <RadzenFieldset Text="Date"> *@
+            @* </RadzenFieldset> *@
+        </RadzenCard>
+        <RadzenCard>
+            <RadzenStack Gap="0.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenIcon Icon="attach_money"></RadzenIcon>
+                    <RadzenText Text="Budget" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                    <RadzenSelectBar TValue="BudgetType" Size="ButtonSize.Small" @bind-Value="@BudgetType">
+                        <Items>
+                            @foreach(var each in Enum.GetValues(typeof(BudgetType)).Cast<BudgetType>())
+                            {
+                            <RadzenSelectBarItem Value="@each" Text="@each.ToString()" />
+                            }
+                        </Items>
+                    </RadzenSelectBar>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Budget -= 100)" />
+                        <RadzenNumeric class="budget-input" @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" />
+                        <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Budget += 100)" />
+                    </RadzenStack>
+                </RadzenStack>
             </RadzenStack>
-        </RadzenFieldset>
+        </RadzenCard>
+        @* <RadzenFieldset Text="Budget"> *@
+        @* </RadzenFieldset> *@
+        <RadzenCard>
+            <RadzenStack Gap="0.5rem">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenIcon Icon="done_all"></RadzenIcon>
+                    <RadzenText Text="Status" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount">
+                        <Template>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
+                                <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                            </RadzenStack>
+                        </Template>
+                    </RadzenDropDown>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenCard>
+        @* <RadzenFieldset Text="Status"> *@
+        @* </RadzenFieldset> *@
     </RadzenRow>
-    <RadzenTabs @bind-SelectedIndex="@SelectedTabIndex">
-        <Tabs>
-            <RadzenTabsItem Text="Locations" Icon="location_on">
-                <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@advertisements" Add="@OnAddAdvertisement" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Schedule" Icon="schedule">
-                <CampaignScheduleEditor CampaignId="@CampaignIdInt" />
-            </RadzenTabsItem>
-            <RadzenTabsItem Text="Review" Icon="grading">
-                <Review CampaignId="@CampaignIdInt" />
-            </RadzenTabsItem>
-        </Tabs>
-    </RadzenTabs>
+    <RadzenCard>
+        <RadzenTabs @bind-SelectedIndex="@_selectedTabIndex">
+            <Tabs>
+                <RadzenTabsItem Text="Locations" Icon="location_on">
+                    <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="_selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Advertisements" Icon="featured_video">
+                    <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@_advertisements" Add="@OnAddAdvertisement" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Schedule" Icon="schedule">
+                    <CampaignScheduleEditor CampaignId="@CampaignIdInt" />
+                </RadzenTabsItem>
+                <RadzenTabsItem Text="Review" Icon="grading">
+                    <Review CampaignId="@CampaignIdInt" />
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </RadzenCard>
 </RadzenStack>
 
 <style>

@@ -32,21 +32,21 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         //     Campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignId);
         // }
         
-        private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Upload.GetThumbnail());
+        private IEnumerable<string> Images => Campaign?.Advertisements?.Select(x => x.Upload.GetThumbnail()) ?? new List<string>();
     
-        private int currentIndex = 0;
-        private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
+        private int _currentIndex = 0;
+        private string CurrentImage => Images.ElementAtOrDefault(_currentIndex);
         private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
-        private bool IsPreviousButtonVisible => currentIndex > 0;
-        private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
+        private bool IsPreviousButtonVisible => _currentIndex > 0;
+        private bool IsNextButtonVisible => Images.Count() - 1 > _currentIndex;
         private void NextImage()
         {
-            currentIndex = (currentIndex + 1) % Images.Count();
+            _currentIndex = (_currentIndex + 1) % Images.Count();
         }
 
         private void PreviousImage()
         {
-            currentIndex = (currentIndex - 1 + Images.Count()) % Images.Count();
+            _currentIndex = (_currentIndex - 1 + Images.Count()) % Images.Count();
         }
         
         

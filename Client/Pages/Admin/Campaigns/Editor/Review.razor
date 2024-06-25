@@ -8,7 +8,7 @@
                         <RadzenIcon Icon="date_range" Style="font-size: 16px" />
                         <RadzenText Text="Date" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                     </RadzenStack>
-                    <RadzenText Text="@($"{Campaign.StartDate:d} to {(Campaign.EndDate != null ? $"{Campaign.EndDate:d}" : "Ongoing")}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                    <RadzenText Text="@($"{Campaign.StartDate:d} to {Campaign.EndDate:d}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="1rem">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
@@ -52,7 +52,7 @@
     </RadzenColumn>
     <RadzenColumn SizeMD="4">
         <RadzenStack JustifyContent="Radzen.JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" class="w-100">
-            <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="auto" Height="400px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
+            <CarouselComponent CurrentIndex="@_currentIndex" Images="@Images" Width="auto" Height="400px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
                 <Overlay>
                     <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible" />
                     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>

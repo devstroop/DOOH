@@ -38,12 +38,18 @@ namespace DOOH.Client.Pages
         protected string error;
         protected bool errorVisible;
         protected bool successVisible;
+        protected bool isDeveloper = false;
 
         [Inject]
         protected SecurityService Security { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+            if (String.IsNullOrEmpty(Security.User.Id) && Security.User.Name == "admin" && Security.User.Email == "admin")
+            {
+                isDeveloper = true;
+                return;
+            }
             user = await Security.GetUserById($"{Security.User.Id}");
             twoFactorEnabled = Security.User.TwoFactorEnabled;
         }

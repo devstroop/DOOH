@@ -1,18 +1,52 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CampaignScheduleEditor> L
-<RadzenScheduler TItem="Server.Models.DOOHDB.CampaignSchedule" StartProperty="Start" EndProperty="End" TextProperty="Label" Data="@schedules" SelectedIndex="0"
-                 SlotSelect=@OnSlotSelect AppointmentSelect=@OnScheduleSelect AppointmentRender=@OnScheduleRender
-                 AppointmentMove=@OnScheduleMove Style="height: 640px" Date="@SelectedDate" SlotRender="@OnSlotRender">
-    @* <RadzenDayView StartTime="@SelectedDate.TimeOfDay"></RadzenDayView> *@
-    @* <RadzenWeekView StartTime="@SelectedDate.TimeOfDay"></RadzenWeekView> *@
-    <RadzenMonthView></RadzenMonthView>
-    <RadzenYearView StartMonth="@startMonth"></RadzenYearView>
-    @* <RadzenYearPlannerView StartMonth="@startMonth"/> *@
-    @* <RadzenYearTimelineView StartMonth="@startMonth"/> *@
-</RadzenScheduler>
+<RadzenRow>
+    <RadzenColumn SizeMD="8">
+        <RadzenScheduler TItem="Server.Models.DOOHDB.CampaignSchedule" StartProperty="Start" EndProperty="End" TextProperty="Label" Data="@schedules" SelectedIndex="0"
+                         SlotSelect=@OnSlotSelect AppointmentSelect=@OnScheduleSelect AppointmentRender=@OnScheduleRender
+                         AppointmentMove=@OnScheduleMove Style="height: 640px" Date="@SelectedDate" SlotRender="@OnSlotRender">
+            @* <RadzenDayView StartTime="@SelectedDate.TimeOfDay"></RadzenDayView> *@
+            @* <RadzenWeekView StartTime="@SelectedDate.TimeOfDay"></RadzenWeekView> *@
+            <RadzenMonthView></RadzenMonthView>
+            <RadzenYearView StartMonth="@StartMonth"></RadzenYearView>
+            @* <RadzenYearPlannerView StartMonth="@startMonth"/> *@
+            @* <RadzenYearTimelineView StartMonth="@startMonth"/> *@
+        </RadzenScheduler>
+    </RadzenColumn>
+    <RadzenColumn SizeMD="4">
+        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@schedules" LoadData="@LoadData">
+            <Template>
+                <RadzenStack Orientation="Radzen.Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenStack Gap="1rem">
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem">
+                            <RadzenIcon Icon="date_range"></RadzenIcon>
+                            <RadzenText Text="Date" TextStyle="Radzen.Blazor.TextStyle.Body2" Style="font-weight: bold"/>
+                        </RadzenStack>
+                        <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="2rem">
+                            <RadzenStack Gap="0">
+                                <RadzenText Text="@context.Start.ToString("d")" TextStyle="TextStyle.Body2"/>
+                                <RadzenText Text="@context.Start.ToString("t")" TextStyle="TextStyle.Caption"/>
+                            </RadzenStack>
+                            <RadzenStack Gap="0">
+                                <RadzenText Text="@context.End.ToString("d")" TextStyle="TextStyle.Body2"/>
+                                <RadzenText Text="@context.End.ToString("t")" TextStyle="TextStyle.Caption"/>
+                            </RadzenStack>
+                        </RadzenStack>
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                        <RadzenText Text="@context.Rotation.ToString()" TextStyle="Radzen.Blazor.TextStyle.DisplayH5" class="rz-mb-0" />
+                        <RadzenButton Icon="delete_outline" ButtonStyle="Radzen.ButtonStyle.Danger" Variant="Radzen.Variant.Filled" Size="Radzen.ButtonSize.Medium"></RadzenButton>
+                    </RadzenStack>
+                </RadzenStack>
+            </Template>
+        </RadzenDataList>
+    </RadzenColumn>
+</RadzenRow>
 
 
 @code {
     [Parameter] public int CampaignId { get; set; }
+    [Parameter] public DateTime StartDate { get; set; } = DateTime.Today;
+    [Parameter] public DateTime EndDate { get; set; } = DateTime.Today.AddYears(1);
 
     [Inject] protected DialogService DialogService { get; set; }
 
@@ -24,9 +58,8 @@
 
     private IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> schedules;
 
-    private int schedulesCount;
-
-    private Month startMonth { get; set; } = (Month)DateTime.Today.Month;
+    private int _schedulesCount;
+    private Month StartMonth { get; set; } = (Month)DateTime.Today.Month;
     private DateTime SelectedDate { get; set; } = DateTime.Now;
 
     protected override async Task OnParametersSetAsync()
@@ -34,12 +67,12 @@
         await LoadData();
     }
 
-    private async Task LoadData()
+    private async Task LoadData(LoadDataArgs args = null)
     {
-        var result = await DOOHDBService.GetCampaignSchedules(filter: $"CampaignId eq {CampaignId}");
+        var result = await DOOHDBService.GetCampaignSchedules(filter: $"CampaignId eq {CampaignId}", orderby: "Start", expand: "Campaign", top: 1000);
         schedules = result.Value;
-        schedulesCount = result.Count;
-        Console.WriteLine($"Loaded {schedulesCount} schedules");
+        _schedulesCount = result.Count;
+        Console.WriteLine($"Loaded {_schedulesCount} schedules");
         StateHasChanged();
     }
 
@@ -63,8 +96,20 @@
     {
         // Console Log, after Serialize
         // await JSRuntime.InvokeVoidAsync("console.log", args.Start.ToString("yyyy-MM-ddTHH:mm:ss"), args.End.ToString("yyyy-MM-ddTHH:mm:ss"));
+        
+        
         if (args.View.Text != "Year")
         {
+            var start = args.Start;
+            var end = args.End;
+
+            if ((start < StartDate || start > EndDate) || (end < StartDate || end > EndDate) || (start > end))
+            {
+                NotificationService.Notify(NotificationSeverity.Error, "Invalid Date", "Selected date is out of campaign date range");
+                return;
+            }
+
+            
             DOOH.Server.Models.DOOHDB.CampaignSchedule data = await DialogService.OpenAsync<CampaignScheduleValueEditor>("Add Schedule",
                 new Dictionary<string, object> { { "CampaignId", CampaignId },{ "ScheduleId", 0 }, { "Start", args.Start }, { "End", args.End } });
 
@@ -82,6 +127,16 @@
         {
             return;
         }
+        
+        var start = args.Start;
+        var end = args.End;
+
+        if ((start < StartDate || start > EndDate) || (end < StartDate || end > EndDate) || (start > end))
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Cannot Edit", "Older schedules cannot be edited");
+            return;
+        }
+
         var data = await DialogService.OpenAsync<CampaignScheduleValueEditor>("Edit Schedule", new Dictionary<string, object> { { "CampaignId", CampaignId }, { "ScheduleId", args.Data.ScheduleId } });
 
         if (data != null)
@@ -106,6 +161,7 @@
         {
             args.Attributes["style"] = "background: red";
         }
+        
     }
 
     async Task OnScheduleMove(SchedulerAppointmentMoveEventArgs args)

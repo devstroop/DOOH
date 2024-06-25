@@ -174,7 +174,7 @@
             var position = new GoogleMapPosition() { Lat = adboard?.Adboard?.Latitude ?? 0, Lng = adboard?.Adboard?.Longitude ?? 0 };
             markers.Add(new Tuple<string, GoogleMapPosition>($"#{adboard.AdboardId}", position));
             if (firstPosition == null)
-            {
+             {
                 firstPosition = position;
             }
         }

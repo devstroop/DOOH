@@ -1,3 +1,4 @@
+@layout ProfileLayout
 @page "/profile"
 @attribute [Authorize]
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Profile> L
@@ -9,10 +10,10 @@
             <RadzenText Text="Profile" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
     </RadzenRow>
-    <RadzenRow>
+    <RadzenRow Visible="!isDeveloper">
         <RadzenColumn SizeMD="12">
             <RadzenTemplateForm Method="post" Submit="@FormSubmit" TItem="DOOH.Server.Models.ApplicationUser" Data="@user"
-                Visible="@(user != null)">
+                                Visible="@(user != null)">
                 <RadzenAlert Size="AlertSize.Large" Shade="Shade.Light" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Title="Cannot change password" Visible="@errorVisible">@error</RadzenAlert>
                 <RadzenAlert Size="AlertSize.Large" Shade="Shade.Light" AlertStyle="AlertStyle.Success" Variant="Variant.Flat" Visible="@successVisible">
                     Your password has been changed.
@@ -24,7 +25,7 @@
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
                         <RadzenPassword @bind-Value="@oldPassword" style="display: block; width: 100%"
-                            Name="OldPassword" />
+                                        Name="OldPassword" />
                         <RadzenRequiredValidator Component="OldPassword" Text="Enter your current password" />
                     </RadzenColumn>
                 </RadzenRow>
@@ -34,7 +35,7 @@
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
                         <RadzenPassword @bind-Value="@newPassword" style="display: block; width: 100%"
-                            Name="NewPassword" />
+                                        Name="NewPassword" />
                         <RadzenRequiredValidator Component="NewPassword" Text="Enter your new password" />
                     </RadzenColumn>
                 </RadzenRow>
@@ -44,7 +45,7 @@
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
                         <RadzenPassword @bind-Value="@confirmPassword" style="display: block; width: 100%"
-                            Name="ConfirmPassword" />
+                                        Name="ConfirmPassword" />
                         <RadzenRequiredValidator Component="ConfirmPassword" Text="Confirm your new password" />
                         <RadzenCompareValidator Component="ConfirmPassword" Text="Passwords should be the same" Value="@newPassword" />
                     </RadzenColumn>
@@ -58,9 +59,16 @@
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
-                        <RadzenButton ButtonType="ButtonType.Submit" Text="Change password" Variant="Variant.Flat" />
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Change password" Variant="Variant.Flat" />
                 </RadzenStack>
             </RadzenTemplateForm>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Visible="@isDeveloper">
+        <RadzenColumn Size="12">
+            <RadzenCard>
+                <RadzenText Text="You are a developer. Cannot edit your profile."/>
+            </RadzenCard>
         </RadzenColumn>
     </RadzenRow>
 </RadzenStack>

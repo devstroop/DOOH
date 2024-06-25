@@ -25,16 +25,15 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private decimal Budget { get; set; } = 0;
         private bool IsDraft { get; set; } = true;
         private bool IsSaving { get; set; } = false;
-        private bool Continuous { get; set; } = true;
+        // private bool Continuous { get; set; } = true;
         private DateTime StartDate { get; set; } = DateTime.Today;
         private DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
         private int StatusId { get; set; }
         
-        private IList<int> selectedAdboardIds = new List<int>();
-        private IEnumerable<Advertisement> advertisements = new List<Advertisement>();
+        private IList<int> _selectedAdboardIds = new List<int>();
+        private IEnumerable<Advertisement> _advertisements = new List<Advertisement>();
 
-        private DOOH.Server.Models.DOOHDB.Campaign campaign;
-        
+        private DOOH.Server.Models.DOOHDB.Campaign _campaign;
 
         [Inject]
         protected IJSRuntime JsRuntime { get; set; }
@@ -79,26 +78,21 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 if (CampaignIdInt != 0)
                 {
-                    campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard),Advertisements($expand=Upload)");
-                    if (campaign != null)
+                    _campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignIdInt, expand: "CampaignAdboards($expand=Adboard),Advertisements($expand=Upload)");
+                    if (_campaign != null)
                     {
-                        CampaignId = campaign.CampaignId.ToString();
-                        CampaignName = campaign.CampaignName;
-                        StartDate = campaign.StartDate;
-                        EndDate = campaign.EndDate ?? DateTime.Today.AddDays(30);
-                        Continuous = campaign.EndDate == null;
-                        Budget = campaign.Budget;
-                        BudgetType = (BudgetType)campaign.BudgetType;
-                        IsDraft = campaign.IsDraft;
-                        StatusId = campaign.StatusId ?? 0;
-                        selectedAdboardIds = campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
-                        advertisements = campaign.Advertisements;
+                        CampaignId = _campaign.CampaignId.ToString();
+                        CampaignName = _campaign.CampaignName;
+                        StartDate = _campaign.StartDate;
+                        EndDate = _campaign.EndDate;
+                        Budget = _campaign.Budget;
+                        BudgetType = (BudgetType)_campaign.BudgetType;
+                        IsDraft = _campaign.IsDraft;
+                        StatusId = _campaign.StatusId ?? 0;
+                        _selectedAdboardIds = _campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
+                        _advertisements = _campaign.Advertisements;
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                errorVisible = true;
             }
             finally
             {
@@ -107,28 +101,26 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        protected bool errorVisible;
-
-        private int SelectedTabIndex { get; set; } = 0;
+        private int _selectedTabIndex = 0;
 
 
         private async Task SaveCampaignAdboards()
         {
-            var existing = campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
-            var toAdd = selectedAdboardIds.Except(existing).ToList();
-            var toRemove = existing.Except(selectedAdboardIds).ToList();
+            var existing = _campaign.CampaignAdboards.Select(ca => ca.AdboardId).ToList();
+            var toAdd = _selectedAdboardIds.Except(existing).ToList();
+            var toRemove = existing.Except(_selectedAdboardIds).ToList();
             
             foreach (var adboardId in toAdd)
             {
                 var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard();
-                campaignAdboard.CampaignId = campaign.CampaignId;
+                campaignAdboard.CampaignId = _campaign.CampaignId;
                 campaignAdboard.AdboardId = adboardId;
                 await DoohdbService.CreateCampaignAdboard(campaignAdboard);
             }
             
             foreach (var adboardId in toRemove)
             {
-                var campaignAdboard = campaign.CampaignAdboards.FirstOrDefault(ca => ca.AdboardId == adboardId);
+                var campaignAdboard = _campaign.CampaignAdboards.FirstOrDefault(ca => ca.AdboardId == adboardId);
                 if (campaignAdboard != null)
                 {
                     await DoohdbService.DeleteCampaignAdboard(campaignAdboard.CampaignId, campaignAdboard.AdboardId);
@@ -149,39 +141,35 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 IsSaving = true;
                 StateHasChanged();
 
-                campaign = campaign ?? new DOOH.Server.Models.DOOHDB.Campaign();
-                campaign.CampaignId = CampaignIdInt;
-                campaign.CampaignName = CampaignName;
-                campaign.StartDate = StartDate;
-                campaign.EndDate = Continuous ? null : EndDate;
-                campaign.Budget = Budget;
-                campaign.BudgetType = (int)BudgetType;
-                campaign.IsDraft = IsDraft;
-                campaign.StatusId = StatusId;
+                _campaign = _campaign ?? new DOOH.Server.Models.DOOHDB.Campaign();
+                _campaign.CampaignId = CampaignIdInt;
+                _campaign.CampaignName = CampaignName;
+                _campaign.StartDate = StartDate;
+                _campaign.EndDate = EndDate;
+                _campaign.Budget = Budget;
+                _campaign.BudgetType = (int)BudgetType;
+                _campaign.IsDraft = IsDraft;
+                _campaign.StatusId = StatusId;
                 
-                if (campaign.CampaignId == 0)
+                if (_campaign.CampaignId == 0)
                 {
-                    var result = await DoohdbService.CreateCampaign(campaign);
+                    var result = await DoohdbService.CreateCampaign(_campaign);
                     if(result != null)
                     {
-                        campaign.CampaignId = result.CampaignId;
+                        _campaign.CampaignId = result.CampaignId;
                         await SaveCampaignAdboards();
                         NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }
                 else
                 {
-                    var result = await DoohdbService.UpdateCampaign(campaign.CampaignId, campaign);
+                    var result = await DoohdbService.UpdateCampaign(_campaign.CampaignId, _campaign);
                     if (result != null)
                     {
                         await SaveCampaignAdboards();
                         NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                errorVisible = true;
             }
             finally
             {
@@ -227,23 +215,23 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private async Task OnAddAdboard(int adboardId)
         {
-            if (!selectedAdboardIds.Contains(adboardId))
+            if (!_selectedAdboardIds.Contains(adboardId))
             {
-                selectedAdboardIds.Add(adboardId);
+                _selectedAdboardIds.Add(adboardId);
             }
         }
 
         private async Task OnRemoveAdboard(int adboardId)
         {
-            if (selectedAdboardIds.Contains(adboardId))
+            if (_selectedAdboardIds.Contains(adboardId))
             {
-                selectedAdboardIds.Remove(adboardId);
+                _selectedAdboardIds.Remove(adboardId);
             }
         }
 
         private async Task OnClearAdboards()
         {
-            selectedAdboardIds.Clear();
+            _selectedAdboardIds.Clear();
         }
         
         // OnRefresh
