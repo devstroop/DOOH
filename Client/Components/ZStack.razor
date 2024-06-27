@@ -1,0 +1,14 @@
+<div class="zstack" style="position: relative; width: 100%; height: 100%;">
+    @ChildContent
+</div>
+<style>
+    .zstack > * {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

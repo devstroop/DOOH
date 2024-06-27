@@ -1,8 +1,7 @@
-<h3>Review</h3>
-<RadzenRow>
+<RadzenRow class="h-100">
     <RadzenColumn SizeMD="8">
         <RadzenFieldset Text="Summary">
-            <RadzenStack Gap="0.5rem" JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Start">
+            <RadzenStack Gap="1rem" JustifyContent="Radzen.JustifyContent.Start" AlignItems="Radzen.AlignItems.Start">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.5rem">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                         <RadzenIcon Icon="date_range" Style="font-size: 16px" />
@@ -45,24 +44,86 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenFieldset>
-        <RadzenFieldset Text="Disclaimer">
-            @*Static Text*@
+        <RadzenFieldset Text="Adboards">
+            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="100px" AllowSorting="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
+                <Columns>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" />
+                </Columns>
+            </RadzenDataGrid>
             
+        </RadzenFieldset>
+        <RadzenFieldset Text="Schedules">
+            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@campaignSchedules" ColumnWidth="100px" AllowSorting="true" LoadData="@campaignSchedulesLoadData" Count="@campaignSchedulesCount">
+                <Columns>
+                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Label" Title="Label" /> *@
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Start" Title="Start">
+                        <Template Context="schedule">
+                            @schedule.Start.ToString("d")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="End" Title="End">
+                        <Template Context="schedule">
+                            @schedule.End.ToString("d")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Rotation" Title="Rotation" />
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Title="" Width="72px">
+                        <Template Context="schedule">
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+            <RadzenStack Orientation="Orientation.Horizontal" class="rz-mx-2 rz-mt-4">
+                <RadzenRow>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="Scheduled Duration"></RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="1000.00" class="fw-semibold"></RadzenText>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="Total Rotations"></RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="100" class="fw-semibold"></RadzenText>
+                </RadzenRow>
+                <RadzenRow>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="Frequency"></RadzenText>
+                    <RadzenText TextStyle="TextStyle.Caption" Text="100 rotation/day" class="fw-semibold"></RadzenText>
+                </RadzenRow>
+            </RadzenStack>
         </RadzenFieldset>
     </RadzenColumn>
     <RadzenColumn SizeMD="4">
-        <RadzenStack JustifyContent="Radzen.JustifyContent.Center" AlignItems="Radzen.AlignItems.Center" class="w-100">
-            <CarouselComponent CurrentIndex="@_currentIndex" Images="@Images" Width="auto" Height="400px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
-                <Overlay>
-                    <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible" />
-                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>
-                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible"/>
-                </Overlay>
-            </CarouselComponent>
+        <RadzenStack JustifyContent="JustifyContent.SpaceBetween" class="h-100">
+            <RadzenStack AlignItems="AlignItems.Center" >
+                @* <RadzenBadge Style="font-size: 18px; border-radius: 12px" Shade="Shade.Lighter" BadgeStyle="BadgeStyle.Info" class="rz-px-3 rz-py-2" Text="Preview"></RadzenBadge> *@
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" class="rz-mt-3">
+                    <CarouselComponent CurrentIndex="@_currentIndex" Images="@Images" Width="100%" Height="auto" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5; min-width: 200px; max-height: 500px;" Class="rz-mx-0 rz-shadow-5">
+                        <Overlay>
+                            <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible"/>
+                            <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>
+                            <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible"/>
+                        </Overlay>
+                    </CarouselComponent>
+                </RadzenStack>
+            </RadzenStack>
+            <RadzenStack AlignItems="AlignItems.Start">
+                
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" class="rz-mt-2">
+                    <RadzenCheckBox TValue="bool"></RadzenCheckBox>
+                    <RadzenText Text="I have reviewed the campaign and confirm that it is ready for publishing." TextStyle="TextStyle.Caption" class="rz-mb-0" />
+                </RadzenStack>
+                <RadzenRow class="rz-mt-2 w-100">
+                    <RadzenColumn>
+                        <RadzenButton Size="ButtonSize.Large" Text="Publish" ButtonStyle="ButtonStyle.Primary" BusyText="Publishing" Style="display: block; width: 100%" />
+                    </RadzenColumn>
+                    <RadzenColumn>
+                        <RadzenButton Size="ButtonSize.Large" Text="Cancel" ButtonStyle="ButtonStyle.Light" Style="display: block; width: 100%"/>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
 <style>
+    
     .custom-center-icon-button {
         position: absolute;
         top: 50%;

@@ -100,15 +100,20 @@
                 <RadzenTabsItem Text="Schedule" Icon="schedule">
                     <CampaignScheduleEditor CampaignId="@CampaignIdInt" />
                 </RadzenTabsItem>
-                <RadzenTabsItem Text="Review" Icon="grading">
-                    <Review CampaignId="@CampaignIdInt" />
-                </RadzenTabsItem>
+                @* <RadzenTabsItem Text="Review" Icon="grading"> *@
+                @*     <Review CampaignId="@CampaignIdInt" /> *@
+                @* </RadzenTabsItem> *@
             </Tabs>
         </RadzenTabs>
     </RadzenCard>
 </RadzenStack>
 
 <style>
+    .rz-tabview-nav {
+        width: auto;
+        overflow-x: auto; 
+        scroll-margin-left: 1rem;
+    }
     .rz-dialog-titlebar {
         background-color: #fff;
     }

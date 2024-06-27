@@ -132,8 +132,19 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             try
             {
-                var confirmariotnResult = await DialogService.Confirm("Are you sure you want to save?");
-                if (confirmariotnResult != true)
+                // var confirmariotnResult = await DialogService.Confirm("Are you sure you want to save?");
+                // if (confirmariotnResult != true)
+                // {
+                //     return;
+                // }
+                
+                // OpenDialog Review
+                var reviewDialog = await DialogService.OpenAsync<Review>("Review", new Dictionary<string, object>() {{"CampaignId", CampaignIdInt}}, new DialogOptions()
+                {
+                    Width = "100%",
+                    Height = "100%",
+                });
+                if (reviewDialog != true)
                 {
                     return;
                 }
