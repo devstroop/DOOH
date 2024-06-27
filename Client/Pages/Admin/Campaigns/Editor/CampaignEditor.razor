@@ -3,6 +3,7 @@
 @page "/admin/campaigns/editor/{CampaignId}"
 @page "/admin/campaigns/editor"
 @attribute [Authorize]
+
 <PageTitle>Campaign Editor</PageTitle>
 <RadzenStack>
     <RadzenRow class="rz-mb-2" AlignItems="AlignItems.Center" Gap="1rem" RowGap="1rem">
@@ -65,8 +66,6 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenCard>
-        @* <RadzenFieldset Text="Budget"> *@
-        @* </RadzenFieldset> *@
         <RadzenCard>
             <RadzenStack Gap="0.5rem">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
@@ -74,7 +73,7 @@
                     <RadzenText Text="Status" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount">
+                    <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@StatusesLoadData" Count="@statusesCount">
                         <Template>
                             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                                 <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
@@ -85,20 +84,18 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenCard>
-        @* <RadzenFieldset Text="Status"> *@
-        @* </RadzenFieldset> *@
     </RadzenRow>
     <RadzenCard>
         <RadzenTabs @bind-SelectedIndex="@_selectedTabIndex">
             <Tabs>
                 <RadzenTabsItem Text="Locations" Icon="location_on">
-                    <CampaignAdboardsEditor CampaignId="@CampaignIdInt" SelectedAdboardIds="_selectedAdboardIds" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
+                    <CampaignAdboardsEditor CampaignId="@_campaignId" Data="@_selectedAdboards" Add="@OnAddAdboard" Remove="@OnRemoveAdboard" Clear="@OnClearAdboards"/>
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="Advertisements" Icon="featured_video">
-                    <CampaignAdvertisementsEditor CampaignId="@CampaignIdInt" Advertisements="@_advertisements" Add="@OnAddAdvertisement" DeleteAdvertisementByAdvertisementId="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
+                    <CampaignAdvertisementsEditor CampaignId="@_campaignId" Data="@_advertisements" Add="@OnAddAdvertisement" Delete="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="Schedule" Icon="schedule">
-                    <CampaignScheduleEditor CampaignId="@CampaignIdInt" />
+                    <CampaignScheduleEditor CampaignId="@_campaignId" Data="@_campaignSchedules" Add="@AddSchedule" Update="@UpdateSchedule" Delete="@DeleteSchedule" />
                 </RadzenTabsItem>
                 @* <RadzenTabsItem Text="Review" Icon="grading"> *@
                 @*     <Review CampaignId="@CampaignIdInt" /> *@

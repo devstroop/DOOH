@@ -1,9 +1,9 @@
 @using DOOH.Server.Models.DOOHDB
 <RadzenRow>
     <RadzenColumn SizeMD="6">
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(Advertisements != null && Advertisements.Any())">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" class="rz-p-3 rz-mx-2 rz-mb-4" Style="background-color: green; border-radius: 4px;" Visible="@(Data != null && Data.Any())">
             <RadzenIcon Icon="info" IconColor="white"/>
-            <RadzenText class="rz-mb-0" Text="@($"{Advertisements.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
+            <RadzenText class="rz-mb-0" Text="@($"{Data.Count()} advertisements!")" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;"/>
         </RadzenStack>
     </RadzenColumn>
     <RadzenColumn SizeMD="6">
@@ -12,7 +12,7 @@
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Advertisements" Count="@AdvertisementsCount" WrapItems="true">
+<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Data" Count="@AdvertisementsCount" WrapItems="true">
     <Template>
         <CarouselComponent Images="@(new List<string> { context.Upload.GetThumbnail() })" Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
             <Overlay>

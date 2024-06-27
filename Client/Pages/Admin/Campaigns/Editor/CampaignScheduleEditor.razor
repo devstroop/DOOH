@@ -1,19 +1,16 @@
 @inject Microsoft.Extensions.Localization.IStringLocalizer<CampaignScheduleEditor> L
 <RadzenRow>
     <RadzenColumn SizeMD="7" SizeLG="8" SizeXL="9">
-        <RadzenScheduler TItem="Server.Models.DOOHDB.CampaignSchedule" StartProperty="Start" EndProperty="End" TextProperty="Label" Data="@schedules" SelectedIndex="0"
-                         SlotSelect=@OnSlotSelect AppointmentSelect=@OnScheduleSelect AppointmentRender=@OnScheduleRender
-                         AppointmentMove=@OnScheduleMove Style="height: 640px" Date="@SelectedDate" SlotRender="@OnSlotRender">
-            @* <RadzenDayView StartTime="@SelectedDate.TimeOfDay"></RadzenDayView> *@
-            @* <RadzenWeekView StartTime="@SelectedDate.TimeOfDay"></RadzenWeekView> *@
+        <RadzenScheduler TItem="Server.Models.DOOHDB.CampaignSchedule" StartProperty="Start" EndProperty="End" TextProperty="Label" Data="@Data" SelectedIndex="0"
+                         SlotSelect="@OnSlotSelect" AppointmentSelect="@OnScheduleSelect" AppointmentRender="@OnScheduleRender"
+                         AppointmentMove="@OnScheduleMove" Style="height: 640px" Date="@SelectedDate" SlotRender="@OnSlotRender">
             <RadzenMonthView></RadzenMonthView>
             <RadzenYearView StartMonth="@StartMonth"></RadzenYearView>
-            @* <RadzenYearPlannerView StartMonth="@startMonth"/> *@
             <RadzenYearTimelineView StartMonth="@StartMonth"/>
         </RadzenScheduler>
     </RadzenColumn>
     <RadzenColumn SizeMD="5" SizeLG="4" SizeXL="3" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
-        <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@schedules" LoadData="@LoadData" WrapItems="true" Count="@_schedulesCount">
+        <RadzenDataList TItem="Server.Models.DOOHDB.CampaignSchedule" Data="@Data" WrapItems="true" Count="@Data.Count()">
             <Template>
                 <CampaignScheduleTemplate Context="@context"></CampaignScheduleTemplate>
             </Template>
@@ -23,37 +20,24 @@
 
 
 @code {
-    [Parameter] public int CampaignId { get; set; }
-    [Parameter] public DateTime StartDate { get; set; } = DateTime.Today;
-    [Parameter] public DateTime EndDate { get; set; } = DateTime.Today.AddYears(1);
+    [Parameter] public int CampaignId { get; set; } = 0;
+    [Parameter] public DateTime Min { get; set; } = DateTime.Today;
+    [Parameter] public DateTime Max { get; set; } = DateTime.Today.AddDays(90);
+    [Parameter] public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> Data { get; set; }
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.CampaignSchedule> Add { get; set; }
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.CampaignSchedule> Update { get; set; }
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.CampaignSchedule> Delete { get; set; }
 
     [Inject] protected DialogService DialogService { get; set; }
 
-    [Inject] protected DOOHDBService DOOHDBService { get; set; }
+    [Inject] protected DOOHDBService DoohDbService { get; set; }
 
     [Inject] protected NotificationService NotificationService { get; set; }
 
-    [Inject] protected IJSRuntime JSRuntime { get; set; }
+    [Inject] protected IJSRuntime JsRuntime { get; set; }
 
-    private IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> schedules;
-
-    private int _schedulesCount;
     private Month StartMonth { get; set; } = (Month)DateTime.Today.Month;
     private DateTime SelectedDate { get; set; } = DateTime.Now;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        await LoadData();
-    }
-
-    private async Task LoadData(LoadDataArgs args = null)
-    {
-        var result = await DOOHDBService.GetCampaignSchedules(filter: $"CampaignId eq {CampaignId}", orderby: "Start", expand: "Campaign", top: 1000);
-        schedules = result.Value;
-        _schedulesCount = result.Count;
-        Console.WriteLine($"Loaded {_schedulesCount} schedules");
-        StateHasChanged();
-    }
 
 
     void OnSlotRender(SchedulerSlotRenderEventArgs args)
@@ -73,16 +57,12 @@
 
     async Task OnSlotSelect(SchedulerSlotSelectEventArgs args)
     {
-        // Console Log, after Serialize
-        // await JSRuntime.InvokeVoidAsync("console.log", args.Start.ToString("yyyy-MM-ddTHH:mm:ss"), args.End.ToString("yyyy-MM-ddTHH:mm:ss"));
-        
-        
         if (args.View.Text != "Year")
         {
             var start = args.Start;
             var end = args.End;
 
-            if ((start < StartDate || start > EndDate) || (end < StartDate || end > EndDate) || (start > end))
+            if ((start < Min || start > Max) || (end < Min || end > Max) || (start > end))
             {
                 NotificationService.Notify(NotificationSeverity.Error, "Invalid Date", "Selected date is out of campaign date range");
                 return;
@@ -94,8 +74,9 @@
 
             if (data != null)
             {
-                data = await DOOHDBService.CreateCampaignSchedule(data);
-                await LoadData();
+                Data = Data.Append(data);
+                StateHasChanged();
+                await Add.InvokeAsync(data);
             }
         }
     }
@@ -110,7 +91,7 @@
         var start = args.Start;
         var end = args.End;
 
-        if ((start < StartDate || start > EndDate) || (end < StartDate || end > EndDate) || (start > end))
+        if ((start < Min || start > Max) || (end < Min || end > Max) || (start > end))
         {
             NotificationService.Notify(NotificationSeverity.Error, "Cannot Edit", "Older schedules cannot be edited");
             return;
@@ -120,32 +101,28 @@
 
         if (data != null)
         {
-            // Update the appointment
             args.Data.Start = data.Start;
             args.Data.End = data.End;
             args.Data.Rotation = data.Rotation;
             args.Data.Label = data.Label;
         }
-
-        await DOOHDBService.UpdateCampaignSchedule(args.Data.ScheduleId, args.Data);
-
-        await LoadData();
+        
+        Data = Data.Where(x => x.ScheduleId != args.Data.ScheduleId).Append(args.Data);
+        StateHasChanged();
+        await Update.InvokeAsync(args.Data);
     }
 
     void OnScheduleRender(SchedulerAppointmentRenderEventArgs<DOOH.Server.Models.DOOHDB.CampaignSchedule> args)
     {
-        // Never call StateHasChanged in AppointmentRender - would lead to infinite loop
-
         if (args.Data.Rotation == 0)
         {
             args.Attributes["style"] = "background: red";
         }
-        
     }
 
     async Task OnScheduleMove(SchedulerAppointmentMoveEventArgs args)
     {
-        var draggedAppointment = schedules.FirstOrDefault(x => x == args.Appointment.Data);
+        var draggedAppointment = Data.FirstOrDefault(x => x == args.Appointment.Data);
 
         if (draggedAppointment != null)
         {
@@ -157,10 +134,10 @@
 
             draggedAppointment.Label = draggedAppointment.Label;
 
-
-            await DOOHDBService.UpdateCampaignSchedule(draggedAppointment.ScheduleId, draggedAppointment);
-
-            await LoadData();
+            
+            Data = Data.Where(x => x.ScheduleId != draggedAppointment.ScheduleId).Append(draggedAppointment);
+            StateHasChanged();
+            await Update.InvokeAsync(draggedAppointment);
         }
     }
 }

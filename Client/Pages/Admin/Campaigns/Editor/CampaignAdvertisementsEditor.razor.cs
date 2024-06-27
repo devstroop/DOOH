@@ -20,13 +20,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Parameter]
         public EventCallback<Advertisement> Add { get; set; }
         [Parameter]
-        public EventCallback<int> DeleteAdvertisementByAdvertisementId { get; set; }
+        public EventCallback<int> Delete { get; set; }
         
         [Parameter]
         public Action Refresh { get; set; }
         
         [Parameter]
-        public IEnumerable<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
+        public IEnumerable<Advertisement> Data { get; set; } = new List<Advertisement>();
 
         [Inject]
         protected IJSRuntime Runtime { get; set; }
@@ -41,7 +41,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected DialogService DialogService { get; set; }
 
 
-        private int AdvertisementsCount => Advertisements?.Count() ?? 0;
+        private int AdvertisementsCount => Data?.Count() ?? 0;
 
 
         [Inject]
@@ -57,7 +57,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
         {
-            await DeleteAdvertisementByAdvertisementId.InvokeAsync(advertisement.AdvertisementId);
+            await Delete.InvokeAsync(advertisement.AdvertisementId);
         }
 
 

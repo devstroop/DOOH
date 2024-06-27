@@ -44,51 +44,57 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenFieldset>
-        <RadzenFieldset Text="Adboards">
-            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="100px" AllowSorting="true" LoadData="@adboardsLoadData" Count="@adboardsCount">
-                <Columns>
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" />
-                </Columns>
-            </RadzenDataGrid>
-            
-        </RadzenFieldset>
-        <RadzenFieldset Text="Schedules">
-            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@campaignSchedules" ColumnWidth="100px" AllowSorting="true" LoadData="@campaignSchedulesLoadData" Count="@campaignSchedulesCount">
-                <Columns>
-                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Label" Title="Label" /> *@
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Start" Title="Start">
-                        <Template Context="schedule">
-                            @schedule.Start.ToString("d")
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="End" Title="End">
-                        <Template Context="schedule">
-                            @schedule.End.ToString("d")
-                        </Template>
-                    </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Rotation" Title="Rotation" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Title="" Width="72px">
-                        <Template Context="schedule">
-                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall" />
-                        </Template>
-                    </RadzenDataGridColumn>
-                </Columns>
-            </RadzenDataGrid>
-            <RadzenStack Orientation="Orientation.Horizontal" class="rz-mx-2 rz-mt-4">
-                <RadzenRow>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="Scheduled Duration"></RadzenText>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="1000.00" class="fw-semibold"></RadzenText>
-                </RadzenRow>
-                <RadzenRow>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="Total Rotations"></RadzenText>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="100" class="fw-semibold"></RadzenText>
-                </RadzenRow>
-                <RadzenRow>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="Frequency"></RadzenText>
-                    <RadzenText TextStyle="TextStyle.Caption" Text="100 rotation/day" class="fw-semibold"></RadzenText>
-                </RadzenRow>
-            </RadzenStack>
-        </RadzenFieldset>
+        <RadzenRow>
+            <RadzenColumn>
+                <RadzenFieldset Text="Adboards">
+                    <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@Adboards" ColumnWidth="100px" AllowSorting="true" Count="@Adboards.Count()">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" />
+                        </Columns>
+                    </RadzenDataGrid>
+
+                </RadzenFieldset>
+            </RadzenColumn>
+            <RadzenColumn>
+                <RadzenFieldset Text="Schedules">
+                    <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@Schedules" ColumnWidth="100px" AllowSorting="true" Count="@Schedules.Count()">
+                        <Columns>
+                            @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Label" Title="Label" /> *@
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Start" Title="Start">
+                                <Template Context="schedule">
+                                    @schedule.Start.ToString("d")
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="End" Title="End">
+                                <Template Context="schedule">
+                                    @schedule.End.ToString("d")
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Rotation" Title="Rotation"/>
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Title="" Width="72px">
+                                <Template Context="schedule">
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"/>
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                    <RadzenStack Orientation="Orientation.Horizontal" class="rz-mx-2 rz-mt-4">
+                        <RadzenRow>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="Scheduled Duration"></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="1000.00" class="fw-semibold"></RadzenText>
+                        </RadzenRow>
+                        <RadzenRow>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="Total Rotations"></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="100" class="fw-semibold"></RadzenText>
+                        </RadzenRow>
+                        <RadzenRow>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="Frequency"></RadzenText>
+                            <RadzenText TextStyle="TextStyle.Caption" Text="100 rotation/day" class="fw-semibold"></RadzenText>
+                        </RadzenRow>
+                    </RadzenStack>
+                </RadzenFieldset>
+            </RadzenColumn>
+        </RadzenRow>
     </RadzenColumn>
     <RadzenColumn SizeMD="4">
         <RadzenStack JustifyContent="JustifyContent.SpaceBetween" class="h-100">
@@ -112,10 +118,10 @@
                 </RadzenStack>
                 <RadzenRow class="rz-mt-2 w-100">
                     <RadzenColumn>
-                        <RadzenButton Size="ButtonSize.Large" Text="Publish" ButtonStyle="ButtonStyle.Primary" BusyText="Publishing" Style="display: block; width: 100%" />
+                        <RadzenButton Click="@Submit" Size="ButtonSize.Large" Text="Publish" ButtonStyle="ButtonStyle.Primary" BusyText="Publishing" Style="display: block; width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn>
-                        <RadzenButton Size="ButtonSize.Large" Text="Cancel" ButtonStyle="ButtonStyle.Light" Style="display: block; width: 100%"/>
+                        <RadzenButton Click="@Cancel" Size="ButtonSize.Large" Text="Cancel" ButtonStyle="ButtonStyle.Light" Style="display: block; width: 100%"/>
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenStack>

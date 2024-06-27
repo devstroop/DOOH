@@ -13,13 +13,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public int CampaignId { get; set; }
         
         [Parameter]
-        public IList<int> SelectedAdboardIds { get; set; } = new List<int>();
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Data { get; set; } = new List<DOOH.Server.Models.DOOHDB.Adboard>();
         
         [Parameter]
-        public EventCallback<int> Add { get; set; }
+        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> Add { get; set; }
         
         [Parameter]
-        public EventCallback<int> Remove { get; set; }
+        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> Remove { get; set; }
         
         [Parameter]
         public EventCallback Clear { get; set; }
@@ -147,13 +147,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             var adboardId = Convert.ToInt32(marker.Title);
             var adboard = Adboards.FirstOrDefault(x => x.AdboardId == adboardId);
-            var message = $"<img src=\"{adboard.AdboardImages.FirstOrDefault().Image}\" class=\"\" style=\"height: 120px; width: auto; object-fit: cover; border-radius: 4px;\"/>" +
+            var message = $"<img src=\"{adboard?.AdboardImages.FirstOrDefault()?.Image}\" class=\"\" style=\"height: 120px; width: auto; object-fit: cover; border-radius: 4px;\"/>" +
                 $"<br/><br/>" +
                 $"ID: {adboardId}" +
                 $"<br/>" +
-                $"{adboard.SignName.Trim()}" +
+                $"{adboard?.SignName?.Trim()}" +
                 $"<br/>" +
-                $"Price <b>₹{adboard.BaseRatePerSecond ?? 0}</b>/sec";
+                $"Price <b>₹{adboard?.BaseRatePerSecond ?? 0}</b>/sec";
 
             var code = $@"
 var map = Radzen['{map.UniqueID}'].instance;
@@ -166,30 +166,30 @@ setTimeout(() => window.infoWindow.open(map, marker), 200);
             await JSRuntime.InvokeVoidAsync("eval", code);
         }
 
-        protected async Task OnSelectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
+        private async Task OnSelectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (!SelectedAdboardIds.Contains(adboard.AdboardId))
+            if (Data.All(x => x.AdboardId != adboard.AdboardId))
             {
-                await Add.InvokeAsync(adboard.AdboardId);
+                await Add.InvokeAsync(adboard);
             }
         }
 
-        protected async Task OnUnselectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
+        private async Task OnUnselectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (SelectedAdboardIds.Contains(adboard.AdboardId))
+            if (Data.Any( x => x.AdboardId == adboard.AdboardId))
             {
-                await Remove.InvokeAsync(adboard.AdboardId);
+                await Remove.InvokeAsync(adboard);
             }
         }
 
-        protected async Task ClearSelectedAdboards()
+        private async Task ClearSelectedAdboards()
         {
             await Clear.InvokeAsync();
         }
 
 
-        protected string selectedAdboardLabel => $"{SelectedAdboardIds.Count()} selected!";
+        private string SelectedAdboardLabel => $"{Data.Count()} selected!";
 
-        protected bool showSelectedAdboardLabel => SelectedAdboardIds.Count() > 0;
+        private bool ShowSelectedAdboardLabel => Data.Any();
     }
 }

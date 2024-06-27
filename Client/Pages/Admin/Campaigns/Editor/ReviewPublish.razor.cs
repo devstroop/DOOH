@@ -8,10 +8,19 @@ using Radzen;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
-    public partial class Review
+    public partial class ReviewPublish
     {
         [Parameter]
-        public int CampaignId { get; set; }
+        public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
+        [Parameter]
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards { get; set; }
+        [Parameter]
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> Advertisements { get; set; }
+        [Parameter]
+        public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> Schedules { get; set; }
+        
+        
+        
         
         [Inject]
         private DOOHDBService DoohdbService { get; set; }
@@ -22,22 +31,9 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Inject]
         private NotificationService NotificationService { get; set; }
         
-        private Campaign Campaign { get; set; }
-        
-        // OnParameterSetAsync
-        protected override async Task OnInitializedAsync()
-        {
-            Campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignId, expand: "Advertisements($expand=Upload), CampaignAdboards($expand=Adboard)");
-        }
         
         
-        
-        // protected override async Task OnParameterSetAsync()
-        // {
-        //     Campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: CampaignId);
-        // }
-        
-        private IEnumerable<string> Images => Campaign?.Advertisements?.Select(x => x.Upload.GetThumbnail()) ?? new List<string>();
+        private IEnumerable<string> Images => Campaign.Advertisements?.Select(x => x.Upload.GetThumbnail()) ?? new List<string>();
     
         private int _currentIndex = 0;
         private string CurrentImage => Images.ElementAtOrDefault(_currentIndex);
@@ -45,16 +41,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private bool IsPreviousButtonVisible => _currentIndex > 0;
         private bool IsNextButtonVisible => Images.Count() - 1 > _currentIndex;
 
-        [Inject]
-        protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> campaignSchedules;
-
-        protected int campaignSchedulesCount;
-
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
-
-        protected int adboardsCount;
         private void NextImage()
         {
             _currentIndex = (_currentIndex + 1) % Images.Count();
@@ -104,35 +91,15 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         }
 
 
-        protected async Task campaignSchedulesLoadData(LoadDataArgs args)
+        // Submit, Cancel
+        private async Task Submit()
         {
-            try
-            {
-                var result = await DOOHDBService.GetCampaignSchedules(new Query { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy });
-
-                campaignSchedules = result.Value.AsODataEnumerable();
-                campaignSchedulesCount = result.Count;
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
-            }
+            DialogService.Close(true);
         }
-
-
-        protected async Task adboardsLoadData(LoadDataArgs args)
+        
+        private async Task Cancel()
         {
-            try
-            {
-                var result = await DOOHDBService.GetCampaignAdboards(new Query { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy, Expand = "Adboard"});
-
-                adboards = result.Value.AsODataEnumerable().Select(x => x.Adboard);
-                adboardsCount = result.Count;
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
-            }
+            DialogService.Close(false);
         }
 
     }
