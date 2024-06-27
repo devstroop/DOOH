@@ -12,7 +12,7 @@
                             </RadzenRow>
                             <RadzenBadge Text="@Context.Category.CategoryName.ToUpper()" Style="@($"{(String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}")}; border-radius: 4px; font-weight: 600;")" class="rz-pt-05 rz-px-15 rz-mb-0" />
                         </RadzenStack>
-                        <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
+                        <RadzenText Text="@($"{Context.City} {Context.State}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
                     </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>

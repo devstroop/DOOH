@@ -201,20 +201,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetCategories(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/cities/csv")]
-        [HttpGet("/export/DOOHDB/cities/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCitiesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCities(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/cities/excel")]
-        [HttpGet("/export/DOOHDB/cities/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCitiesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCities(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/companies/csv")]
         [HttpGet("/export/DOOHDB/companies/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCompaniesToCSV(string fileName = null)
@@ -227,20 +213,6 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportCompaniesToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetCompanies(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/countries/csv")]
-        [HttpGet("/export/DOOHDB/countries/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCountriesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCountries(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/countries/excel")]
-        [HttpGet("/export/DOOHDB/countries/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCountriesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCountries(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/DOOHDB/displays/csv")]
@@ -325,20 +297,6 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportProvidersToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetProviders(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/states/csv")]
-        [HttpGet("/export/DOOHDB/states/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportStatesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/states/excel")]
-        [HttpGet("/export/DOOHDB/states/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportStatesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetStates(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/DOOHDB/statuses/csv")]

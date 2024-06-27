@@ -33,18 +33,6 @@ namespace DOOH.Server.Data
               .HasPrincipalKey(i => i.CategoryId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
-              .HasOne(i => i.City)
-              .WithMany(i => i.Adboards)
-              .HasForeignKey(i => i.CityName)
-              .HasPrincipalKey(i => i.CityName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
-              .HasOne(i => i.Country)
-              .WithMany(i => i.Adboards)
-              .HasForeignKey(i => i.CountryName)
-              .HasPrincipalKey(i => i.CountryName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Display)
               .WithMany(i => i.Adboards)
               .HasForeignKey(i => i.DisplayId)
@@ -61,12 +49,6 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Adboards)
               .HasForeignKey(i => i.ProviderId)
               .HasPrincipalKey(i => i.ProviderId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
-              .HasOne(i => i.State)
-              .WithMany(i => i.Adboards)
-              .HasForeignKey(i => i.StateName)
-              .HasPrincipalKey(i => i.StateName);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardImage>()
               .HasOne(i => i.Adboard)
@@ -146,30 +128,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.City>()
-              .HasOne(i => i.State)
-              .WithMany(i => i.Cities)
-              .HasForeignKey(i => i.StateName)
-              .HasPrincipalKey(i => i.StateName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
-              .HasOne(i => i.City)
-              .WithMany(i => i.Companies)
-              .HasForeignKey(i => i.CityName)
-              .HasPrincipalKey(i => i.CityName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
-              .HasOne(i => i.Country)
-              .WithMany(i => i.Companies)
-              .HasForeignKey(i => i.CountryName)
-              .HasPrincipalKey(i => i.CountryName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Company>()
-              .HasOne(i => i.State)
-              .WithMany(i => i.Companies)
-              .HasForeignKey(i => i.StateName)
-              .HasPrincipalKey(i => i.StateName);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.Display>()
               .HasOne(i => i.Brand)
               .WithMany(i => i.Displays)
@@ -199,30 +157,6 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Motherboards)
               .HasForeignKey(i => i.BrandId)
               .HasPrincipalKey(i => i.BrandId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
-              .HasOne(i => i.City)
-              .WithMany(i => i.Providers)
-              .HasForeignKey(i => i.CityName)
-              .HasPrincipalKey(i => i.CityName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
-              .HasOne(i => i.Country)
-              .WithMany(i => i.Providers)
-              .HasForeignKey(i => i.CountryName)
-              .HasPrincipalKey(i => i.CountryName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
-              .HasOne(i => i.State)
-              .WithMany(i => i.Providers)
-              .HasForeignKey(i => i.StateName)
-              .HasPrincipalKey(i => i.StateName);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.State>()
-              .HasOne(i => i.Country)
-              .WithMany(i => i.States)
-              .HasForeignKey(i => i.CountryName)
-              .HasPrincipalKey(i => i.CountryName);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .HasOne(i => i.Tax1)
@@ -460,11 +394,7 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Category> Categories { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.City> Cities { get; set; }
-
         public DbSet<DOOH.Server.Models.DOOHDB.Company> Companies { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.Country> Countries { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Display> Displays { get; set; }
 
@@ -477,8 +407,6 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Page> Pages { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.State> States { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Status> Statuses { get; set; }
 

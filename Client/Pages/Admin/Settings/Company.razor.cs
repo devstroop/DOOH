@@ -88,66 +88,6 @@ namespace DOOH.Client.Pages.Admin.Settings
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Company company;
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.City> citiesForCityName;
-
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.State> statesForStateName;
-
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Country> countriesForCountryName;
-
-
-        protected int citiesForCityNameCount;
-        protected DOOH.Server.Models.DOOHDB.City citiesForCityNameValue;
-        protected async Task citiesForCityNameLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetCities(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(CityName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                citiesForCityName = result.Value.AsODataEnumerable();
-                citiesForCityNameCount = result.Count;
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load City" });
-            }
-        }
-
-        protected int statesForStateNameCount;
-        protected DOOH.Server.Models.DOOHDB.State statesForStateNameValue;
-        protected async Task statesForStateNameLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetStates(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(StateName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                statesForStateName = result.Value.AsODataEnumerable();
-                statesForStateNameCount = result.Count;
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load State" });
-            }
-        }
-
-        protected int countriesForCountryNameCount;
-        protected DOOH.Server.Models.DOOHDB.Country countriesForCountryNameValue;
-
-
-        protected async Task countriesForCountryNameLoadData(LoadDataArgs args)
-        {
-            try
-            {
-                var result = await DOOHDBService.GetCountries(top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, filter: $"contains(CountryName, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : "")}')", orderby: $"{args.OrderBy}");
-                countriesForCountryName = result.Value.AsODataEnumerable();
-                countriesForCountryNameCount = result.Count;
-
-            }
-            catch (System.Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Country" });
-            }
-        }
-
         protected bool IsSaving { get; set; } = false;
         protected async Task SaveClick(MouseEventArgs args)
         {

@@ -39,20 +39,12 @@ namespace DOOH.Server.Models.DOOHDB
 
         public string CIN { get; set; }
 
-        public string AddressLine1 { get; set; }
+        public string Address { get; set; }
 
-        public string AddressLine2 { get; set; }
+        public string City { get; set; }
 
-        public string CityName { get; set; }
+        public string State { get; set; }
 
-        public City City { get; set; }
-
-        public string StateName { get; set; }
-
-        public State State { get; set; }
-
-        public string CountryName { get; set; }
-
-        public Country Country { get; set; }
+        public string Country { get; set; }
     }
 }

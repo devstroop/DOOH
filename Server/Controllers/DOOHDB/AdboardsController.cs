@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,Display,Motherboard,Provider");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,Display,Motherboard,Provider");
                 this.OnAfterAdboardUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Adboards.Where(i => i.AdboardId == item.AdboardId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Category,City,Country,Display,Motherboard,Provider,State");
+                Request.QueryString = Request.QueryString.Add("$expand", "Category,Display,Motherboard,Provider");
 
                 this.OnAfterAdboardCreated(item);
 

@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Providers.Where(i => i.ProviderId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "AspNetUser");
                 this.OnAfterProviderUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Providers.Where(i => i.ProviderId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "AspNetUser");
                 this.OnAfterProviderUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Providers.Where(i => i.ProviderId == item.ProviderId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "AspNetUser");
 
                 this.OnAfterProviderCreated(item);
 

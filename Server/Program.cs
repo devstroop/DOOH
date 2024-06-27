@@ -44,16 +44,13 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignAdboard>("CampaignAdboards").EntityType.HasKey(entity => new { entity.CampaignId, entity.AdboardId });
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignSchedule>("CampaignSchedules");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Category>("Categories");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.City>("Cities");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Company>("Companies");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Country>("Countries");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Display>("Displays");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Earning>("Earnings");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Faq>("Faqs");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Motherboard>("Motherboards");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Page>("Pages");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Provider>("Providers");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.State>("States");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Status>("Statuses");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Upload>("Uploads");

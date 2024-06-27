@@ -83,7 +83,7 @@ namespace DOOH.Client.Pages.Admin
         {
             try
             {
-                var expand = $"Category, City, State, Country, Motherboard($expand=Brand), Provider, Display($expand=Brand), AdboardImages";
+                var expand = $"Category, Motherboard($expand=Brand), Provider, Display($expand=Brand), AdboardImages";
                 var result = await DOOHDBService.GetAdboards(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy, expand: expand);
 
                 adboards = result.Value.AsODataEnumerable();

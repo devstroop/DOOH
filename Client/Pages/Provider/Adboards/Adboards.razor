@@ -18,7 +18,7 @@
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
                     <RadzenStack Gap="0">
                         <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" />
-                        <RadzenText Text="@($"{(String.IsNullOrEmpty(context.SignName) ? $"{context.SignName}, " : "")} {context.CityName}")" TextStyle="TextStyle.Subtitle1" />
+                        <RadzenText Text="@($"{(String.IsNullOrEmpty(context.SignName) ? $"{context.SignName}, " : "")} {context.City}")" TextStyle="TextStyle.Subtitle1" />
                         <RadzenBadge Text="@context.Category.CategoryName" Style="@($"{(String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}")}")" />
                     </RadzenStack>
                     <RadzenStack>

@@ -86,12 +86,9 @@ namespace DOOH.Server
             var items = Context.Adboards.AsQueryable();
 
             items = items.Include(i => i.Category);
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
             items = items.Include(i => i.Display);
             items = items.Include(i => i.Motherboard);
             items = items.Include(i => i.Provider);
-            items = items.Include(i => i.State);
 
             if (query != null)
             {
@@ -123,12 +120,9 @@ namespace DOOH.Server
                               .Where(i => i.AdboardId == adboardid);
 
             items = items.Include(i => i.Category);
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
             items = items.Include(i => i.Display);
             items = items.Include(i => i.Motherboard);
             items = items.Include(i => i.Provider);
-            items = items.Include(i => i.State);
  
             OnGetAdboardByAdboardId(ref items);
 
@@ -2218,172 +2212,6 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
-        public async Task ExportCitiesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/cities/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/cities/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportCitiesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/cities/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/cities/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnCitiesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.City> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.City>> GetCities(Query query = null)
-        {
-            var items = Context.Cities.AsQueryable();
-
-            items = items.Include(i => i.State);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnCitiesRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnCityGet(DOOH.Server.Models.DOOHDB.City item);
-        partial void OnGetCityByCityName(ref IQueryable<DOOH.Server.Models.DOOHDB.City> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.City> GetCityByCityName(string cityname)
-        {
-            var items = Context.Cities
-                              .AsNoTracking()
-                              .Where(i => i.CityName == cityname);
-
-            items = items.Include(i => i.State);
- 
-            OnGetCityByCityName(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnCityGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnCityCreated(DOOH.Server.Models.DOOHDB.City item);
-        partial void OnAfterCityCreated(DOOH.Server.Models.DOOHDB.City item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.City> CreateCity(DOOH.Server.Models.DOOHDB.City city)
-        {
-            OnCityCreated(city);
-
-            var existingItem = Context.Cities
-                              .Where(i => i.CityName == city.CityName)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.Cities.Add(city);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(city).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterCityCreated(city);
-
-            return city;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.City> CancelCityChanges(DOOH.Server.Models.DOOHDB.City item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnCityUpdated(DOOH.Server.Models.DOOHDB.City item);
-        partial void OnAfterCityUpdated(DOOH.Server.Models.DOOHDB.City item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.City> UpdateCity(string cityname, DOOH.Server.Models.DOOHDB.City city)
-        {
-            OnCityUpdated(city);
-
-            var itemToUpdate = Context.Cities
-                              .Where(i => i.CityName == city.CityName)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(city);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterCityUpdated(city);
-
-            return city;
-        }
-
-        partial void OnCityDeleted(DOOH.Server.Models.DOOHDB.City item);
-        partial void OnAfterCityDeleted(DOOH.Server.Models.DOOHDB.City item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.City> DeleteCity(string cityname)
-        {
-            var itemToDelete = Context.Cities
-                              .Where(i => i.CityName == cityname)
-                              .Include(i => i.Adboards)
-                              .Include(i => i.Companies)
-                              .Include(i => i.Providers)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnCityDeleted(itemToDelete);
-
-
-            Context.Cities.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterCityDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
         public async Task ExportCompaniesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/companies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/companies/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -2400,9 +2228,6 @@ namespace DOOH.Server
         {
             var items = Context.Companies.AsQueryable();
 
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
-            items = items.Include(i => i.State);
 
             if (query != null)
             {
@@ -2433,9 +2258,6 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.Key == key);
 
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
-            items = items.Include(i => i.State);
  
             OnGetCompanyByKey(ref items);
 
@@ -2547,171 +2369,6 @@ namespace DOOH.Server
             }
 
             OnAfterCompanyDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportCountriesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/countries/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/countries/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportCountriesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/countries/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/countries/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnCountriesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.Country> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.Country>> GetCountries(Query query = null)
-        {
-            var items = Context.Countries.AsQueryable();
-
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnCountriesRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnCountryGet(DOOH.Server.Models.DOOHDB.Country item);
-        partial void OnGetCountryByCountryName(ref IQueryable<DOOH.Server.Models.DOOHDB.Country> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.Country> GetCountryByCountryName(string countryname)
-        {
-            var items = Context.Countries
-                              .AsNoTracking()
-                              .Where(i => i.CountryName == countryname);
-
- 
-            OnGetCountryByCountryName(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnCountryGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnCountryCreated(DOOH.Server.Models.DOOHDB.Country item);
-        partial void OnAfterCountryCreated(DOOH.Server.Models.DOOHDB.Country item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Country> CreateCountry(DOOH.Server.Models.DOOHDB.Country country)
-        {
-            OnCountryCreated(country);
-
-            var existingItem = Context.Countries
-                              .Where(i => i.CountryName == country.CountryName)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.Countries.Add(country);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(country).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterCountryCreated(country);
-
-            return country;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.Country> CancelCountryChanges(DOOH.Server.Models.DOOHDB.Country item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnCountryUpdated(DOOH.Server.Models.DOOHDB.Country item);
-        partial void OnAfterCountryUpdated(DOOH.Server.Models.DOOHDB.Country item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Country> UpdateCountry(string countryname, DOOH.Server.Models.DOOHDB.Country country)
-        {
-            OnCountryUpdated(country);
-
-            var itemToUpdate = Context.Countries
-                              .Where(i => i.CountryName == country.CountryName)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(country);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterCountryUpdated(country);
-
-            return country;
-        }
-
-        partial void OnCountryDeleted(DOOH.Server.Models.DOOHDB.Country item);
-        partial void OnAfterCountryDeleted(DOOH.Server.Models.DOOHDB.Country item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.Country> DeleteCountry(string countryname)
-        {
-            var itemToDelete = Context.Countries
-                              .Where(i => i.CountryName == countryname)
-                              .Include(i => i.Adboards)
-                              .Include(i => i.Companies)
-                              .Include(i => i.Providers)
-                              .Include(i => i.States)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnCountryDeleted(itemToDelete);
-
-
-            Context.Countries.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterCountryDeleted(itemToDelete);
 
             return itemToDelete;
         }
@@ -3549,9 +3206,6 @@ namespace DOOH.Server
         {
             var items = Context.Providers.AsQueryable();
 
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
-            items = items.Include(i => i.State);
 
             if (query != null)
             {
@@ -3582,9 +3236,6 @@ namespace DOOH.Server
                               .AsNoTracking()
                               .Where(i => i.ProviderId == providerid);
 
-            items = items.Include(i => i.City);
-            items = items.Include(i => i.Country);
-            items = items.Include(i => i.State);
  
             OnGetProviderByProviderId(ref items);
 
@@ -3698,173 +3349,6 @@ namespace DOOH.Server
             }
 
             OnAfterProviderDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportStatesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/states/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/states/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportStatesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/states/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/states/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnStatesRead(ref IQueryable<DOOH.Server.Models.DOOHDB.State> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.State>> GetStates(Query query = null)
-        {
-            var items = Context.States.AsQueryable();
-
-            items = items.Include(i => i.Country);
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnStatesRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnStateGet(DOOH.Server.Models.DOOHDB.State item);
-        partial void OnGetStateByStateName(ref IQueryable<DOOH.Server.Models.DOOHDB.State> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.State> GetStateByStateName(string statename)
-        {
-            var items = Context.States
-                              .AsNoTracking()
-                              .Where(i => i.StateName == statename);
-
-            items = items.Include(i => i.Country);
- 
-            OnGetStateByStateName(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnStateGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnStateCreated(DOOH.Server.Models.DOOHDB.State item);
-        partial void OnAfterStateCreated(DOOH.Server.Models.DOOHDB.State item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.State> CreateState(DOOH.Server.Models.DOOHDB.State state)
-        {
-            OnStateCreated(state);
-
-            var existingItem = Context.States
-                              .Where(i => i.StateName == state.StateName)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.States.Add(state);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(state).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterStateCreated(state);
-
-            return state;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.State> CancelStateChanges(DOOH.Server.Models.DOOHDB.State item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnStateUpdated(DOOH.Server.Models.DOOHDB.State item);
-        partial void OnAfterStateUpdated(DOOH.Server.Models.DOOHDB.State item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.State> UpdateState(string statename, DOOH.Server.Models.DOOHDB.State state)
-        {
-            OnStateUpdated(state);
-
-            var itemToUpdate = Context.States
-                              .Where(i => i.StateName == state.StateName)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(state);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterStateUpdated(state);
-
-            return state;
-        }
-
-        partial void OnStateDeleted(DOOH.Server.Models.DOOHDB.State item);
-        partial void OnAfterStateDeleted(DOOH.Server.Models.DOOHDB.State item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.State> DeleteState(string statename)
-        {
-            var itemToDelete = Context.States
-                              .Where(i => i.StateName == statename)
-                              .Include(i => i.Adboards)
-                              .Include(i => i.Cities)
-                              .Include(i => i.Companies)
-                              .Include(i => i.Providers)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnStateDeleted(itemToDelete);
-
-
-            Context.States.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterStateDeleted(itemToDelete);
 
             return itemToDelete;
         }

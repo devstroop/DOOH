@@ -29,19 +29,13 @@ namespace DOOH.Server.Models.DOOHDB
         public string Address { get; set; }
 
         [Required]
-        public string CityName { get; set; }
-
-        public City City { get; set; }
+        public string City { get; set; }
 
         [Required]
-        public string StateName { get; set; }
-
-        public State State { get; set; }
+        public string State { get; set; }
 
         [Required]
-        public string CountryName { get; set; }
-
-        public Country Country { get; set; }
+        public string Country { get; set; }
 
         public string UserId { get; set; }
 

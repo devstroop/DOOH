@@ -38,23 +38,19 @@ namespace DOOH.Server.Models.DOOHDB
 
         public string SignName { get; set; }
 
-        public string CityName { get; set; }
-
-        public City City { get; set; }
-
-        public string StateName { get; set; }
-
-        public State State { get; set; }
-
-        public string CountryName { get; set; }
-
-        public Country Country { get; set; }
+        public string Address { get; set; }
 
         public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+        public string City { get; set; }
+
+        public string State { get; set; }
+
+        public string Country { get; set; }
 
         public ICollection<AdboardImage> AdboardImages { get; set; }
 

@@ -134,18 +134,10 @@
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
-                        <RadzenLabel Text="Address Line1" Component="AddressLine1" style="width: 100%" />
+                        <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <RadzenTextBox style="display: block; width: 100%" @bind-Value="@company.AddressLine1" Name="AddressLine1" />
-                    </RadzenColumn>
-                </RadzenRow>
-                <RadzenRow style="margin-bottom: 1rem">
-                    <RadzenColumn SizeMD="3">
-                        <RadzenLabel Text="Address Line2" Component="AddressLine2" style="width: 100%" />
-                    </RadzenColumn>
-                    <RadzenColumn SizeMD="9">
-                        <RadzenTextBox style="display: block; width: 100%" @bind-Value="@company.AddressLine2" Name="AddressLine2" />
+                        <RadzenTextBox style="display: block; width: 100%" @bind-Value="@company.Address" Name="Address" />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -153,9 +145,7 @@
                         <RadzenLabel Text="City" Component="City" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <RadzenDropDown Data="@citiesForCityName" TextProperty="CityName" ValueProperty="CityName" AllowClear=true
-                                        Placeholder="Choose City" style="display: block; width: 100%" @bind-Value="@company.CityName" Name="CityName"
-                                        Count=@citiesForCityNameCount LoadData=@citiesForCityNameLoadData />
+                        <RadzenTextBox  Placeholder="Enter City" style="display: block; width: 100%" @bind-Value="@company.City" Name="City"  />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -163,9 +153,7 @@
                         <RadzenLabel Text="State" Component="State" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <RadzenDropDown Data="@statesForStateName" TextProperty="StateName" ValueProperty="StateName" AllowClear=true
-                                        Placeholder="Choose State" style="display: block; width: 100%" @bind-Value="@company.StateName" Name="StateName"
-                                        Count=@statesForStateNameCount LoadData=@statesForStateNameLoadData />
+                        <RadzenTextBox  Placeholder="Enter State" style="display: block; width: 100%" @bind-Value="@company.State" Name="State"  />
                     </RadzenColumn>
                 </RadzenRow>
                 <RadzenRow style="margin-bottom: 1rem">
@@ -173,9 +161,7 @@
                         <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                     </RadzenColumn>
                     <RadzenColumn SizeMD="9">
-                        <RadzenDropDown Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
-                                        Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@company.CountryName" Name="CountryName"
-                                        Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
+                        <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" @bind-Value="@company.Country" Name="Country"  />
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenTemplateForm>
@@ -292,15 +278,7 @@
                     <RadzenLabel Text="Address Line1" Component="AddressLine1" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine1) ? "NA" : company.AddressLine1)" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Address Line2" Component="AddressLine2" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.AddressLine2) ? "NA" : company.AddressLine2)" />
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Address) ? "NA" : company.Address)" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -308,7 +286,7 @@
                     <RadzenLabel Text="City" Component="City" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CityName) ? "NA" : company.CityName)" />
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.City) ? "NA" : company.City)" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -316,7 +294,7 @@
                     <RadzenLabel Text="State" Component="State" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.StateName) ? "NA" : company.StateName)" />
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.State) ? "NA" : company.State)" />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -324,7 +302,7 @@
                     <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.CountryName) ? "NA" : company.CountryName)" />
+                    <RadzenText style="display: block; width: 100%" Text="@(String.IsNullOrEmpty(company.Country) ? "NA" : company.Country)" />
                 </RadzenColumn>
             </RadzenRow>
         </RadzenColumn>

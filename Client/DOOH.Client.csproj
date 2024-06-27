@@ -25,6 +25,12 @@
 	  <Folder Include="Pages\Admin\Faqs\" />
 	  <Folder Include="Pages\Admin\Settings\Statuses\" />
 	</ItemGroup>
+	<ItemGroup>
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddCity.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddCountry.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddState.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\Region.razor" />
+	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
 	</PropertyGroup>

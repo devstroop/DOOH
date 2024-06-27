@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key));
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
+                
                 this.OnAfterCompanyUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Companies.Where(i => i.Key == Uri.UnescapeDataString(key));
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
+                
                 this.OnAfterCompanyUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Companies.Where(i => i.Key == item.Key);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "City,Country,State");
+                
 
                 this.OnAfterCompanyCreated(item);
 

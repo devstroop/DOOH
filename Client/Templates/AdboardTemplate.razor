@@ -19,7 +19,7 @@
                         <RadzenText Text="@(String.IsNullOrEmpty(Context.SignName) ? "NA" : Context.SignName)" TextStyle="TextStyle.Subtitle1" Style="font-weight: 500" class="rz-mb-0 rz-mr-2" />
                         <RadzenBadge Text="@Context.Category.CategoryName.ToUpper()" Style="@((String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}") + ";font-weight:600")" class="rz-py-05 rz-px-1" />
                     </RadzenStack>
-                    <RadzenText Text="@($"{Context.CityName} {Context.StateName}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
+                    <RadzenText Text="@($"{Context.City} {Context.State}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
 
                 </RadzenStack>
 

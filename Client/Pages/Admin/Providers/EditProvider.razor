@@ -53,9 +53,7 @@
                     <RadzenLabel Text="City" Component="City" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="8">
-                    <RadzenDropDownDataGrid Data="@citiesForCityName" TextProperty="CityName" ValueProperty="CityName" AllowClear=true
-                         Placeholder="Choose City" style="display: block; width: 100%" @bind-Value="@provider.CityName" Name="CityName"
-                        SelectedValue=@citiesForCityNameValue Count=@citiesForCityNameCount LoadData=@citiesForCityNameLoadData />
+                    <RadzenTextBox  Placeholder="Enter City" style="display: block; width: 100%" @bind-Value="@provider.City" Name="City"  />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -63,9 +61,7 @@
                     <RadzenLabel Text="State" Component="State" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="8">
-                    <RadzenDropDownDataGrid Data="@statesForStateName" TextProperty="StateName" ValueProperty="StateName" AllowClear=true
-                         Placeholder="Choose State" style="display: block; width: 100%" @bind-Value="@provider.StateName" Name="StateName"
-                        SelectedValue=@statesForStateNameValue Count=@statesForStateNameCount LoadData=@statesForStateNameLoadData />
+                    <RadzenTextBox  Placeholder="Enter State" style="display: block; width: 100%" @bind-Value="@provider.State" Name="State"  />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -73,9 +69,7 @@
                     <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="8">
-                    <RadzenDropDownDataGrid Data="@countriesForCountryName" TextProperty="CountryName" ValueProperty="CountryName" AllowClear=true
-                         Placeholder="Choose Country" style="display: block; width: 100%" @bind-Value="@provider.CountryName" Name="CountryName"
-                        SelectedValue=@countriesForCountryNameValue Count=@countriesForCountryNameCount LoadData=@countriesForCountryNameLoadData />
+                    <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" @bind-Value="@provider.Country" Name="Country"  />
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
