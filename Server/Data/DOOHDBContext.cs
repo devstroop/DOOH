@@ -26,6 +26,10 @@ namespace DOOH.Server.Data
                 table.CampaignId, table.AdboardId
             });
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>().HasKey(table => new {
+                table.ScheduleId, table.AdboardId
+            });
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Category)
               .WithMany(i => i.Adboards)
@@ -104,12 +108,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.AnalyticId)
               .HasPrincipalKey(i => i.AnalyticId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .HasOne(i => i.Status)
-              .WithMany(i => i.Campaigns)
-              .HasForeignKey(i => i.StatusId)
-              .HasPrincipalKey(i => i.StatusId);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.CampaignAdboards)
@@ -119,12 +117,6 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.CampaignAdboard>()
               .HasOne(i => i.Campaign)
               .WithMany(i => i.CampaignAdboards)
-              .HasForeignKey(i => i.CampaignId)
-              .HasPrincipalKey(i => i.CampaignId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
-              .HasOne(i => i.Campaign)
-              .WithMany(i => i.CampaignSchedules)
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
@@ -158,6 +150,12 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.BrandId)
               .HasPrincipalKey(i => i.BrandId);
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .HasOne(i => i.Campaign)
+              .WithMany(i => i.Schedules)
+              .HasForeignKey(i => i.CampaignId)
+              .HasPrincipalKey(i => i.CampaignId);
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .HasOne(i => i.Tax1)
               .WithMany(i => i.Taxes1)
@@ -169,6 +167,18 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Uploads)
               .HasForeignKey(i => i.Owner)
               .HasPrincipalKey(i => i.UserId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>()
+              .HasOne(i => i.Adboard)
+              .WithMany(i => i.ScheduleAdboards)
+              .HasForeignKey(i => i.AdboardId)
+              .HasPrincipalKey(i => i.AdboardId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>()
+              .HasOne(i => i.Schedule)
+              .WithMany(i => i.ScheduleAdboards)
+              .HasForeignKey(i => i.ScheduleId)
+              .HasPrincipalKey(i => i.ScheduleId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
@@ -227,24 +237,12 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.CreatedAt)
-              .HasDefaultValueSql(@"(sysdatetime())");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.IsDraft)
-              .HasDefaultValueSql(@"((1))");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
-              .Property(p => p.IsSuspended)
+              .Property(p => p.Status)
               .HasDefaultValueSql(@"((0))");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
-              .Property(p => p.Rotation)
-              .HasDefaultValueSql(@"((1))");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.CampaignSchedule>()
-              .Property(p => p.Start)
-              .HasDefaultValueSql(@"(getdate())");
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.CreatedAt)
+              .HasDefaultValueSql(@"(sysdatetime())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Category>()
               .Property(p => p.Commission)
@@ -265,6 +263,14 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.Rotation)
+              .HasDefaultValueSql(@"((1))");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.Date)
+              .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .Property(p => p.TaxRate)
@@ -390,8 +396,6 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.CampaignAdboard> CampaignAdboards { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.CampaignSchedule> CampaignSchedules { get; set; }
-
         public DbSet<DOOH.Server.Models.DOOHDB.Category> Categories { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Company> Companies { get; set; }
@@ -408,13 +412,15 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Provider> Providers { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.Status> Statuses { get; set; }
+        public DbSet<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdboard> ScheduleAdboards { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

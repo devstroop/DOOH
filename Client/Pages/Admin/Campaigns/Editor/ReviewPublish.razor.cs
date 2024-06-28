@@ -17,7 +17,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Parameter]
         public IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> Advertisements { get; set; }
         [Parameter]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignSchedule> Schedules { get; set; }
+        public IEnumerable<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
         
         
         

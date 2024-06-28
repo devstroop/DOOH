@@ -1,4 +1,4 @@
-<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" @onclick="@OnClick" Style="">
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" @onclick="@OnClick" class="rz-shadow-3 rz-border-radius-2 rz-p-4">
     <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" Style="object-fit: cover; min-width: 120px;" Height="180px" Width="150px" />
     <RadzenStack Gap="0" JustifyContent="JustifyContent.SpaceBetween" Style="height: 100%">
         <RadzenStack>
@@ -28,6 +28,9 @@
     </RadzenStack>
 </RadzenStack>
 <style>
+    .rz-g>div, .rz-datalist-data>li{
+        border-radius: 0.5rem;
+    }
     .rz-menuitem {
         padding: 0.5rem;
     }

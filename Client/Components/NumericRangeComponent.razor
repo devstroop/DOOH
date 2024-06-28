@@ -1,0 +1,29 @@
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+    <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => OnValueChanged(Value-ChangeValue))" />
+    <RadzenNumeric class="numeric-range-component" @bind-Value="@Value" Name="Budget" Min="@Min" Max="@Max" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" />
+    <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => OnValueChanged(Value+ChangeValue))" />
+</RadzenStack>
+<style>
+    .numeric-range-component input{
+        border: none;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .numeric-range-component .rz-spinner input[type=number], .rz-spinner input[type=text] {
+        padding: 0;
+    }
+</style>
+@code {
+    [Parameter] public decimal Value { get; set; } = 0;
+    [Parameter] public decimal ChangeValue { get; set; } = 1;
+    [Parameter] public decimal Min { get; set; } = 0;
+    [Parameter] public decimal Max { get; set; } = 100;
+    [Parameter] public EventCallback<decimal> ValueChanged { get; set; } = EventCallback<decimal>.Empty;
+    
+    private async Task OnValueChanged(decimal value)
+    {
+        Value = value;
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

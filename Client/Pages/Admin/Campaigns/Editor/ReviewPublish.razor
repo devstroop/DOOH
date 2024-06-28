@@ -57,21 +57,16 @@
             </RadzenColumn>
             <RadzenColumn>
                 <RadzenFieldset Text="Schedules">
-                    <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Data="@Schedules" ColumnWidth="100px" AllowSorting="true" Count="@Schedules.Count()">
+                    <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Schedule" Data="@Schedules" ColumnWidth="100px" AllowSorting="true" Count="@Schedules.Count()">
                         <Columns>
-                            @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Label" Title="Label" /> *@
-                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Start" Title="Start">
+                            @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Label" Title="Label" /> *@
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Date" Title="Date">
                                 <Template Context="schedule">
-                                    @schedule.Start.ToString("d")
+                                    @schedule.Date.ToString("d")
                                 </Template>
                             </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="End" Title="End">
-                                <Template Context="schedule">
-                                    @schedule.End.ToString("d")
-                                </Template>
-                            </RadzenDataGridColumn>
-                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Property="Rotation" Title="Rotation"/>
-                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.CampaignSchedule" Title="" Width="72px">
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Rotation" Title="Rotation"/>
+                            <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Title="" Width="72px">
                                 <Template Context="schedule">
                                     <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.ExtraSmall"/>
                                 </Template>

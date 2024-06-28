@@ -1,6 +1,7 @@
 @layout AdminLayout
 @page "/admin/dashboard"
 @page "/admin"
+@using DOOH.Server.Extensions
 
 @attribute [Authorize]
 
@@ -150,19 +151,31 @@
             @* </RadzenDataGrid> *@
             <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" ColumnWidth="200px" AllowSorting="false" AllowPaging="true" AllowFiltering="true" LoadData="@campaignsLoadData" Count="@campaignsCount" AllowAlternatingRows="false">
                 <Columns>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignId" Title="Id" />
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignName" Title="Campaign Name" />
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Budget" Title="Budget" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="BudgetType" Title="BudgetType" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignId" Title="CampaignId" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignName" Title="CampaignName" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CreatedAt" Title="CreatedAt" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="EndDate" Title="EndDate" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="IsDraft" Title="IsDraft" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="IsSuspended" Title="IsSuspended" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StartDate" Title="StartDate" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Status" Title="Status" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StatusId" Title="StatusId" />
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UserId" Title="User" />
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StartDate" Title="StartDate">
+                        <Template>
+                            @context.StartDate.ToString("d")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="EndDate" Title="EndDate">
+                        <Template>
+                            @context.EndDate.ToString("d")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Status" Title="Status">
+                        <Template>
+                            <RadzenBadge Text="@context.Status.ToFriendlyString()" Variant="Variant.Outlined"></RadzenBadge>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CreatedAt" Title="CreatedAt">
+                        <Template>
+                            @context.CreatedAt
+                        </Template>
+                    </RadzenDataGridColumn>
                     <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UpdatedAt" Title="UpdatedAt" />
-                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UserId" Title="UserId" />
                 </Columns>
             </RadzenDataGrid>
         </RadzenCard>

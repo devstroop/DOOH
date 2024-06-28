@@ -65,5 +65,7 @@ namespace DOOH.Server.Models.DOOHDB
         public ICollection<CampaignAdboard> CampaignAdboards { get; set; }
 
         public ICollection<Earning> Earnings { get; set; }
+
+        public ICollection<ScheduleAdboard> ScheduleAdboards { get; set; }
     }
 }

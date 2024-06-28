@@ -14,7 +14,7 @@
 </RadzenRow>
 <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Advertisement" Data="@Data" Count="@AdvertisementsCount" WrapItems="true">
     <Template>
-        <CarouselComponent Images="@(new List<string> { context.Upload.GetThumbnail() })" Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
+        <CarouselComponent Images="@(new List<string> { context.Upload.GetThumbnail() })" Width="auto" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px" >
             <Overlay>
                 <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, context))"/>
                 <RadzenButton Icon="close" Click="@((args) => DeleteAdvertisement(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75"/>
@@ -40,6 +40,7 @@
             color: white;
             border: none;
             border-radius: 50%;
+            z-index: max(1, 1000);
         }
         .custom-topLeft {
             position: absolute;

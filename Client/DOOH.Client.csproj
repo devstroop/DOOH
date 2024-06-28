@@ -16,6 +16,7 @@
 		<PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
 		<PackageReference Include="Radzen.Blazor" Version="*" />
 		<Compile Include="../Server/Models/**/*.cs" />
+		<Compile Include="../Server/Extension*/*.cs" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Localization" Version="8.0.0" />
 		<PackageReference Include="TheBlazorCarousel" Version="1.0.0" />
@@ -23,7 +24,6 @@
 	<ItemGroup>
 	  <Folder Include="Pages\Adboard\" />
 	  <Folder Include="Pages\Admin\Faqs\" />
-	  <Folder Include="Pages\Admin\Settings\Statuses\" />
 	</ItemGroup>
 	<ItemGroup>
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddCity.razor" />

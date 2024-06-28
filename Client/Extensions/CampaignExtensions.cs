@@ -2,7 +2,6 @@
 {
     public static class CampaignExtensions
     {
-        // GetBudgetTypeLabel method
         public static string GetBudgetTypeLabel(this DOOH.Server.Models.DOOHDB.Campaign campaign)
         {
             return campaign.BudgetType switch

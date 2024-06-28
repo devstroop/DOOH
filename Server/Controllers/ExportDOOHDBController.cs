@@ -173,20 +173,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetCampaignAdboards(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/campaignschedules/csv")]
-        [HttpGet("/export/DOOHDB/campaignschedules/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignSchedulesToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCampaignSchedules(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/campaignschedules/excel")]
-        [HttpGet("/export/DOOHDB/campaignschedules/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignSchedulesToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCampaignSchedules(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/categories/csv")]
         [HttpGet("/export/DOOHDB/categories/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCategoriesToCSV(string fileName = null)
@@ -299,18 +285,18 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetProviders(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/statuses/csv")]
-        [HttpGet("/export/DOOHDB/statuses/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportStatusesToCSV(string fileName = null)
+        [HttpGet("/export/DOOHDB/schedules/csv")]
+        [HttpGet("/export/DOOHDB/schedules/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportSchedulesToCSV(string fileName = null)
         {
-            return ToCSV(ApplyQuery(await service.GetStatuses(), Request.Query, false), fileName);
+            return ToCSV(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/statuses/excel")]
-        [HttpGet("/export/DOOHDB/statuses/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportStatusesToExcel(string fileName = null)
+        [HttpGet("/export/DOOHDB/schedules/excel")]
+        [HttpGet("/export/DOOHDB/schedules/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportSchedulesToExcel(string fileName = null)
         {
-            return ToExcel(ApplyQuery(await service.GetStatuses(), Request.Query, false), fileName);
+            return ToExcel(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
         }
 
         [HttpGet("/export/DOOHDB/taxes/csv")]
@@ -353,6 +339,20 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/scheduleadboards/csv")]
+        [HttpGet("/export/DOOHDB/scheduleadboards/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdboardsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetScheduleAdboards(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/scheduleadboards/excel")]
+        [HttpGet("/export/DOOHDB/scheduleadboards/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdboardsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetScheduleAdboards(), Request.Query, false), fileName);
         }
     }
 }

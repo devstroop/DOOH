@@ -1,0 +1,53 @@
+@using System.Net.Mime
+@using DOOH.Server.Models.DOOHDB
+
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-shadow-3 rz-mt-3 campaign-schedule-card">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" class="campaign-schedule-top-right" Gap="0.5rem">
+        <RadzenButton Icon="edit" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Primary" Click="@EditClick" Style="border-radius: 16px"></RadzenButton>
+        <RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@DeleteClick" Style="border-radius: 16px"></RadzenButton>
+    </RadzenStack>
+
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" Style="">
+        @* <RadzenStack Style="width: auto; height:  auto; display:  block; border-radius: 50%; overflow: hidden; background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 0.5rem; margin-right: 1rem;"> *@
+        @*     <RadzenText Text="@Context.ScheduleId.ToString()"></RadzenText> *@
+        @* </RadzenStack> *@
+        <RadzenStack Gap="0">
+            <RadzenText Text="@Context.Date.ToString("ddd").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0 fw-semibold" Style="color:#5f5f5f"></RadzenText>
+            <RadzenText Text="@Context.Date.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
+            <RadzenText Text="@Context.Date.ToString("MMM yyyy").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-size: 11px; color:#5f5f5f"></RadzenText>
+        </RadzenStack>
+        <RadzenStack Gap="0" JustifyContent="JustifyContent.SpaceBetween">
+            <RadzenText Text="@($"ID: {Context.ScheduleId.ToString()}")" TextStyle="Radzen.Blazor.TextStyle.Caption" Style="font-weight: 500"></RadzenText>
+            <RadzenStack Gap="0" JustifyContent="JustifyContent.End">
+                <RadzenText Text="@Context.Label" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"></RadzenText>
+                <RadzenText Text="No of Adboards: 2" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"></RadzenText>
+                <RadzenText Text="No of Rotations: 3" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"></RadzenText>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenStack>
+    @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="padding-top: 1rem" Gap="0.5rem"> *@
+    @*     <RadzenButton Shade="Shade.Lighter" Icon="remove" Size="ButtonSize.Small" Click="@RemoveRotationClick"></RadzenButton> *@
+    @*     <RadzenStack Gap="0" AlignItems="AlignItems.End" Orientation="Orientation.Horizontal" Style="min-width: 48px; padding-left: 0.5rem" JustifyContent="JustifyContent.Center"> *@
+    @*         <RadzenText Text="@Context.Rotation.ToString()" TextStyle="TextStyle.H6" class="rz-mb-0"></RadzenText> *@
+    @*         <RadzenIcon Icon="360" Style="font-size: 16px" IconColor="var(--rz-primary)"></RadzenIcon> *@
+    @*     </RadzenStack> *@
+    @*     <RadzenButton Icon="add" Shade="Shade.Lighter" Size="ButtonSize.Small" Click="@AddRotationClick"></RadzenButton> *@
+    @* </RadzenStack> *@
+</RadzenStack>
+
+<style>
+    .campaign-schedule-card {
+        position: relative;
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .campaign-schedule-top-right {
+        position: absolute;
+        top: -6px;
+        right: -6px;
+        z-index: max(1, 1000);
+    }
+</style>

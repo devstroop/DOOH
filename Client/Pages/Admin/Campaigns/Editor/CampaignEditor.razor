@@ -1,4 +1,5 @@
 @using DOOH.Server.Models.DOOHDB
+@using DOOH.Server.Models.Enums
 @layout AdminLayout
 @page "/admin/campaigns/editor/{CampaignId}"
 @page "/admin/campaigns/editor"
@@ -11,6 +12,7 @@
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="1rem">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenIcon Icon="campaign" Style="font-size: 28px" />
+                    <RadzenText Text="@($"{(_campaignId != 0 ? CampaignId.ToString() : "New")}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                     <RadzenText Text="@CampaignName" TextStyle="TextStyle.H5" style="margin: 0" Visible="!CampaignNameEditable" />
                     <RadzenTextBox style="appearance: none; font-weight: 500; border: none; text-align: start; font-size: 16px; padding-inline: 6px" @bind-Value="@CampaignName" Name="CampaignName" Visible="@CampaignNameEditable" />
                     <RadzenButton class="rz-ml-2" Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="!CampaignNameEditable" Click="@((args) => CampaignNameEditable=true)" />
@@ -27,26 +29,12 @@
     </RadzenRow>
     <RadzenRow JustifyContent="JustifyContent.Stretch">
         <RadzenCard>
-            <RadzenStack Gap="0.5rem">
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                    <RadzenIcon Icon="date_range"></RadzenIcon>
-                    <RadzenText Text="Date" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
-                </RadzenStack>
-                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenDatePicker @bind-Value="@StartDate" DateFormat="d" Style="width: 120px" />
-                    <RadzenText Text="to" class="rz-mb-0" />
-                    <RadzenDatePicker @bind-Value="@EndDate" DateFormat="d" Style="width: 120px" />
-                    @* <RadzenCheckBox Placeholder="Continuous" @bind-Value="@Continuous" /> *@
-                    @* <RadzenText Text="Continuous" class="rz-mb-0" Style="font-size: 14px; font-weight: 500;" /> *@
-                </RadzenStack>
-            </RadzenStack>
-            @* <RadzenFieldset Text="Date"> *@
-            @* </RadzenFieldset> *@
+            <DateRangeComponent Start="@StartDate" End="@EndDate"></DateRangeComponent>
         </RadzenCard>
         <RadzenCard>
             <RadzenStack Gap="0.5rem">
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                    <RadzenIcon Icon="attach_money"></RadzenIcon>
+                    <RadzenIcon Icon="currency_rupee"></RadzenIcon>
                     <RadzenText Text="Budget" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
@@ -54,15 +42,16 @@
                         <Items>
                             @foreach(var each in Enum.GetValues(typeof(BudgetType)).Cast<BudgetType>())
                             {
-                            <RadzenSelectBarItem Value="@each" Text="@each.ToString()" />
+                                <RadzenSelectBarItem Value="@each" Text="@each.ToString()" />
                             }
                         </Items>
                     </RadzenSelectBar>
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                        <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Budget -= 100)" />
-                        <RadzenNumeric class="budget-input" @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" />
-                        <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Budget += 100)" />
-                    </RadzenStack>
+                    <NumericRangeComponent @bind-Value="@Budget" ChangeValue="100" Min="0" Max="10000"></NumericRangeComponent>
+                    @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem"> *@
+                    @*     <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Budget -= 100)" /> *@
+                    @*     <RadzenNumeric class="budget-input" @bind-Value="@Budget" Name="Budget" Min="0" Max="10000" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;" /> *@
+                    @*     <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Budget += 100)" /> *@
+                    @* </RadzenStack> *@
                 </RadzenStack>
             </RadzenStack>
         </RadzenCard>
@@ -73,11 +62,11 @@
                     <RadzenText Text="Status" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenDropDown TValue="int" @bind-Value="@StatusId" ValueProperty="StatusId" TextProperty="StatusName" Data="@statuses" LoadData="@StatusesLoadData" Count="@statusesCount">
+                    <RadzenDropDown TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@Status" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())">
                         <Template>
                             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
-                                <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                                <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon((DOOH.Server.Models.Enums.Status)context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor((DOOH.Server.Models.Enums.Status)context)" ></RadzenIcon>
+                                <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString((DOOH.Server.Models.Enums.Status)context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
                             </RadzenStack>
                         </Template>
                     </RadzenDropDown>
@@ -95,7 +84,7 @@
                     <CampaignAdvertisementsEditor CampaignId="@_campaignId" Data="@_advertisements" Add="@OnAddAdvertisement" Delete="@OnDeleteAdvertisement" Refresh="@OnRefresh" />
                 </RadzenTabsItem>
                 <RadzenTabsItem Text="Schedule" Icon="schedule">
-                    <CampaignScheduleEditor CampaignId="@_campaignId" Data="@_campaignSchedules" Add="@AddSchedule" Update="@UpdateSchedule" Delete="@DeleteSchedule" />
+                    <ScheduleEditor CampaignId="@_campaignId" Data="@_schedules" SelectedAdboards="@_selectedAdboards" Add="@AddSchedule" Update="@UpdateSchedule" Delete="@DeleteSchedule" />
                 </RadzenTabsItem>
                 @* <RadzenTabsItem Text="Review" Icon="grading"> *@
                 @*     <Review CampaignId="@CampaignIdInt" /> *@
@@ -121,15 +110,6 @@
 
     .rz-spinner-button {
         display: none;
-    }
-    .budget-input input{
-        border: none;
-        text-align: center;
-        font-size: 14px;
-        font-weight: bold;
-    }
-    .budget-input .rz-spinner input[type=number], .rz-spinner input[type=text] {
-        padding: 0;
     }
 </style>
 

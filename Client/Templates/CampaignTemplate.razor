@@ -1,6 +1,4 @@
-@using DOOH.Client.Pages.Admin.Settings.Statuses
-@using DOOH.Server.Models.DOOHDB
-<RadzenColumn Size="12" Style="@Style">
+<RadzenColumn Size="12" Style="@Style" class="rz-shadow-3 rz-border-radius-2">
     <RadzenRow>
         <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="1" Visible="@(Campaign?.Advertisements != null)">
             <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="100%" Height="180px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
@@ -21,16 +19,16 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="display: block" class="flex-grow-1" JustifyContent="Radzen.JustifyContent.SpaceBetween">
                         @* <RadzenDropDown TValue="Status" TextProperty="StatusName"  ValueProperty="StatusId" Data=@Statuses Change="@(args => StateHasChanged())" Style="width: 100%; max-width: 400px;" Name="DropDownChangeEvent" /> *@
                         @* <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
-                        <RadzenDropDown TValue="int" @bind-Value="@CurrentStatusId" ValueProperty="StatusId" TextProperty="StatusName" Change="@OnStatusChange" Data="@statuses" LoadData="@statusesLoadData" Count="@statusesCount" Style="border: 0px none #dfe5ec; background-color: transparent" AllowSelectAll="false" class="justify-content-center">
+                        <RadzenDropDown TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@CurrentStatus" Change="@OnStatusChange" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="border: 0px none #dfe5ec; background-color: transparent" AllowSelectAll="false" class="justify-content-center">
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                    <RadzenIcon Icon="fiber_manual_record" IconColor="@context.StatusColor" ></RadzenIcon>
-                                    <RadzenText Text="@context.StatusName" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                                    <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon(context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor(context)" ></RadzenIcon>
+                                    <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString(context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
                                 </RadzenStack>
                             </Template>
                         </RadzenDropDown>
                         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                            <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@Campaign.IsDraft" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                            <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status)Campaign.Status)" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
                             <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Medium" Click="@SplitBtnClick">
                                 <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
                                 <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
@@ -103,6 +101,9 @@
     </RadzenRow>
 </RadzenColumn>
 <style>
+    .rz-g>div, .rz-datalist-data>li{
+        border-radius: 0.5rem;
+    }
     .rz-menuitem {
         padding: 0.5rem;
     }
@@ -157,7 +158,7 @@
     [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Delete { get; set; }
     [Parameter] public IEnumerable<Status> statuses { get; set; }
 
-    private int CurrentStatusId { get; set; }
+    private DOOH.Server.Models.Enums.Status CurrentStatus { get; set; }
     
     private int statusesCount { get; set; } = 0;
     
@@ -213,27 +214,9 @@
         }
     }
     
-    // statusesLoadData
-    protected async Task statusesLoadData(LoadDataArgs args)
-    {
-        try
-        {
-            var result = await DOOHDBService.GetStatuses(filter: $"{args.Filter}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null);
-            statuses = result.Value.AsODataEnumerable();
-            statusesCount = result.Count;
-            if (Campaign.StatusId != null)
-            {
-                CurrentStatusId = (int)Campaign.StatusId;
-            }
-        }
-        catch (System.Exception ex)
-        {
-            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to load Statuses" });
-        }
-    }
     
     // OnStatusChange
-    protected async Task OnStatusChange(object statusId)
+    protected async Task OnStatusChange(object status)
     {
         try
         {
@@ -242,25 +225,25 @@
             var confirmmationResult = await DialogService.Confirm("Are you sure you want to change the status?");
             if (confirmmationResult != true)
             {
-                CurrentStatusId = existing.StatusId ?? 0;
+                CurrentStatus = (DOOH.Server.Models.Enums.Status)existing.Status;
                 StateHasChanged();
                 return;
             }
             
-            existing.StatusId = (int)statusId;
+            existing.Status = (int)status;
             var result = await DOOHDBService.UpdateCampaign(Campaign.CampaignId, existing);
             if (result != null && result.IsSuccessStatusCode)
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Info, Summary = $"Status", Detail = $"Status changed to {statuses.FirstOrDefault(x => x.StatusId == (int)statusId)?.StatusName}" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Info, Summary = $"Status", Detail = $"Status changed successfully!" });
             }
             else
             {
-                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status" });
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status." });
             }
         }
         catch (System.Exception ex)
         {
-            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status" });
+            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status." });
         }
     }
     

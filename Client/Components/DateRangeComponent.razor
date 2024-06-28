@@ -1,0 +1,17 @@
+<RadzenStack Gap="0.5rem">
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+        <RadzenIcon Icon="@Icon"></RadzenIcon>
+        <RadzenText Text="@Title" TextStyle="TextStyle.Body1" Style="font-weight: 500;"></RadzenText>
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+        <RadzenDatePicker @bind-Value="@Start" DateFormat="d" Style="width: 120px" />
+        <RadzenText Text="to" class="rz-mb-0" />
+        <RadzenDatePicker @bind-Value="@End" DateFormat="d" Style="width: 120px" />
+    </RadzenStack>
+</RadzenStack>
+@code {
+    [Parameter] public string Title { get; set; } = "Date Range";
+    [Parameter] public string Icon { get; set; } = "date_range";
+    [Parameter] public DateTime Start { get; set; }
+    [Parameter] public DateTime End { get; set; }
+}

@@ -52,7 +52,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             
             var url = advertisement.Upload.GetUrl();
-            await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
+            await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px", CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true });
         }
 
         private async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)

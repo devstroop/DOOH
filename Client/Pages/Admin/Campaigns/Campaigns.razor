@@ -28,7 +28,7 @@
 </RadzenRow>
 <RadzenRow>
     <RadzenColumn>
-        <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount">
+        <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount" Style="min-height: 400px">
             <Template>
                 <CampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete"/>
             </Template>

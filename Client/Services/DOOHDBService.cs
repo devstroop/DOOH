@@ -1065,100 +1065,6 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportCampaignSchedulesToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaignschedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaignschedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async System.Threading.Tasks.Task ExportCampaignSchedulesToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaignschedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaignschedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnGetCampaignSchedules(HttpRequestMessage requestMessage);
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignSchedule>> GetCampaignSchedules(Query query)
-        {
-            return await GetCampaignSchedules(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
-        }
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignSchedule>> GetCampaignSchedules(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
-        {
-            var uri = new Uri(baseUri, $"CampaignSchedules");
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetCampaignSchedules(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignSchedule>>(response);
-        }
-
-        partial void OnCreateCampaignSchedule(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignSchedule> CreateCampaignSchedule(DOOH.Server.Models.DOOHDB.CampaignSchedule campaignSchedule = default(DOOH.Server.Models.DOOHDB.CampaignSchedule))
-        {
-            var uri = new Uri(baseUri, $"CampaignSchedules");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignSchedule), Encoding.UTF8, "application/json");
-
-            OnCreateCampaignSchedule(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignSchedule>(response);
-        }
-
-        partial void OnDeleteCampaignSchedule(HttpRequestMessage requestMessage);
-
-        public async Task<HttpResponseMessage> DeleteCampaignSchedule(int scheduleId = default(int))
-        {
-            var uri = new Uri(baseUri, $"CampaignSchedules({scheduleId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
-
-            OnDeleteCampaignSchedule(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
-        partial void OnGetCampaignScheduleByScheduleId(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignSchedule> GetCampaignScheduleByScheduleId(string expand = default(string), int scheduleId = default(int))
-        {
-            var uri = new Uri(baseUri, $"CampaignSchedules({scheduleId})");
-
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetCampaignScheduleByScheduleId(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignSchedule>(response);
-        }
-
-        partial void OnUpdateCampaignSchedule(HttpRequestMessage requestMessage);
-        
-        public async Task<HttpResponseMessage> UpdateCampaignSchedule(int scheduleId = default(int), DOOH.Server.Models.DOOHDB.CampaignSchedule campaignSchedule = default(DOOH.Server.Models.DOOHDB.CampaignSchedule))
-        {
-            var uri = new Uri(baseUri, $"CampaignSchedules({scheduleId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
-
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignSchedule), Encoding.UTF8, "application/json");
-
-            OnUpdateCampaignSchedule(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
         public async System.Threading.Tasks.Task ExportCategoriesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -1911,96 +1817,96 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        public async System.Threading.Tasks.Task ExportStatusesToExcel(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportSchedulesToExcel(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/schedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/schedules/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        public async System.Threading.Tasks.Task ExportStatusesToCSV(Query query = null, string fileName = null)
+        public async System.Threading.Tasks.Task ExportSchedulesToCSV(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/statuses/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/schedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/schedules/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        partial void OnGetStatuses(HttpRequestMessage requestMessage);
+        partial void OnGetSchedules(HttpRequestMessage requestMessage);
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>> GetStatuses(Query query)
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Schedule>> GetSchedules(Query query)
         {
-            return await GetStatuses(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+            return await GetSchedules(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
         }
 
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>> GetStatuses(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Schedule>> GetSchedules(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
         {
-            var uri = new Uri(baseUri, $"Statuses");
+            var uri = new Uri(baseUri, $"Schedules");
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetStatuses(httpRequestMessage);
+            OnGetSchedules(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Status>>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.Schedule>>(response);
         }
 
-        partial void OnCreateStatus(HttpRequestMessage requestMessage);
+        partial void OnCreateSchedule(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.Status> CreateStatus(DOOH.Server.Models.DOOHDB.Status status = default(DOOH.Server.Models.DOOHDB.Status))
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> CreateSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule = default(DOOH.Server.Models.DOOHDB.Schedule))
         {
-            var uri = new Uri(baseUri, $"Statuses");
+            var uri = new Uri(baseUri, $"Schedules");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(status), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(schedule), Encoding.UTF8, "application/json");
 
-            OnCreateStatus(httpRequestMessage);
+            OnCreateSchedule(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Status>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Schedule>(response);
         }
 
-        partial void OnDeleteStatus(HttpRequestMessage requestMessage);
+        partial void OnDeleteSchedule(HttpRequestMessage requestMessage);
 
-        public async Task<HttpResponseMessage> DeleteStatus(int statusId = default(int))
+        public async Task<HttpResponseMessage> DeleteSchedule(int scheduleId = default(int))
         {
-            var uri = new Uri(baseUri, $"Statuses({statusId})");
+            var uri = new Uri(baseUri, $"Schedules({scheduleId})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
 
-            OnDeleteStatus(httpRequestMessage);
+            OnDeleteSchedule(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
-        partial void OnGetStatusByStatusId(HttpRequestMessage requestMessage);
+        partial void OnGetScheduleByScheduleId(HttpRequestMessage requestMessage);
 
-        public async Task<DOOH.Server.Models.DOOHDB.Status> GetStatusByStatusId(string expand = default(string), int statusId = default(int))
+        public async Task<DOOH.Server.Models.DOOHDB.Schedule> GetScheduleByScheduleId(string expand = default(string), int scheduleId = default(int))
         {
-            var uri = new Uri(baseUri, $"Statuses({statusId})");
+            var uri = new Uri(baseUri, $"Schedules({scheduleId})");
 
             uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
 
-            OnGetStatusByStatusId(httpRequestMessage);
+            OnGetScheduleByScheduleId(httpRequestMessage);
 
             var response = await httpClient.SendAsync(httpRequestMessage);
 
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Status>(response);
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.Schedule>(response);
         }
 
-        partial void OnUpdateStatus(HttpRequestMessage requestMessage);
+        partial void OnUpdateSchedule(HttpRequestMessage requestMessage);
         
-        public async Task<HttpResponseMessage> UpdateStatus(int statusId = default(int), DOOH.Server.Models.DOOHDB.Status status = default(DOOH.Server.Models.DOOHDB.Status))
+        public async Task<HttpResponseMessage> UpdateSchedule(int scheduleId = default(int), DOOH.Server.Models.DOOHDB.Schedule schedule = default(DOOH.Server.Models.DOOHDB.Schedule))
         {
-            var uri = new Uri(baseUri, $"Statuses({statusId})");
+            var uri = new Uri(baseUri, $"Schedules({scheduleId})");
 
             var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
 
 
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(status), Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(schedule), Encoding.UTF8, "application/json");
 
-            OnUpdateStatus(httpRequestMessage);
+            OnUpdateSchedule(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
@@ -2283,6 +2189,100 @@ namespace DOOH.Client
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(userInformation), Encoding.UTF8, "application/json");
 
             OnUpdateUserInformation(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        public async System.Threading.Tasks.Task ExportScheduleAdboardsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportScheduleAdboardsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetScheduleAdboards(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.ScheduleAdboard>> GetScheduleAdboards(Query query)
+        {
+            return await GetScheduleAdboards(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.ScheduleAdboard>> GetScheduleAdboards(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"ScheduleAdboards");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetScheduleAdboards(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.ScheduleAdboard>>(response);
+        }
+
+        partial void OnCreateScheduleAdboard(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> CreateScheduleAdboard(DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleAdboard = default(DOOH.Server.Models.DOOHDB.ScheduleAdboard))
+        {
+            var uri = new Uri(baseUri, $"ScheduleAdboards");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(scheduleAdboard), Encoding.UTF8, "application/json");
+
+            OnCreateScheduleAdboard(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.ScheduleAdboard>(response);
+        }
+
+        partial void OnDeleteScheduleAdboard(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteScheduleAdboard(int scheduleId = default(int), int adboardId = default(int))
+        {
+            var uri = new Uri(baseUri, $"ScheduleAdboards(ScheduleId={scheduleId},AdboardId={adboardId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteScheduleAdboard(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetScheduleAdboardByScheduleIdAndAdboardId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> GetScheduleAdboardByScheduleIdAndAdboardId(string expand = default(string), int scheduleId = default(int), int adboardId = default(int))
+        {
+            var uri = new Uri(baseUri, $"ScheduleAdboards(ScheduleId={scheduleId},AdboardId={adboardId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetScheduleAdboardByScheduleIdAndAdboardId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.ScheduleAdboard>(response);
+        }
+
+        partial void OnUpdateScheduleAdboard(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateScheduleAdboard(int scheduleId = default(int), int adboardId = default(int), DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleAdboard = default(DOOH.Server.Models.DOOHDB.ScheduleAdboard))
+        {
+            var uri = new Uri(baseUri, $"ScheduleAdboards(ScheduleId={scheduleId},AdboardId={adboardId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(scheduleAdboard), Encoding.UTF8, "application/json");
+
+            OnUpdateScheduleAdboard(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }
