@@ -156,18 +156,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
-              .HasOne(i => i.Tax1)
-              .WithMany(i => i.Taxes1)
-              .HasForeignKey(i => i.ParentTaxId)
-              .HasPrincipalKey(i => i.TaxId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .HasOne(i => i.UserInformation)
-              .WithMany(i => i.Uploads)
-              .HasForeignKey(i => i.Owner)
-              .HasPrincipalKey(i => i.UserId);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.ScheduleAdboards)
@@ -179,6 +167,18 @@ namespace DOOH.Server.Data
               .WithMany(i => i.ScheduleAdboards)
               .HasForeignKey(i => i.ScheduleId)
               .HasPrincipalKey(i => i.ScheduleId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
+              .HasOne(i => i.Tax1)
+              .WithMany(i => i.Taxes1)
+              .HasForeignKey(i => i.ParentTaxId)
+              .HasPrincipalKey(i => i.TaxId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
+              .HasOne(i => i.UserInformation)
+              .WithMany(i => i.Uploads)
+              .HasForeignKey(i => i.Owner)
+              .HasPrincipalKey(i => i.UserId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
@@ -414,13 +414,15 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
 
+        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdboard> ScheduleAdboards { get; set; }
+
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdboard> ScheduleAdboards { get; set; }
+        public DbSet<DOOH.Server.Models.DOOHDB.CampaignCriterion> CampaignCriteria { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

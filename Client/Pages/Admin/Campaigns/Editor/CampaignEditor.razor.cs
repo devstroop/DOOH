@@ -26,7 +26,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> _selectedAdboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
         private IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> _advertisements = new List<DOOH.Server.Models.DOOHDB.Advertisement>();
         private IEnumerable<DOOH.Server.Models.DOOHDB.Schedule> _schedules = new List<DOOH.Server.Models.DOOHDB.Schedule>();
-        private IEnumerable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> _scheduleAdboards = new List<DOOH.Server.Models.DOOHDB.ScheduleAdboard>();
+        // private IEnumerable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> _scheduleAdboards = new List<DOOH.Server.Models.DOOHDB.ScheduleAdboard>();
 
 
         [Inject]
@@ -88,7 +88,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                         _selectedAdboards = _campaign.CampaignAdboards.Select(ca => ca.Adboard).ToList();
                         _advertisements = _campaign.Advertisements;
                         _schedules = _campaign.Schedules.Where(x => x.Date >= DateTime.Today);
-                        _scheduleAdboards = _schedules.SelectMany(x => x.ScheduleAdboards);
+                        // _scheduleAdboards = _schedules.SelectMany(x => x.ScheduleAdboards);
                     }
                 }
             }
@@ -97,6 +97,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 IsSaving = false;
                 StateHasChanged();
             }
+        }
+        
+        private async Task LoadSchedules()
+        {
+            var expand = "ScheduleAdboards($expand=Adboard)";
+            var result = await DoohdbService.GetSchedules(filter: $"CampaignId eq {_campaignId}", expand: expand);
+            _schedules = result.Value.AsODataEnumerable();
         }
 
         private int _selectedTabIndex = 0;
@@ -267,25 +274,52 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             await LoadCampaign();
         }
         
-        // AddSchedule
         private async Task AddSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
-            _schedules = _schedules.Append(schedule);
-            await DoohdbService.CreateSchedule(schedule);
+            schedule = await DoohdbService.CreateSchedule(schedule);
+            var toAdd = schedule.ScheduleAdboards.ToList();
+            foreach (var scheduleAdboard in toAdd)
+            {
+                scheduleAdboard.ScheduleId = schedule.ScheduleId;
+                await DoohdbService.CreateScheduleAdboard(scheduleAdboard);
+            }
+            await LoadSchedules();
             StateHasChanged();
         }
-        // AddSchedule
+        
         private async Task UpdateSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
-            _schedules = _schedules.Append(schedule);
             await DoohdbService.UpdateSchedule(schedule.ScheduleId, schedule);
+            var existing = await DoohdbService.GetScheduleAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
+            var existingScheduleAdboards = existing.Value.AsODataEnumerable();
+            var toRemove = existingScheduleAdboards.Except(schedule.ScheduleAdboards).ToList();
+            var toAdd = schedule.ScheduleAdboards.Except(existingScheduleAdboards).ToList();
+            foreach (var scheduleAdboard in toAdd)
+            {
+                await DoohdbService.CreateScheduleAdboard(scheduleAdboard);
+            }
+            foreach (var scheduleAdboard in toRemove)
+            {
+                await DoohdbService.DeleteScheduleAdboard(scheduleAdboard.ScheduleId, scheduleAdboard.AdboardId);
+            }
+
+            await LoadSchedules();
             StateHasChanged();
         }
-        // AddSchedule
+        
         private async Task DeleteSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
-            _schedules = _schedules.Where(x => x.ScheduleId != schedule.ScheduleId);
+            // _schedules = _schedules.Where(x => x.ScheduleId != schedule.ScheduleId);
             await DoohdbService.DeleteSchedule(schedule.ScheduleId);
+            var existing = await DoohdbService.GetScheduleAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
+            var existingScheduleAdboards = existing.Value.AsODataEnumerable();
+            var toRemove = existingScheduleAdboards.Except(schedule.ScheduleAdboards).ToList();
+            
+            foreach (var scheduleAdboard in toRemove)
+            {
+                await DoohdbService.DeleteScheduleAdboard(scheduleAdboard.ScheduleId, scheduleAdboard.AdboardId);
+            }
+            await LoadSchedules();
             StateHasChanged();
         }
     }

@@ -3353,6 +3353,171 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
+        public async Task ExportScheduleAdboardsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportScheduleAdboardsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnScheduleAdboardsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard>> GetScheduleAdboards(Query query = null)
+        {
+            var items = Context.ScheduleAdboards.AsQueryable();
+
+            items = items.Include(i => i.Adboard);
+            items = items.Include(i => i.Schedule);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnScheduleAdboardsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnScheduleAdboardGet(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnGetScheduleAdboardByScheduleIdAndAdboardId(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> GetScheduleAdboardByScheduleIdAndAdboardId(int scheduleid, int adboardid)
+        {
+            var items = Context.ScheduleAdboards
+                              .AsNoTracking()
+                              .Where(i => i.ScheduleId == scheduleid && i.AdboardId == adboardid);
+
+            items = items.Include(i => i.Adboard);
+            items = items.Include(i => i.Schedule);
+ 
+            OnGetScheduleAdboardByScheduleIdAndAdboardId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnScheduleAdboardGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnScheduleAdboardCreated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnAfterScheduleAdboardCreated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> CreateScheduleAdboard(DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleadboard)
+        {
+            OnScheduleAdboardCreated(scheduleadboard);
+
+            var existingItem = Context.ScheduleAdboards
+                              .Where(i => i.ScheduleId == scheduleadboard.ScheduleId && i.AdboardId == scheduleadboard.AdboardId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.ScheduleAdboards.Add(scheduleadboard);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(scheduleadboard).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterScheduleAdboardCreated(scheduleadboard);
+
+            return scheduleadboard;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> CancelScheduleAdboardChanges(DOOH.Server.Models.DOOHDB.ScheduleAdboard item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnScheduleAdboardUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnAfterScheduleAdboardUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> UpdateScheduleAdboard(int scheduleid, int adboardid, DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleadboard)
+        {
+            OnScheduleAdboardUpdated(scheduleadboard);
+
+            var itemToUpdate = Context.ScheduleAdboards
+                              .Where(i => i.ScheduleId == scheduleadboard.ScheduleId && i.AdboardId == scheduleadboard.AdboardId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(scheduleadboard);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterScheduleAdboardUpdated(scheduleadboard);
+
+            return scheduleadboard;
+        }
+
+        partial void OnScheduleAdboardDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnAfterScheduleAdboardDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> DeleteScheduleAdboard(int scheduleid, int adboardid)
+        {
+            var itemToDelete = Context.ScheduleAdboards
+                              .Where(i => i.ScheduleId == scheduleid && i.AdboardId == adboardid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnScheduleAdboardDeleted(itemToDelete);
+
+
+            Context.ScheduleAdboards.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterScheduleAdboardDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportTaxesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/taxes/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -3843,24 +4008,22 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
-        public async Task ExportScheduleAdboardsToExcel(Query query = null, string fileName = null)
+        public async Task ExportCampaignCriteriaToExcel(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        public async Task ExportScheduleAdboardsToCSV(Query query = null, string fileName = null)
+        public async Task ExportCampaignCriteriaToCSV(Query query = null, string fileName = null)
         {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadboards/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
         }
 
-        partial void OnScheduleAdboardsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> items);
+        partial void OnCampaignCriteriaRead(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
 
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard>> GetScheduleAdboards(Query query = null)
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(Query query = null)
         {
-            var items = Context.ScheduleAdboards.AsQueryable();
+            var items = Context.CampaignCriteria.AsQueryable();
 
-            items = items.Include(i => i.Adboard);
-            items = items.Include(i => i.Schedule);
 
             if (query != null)
             {
@@ -3876,42 +4039,40 @@ namespace DOOH.Server
                 ApplyQuery(ref items, query);
             }
 
-            OnScheduleAdboardsRead(ref items);
+            OnCampaignCriteriaRead(ref items);
 
             return await Task.FromResult(items);
         }
 
-        partial void OnScheduleAdboardGet(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
-        partial void OnGetScheduleAdboardByScheduleIdAndAdboardId(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdboard> items);
+        partial void OnCampaignCriterionGet(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnGetCampaignCriterionByCampaignCriteriaId(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
 
 
-        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> GetScheduleAdboardByScheduleIdAndAdboardId(int scheduleid, int adboardid)
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> GetCampaignCriterionByCampaignCriteriaId(int campaigncriteriaid)
         {
-            var items = Context.ScheduleAdboards
+            var items = Context.CampaignCriteria
                               .AsNoTracking()
-                              .Where(i => i.ScheduleId == scheduleid && i.AdboardId == adboardid);
+                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid);
 
-            items = items.Include(i => i.Adboard);
-            items = items.Include(i => i.Schedule);
  
-            OnGetScheduleAdboardByScheduleIdAndAdboardId(ref items);
+            OnGetCampaignCriterionByCampaignCriteriaId(ref items);
 
             var itemToReturn = items.FirstOrDefault();
 
-            OnScheduleAdboardGet(itemToReturn);
+            OnCampaignCriterionGet(itemToReturn);
 
             return await Task.FromResult(itemToReturn);
         }
 
-        partial void OnScheduleAdboardCreated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
-        partial void OnAfterScheduleAdboardCreated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> CreateScheduleAdboard(DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleadboard)
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CreateCampaignCriterion(DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
         {
-            OnScheduleAdboardCreated(scheduleadboard);
+            OnCampaignCriterionCreated(campaigncriterion);
 
-            var existingItem = Context.ScheduleAdboards
-                              .Where(i => i.ScheduleId == scheduleadboard.ScheduleId && i.AdboardId == scheduleadboard.AdboardId)
+            var existingItem = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
                               .FirstOrDefault();
 
             if (existingItem != null)
@@ -3921,21 +4082,21 @@ namespace DOOH.Server
 
             try
             {
-                Context.ScheduleAdboards.Add(scheduleadboard);
+                Context.CampaignCriteria.Add(campaigncriterion);
                 Context.SaveChanges();
             }
             catch
             {
-                Context.Entry(scheduleadboard).State = EntityState.Detached;
+                Context.Entry(campaigncriterion).State = EntityState.Detached;
                 throw;
             }
 
-            OnAfterScheduleAdboardCreated(scheduleadboard);
+            OnAfterCampaignCriterionCreated(campaigncriterion);
 
-            return scheduleadboard;
+            return campaigncriterion;
         }
 
-        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> CancelScheduleAdboardChanges(DOOH.Server.Models.DOOHDB.ScheduleAdboard item)
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CancelCampaignCriterionChanges(DOOH.Server.Models.DOOHDB.CampaignCriterion item)
         {
             var entityToCancel = Context.Entry(item);
             if (entityToCancel.State == EntityState.Modified)
@@ -3947,15 +4108,15 @@ namespace DOOH.Server
             return item;
         }
 
-        partial void OnScheduleAdboardUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
-        partial void OnAfterScheduleAdboardUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> UpdateScheduleAdboard(int scheduleid, int adboardid, DOOH.Server.Models.DOOHDB.ScheduleAdboard scheduleadboard)
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> UpdateCampaignCriterion(int campaigncriteriaid, DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
         {
-            OnScheduleAdboardUpdated(scheduleadboard);
+            OnCampaignCriterionUpdated(campaigncriterion);
 
-            var itemToUpdate = Context.ScheduleAdboards
-                              .Where(i => i.ScheduleId == scheduleadboard.ScheduleId && i.AdboardId == scheduleadboard.AdboardId)
+            var itemToUpdate = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
                               .FirstOrDefault();
 
             if (itemToUpdate == null)
@@ -3964,23 +4125,23 @@ namespace DOOH.Server
             }
                 
             var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(scheduleadboard);
+            entryToUpdate.CurrentValues.SetValues(campaigncriterion);
             entryToUpdate.State = EntityState.Modified;
 
             Context.SaveChanges();
 
-            OnAfterScheduleAdboardUpdated(scheduleadboard);
+            OnAfterCampaignCriterionUpdated(campaigncriterion);
 
-            return scheduleadboard;
+            return campaigncriterion;
         }
 
-        partial void OnScheduleAdboardDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
-        partial void OnAfterScheduleAdboardDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdboard item);
+        partial void OnCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
 
-        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdboard> DeleteScheduleAdboard(int scheduleid, int adboardid)
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> DeleteCampaignCriterion(int campaigncriteriaid)
         {
-            var itemToDelete = Context.ScheduleAdboards
-                              .Where(i => i.ScheduleId == scheduleid && i.AdboardId == adboardid)
+            var itemToDelete = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -3988,10 +4149,10 @@ namespace DOOH.Server
                throw new Exception("Item no longer available");
             }
 
-            OnScheduleAdboardDeleted(itemToDelete);
+            OnCampaignCriterionDeleted(itemToDelete);
 
 
-            Context.ScheduleAdboards.Remove(itemToDelete);
+            Context.CampaignCriteria.Remove(itemToDelete);
 
             try
             {
@@ -4003,7 +4164,7 @@ namespace DOOH.Server
                 throw;
             }
 
-            OnAfterScheduleAdboardDeleted(itemToDelete);
+            OnAfterCampaignCriterionDeleted(itemToDelete);
 
             return itemToDelete;
         }

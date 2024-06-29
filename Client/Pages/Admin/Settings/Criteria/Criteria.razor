@@ -1,0 +1,30 @@
+@layout AdminLayout
+@page "/admin/settings/criteria"
+
+@attribute [Authorize]
+<PageTitle>Criteria</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="6">
+            <RadzenBreadCrumb>
+                <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
+                <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
+                <RadzenBreadCrumbItem Path="/admin/settings/criteria"  Text="Criteria" Icon="policy" />
+            </RadzenBreadCrumb>
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                @* <RadzenTextBox Placeholder="Search ..." class="rz-px-2 rz-py-1" @oninput="@Search" aria-label="Search" />
+                <RadzenButton Icon="add" Click="@AddButtonClick" Size="ButtonSize.Medium" Variant="Variant.Flat" /> *@
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenCard>
+        <RadzenTabs TabPosition="Radzen.TabPosition.Left">
+            <Tabs>
+                <RadzenTabsItem Text="Campaign"></RadzenTabsItem>
+                <RadzenTabsItem Text="Advertisement"></RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </RadzenCard>
+</RadzenStack>

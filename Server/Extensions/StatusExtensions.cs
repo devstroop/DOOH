@@ -15,11 +15,11 @@ public static class StatusExtensions
             Status.Completed => "Completed",
             Status.Cancelled => "Cancelled",
             Status.Suspended => "Suspended",
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            _ => null
         };
     }
     
-    public static Status FromFriendlyString(string status)
+    public static Status? FromFriendlyString(string status)
     {
         return status switch
         {
@@ -29,7 +29,7 @@ public static class StatusExtensions
             "Completed" => Status.Completed,
             "Cancelled" => Status.Cancelled,
             "Suspended" => Status.Suspended,
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            _ => null
         };
     }
     
@@ -44,7 +44,7 @@ public static class StatusExtensions
             Status.Completed => "badge badge-secondary",
             Status.Cancelled => "badge badge-danger",
             Status.Suspended => "badge badge-warning",
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            _ => null
         };
     }
     
@@ -59,7 +59,7 @@ public static class StatusExtensions
             Status.Completed => "fiber_manual_record",
             Status.Cancelled => "fiber_manual_record",
             Status.Suspended => "fiber_manual_record",
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            _ => null
         };
     }
     
@@ -74,7 +74,7 @@ public static class StatusExtensions
             Status.Completed => "#6c757d",
             Status.Cancelled => "#dc3545",
             Status.Suspended => "#ffc107",
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            _ => null
         };
     }
     
