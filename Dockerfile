@@ -11,7 +11,7 @@ COPY ["Server/DOOH.Server.csproj", "."]
 RUN dotnet restore "./DOOH.Server.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+# RUN dotnet build "./Client/DOOH.Client.csproj" -c $BUILD_CONFIGURATION -o /app/build
 RUN dotnet build "./Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -21,6 +21,6 @@ RUN dotnet publish "./Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-# ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
+ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
 # entrypoint.sh
-ENTRYPOINT ["sh", "entrypoint.sh"]
+# ENTRYPOINT ["sh", "entrypoint.sh"]
