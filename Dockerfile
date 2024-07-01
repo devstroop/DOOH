@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Server/DOOH.Server.csproj", "."]
+RUN ls
 RUN dotnet restore "././././Server/DOOH.Server.csproj"
 COPY . .
 WORKDIR "/src/."
