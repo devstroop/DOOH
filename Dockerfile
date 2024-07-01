@@ -13,7 +13,7 @@ COPY ["Server/DOOH.Server.csproj", "."]
 RUN dotnet restore "./Server/DOOH.Server.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "./Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "././Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
