@@ -21,4 +21,6 @@ RUN dotnet publish "./Server/DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
+# ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
+# entrypoint.sh
+ENTRYPOINT ["sh", "entrypoint.sh"]
