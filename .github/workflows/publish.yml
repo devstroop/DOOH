@@ -12,6 +12,9 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v2
 
+      - name: Change directory to the code
+        run: cd Server
+
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
