@@ -22,7 +22,6 @@ if [ ! -f "$CERTIFICATE_PATH" ]; then
 
     # Ensure the /app directory exists and is writable
     mkdir -p /app
-    chmod 755 /app
 
     # Generate a self-signed certificate
     openssl req -x509 -newkey rsa:4096 -nodes -keyout /app/privateKey.key -out /app/certificate.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
