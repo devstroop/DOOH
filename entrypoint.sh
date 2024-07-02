@@ -10,11 +10,11 @@ openssl req -x509 -newkey rsa:4096 -keyout /app/privateKey.key -out /app/certifi
 # Convert the certificate to PKCS#12 format
 openssl pkcs12 -export -out /app/aspnetapp.pfx -inkey /app/privateKey.key -in /app/certificate.crt -passout pass:$CERTIFICATE_PASSWORD
 
-# Set the permissions
-chmod 400 /app/aspnetapp.pfx
-
 # Assuming your generated file is aspnetapp.pfx
 mv /app/aspnetapp.pfx /https/$CERTIFICATE_NAME
+
+# Set the permissions
+chmod 400 /https/$CERTIFICATE_NAME
 
 # Start the application with HTTPS
 exec dotnet DOOH.Server.dll
