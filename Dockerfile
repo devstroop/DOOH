@@ -3,6 +3,9 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# Create /https directory with appropriate permissions
+RUN mkdir -p /https && chmod 755 /https
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -20,12 +23,13 @@ RUN dotnet publish "DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 
+# Copy published app and entrypoint script
 COPY --from=publish /app/publish .
 
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
-# Ensure /app is writable and has the correct permissions
+# Ensure /https is writable and has the correct permissions
 RUN mkdir -p /https && chmod 755 /https
 
 USER $APP_UID

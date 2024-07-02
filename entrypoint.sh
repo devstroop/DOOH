@@ -16,9 +16,8 @@ trap 'error_handler $LINENO' ERR
 CERTIFICATE_PASSWORD=${CERTIFICATE_PASSWORD:-defaultpassword}
 CERTIFICATE_PATH=${ASPNETCORE_Kestrel__Certificates__Default__Path:-/https/aspnetapp.pfx}
 
-# Ensure the /https directory exists and is writable
+# Ensure the /https directory exists (if not mounted) and is writable
 mkdir -p /https
-chmod 755 /https
 
 # Check if the certificate already exists
 if [ ! -f "$CERTIFICATE_PATH" ]; then
@@ -34,8 +33,8 @@ if [ ! -f "$CERTIFICATE_PATH" ]; then
     mkdir -p "$(dirname "$CERTIFICATE_PATH")"
     mv /https/aspnetapp.pfx "$CERTIFICATE_PATH"
 
-    # Set the permissions
-    chmod 400 "$CERTIFICATE_PATH"
+    # Set the permissions (if needed)
+    # chmod 400 "$CERTIFICATE_PATH"
 
     echo "Certificate generated and moved to $CERTIFICATE_PATH"
 else
