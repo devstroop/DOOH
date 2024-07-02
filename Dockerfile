@@ -22,8 +22,8 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 
-COPY generate-certificate.sh .
-RUN chmod +x generate-certificate.sh
+COPY ./https/generate-certificate.sh .
+RUN chmod +x ./https/generate-certificate.sh
 
 USER $APP_UID
 ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
