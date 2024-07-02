@@ -16,12 +16,13 @@ trap 'error_handler $LINENO' ERR
 CERTIFICATE_PASSWORD=${CERTIFICATE_PASSWORD:-defaultpassword}
 CERTIFICATE_PATH=${ASPNETCORE_Kestrel__Certificates__Default__Path:-/https/aspnetapp.pfx}
 
+# Ensure the /https directory exists and is writable
+mkdir -p /https
+chmod 755 /https
+
 # Check if the certificate already exists
 if [ ! -f "$CERTIFICATE_PATH" ]; then
     echo "Certificate not found. Generating a new one..."
-
-    # Ensure the /app directory exists and is writable
-    mkdir -p /https
 
     # Generate a self-signed certificate
     openssl req -x509 -newkey rsa:4096 -nodes -keyout /https/privateKey.key -out /https/certificate.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
