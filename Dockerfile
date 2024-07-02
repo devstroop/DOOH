@@ -22,5 +22,8 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
 USER $APP_UID
 ENTRYPOINT ["sh", "./entrypoint.sh"]
