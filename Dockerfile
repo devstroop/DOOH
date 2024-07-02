@@ -19,7 +19,6 @@ RUN dotnet publish "DOOH.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
-RUN chmod 755 /app
 
 COPY --from=publish /app/publish .
 
@@ -27,6 +26,7 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 USER $APP_UID
+RUN chmod 755 /app
 ENTRYPOINT ["./entrypoint.sh"]
 
 

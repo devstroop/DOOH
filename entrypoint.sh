@@ -2,7 +2,6 @@
 
 # Set the certificate password from env
 CERTIFICATE_PASSWORD=$CERTIFICATE_PASSWORD
-CERTIFICATE_NAME=$DOMAIN.pfx
 
 # Generate a self-signed certificate
 openssl req -x509 -newkey rsa:4096 -keyout /app/privateKey.key -out /app/certificate.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
@@ -11,10 +10,10 @@ openssl req -x509 -newkey rsa:4096 -keyout /app/privateKey.key -out /app/certifi
 openssl pkcs12 -export -out /app/aspnetapp.pfx -inkey /app/privateKey.key -in /app/certificate.crt -passout pass:$CERTIFICATE_PASSWORD
 
 # Assuming your generated file is aspnetapp.pfx
-mv /app/aspnetapp.pfx /https/$CERTIFICATE_NAME
+mv /app/aspnetapp.pfx $ASPNETCORE_Kestrel__Certificates__Default__Path
 
 # Set the permissions
-chmod 400 /https/$CERTIFICATE_NAME
+chmod 400 $ASPNETCORE_Kestrel__Certificates__Default__Path
 
 # Start the application with HTTPS
 exec dotnet DOOH.Server.dll
