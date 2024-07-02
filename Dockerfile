@@ -23,4 +23,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 USER $APP_UID
-ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
+ENTRYPOINT ["sh", "entrypoint.sh"]

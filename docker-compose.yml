@@ -3,8 +3,6 @@
 services:
   app:
     image: doohfy/dooh:beta
-    command: |
-      ./entrypoint.sh
     environment:
       - DOOHDBConnection=Server=sqlserver,1433;TrustServerCertificate=True;User ID=sa;Password=${SA_PASSWORD};;Initial Catalog=DOOHDB
       - ASPNETCORE_ENVIRONMENT=Production
