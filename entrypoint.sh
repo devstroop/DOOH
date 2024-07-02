@@ -21,17 +21,17 @@ if [ ! -f "$CERTIFICATE_PATH" ]; then
     echo "Certificate not found. Generating a new one..."
 
     # Ensure the /app directory exists and is writable
-    mkdir -p /app
+    mkdir -p /https
 
     # Generate a self-signed certificate
-    openssl req -x509 -newkey rsa:4096 -nodes -keyout /app/privateKey.key -out /app/certificate.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+    openssl req -x509 -newkey rsa:4096 -nodes -keyout /https/privateKey.key -out /https/certificate.crt -days 365 -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
 
     # Convert the certificate to PKCS#12 format
-    openssl pkcs12 -export -out /app/aspnetapp.pfx -inkey /app/privateKey.key -in /app/certificate.crt -passout pass:$CERTIFICATE_PASSWORD
+    openssl pkcs12 -export -out /https/aspnetapp.pfx -inkey /https/privateKey.key -in /https/certificate.crt -passout pass:$CERTIFICATE_PASSWORD
 
     # Move the generated file to the specified path
     mkdir -p "$(dirname "$CERTIFICATE_PATH")"
-    mv /app/aspnetapp.pfx "$CERTIFICATE_PATH"
+    mv /https/aspnetapp.pfx "$CERTIFICATE_PATH"
 
     # Set the permissions
     chmod 400 "$CERTIFICATE_PATH"

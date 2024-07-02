@@ -26,7 +26,7 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 # Ensure /app is writable and has the correct permissions
-RUN mkdir -p /app && chmod 755 /app
+RUN mkdir -p /https && chmod 755 /https
 
 USER $APP_UID
 ENTRYPOINT ["bash", "./entrypoint.sh"]
