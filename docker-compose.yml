@@ -1,21 +1,10 @@
 ﻿version: '3.8'
 
 services:
-  generate-certificate:
-    image: alpine:latest
-    volumes:
-      - origin-cert:/https/
-    working_dir: /https/
-    entrypoint: ["/bin/sh", "-c"]
-    command: |
-      apk add --no-cache openssl &&
-      ./generate-certificate.sh
-    deploy:
-      restart_policy:
-        condition: on-failure
-
   app:
     image: doohfy/dooh:beta
+    command: |
+      ./entrypoint.sh
     environment:
       - DOOHDBConnection=Server=sqlserver,1433;TrustServerCertificate=True;User ID=sa;Password=${SA_PASSWORD};;Initial Catalog=DOOHDB
       - ASPNETCORE_ENVIRONMENT=Production
@@ -28,7 +17,6 @@ services:
       - origin-cert:/https/
     depends_on:
       - sqlserver
-      - generate-certificate
     deploy:
       restart_policy:
         condition: unless-stopped

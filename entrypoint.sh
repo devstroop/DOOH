@@ -1,5 +1,4 @@
 #!/bin/sh
-# generate-certificate.sh
 
 # Exit immediately if a command exits with a non-zero status
 set -e
@@ -42,3 +41,6 @@ if [ ! -f "$CERTIFICATE_PATH" ]; then
 else
     echo "Using existing certificate at $CERTIFICATE_PATH"
 fi
+
+
+exec dotnet DOOH.Server.dll
