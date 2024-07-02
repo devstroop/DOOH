@@ -4,7 +4,7 @@ EXPOSE 80
 EXPOSE 443
 
 # Create /https directory with appropriate permissions
-RUN mkdir -p /https && chmod 755 /https
+RUN mkdir -p /https && chown -R $APP_UID:$APP_UID /https
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -30,9 +30,8 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 # Ensure /https is writable and has the correct permissions
-RUN mkdir -p /https && chmod 755 /https
+RUN mkdir -p /https && chown -R $APP_UID:$APP_UID /https
 
-# Ensure that the script runs with appropriate user permissions
 USER $APP_UID
 
 ENTRYPOINT ["bash", "./entrypoint.sh"]
