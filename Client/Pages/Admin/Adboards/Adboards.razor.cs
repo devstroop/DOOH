@@ -45,7 +45,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
         [CascadingParameter]
         protected AdminLayout Layout { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> adboards = new List<Server.Models.DOOHDB.Adboard>();
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Adboard> list0;
         protected int adboardsCount;

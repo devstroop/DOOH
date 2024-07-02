@@ -33,7 +33,7 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Motherboard> motherboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Motherboard> motherboards = new List<DOOH.Server.Models.DOOHDB.Motherboard>();
 
         protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Motherboard> grid0;
         protected int count;

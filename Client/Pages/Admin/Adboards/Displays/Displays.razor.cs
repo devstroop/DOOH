@@ -33,7 +33,7 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
         [Inject]
         public DOOHDBService DOOHDBService { get; set; }
 
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displays;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Display> displays = new List<DOOH.Server.Models.DOOHDB.Display>();
 
         protected RadzenDataGrid<DOOH.Server.Models.DOOHDB.Display> grid0;
         protected int count;

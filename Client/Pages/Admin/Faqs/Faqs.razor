@@ -15,12 +15,12 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    @if (faqs?.Count() == 0)
-    {
-        <RadzenCard>
-            <RadzenText Text="No FAQs found" />
-        </RadzenCard>
-    }
+
+    <RadzenRow Visible="@(faqs?.Count() == 0)">
+        <RadzenColumn>
+            <NoRecordsFound Title="No faqs found!" Subtitle="Please add a faq." />
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenDataList @bind-IsLoading="@IsLoading" TItem="DOOH.Server.Models.DOOHDB.Faq" Data="@faqs" AllowPaging="true" LoadData="@faqsLoadData" Count="@faqsCount">
         <Template>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" JustifyContent="JustifyContent.SpaceBetween">
