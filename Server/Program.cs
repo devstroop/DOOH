@@ -112,6 +112,6 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(DOOH.Client._Imports).Assembly);
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
-app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
+// app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
 app.UseRequestLocalization("en-IN");
 app.Run();

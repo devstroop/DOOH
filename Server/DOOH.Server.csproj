@@ -3,9 +3,13 @@
     <NoWarn>CS0168,CS1998,BL9993,CS0649,CS0436,0436</NoWarn>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
   <ItemGroup>
     <Content Remove="wwwroot\js\geoHandler.js" />
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
     <Content Include="Controllers\AccountController.cs" />
     <Content Include="Controllers\ApplicationRolesController.cs" />
     <Content Include="Controllers\ApplicationUsersController.cs" />

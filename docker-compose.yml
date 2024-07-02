@@ -1,0 +1,6 @@
+﻿services:
+  dooh.server:
+    image: dooh.server
+    build:
+      context: .
+      dockerfile: Server/Dockerfile
