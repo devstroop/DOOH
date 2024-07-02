@@ -32,5 +32,7 @@ RUN chmod +x entrypoint.sh
 # Ensure /https is writable and has the correct permissions
 RUN mkdir -p /https && chmod 755 /https
 
+# Ensure that the script runs with appropriate user permissions
 USER $APP_UID
+
 ENTRYPOINT ["bash", "./entrypoint.sh"]
