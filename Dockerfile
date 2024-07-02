@@ -23,4 +23,4 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 
 USER $APP_UID
-ENTRYPOINT ["sh", "entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
