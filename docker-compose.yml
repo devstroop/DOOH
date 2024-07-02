@@ -11,10 +11,12 @@ services:
       - HTTP_PORTS=80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERTIFICATE_PASSWD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - FFMpeg__Endpoint=http://ffmpeg-api:80
     volumes:
       - origin-cert:/https/
     depends_on:
       - sqlserver
+      - ffmpeg-api
     deploy:
       restart_policy:
         condition: unless-stopped
