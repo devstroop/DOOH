@@ -22,12 +22,8 @@ WORKDIR /app
 
 COPY --from=publish /app/publish .
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+COPY generate-certificate.sh .
+RUN chmod +x generate-certificate.sh
 
 USER $APP_UID
-RUN chmod 755 /app
-ENTRYPOINT ["./entrypoint.sh"]
-
-
-#ENTRYPOINT ["dotnet", "DOOH.Server.dll"]
+ENTRYPOINT ["dotnet", "DOOH.Server.dll"]

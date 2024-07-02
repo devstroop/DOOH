@@ -1,6 +1,19 @@
 ﻿version: '3.8'
 
 services:
+  generate-certificate:
+    image: alpine:latest
+    volumes:
+      - origin-cert:/https/
+    working_dir: /https/
+    entrypoint: ["/bin/sh", "-c"]
+    command: |
+      apk add --no-cache openssl &&
+      ./generate-certificate.sh
+    deploy:
+      restart_policy:
+        condition: on-failure
+
   app:
     image: doohfy/dooh:beta
     environment:
@@ -15,6 +28,7 @@ services:
       - origin-cert:/https/
     depends_on:
       - sqlserver
+      - generate-certificate
     deploy:
       restart_policy:
         condition: unless-stopped
