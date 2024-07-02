@@ -18,9 +18,15 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
-    <RadzenRow>
+
+    <RadzenRow Visible="@(!motherboards.Any())">
+        <RadzenColumn>
+            <NoRecordsFound Title="No motherboards found!" Subtitle="Please add a motherboard." />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Visible="@(motherboards.Any())">
       <RadzenColumn SizeMD=12>
+          <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
         <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@motherboards" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Motherboard" RowDoubleClick="@EditRow">
             <Columns>

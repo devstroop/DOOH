@@ -20,10 +20,8 @@
     </RadzenColumn>
 </RadzenRow>
 <RadzenRow>
-    <RadzenColumn Visible="@(campaigns != null && !campaigns.Any())">
-        <RadzenCard>
-            <RadzenText Text="No campaigns found"  />
-        </RadzenCard>
+    <RadzenColumn Visible="@(campaigns != null && !campaigns.Any())" Style="height: 640px">
+        <NoRecordsFound Title="No campaigns found!" Subtitle="Please add a campaign." />
     </RadzenColumn>
 </RadzenRow>
 <RadzenRow>

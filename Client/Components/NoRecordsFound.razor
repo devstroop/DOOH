@@ -1,0 +1,12 @@
+<RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center">
+    <LottieComponent Src="/animations/no-records.json" Style="max-width: 300px;"></LottieComponent>
+    <RadzenStack>
+        <RadzenText Text="@Title" TextStyle="TextStyle.DisplayH5" TextAlign="TextAlign.Center"></RadzenText>
+        <RadzenText Text="@Subtitle" TextAlign="TextAlign.Center"></RadzenText>
+    </RadzenStack>
+</RadzenStack>
+
+@code{
+    [Parameter] public string Title { get; set; } = "No records found";
+    [Parameter] public string Subtitle { get; set; } = "Please add a record";
+}
