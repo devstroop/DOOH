@@ -42,10 +42,6 @@
     <Content Include="Controllers\ExportDOOHDBController.cs" />
     <Content Include="Controllers\ReportController.cs" />
     <Content Include="Controllers\UploadController.cs" />
-    <None Remove="entrypoint.sh" />
-    <Content Include="entrypoint.sh">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\geoHandler.js" />
