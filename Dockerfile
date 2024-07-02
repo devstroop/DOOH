@@ -26,4 +26,4 @@ COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 
 USER $APP_UID
-ENTRYPOINT ["sh", "./entrypoint.sh"]
+ENTRYPOINT ["bash", "./entrypoint.sh"]
