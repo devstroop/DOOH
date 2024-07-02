@@ -16,7 +16,7 @@ jobs:
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build and tag Docker image
-        run: docker build -t doohfy/dooh:beta ./Server
+        run: docker build -t doohfy/dooh:beta .
 
       - name: Push Docker image to Docker Hub
         run: docker push doohfy/dooh:beta
