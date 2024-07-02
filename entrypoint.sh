@@ -13,7 +13,7 @@ error_handler() {
 trap 'error_handler $LINENO' ERR
 
 # Set the certificate password from env
-CERTIFICATE_PASSWORD=${CERTIFICATE_PASSWORD:-defaultpassword}
+CERTIFICATE_PASSWORD=${CERTIFICATE_PASSWD:-defaultpassword}
 CERTIFICATE_PATH=${ASPNETCORE_Kestrel__Certificates__Default__Path:-/https/aspnetapp.pfx}
 
 # Ensure the /https directory exists (if not mounted)
