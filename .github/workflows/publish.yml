@@ -20,6 +20,6 @@ jobs:
 
       - name: Push Docker image to Docker Hub
         run: docker push doohfy/dooh:beta
-        
-      - name: Notify DevStroop
-        run: curl -X POST -H "Content-Type: application/json" -d '{"stackId":"06495395-8458-44d8-9a55-6e97508714f3"}' https://node1.devstroop.in/api/stacks/webhooks/06495395-8458-44d8-9a55-6e97508714f3
+
+      # - name: Notify DevStroop
+      #   run: curl -X POST -H "Content-Type: application/json" -d '{"stackId":"06495395-8458-44d8-9a55-6e97508714f3"}' https://node1.devstroop.in/api/stacks/webhooks/06495395-8458-44d8-9a55-6e97508714f3
