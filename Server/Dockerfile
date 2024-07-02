@@ -7,8 +7,8 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Server/DOOH.Server.csproj", "Server/"]
-COPY ["Client/DOOH.Client.csproj", "Client/"]
+# COPY ["Server/DOOH.Server.csproj", "Server/"]
+# COPY ["Client/DOOH.Client.csproj", "Client/"]
 RUN dotnet restore "Server/DOOH.Server.csproj"
 COPY . .
 WORKDIR "/src/Server"
