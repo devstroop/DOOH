@@ -20,6 +20,11 @@
         </RadzenColumn>
     </RadzenRow>
 
+    <RadzenRow Visible="@(brands?.Count() == 0)">
+        <RadzenColumn>
+            <NoRecordsFound Title="No brands found!" Subtitle="Please add a brand." />
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenRow>
         <RadzenColumn SizeMD=12>
             <RadzenDataList @ref="@list0" IsLoading="@isLoading" TItem="DOOH.Server.Models.DOOHDB.Brand" Data="@brands" AllowPaging="true" LoadData="@brandsLoadData" Count="@brandsCount" WrapItems="true">

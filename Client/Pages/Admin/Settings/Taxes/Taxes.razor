@@ -19,61 +19,59 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenCard>
-        <RadzenRow>
-            <RadzenColumn SizeMD=12>
-                <RadzenProgressBarCircular Visible="@isLoading" />
-                <RadzenTree Expand=@OnExpand Collapse=@OnCollapse Change=@OnChange Style="width: 100%; height: 300px" Visible="!isLoading">
-                    @foreach (var rootTax in taxes.Where(x => x.ParentTaxId == null))
-                    {
-                    <RadzenTreeItem Text="@rootTax.TaxName">
-                        <ChildContent>
-                            @foreach (var childTax in taxes.Where(x => x.ParentTaxId == rootTax.TaxId))
-                            {
-                            <RadzenTreeItem Text="@childTax.TaxName">
-                                <Template>
-                                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
-                                        <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
-                                        <RadzenButton Icon="edit" Click="@((args) => EditTaxClick(args, childTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" Style="" Shade="Shade.Lighter" />
-                                        <RadzenButton Icon="delete" Click="@((args) => DeleteTaxClick(args, childTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
-                                    </RadzenStack>
-                                </Template>
-                            </RadzenTreeItem>
-                            }
-                        </ChildContent>
-                        <Template>
-                            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center">
+    <RadzenRow>
+        <RadzenColumn SizeMD=12>
+            <RadzenProgressBarCircular Visible="@isLoading" />
+            <RadzenTree Expand=@OnExpand Collapse=@OnCollapse Change=@OnChange Style="width: 100%; height: 300px" Visible="!isLoading">
+                @foreach (var rootTax in taxes.Where(x => x.ParentTaxId == null))
+                {
+                <RadzenTreeItem Text="@rootTax.TaxName">
+                    <ChildContent>
+                        @foreach (var childTax in taxes.Where(x => x.ParentTaxId == rootTax.TaxId))
+                        {
+                        <RadzenTreeItem Text="@childTax.TaxName">
+                            <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
-                                    <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 500;" />
-                                    @if (taxes.Where(x => x.ParentTaxId == rootTax.TaxId).Count() > 0 && taxes.Where(x => x.ParentTaxId == rootTax.TaxId).Select(x => x.TaxRate).Sum() != rootTax.TaxRate)
-                                    {
-                                    <RadzenIcon Icon="warning" class="rz-ml-1" Style="color: darkgoldenrod;" />
-                                    }
+                                    <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 400; font-size: 14px;" />
+                                    <RadzenButton Icon="edit" Click="@((args) => EditTaxClick(args, childTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" Style="" Shade="Shade.Lighter" />
+                                    <RadzenButton Icon="delete" Click="@((args) => DeleteTaxClick(args, childTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
                                 </RadzenStack>
-                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                                    <RadzenButton Icon="edit" Click="@((args) => EditTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" Style="" Shade="Shade.Lighter" />
-                                    <RadzenButton Icon="delete" Click="@((args) => DeleteTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
-                                </RadzenStack>
-                                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
-                                    <RadzenButton Icon="add" Click="@((args) => AddChildTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
-                                </RadzenStack>
-                            </RadzenStack>
-
-                        </Template>
-                    </RadzenTreeItem>
-                    }
-                    <RadzenTreeItem Text="New Tax">
-                        <Template>
-                            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Gap="0.5rem">
+                            </Template>
+                        </RadzenTreeItem>
+                        }
+                    </ChildContent>
+                    <Template>
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center">
+                            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0.5rem">
                                 <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 500;" />
-                                <RadzenButton Icon="add" Click="@AddParentTaxClick" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                                @if (taxes.Where(x => x.ParentTaxId == rootTax.TaxId).Count() > 0 && taxes.Where(x => x.ParentTaxId == rootTax.TaxId).Select(x => x.TaxRate).Sum() != rootTax.TaxRate)
+                                {
+                                <RadzenIcon Icon="warning" class="rz-ml-1" Style="color: darkgoldenrod;" />
+                                }
                             </RadzenStack>
-                        </Template>
-                    </RadzenTreeItem>
-                </RadzenTree>
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenCard>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                <RadzenButton Icon="edit" Click="@((args) => EditTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" Style="" Shade="Shade.Lighter" />
+                                <RadzenButton Icon="delete" Click="@((args) => DeleteTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Style="" Shade="Shade.Lighter" />
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                <RadzenButton Icon="add" Click="@((args) => AddChildTaxClick(args, rootTax))" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                            </RadzenStack>
+                        </RadzenStack>
+
+                    </Template>
+                </RadzenTreeItem>
+                }
+                <RadzenTreeItem Text="New Tax">
+                    <Template>
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Gap="0.5rem">
+                            <RadzenText Text="@context.Text" class="rz-mb-0" Style="font-weight: 500;" />
+                            <RadzenButton Icon="add" Click="@AddParentTaxClick" @onclick:stopPropagation="true" Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" Style="padding: 2px" />
+                        </RadzenStack>
+                    </Template>
+                </RadzenTreeItem>
+            </RadzenTree>
+        </RadzenColumn>
+    </RadzenRow>
 </RadzenStack>
 
 <style>

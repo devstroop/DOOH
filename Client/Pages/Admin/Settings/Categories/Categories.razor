@@ -22,6 +22,12 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
+
+    <RadzenRow Visible="@(categories?.Count() == 0)">
+        <RadzenColumn>
+            <NoRecordsFound Title="No categories found!" Subtitle="Please add a category." />
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Category" Data="@categories" AllowPaging="true" LoadData="@categoriesLoadData" Count="@categoriesCount" IsLoading="@isCategoriesLoading" WrapItems="true">
         <Template>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Style="width:400px">

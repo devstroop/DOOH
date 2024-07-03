@@ -19,28 +19,29 @@
         </RadzenColumn>
     </RadzenRow>
 
-    <RadzenRow Visible="@(!motherboards.Any())">
-        <RadzenColumn>
-            <NoRecordsFound Title="No motherboards found!" Subtitle="Please add a motherboard." />
-        </RadzenColumn>
-    </RadzenRow>
-    <RadzenRow Visible="@(motherboards.Any())">
+    <RadzenRow>
       <RadzenColumn SizeMD=12>
           <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
-        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+        <RadzenDataGrid @ref="grid0" ColumnWidth="auto"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" AllowColumnResize="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@motherboards" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Motherboard" RowDoubleClick="@EditRow">
+            <LoadingTemplate>
+                <Loading Title="Loading" Subtitle="Motherboards" />
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <NoRecordsFound Title="No motherboards found!" Subtitle="Please add a motherboard." />
+            </EmptyTemplate>
             <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="MotherboardId" Title="Motherboard Id">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="MotherboardId" Title="Id">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Brand.BrandName" Title="Brand">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Model" Title="Model">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Cpu" Title="Cpu">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Cpu" Title="CPU">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Ram" Title="Ram">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Ram" Title="RAM">
                 </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Rom" Title="Rom">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Rom" Title="ROM">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
                     <Template Context="motherboard">

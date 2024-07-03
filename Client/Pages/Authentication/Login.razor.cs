@@ -56,7 +56,7 @@ namespace DOOH.Client.Pages.Authentication
 
         protected async Task Register()
         {
-            var result = await DialogService.OpenAsync<RegisterApplicationUser>("Register Application User");
+            var result = await DialogService.OpenAsync<Register>("Register Application User");
 
             if (result == true)
             {

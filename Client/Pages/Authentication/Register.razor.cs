@@ -10,7 +10,7 @@ using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Authentication
 {
-    public partial class RegisterApplicationUser
+    public partial class Register
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -30,10 +30,10 @@ namespace DOOH.Client.Pages.Authentication
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
-        protected DOOH.Server.Models.ApplicationUser user;
-        protected bool isBusy;
-        protected bool errorVisible;
-        protected string error;
+        private DOOH.Server.Models.ApplicationUser user;
+        private bool isBusy;
+        private bool errorVisible;
+        private string error;
 
         [Inject]
         protected SecurityService Security { get; set; }
@@ -43,7 +43,7 @@ namespace DOOH.Client.Pages.Authentication
             user = new DOOH.Server.Models.ApplicationUser();
         }
 
-        protected async Task FormSubmit()
+        private async Task FormSubmit()
         {
             try
             {
@@ -62,7 +62,7 @@ namespace DOOH.Client.Pages.Authentication
             isBusy = false;
         }
 
-        protected async Task CancelClick()
+        private async Task CancelClick()
         {
             DialogService.Close(false);
         }
