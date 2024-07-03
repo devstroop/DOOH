@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DOOH.Client.Components;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -38,6 +39,26 @@ namespace DOOH.Client.Pages.Admin.Providers
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Provider provider;
+        
+        
+        
+        // FetchAddressClick
+        private async Task FetchAddressClick(MouseEventArgs args)
+        {
+            
+            var result = await DialogService.OpenAsync<GeoPicker>("Fetch Address", new Dictionary<string, object>(), new DialogOptions()
+            {
+                Draggable = true,
+                Resizable = true,
+                CloseDialogOnEsc = true,
+                CloseDialogOnOverlayClick = true
+            });
+            if (result != null)
+            {
+                
+            }
+
+        }
         
         protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()

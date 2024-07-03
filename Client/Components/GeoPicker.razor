@@ -1,0 +1,41 @@
+<RadzenColumn>
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn>
+            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map @bind-Zoom="@Zoom" Center="@Center" Style="width: 100%; height: 360px;" MapClick="@MapClick" MarkerClick="@MarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+                <Markers>
+                    <RadzenGoogleMapMarker id="@($"map-marker-main")" Title="Title" Position="@Center" Style="" />
+                </Markers>
+            </RadzenGoogleMap>
+        </RadzenColumn>
+    </RadzenRow>
+    
+    <RadzenRow>
+        <RadzenColumn SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start">
+                <RadzenButton Text="Current Location" ButtonStyle="ButtonStyle.Success"></RadzenButton>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                <RadzenButton Text="Confirm"></RadzenButton>
+                <RadzenButton Text="Cancel" ButtonStyle="ButtonStyle.Light"></RadzenButton>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenColumn>
+@code {
+    [Parameter] public GoogleMapPosition Center { get; set; } = new GoogleMapPosition() { Lat = 77.9, Lng = 120.22 };
+    private RadzenGoogleMap map;
+    private int Zoom { get; set; } = 12;
+
+    private async Task MapClick(GoogleMapClickEventArgs args)
+    {
+        await Runtime.InvokeVoidAsync("console.log", $"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
+    }
+    private async Task MarkerClick(RadzenGoogleMapMarker marker)
+    {
+        await Runtime.InvokeVoidAsync("console.log", $"Map clicked at Lat: {marker.Position.Lat}, Lng: {marker.Position.Lng}");
+    }
+    
+    [Inject] public IJSRuntime Runtime { get; set; }
+}

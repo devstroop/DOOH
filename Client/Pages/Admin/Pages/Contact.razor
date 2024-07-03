@@ -21,9 +21,19 @@
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
-    <RadzenHtmlEditor @bind-Value=@_page.Content style="min-height: 400px;" Visible="@(_page != null && isEditing)"></RadzenHtmlEditor>
-    @if (_page != null && !isEditing)
-    {
-        @((MarkupString)_page.Content)
-    }
+    <RadzenRow Visible="@(String.IsNullOrEmpty(_page?.Content))">
+        <RadzenColumn>
+            <NoRecordsFound Title="No Content" Subtitle="Please edit and add content on this page."></NoRecordsFound>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Visible="@(_page != null && !isEditing)">
+        <RadzenColumn>
+            @((MarkupString)_page.Content)
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Visible="@(_page != null && isEditing)">
+        <RadzenColumn>
+            <RadzenHtmlEditor @bind-Value="@(_page.Content)" Style="min-height: 400px;"></RadzenHtmlEditor>
+        </RadzenColumn>
+    </RadzenRow>
 </RadzenStack>
