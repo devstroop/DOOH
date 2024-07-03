@@ -4,23 +4,33 @@ services:
   app:
     image: doohfy/dooh:beta
     environment:
-      - DOOHDBConnection=Server=sqlserver,1433;TrustServerCertificate=True;User ID=sa;Password=${SA_PASSWORD};;Initial Catalog=DOOHDB
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ENVIRONMENT}
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - HTTPS_PORTS=443
       - HTTP_PORTS=80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERTIFICATE_PASSWD}
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-      - FFMpeg__Endpoint=http://ffmpeg-api:80
+      - ConnectionStrings__DOOHDBConnection=Server=sqlserver,1433;TrustServerCertificate=True;User ID=sa;Password=${SA_PASSWORD};Initial Catalog=DOOHDB
+      - FFMpeg__Endpoint=http://ffmpeg-api
+      - R2__Bucket=doohfy
+      - R2__Domain=${R2_Domain}
+      - R2__ServiceURL=${R2_ServiceURL}
+      - R2__AccessKey=${R2_AccessKey}
+      - R2__SecretKey=${R2_SecretKey}
+      - Google__API_KEY=${Google_API_KEY}
+      - Smtp__Host=${Smtp_Host}
+      - Smtp__Port=${Smtp_Port}
+      - Smtp__Ssl=${Smtp_Ssl}
+      - Smtp__User=${Smtp_User}
+      - Smtp__Password=${Smtp_Password}
     volumes:
       - origin-cert:/https/
     depends_on:
       - sqlserver
-      - ffmpeg-api
     deploy:
       restart_policy:
         condition: unless-stopped
-       
+  
   ffmpeg-api:
     image: devstroop/ffmpeg-api:latest
     restart: unless-stopped
@@ -36,11 +46,11 @@ services:
       replicas: ${FFMPEG_REPLICAS}
       restart_policy:
         condition: unless-stopped
-        
+  
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - "${SQL_PORT}:1433"
+      - "${EXTERN_SQL_PORT}:1433"
     environment:
       SA_PASSWORD: ${SA_PASSWORD}
       ACCEPT_EULA: "Y"
@@ -53,9 +63,9 @@ services:
       - sqlserver-data:/var/opt/mssql
     deploy:
       resources:
-          limits:
-            cpus: '1'
-            memory: 4G
+        limits:
+          cpus: '1'
+          memory: 2G
       restart_policy:
         condition: unless-stopped
 

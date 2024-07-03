@@ -56,18 +56,19 @@ namespace DOOH.Client.Layout
 
         protected async Task DashboardClick(MouseEventArgs args)
         {
-            if (Security.IsInRole("Admin"))
-            {
-                NavigationManager.NavigateTo("/admin/dashboard");
-            }
-            else if (Security.IsInRole("Provider"))
-            {
-                NavigationManager.NavigateTo("/provider/dashboard");
-            }
-            else
-            {
-                return;
-            }
+            NavigationManager.NavigateTo("/dashboard");
+            // if (Security.IsInRole("Admin"))
+            // {
+            //     NavigationManager.NavigateTo("/admin/dashboard");
+            // }
+            // else if (Security.IsInRole("Provider"))
+            // {
+            //     NavigationManager.NavigateTo("/provider/dashboard");
+            // }
+            // else
+            // {
+            //     return;
+            // }
         }
 
         protected override async Task OnInitializedAsync()
@@ -92,7 +93,8 @@ namespace DOOH.Client.Layout
         {
             try
             {
-                Company = await DOOHDBService.GetCompanyByKey(key: "company");
+                var result = await DOOHDBService.GetCompanies();
+                Company = result.Value.FirstOrDefault(x => x.Key == "company", null);
                 ShowLoading = false;
                 StateHasChanged();
                 return;

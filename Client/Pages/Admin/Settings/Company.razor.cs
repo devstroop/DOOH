@@ -64,12 +64,14 @@ namespace DOOH.Client.Pages.Admin.Settings
         {
             try
             {
-                company = await DOOHDBService.GetCompanyByKey(key: Key);
+                var result = await DOOHDBService.GetCompanies();
+                company = result.Value.FirstOrDefault(x => x.Key == "company", null);
                 Icons = new List<string> { company.Icon };
                 Logos = new List<string> { company.Logo };
                 AdminLogos = new List<string> { company.AdminLogo };
                 ProviderLogos = new List<string> { company.ProviderLogo };
                 LoginLogos = new List<string> { company.LoginLogo };
+                StateHasChanged();
                 isLoading = false;
                 return;
             }

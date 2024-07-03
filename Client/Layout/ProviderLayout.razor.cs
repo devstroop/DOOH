@@ -90,13 +90,10 @@ namespace DOOH.Client.Layout
         {
             try
             {
-                Company = await DOOHDBService.GetCompanyByKey(key: "company");
-                ShowLoading = false;
-                StateHasChanged();
-                return;
+                var result = await DOOHDBService.GetCompanies();
+                Company = result.Value.FirstOrDefault(x => x.Key == "company", null);
             }
             catch { }
-            Company = Company ?? new DOOH.Server.Models.DOOHDB.Company() { Key = "company" };
             ShowLoading = false;
             StateHasChanged();
 

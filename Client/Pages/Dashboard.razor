@@ -1,4 +1,6 @@
-﻿@page "/dashboard"
+﻿@layout PublicLayout
+@page "/dashboard"
+@attribute [Authorize]
 <h3>Redirecting to Dashboard...</h3>
 @code {
     [Inject]
@@ -22,15 +24,13 @@
 
     private void RedirectToDashboard()
     {
-        if (SecurityService.IsInRole("Admin"))
+        if (SecurityService.IsInRole("Admin") || SecurityService.User.Name == "Admin")
         {
             NavigationManager.NavigateTo("/admin/dashboard");
-            return;
         }
-        if (SecurityService.IsInRole("Provider"))
+        else if (SecurityService.IsInRole("Provider"))
         {
             NavigationManager.NavigateTo("/provider/dashboard");
-            return;
         }
     }
 }

@@ -70,7 +70,9 @@ namespace DOOH.Client.Layout
         {
             try
             {
-                Company = await DOOHDBService.GetCompanyByKey(key: "company");
+                
+                var result = await DOOHDBService.GetCompanies();
+                Company = result.Value.FirstOrDefault(x => x.Key == "company", null);
                 ShowLoading = false;
                 StateHasChanged();
                 return;
