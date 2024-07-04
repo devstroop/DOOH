@@ -85,6 +85,7 @@ builder.Services.AddLocalization();
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
