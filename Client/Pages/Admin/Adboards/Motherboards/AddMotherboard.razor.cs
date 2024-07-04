@@ -75,8 +75,9 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
             {
                 IsSaving = true;
                 StateHasChanged();
-                var result = await DOOHDBService.CreateMotherboard(motherboard);
+                motherboard = await DOOHDBService.CreateMotherboard(motherboard);
                 DialogService.Close(motherboard);
+                NotificationService.Notify(new NotificationMessage(){Summary = "Successfully created!"});
             }
             catch (Exception ex)
             {

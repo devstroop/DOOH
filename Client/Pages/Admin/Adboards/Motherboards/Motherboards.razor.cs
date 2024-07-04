@@ -43,6 +43,19 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
         [Inject]
         protected SecurityService Security { get; set; }
 
+        protected override async Task OnInitializedAsync()
+        {
+            await Grid0LoadData(new LoadDataArgs());
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                await Grid0LoadData(new LoadDataArgs());
+            }
+        }
+
         protected async Task Search(ChangeEventArgs args)
         {
             search = $"{args.Value}";

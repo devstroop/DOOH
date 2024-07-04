@@ -26,9 +26,11 @@
                 <RadzenLabel Text="Color" Component="CategoryColor" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
+                
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                    <RadzenColorPicker @bind-Value="@category.CategoryColor" Name="CategoryColor" />
-                    <RadzenTextBox @bind-Value="@category.CategoryColor" Name="CategoryColor" />
+
+                    <RadzenTextBox @bind-Value="@category.CategoryColor" Name="CategoryColor" Style="display: block; width: 100%"  />
+                    <RadzenColorPicker @bind-Value="@category.CategoryColor" Name="CategoryColor"/>
                 </RadzenStack>
             </RadzenColumn>
         </RadzenRow>

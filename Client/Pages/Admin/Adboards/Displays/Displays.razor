@@ -19,18 +19,19 @@
         </RadzenColumn>
     </RadzenRow>
 
-    <RadzenRow Visible="@(!displays.Any())">
-        <RadzenColumn>
-            <NoRecordsFound Title="No displays found!" Subtitle="Please add a display." />
-        </RadzenColumn>
-    </RadzenRow>
-    <RadzenRow Visible="@(displays.Any())">
+    <RadzenRow>
       <RadzenColumn SizeMD=12>
           <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
-        <RadzenDataGrid @ref="grid0" ColumnWidth="200px"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+        <RadzenDataGrid @ref="grid0" ColumnWidth="auto"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowColumnResize="true" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@displays" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Display" RowDoubleClick="@EditRow">
+            <LoadingTemplate>
+                <Loading Title="Loading" Subtitle="Displays" />
+            </LoadingTemplate>
+            <EmptyTemplate>
+                <NoRecordsFound Title="No displays found!" Subtitle="Please add a display." />
+            </EmptyTemplate>
             <Columns>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Display" Property="DisplayId" Title="Display Id">
+                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Display" Property="DisplayId" Title="Id">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Display" Property="Brand.BrandName" Title="Brand">
                 </RadzenDataGridColumn>
