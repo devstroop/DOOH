@@ -43,13 +43,17 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected string search { get; set; } = "";
         protected GoogleMapPosition CenterPosition { get; set; } = new GoogleMapPosition() { Lat = 42.6977, Lng = 23.3219 };
 
+
+        protected override async Task OnParametersSetAsync()
+        {
+            await adboardsLoadData(new LoadDataArgs());
+        }
+
+
         protected async Task Search(MouseEventArgs args)
         {
             await list0.GoToPage(0);
-
             await list0.Reload();
-
-
         }
         protected async Task FetchCurrentLocation(MouseEventArgs args)
         {

@@ -55,8 +55,8 @@
                 @if (adboardsCount == 0)
                 {
                     <NoRecordsFound Title="Oops" Subtitle="No adboards found."></NoRecordsFound>
-                }
-                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && Data.Any() ? Adboards.Where(x => Data.Any(x => x.AdboardId == x.AdboardId)) : Adboards)" WrapItems="true" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Visible="@(adboardsCount > 0)" Style="min-height: 640px">
+                } 
+                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && Data.Any() ? Adboards.Where(x => Data.Any(x => x.AdboardId == x.AdboardId)) : Adboards)" WrapItems="true" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Style="min-height: 640px">
                     <Template>
                         <CampaignAdboardTemplate Context="@context" Selected="@Data.Any(x => x.AdboardId == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard"/>
                     </Template>
