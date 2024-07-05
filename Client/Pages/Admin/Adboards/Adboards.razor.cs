@@ -57,7 +57,15 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected override async System.Threading.Tasks.Task OnInitializedAsync()
         {
-            //Layout.ShowLoading = true;
+            await adboardsLoadData(new LoadDataArgs());
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if(firstRender)
+            {
+                await adboardsLoadData(new LoadDataArgs());
+            }
         }
 
         string SanitizeSearch(string input)
