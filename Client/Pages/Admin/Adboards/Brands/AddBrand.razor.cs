@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
+using DOOH.Server.Models.DOOHDB;
 
-namespace DOOH.Client.Pages.Admin.Settings.Categories
+namespace DOOH.Client.Pages.Admin.Adboards.Brands
 {
-    public partial class AddCategory
+    public partial class AddBrand
     {
         [Inject]
         protected IJSRuntime JSRuntime { get; set; }
@@ -34,10 +35,14 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
 
         protected override async Task OnInitializedAsync()
         {
-            category = new DOOH.Server.Models.DOOHDB.Category();
+            brand = new DOOH.Server.Models.DOOHDB.Brand();
         }
+
+
+
         protected bool errorVisible;
-        protected DOOH.Server.Models.DOOHDB.Category category;
+        protected DOOH.Server.Models.DOOHDB.Brand brand;
+
 
         protected bool IsSaving { get; set; } = false;
         protected async Task FormSubmit()
@@ -46,8 +51,9 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
             {
                 IsSaving = true;
                 StateHasChanged();
-                var result = await DOOHDBService.CreateCategory(category);
-                DialogService.Close(category);
+                brand.BrandLogo = Images.FirstOrDefault();
+                var result = await DOOHDBService.CreateBrand(brand);
+                DialogService.Close(brand);
             }
             catch (Exception ex)
             {
@@ -65,8 +71,23 @@ namespace DOOH.Client.Pages.Admin.Settings.Categories
             DialogService.Close(null);
         }
 
-
         [Inject]
         protected SecurityService Security { get; set; }
+
+        protected List<string> Images = new List<string>();
+
+        protected void OnRefreshImage() => StateHasChanged();
+
+        protected async void OnAddLogo(string image)
+        {
+            Images = new List<string> { image };
+            StateHasChanged();
+        }
+        protected async void OnDeleteLogo(string image)
+        {
+            Images.Clear();
+            StateHasChanged();
+        }
+
     }
 }

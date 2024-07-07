@@ -2,33 +2,36 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="@NavigationManager.BaseUri" />
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
-    <link href="css/material3-base.css" rel="stylesheet" />
-    <link rel="stylesheet" href="css/site.css" />
-    <link rel="icon" href="favicon.ico" />
-    <link href="manifest.json" rel="manifest" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
-    <HeadOutlet @rendermode="@InteractiveAuto" />
-    <link href="DOOH.Server.styles.css" rel="stylesheet" />
-</head>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <base href="@NavigationManager.BaseUri" />
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+        <link href="css/material3-base.css" rel="stylesheet" />
+        <link rel="stylesheet" href="css/site.css" />
+        <link rel="icon" href="favicon.ico" />
+        <link href="manifest.json" rel="manifest" />
+        <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+        <HeadOutlet @rendermode="@InteractiveAuto" />
+        <link href="DOOH.Server.styles.css" rel="stylesheet" />
+        <link href="_content/OpenLayer.NET/css/ol.css" rel="stylesheet" />
+    </head>
 
-<body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
-    <script src="https://unpkg.com/@@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="/js/geoHandler.js"></script>
-    <script src="/js/imageHandler.js"></script>
-    <script src="/js/videoHandler.js"></script>
-    <script src="/js/windowHandler.js"></script>
-    <script src="/js/hubHandler.js"></script>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+        <script src="https://unpkg.com/@@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <script src="/js/geoHandler.js"></script>
+        <script src="/js/imageHandler.js"></script>
+        <script src="/js/videoHandler.js"></script>
+        <script src="/js/windowHandler.js"></script>
+        <script src="/js/hubHandler.js"></script>
+        <script src="_content/OpenLayer.NET/js/ol.js" ></script>
+        <script src="_content/OpenLayer.NET/js/custom.js" ></script>
 
-    <Routes @rendermode="@InteractiveAuto" />
-    <script src="_framework/blazor.web.js"></script>
-    <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
-</body>
+        <Routes @rendermode="@InteractiveAuto"/>
+        <script src="_framework/blazor.web.js"></script>
+        <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
+        <script>navigator.serviceWorker.register('service-worker.js');</script>
+    </body>
 
 </html>

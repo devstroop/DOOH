@@ -21,8 +21,10 @@ namespace DOOH.Server.Models.DOOHDB
 
         public decimal Budget { get; set; }
 
+        [Column(TypeName="datetime2")]
         public DateTime StartDate { get; set; }
 
+        [Column(TypeName="datetime2")]
         [Required]
         public DateTime EndDate { get; set; }
 

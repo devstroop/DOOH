@@ -1886,6 +1886,167 @@ namespace DOOH.Server
             return itemToDelete;
         }
     
+        public async Task ExportCampaignCriteriaToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportCampaignCriteriaToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnCampaignCriteriaRead(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(Query query = null)
+        {
+            var items = Context.CampaignCriteria.AsQueryable();
+
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnCampaignCriteriaRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnCampaignCriterionGet(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnGetCampaignCriterionByCampaignCriteriaId(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> GetCampaignCriterionByCampaignCriteriaId(int campaigncriteriaid)
+        {
+            var items = Context.CampaignCriteria
+                              .AsNoTracking()
+                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid);
+
+ 
+            OnGetCampaignCriterionByCampaignCriteriaId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnCampaignCriterionGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CreateCampaignCriterion(DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
+        {
+            OnCampaignCriterionCreated(campaigncriterion);
+
+            var existingItem = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.CampaignCriteria.Add(campaigncriterion);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(campaigncriterion).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterCampaignCriterionCreated(campaigncriterion);
+
+            return campaigncriterion;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CancelCampaignCriterionChanges(DOOH.Server.Models.DOOHDB.CampaignCriterion item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> UpdateCampaignCriterion(int campaigncriteriaid, DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
+        {
+            OnCampaignCriterionUpdated(campaigncriterion);
+
+            var itemToUpdate = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(campaigncriterion);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterCampaignCriterionUpdated(campaigncriterion);
+
+            return campaigncriterion;
+        }
+
+        partial void OnCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+        partial void OnAfterCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> DeleteCampaignCriterion(int campaigncriteriaid)
+        {
+            var itemToDelete = Context.CampaignCriteria
+                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnCampaignCriterionDeleted(itemToDelete);
+
+
+            Context.CampaignCriteria.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterCampaignCriterionDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
         public async Task ExportCategoriesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -4004,167 +4165,6 @@ namespace DOOH.Server
             }
 
             OnAfterUserInformationDeleted(itemToDelete);
-
-            return itemToDelete;
-        }
-    
-        public async Task ExportCampaignCriteriaToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async Task ExportCampaignCriteriaToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnCampaignCriteriaRead(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
-
-        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(Query query = null)
-        {
-            var items = Context.CampaignCriteria.AsQueryable();
-
-
-            if (query != null)
-            {
-                if (!string.IsNullOrEmpty(query.Expand))
-                {
-                    var propertiesToExpand = query.Expand.Split(',');
-                    foreach(var p in propertiesToExpand)
-                    {
-                        items = items.Include(p.Trim());
-                    }
-                }
-
-                ApplyQuery(ref items, query);
-            }
-
-            OnCampaignCriteriaRead(ref items);
-
-            return await Task.FromResult(items);
-        }
-
-        partial void OnCampaignCriterionGet(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-        partial void OnGetCampaignCriterionByCampaignCriteriaId(ref IQueryable<DOOH.Server.Models.DOOHDB.CampaignCriterion> items);
-
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> GetCampaignCriterionByCampaignCriteriaId(int campaigncriteriaid)
-        {
-            var items = Context.CampaignCriteria
-                              .AsNoTracking()
-                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid);
-
- 
-            OnGetCampaignCriterionByCampaignCriteriaId(ref items);
-
-            var itemToReturn = items.FirstOrDefault();
-
-            OnCampaignCriterionGet(itemToReturn);
-
-            return await Task.FromResult(itemToReturn);
-        }
-
-        partial void OnCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-        partial void OnAfterCampaignCriterionCreated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CreateCampaignCriterion(DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
-        {
-            OnCampaignCriterionCreated(campaigncriterion);
-
-            var existingItem = Context.CampaignCriteria
-                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
-                              .FirstOrDefault();
-
-            if (existingItem != null)
-            {
-               throw new Exception("Item already available");
-            }            
-
-            try
-            {
-                Context.CampaignCriteria.Add(campaigncriterion);
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(campaigncriterion).State = EntityState.Detached;
-                throw;
-            }
-
-            OnAfterCampaignCriterionCreated(campaigncriterion);
-
-            return campaigncriterion;
-        }
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CancelCampaignCriterionChanges(DOOH.Server.Models.DOOHDB.CampaignCriterion item)
-        {
-            var entityToCancel = Context.Entry(item);
-            if (entityToCancel.State == EntityState.Modified)
-            {
-              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
-              entityToCancel.State = EntityState.Unchanged;
-            }
-
-            return item;
-        }
-
-        partial void OnCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-        partial void OnAfterCampaignCriterionUpdated(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> UpdateCampaignCriterion(int campaigncriteriaid, DOOH.Server.Models.DOOHDB.CampaignCriterion campaigncriterion)
-        {
-            OnCampaignCriterionUpdated(campaigncriterion);
-
-            var itemToUpdate = Context.CampaignCriteria
-                              .Where(i => i.CampaignCriteriaId == campaigncriterion.CampaignCriteriaId)
-                              .FirstOrDefault();
-
-            if (itemToUpdate == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-                
-            var entryToUpdate = Context.Entry(itemToUpdate);
-            entryToUpdate.CurrentValues.SetValues(campaigncriterion);
-            entryToUpdate.State = EntityState.Modified;
-
-            Context.SaveChanges();
-
-            OnAfterCampaignCriterionUpdated(campaigncriterion);
-
-            return campaigncriterion;
-        }
-
-        partial void OnCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-        partial void OnAfterCampaignCriterionDeleted(DOOH.Server.Models.DOOHDB.CampaignCriterion item);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> DeleteCampaignCriterion(int campaigncriteriaid)
-        {
-            var itemToDelete = Context.CampaignCriteria
-                              .Where(i => i.CampaignCriteriaId == campaigncriteriaid)
-                              .FirstOrDefault();
-
-            if (itemToDelete == null)
-            {
-               throw new Exception("Item no longer available");
-            }
-
-            OnCampaignCriterionDeleted(itemToDelete);
-
-
-            Context.CampaignCriteria.Remove(itemToDelete);
-
-            try
-            {
-                Context.SaveChanges();
-            }
-            catch
-            {
-                Context.Entry(itemToDelete).State = EntityState.Unchanged;
-                throw;
-            }
-
-            OnAfterCampaignCriterionDeleted(itemToDelete);
 
             return itemToDelete;
         }

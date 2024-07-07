@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings.Categories
+namespace DOOH.Client.Pages.Admin.Providers.Categories
 {
     public partial class EditCategory
     {

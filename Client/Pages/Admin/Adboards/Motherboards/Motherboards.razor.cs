@@ -91,31 +91,6 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
             await grid0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Motherboard motherboard)
-        {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
-                {
-                    var deleteResult = await DOOHDBService.DeleteMotherboard(motherboardId:motherboard.MotherboardId);
-
-                    if (deleteResult != null)
-                    {
-                        await grid0.Reload();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = $"Error",
-                    Detail = $"Unable to delete Motherboard"
-                });
-            }
-        }
-
         protected async Task ExportClick(RadzenSplitButtonItem args)
         {
             if (args?.Value == "csv")

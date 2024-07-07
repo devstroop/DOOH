@@ -12,18 +12,18 @@
         <RadzenColumn Size="6">
             <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem" RowGap="1rem">
                 <RadzenLabel Text="Date" />
-                <RadzenDatePicker @bind-Value="@Schedule.Date" Name="Start" ShowTime="false" DateFormat="d" Style="width: 120px;" />
+                <RadzenDatePicker @bind-Value="@Schedule.Date" Name="Start" ShowTime="false" DateFormat="d" Style="width: 150px;" />
             </RadzenRow>
         </RadzenColumn>
     </RadzenRow>
     <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Schedule" Data="@Schedule" Submit=@OnSubmit Visible="@(Schedule != null)">
-        <RadzenRow>
+        <RadzenRow class="rz-mb-2">
             <RadzenColumn SizeMD="3">
                 <RadzenLabel Text="Adboards" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
                 <RadzenDropDownDataGrid @ref="grid" class="w-100" Chips="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowClear="true" @bind-Value="@SelectedAdboardIds"
-                                        Multiple="true" Placeholder="Select..." Data=@Adboards TextProperty="@nameof(Adboard.SignName)" ValueProperty="@nameof(Adboard.AdboardId)" Name="DropDownDataGridMultiple">
+                                        Multiple="true" Placeholder="Select adboards" Data=@Adboards TextProperty="@nameof(Adboard.SignName)" ValueProperty="@nameof(Adboard.AdboardId)" Name="DropDownDataGridMultiple">
                     <Columns>
                         <RadzenDropDownDataGridColumn Width="36px" Sortable="false">
                             <HeaderTemplate>
@@ -48,6 +48,20 @@
                                 <RadzenText Text="@($"{data.BaseRatePerSecond:C}/s")" class="rz-mb-0" Style="font-size: 14px; font-weight: 500; color: green;"/>
                             </Template>
                         </RadzenDropDownDataGridColumn>
+                    </Columns>
+                </RadzenDropDownDataGrid>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Advertisements" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenDropDownDataGrid class="w-100" TValue="IEnumerable<int>" ValueProperty="AdvertisementId" TextProperty="UploadKey" Data="@advertisements" Multiple="true" AllowSorting="true" AllowPaging="true" AllowFiltering="true" LoadData="@advertisementsLoadData" Count="@advertisementsCount" Placeholder="Select advertisements">
+                    <Columns>
+                        <RadzenDropDownDataGridColumn Property="UploadKey" Title="Upload" />
+                        <RadzenDropDownDataGridColumn Property="Duration" Title="Duration" />
+                        @* <RadzenDropDownDataGridColumn Property="IsVerified" Title="IsVerified" /> *@
                     </Columns>
                 </RadzenDropDownDataGrid>
             </RadzenColumn>
@@ -82,7 +96,6 @@
     </RadzenTemplateForm>
 </RadzenStack>
 <style>
-
         .rotation-input input{
             border: none;
             text-align: center;

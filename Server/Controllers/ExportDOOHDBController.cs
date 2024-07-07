@@ -173,6 +173,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetCampaignAdboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/campaigncriteria/csv")]
+        [HttpGet("/export/DOOHDB/campaigncriteria/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignCriteriaToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/campaigncriteria/excel")]
+        [HttpGet("/export/DOOHDB/campaigncriteria/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignCriteriaToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/categories/csv")]
         [HttpGet("/export/DOOHDB/categories/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCategoriesToCSV(string fileName = null)
@@ -353,20 +367,6 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/campaigncriteria/csv")]
-        [HttpGet("/export/DOOHDB/campaigncriteria/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignCriteriaToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/campaigncriteria/excel")]
-        [HttpGet("/export/DOOHDB/campaigncriteria/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignCriteriaToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
         }
     }
 }

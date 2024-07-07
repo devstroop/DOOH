@@ -11,7 +11,7 @@ namespace DOOH.Server.Models.DOOHDB
     public partial class Earning
     {
         [Key]
-        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EarningId { get; set; }
 
         [Required]

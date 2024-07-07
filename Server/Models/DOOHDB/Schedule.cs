@@ -21,6 +21,7 @@ namespace DOOH.Server.Models.DOOHDB
 
         public int Rotation { get; set; }
 
+        [Column(TypeName="datetime2")]
         public DateTime Date { get; set; }
 
         public string Label { get; set; }

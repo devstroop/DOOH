@@ -5,23 +5,27 @@
 <PageTitle>Motherboards</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
-        <RadzenColumn Size="12" SizeMD="6">
+        <RadzenColumn Size="6">
             <RadzenText Text="Motherboards" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
-        <RadzenColumn Size="12" SizeMD="6">
+        <RadzenColumn Size="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter">
-                    <RadzenSplitButtonItem Text="Excel" Value="xlsx" />
-                    <RadzenSplitButtonItem Text="CSV" Value="csv" />
-                </RadzenSplitButton>
+                @* <RadzenSplitButton Icon="get_app" Text="Export" Click="@ExportClick" Variant="Variant.Flat" Shade="Shade.Lighter"> *@
+                @*     <RadzenSplitButtonItem Text="Excel" Value="xlsx" /> *@
+                @*     <RadzenSplitButtonItem Text="CSV" Value="csv" /> *@
+                @* </RadzenSplitButton> *@
                 <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddButtonClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
 
     <RadzenRow>
+        <RadzenColumn>
+            <RadzenTextBox Placeholder="Search Brands..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
       <RadzenColumn SizeMD=12>
-          <RadzenTextBox Placeholder="Search ..." style="display: block; width: 100%" @oninput="@Search" aria-label="Search by all string columns" />
         <RadzenDataGrid @ref="grid0" ColumnWidth="auto"   AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" AllowColumnResize="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
             Data="@motherboards" LoadData="@Grid0LoadData" Count="@count" TItem="DOOH.Server.Models.DOOHDB.Motherboard" RowDoubleClick="@EditRow">
             <LoadingTemplate>
@@ -34,6 +38,12 @@
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="MotherboardId" Title="Id">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Brand.BrandName" Title="Brand">
+                    <Template>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenImage Path="@context.Brand.BrandLogo" style="width: auto; height: 32px" Visible="@(context.Brand.BrandLogo != null)"></RadzenImage>
+                            <RadzenText Text="@context.Brand.BrandName" class="rz-mb-0" Style="font-weight: 500" />
+                        </RadzenStack>
+                    </Template>
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Model" Title="Model">
                 </RadzenDataGridColumn>
@@ -42,14 +52,6 @@
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Ram" Title="RAM">
                 </RadzenDataGridColumn>
                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Property="Rom" Title="ROM">
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Motherboard" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
-                    <Template Context="motherboard">
-
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
-                            Shade="Shade.Lighter" Variant="Variant.Flat"
-                            Click=@(args => GridDeleteButtonClick(args, motherboard)) @onclick:stopPropagation="true" />
-                    </Template>
                 </RadzenDataGridColumn>
             </Columns>
 

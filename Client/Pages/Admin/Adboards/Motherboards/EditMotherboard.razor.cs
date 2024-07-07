@@ -99,6 +99,33 @@ namespace DOOH.Client.Pages.Admin.Adboards.Motherboards
         {
             DialogService.Close(null);
         }
+        
+        
+        protected async Task DeleteClick(MouseEventArgs args)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var deleteResult = await DOOHDBService.DeleteMotherboard(motherboardId: MotherboardId);
+
+                    if (deleteResult != null)
+                    {
+                        DialogService.Close(motherboard);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = $"Error",
+                    Detail = $"Unable to delete Motherboard"
+                });
+            }
+        }
+
 
         [Inject]
         protected SecurityService Security { get; set; }

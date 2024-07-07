@@ -1,27 +1,22 @@
 @layout AdminLayout
-@page "/admin/settings/categories"
+@page "/admin/providers/categories"
 @inject Microsoft.Extensions.Localization.IStringLocalizer<Categories> L
 
 @attribute [Authorize]
 
 <PageTitle>Categories</PageTitle>
 <RadzenStack>
-    <RadzenRow>
-        <RadzenColumn Size="6">
-            <RadzenStack Orientation="Orientation.Horizontal">
-                <RadzenBreadCrumb>
-                    <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
-                    <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
-                    <RadzenBreadCrumbItem Path="/admin/settings/categories" Text="Categories" Icon="category" />
-                </RadzenBreadCrumb>
-            </RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Categories" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
-        <RadzenColumn Size="6">
-            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                <RadzenButton Icon="add" Click="@AddCategoryClick" Size="ButtonSize.Medium" Variant="Variant.Flat" />
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add" Click="@AddCategoryClick" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
+
 
     <RadzenRow Visible="@(categories?.Count() == 0)">
         <RadzenColumn>

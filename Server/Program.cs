@@ -42,6 +42,7 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Brand>("Brands");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Campaign>("Campaigns");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignAdboard>("CampaignAdboards").EntityType.HasKey(entity => new { entity.CampaignId, entity.AdboardId });
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignCriterion>("CampaignCriteria");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Category>("Categories");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Company>("Companies");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Display>("Displays");
@@ -55,7 +56,6 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Upload>("Uploads");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignCriterion>("CampaignCriteria");
     opt.AddRouteComponents("odata/DOOHDB", oDataBuilderDOOHDB.GetEdmModel()).Count().Filter().OrderBy().Expand().Select().SetMaxTop(null).TimeZone = TimeZoneInfo.Utc;
 });
 //builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();
@@ -85,7 +85,6 @@ builder.Services.AddLocalization();
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -113,10 +112,7 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(DOOH.Client._Imports).Assembly);
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
-app.Services.CreateScope().ServiceProvider.GetRequiredService<DOOHDBContext>().Database.Migrate();
-
+// app.Services.CreateScope().ServiceProvider.GetRequiredService<DOOHDBContext>().Database.Migrate();
 // app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
-
-
 app.UseRequestLocalization("en-IN");
 app.Run();

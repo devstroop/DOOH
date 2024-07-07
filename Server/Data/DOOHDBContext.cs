@@ -333,6 +333,14 @@ namespace DOOH.Server.Data
               .HasColumnType("datetime");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.StartDate)
+              .HasColumnType("datetime2");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
+              .Property(p => p.EndDate)
+              .HasColumnType("datetime2");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Campaign>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
 
@@ -351,6 +359,10 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Provider>()
               .Property(p => p.UpdatedAt)
               .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.Date)
+              .HasColumnType("datetime2");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
               .Property(p => p.CreatedAt)
@@ -396,6 +408,8 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.CampaignAdboard> CampaignAdboards { get; set; }
 
+        public DbSet<DOOH.Server.Models.DOOHDB.CampaignCriterion> CampaignCriteria { get; set; }
+
         public DbSet<DOOH.Server.Models.DOOHDB.Category> Categories { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Company> Companies { get; set; }
@@ -421,8 +435,6 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.CampaignCriterion> CampaignCriteria { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

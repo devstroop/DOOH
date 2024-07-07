@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using Radzen.Blazor;
 
-namespace DOOH.Client.Pages.Admin.Settings.Brands
+namespace DOOH.Client.Pages.Admin.Adboards.Brands
 {
     public partial class Brands
     {

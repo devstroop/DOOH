@@ -1065,6 +1065,100 @@ namespace DOOH.Client
             return await httpClient.SendAsync(httpRequestMessage);
         }
 
+        public async System.Threading.Tasks.Task ExportCampaignCriteriaToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async System.Threading.Tasks.Task ExportCampaignCriteriaToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnGetCampaignCriteria(HttpRequestMessage requestMessage);
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(Query query)
+        {
+            return await GetCampaignCriteria(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
+        }
+
+        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
+        {
+            var uri = new Uri(baseUri, $"CampaignCriteria");
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetCampaignCriteria(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>>(response);
+        }
+
+        partial void OnCreateCampaignCriterion(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CreateCampaignCriterion(DOOH.Server.Models.DOOHDB.CampaignCriterion campaignCriterion = default(DOOH.Server.Models.DOOHDB.CampaignCriterion))
+        {
+            var uri = new Uri(baseUri, $"CampaignCriteria");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignCriterion), Encoding.UTF8, "application/json");
+
+            OnCreateCampaignCriterion(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignCriterion>(response);
+        }
+
+        partial void OnDeleteCampaignCriterion(HttpRequestMessage requestMessage);
+
+        public async Task<HttpResponseMessage> DeleteCampaignCriterion(int campaignCriteriaId = default(int))
+        {
+            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+            OnDeleteCampaignCriterion(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
+        partial void OnGetCampaignCriterionByCampaignCriteriaId(HttpRequestMessage requestMessage);
+
+        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> GetCampaignCriterionByCampaignCriteriaId(string expand = default(string), int campaignCriteriaId = default(int))
+        {
+            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
+
+            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
+
+            OnGetCampaignCriterionByCampaignCriteriaId(httpRequestMessage);
+
+            var response = await httpClient.SendAsync(httpRequestMessage);
+
+            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignCriterion>(response);
+        }
+
+        partial void OnUpdateCampaignCriterion(HttpRequestMessage requestMessage);
+        
+        public async Task<HttpResponseMessage> UpdateCampaignCriterion(int campaignCriteriaId = default(int), DOOH.Server.Models.DOOHDB.CampaignCriterion campaignCriterion = default(DOOH.Server.Models.DOOHDB.CampaignCriterion))
+        {
+            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
+
+            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
+
+
+            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignCriterion), Encoding.UTF8, "application/json");
+
+            OnUpdateCampaignCriterion(httpRequestMessage);
+
+            return await httpClient.SendAsync(httpRequestMessage);
+        }
+
         public async System.Threading.Tasks.Task ExportCategoriesToExcel(Query query = null, string fileName = null)
         {
             navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/categories/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
@@ -2283,100 +2377,6 @@ namespace DOOH.Client
             httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(userInformation), Encoding.UTF8, "application/json");
 
             OnUpdateUserInformation(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
-        public async System.Threading.Tasks.Task ExportCampaignCriteriaToExcel(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        public async System.Threading.Tasks.Task ExportCampaignCriteriaToCSV(Query query = null, string fileName = null)
-        {
-            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/campaigncriteria/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
-        }
-
-        partial void OnGetCampaignCriteria(HttpRequestMessage requestMessage);
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(Query query)
-        {
-            return await GetCampaignCriteria(filter:$"{query.Filter}", orderby:$"{query.OrderBy}", top:query.Top, skip:query.Skip, count:query.Top != null && query.Skip != null);
-        }
-
-        public async Task<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>> GetCampaignCriteria(string filter = default(string), string orderby = default(string), string expand = default(string), int? top = default(int?), int? skip = default(int?), bool? count = default(bool?), string format = default(string), string select = default(string))
-        {
-            var uri = new Uri(baseUri, $"CampaignCriteria");
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:filter, top:top, skip:skip, orderby:orderby, expand:expand, select:select, count:count);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetCampaignCriteria(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<Radzen.ODataServiceResult<DOOH.Server.Models.DOOHDB.CampaignCriterion>>(response);
-        }
-
-        partial void OnCreateCampaignCriterion(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> CreateCampaignCriterion(DOOH.Server.Models.DOOHDB.CampaignCriterion campaignCriterion = default(DOOH.Server.Models.DOOHDB.CampaignCriterion))
-        {
-            var uri = new Uri(baseUri, $"CampaignCriteria");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, uri);
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignCriterion), Encoding.UTF8, "application/json");
-
-            OnCreateCampaignCriterion(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignCriterion>(response);
-        }
-
-        partial void OnDeleteCampaignCriterion(HttpRequestMessage requestMessage);
-
-        public async Task<HttpResponseMessage> DeleteCampaignCriterion(int campaignCriteriaId = default(int))
-        {
-            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
-
-            OnDeleteCampaignCriterion(httpRequestMessage);
-
-            return await httpClient.SendAsync(httpRequestMessage);
-        }
-
-        partial void OnGetCampaignCriterionByCampaignCriteriaId(HttpRequestMessage requestMessage);
-
-        public async Task<DOOH.Server.Models.DOOHDB.CampaignCriterion> GetCampaignCriterionByCampaignCriteriaId(string expand = default(string), int campaignCriteriaId = default(int))
-        {
-            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
-
-            uri = Radzen.ODataExtensions.GetODataUri(uri: uri, filter:null, top:null, skip:null, orderby:null, expand:expand, select:null, count:null);
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri);
-
-            OnGetCampaignCriterionByCampaignCriteriaId(httpRequestMessage);
-
-            var response = await httpClient.SendAsync(httpRequestMessage);
-
-            return await Radzen.HttpResponseMessageExtensions.ReadAsync<DOOH.Server.Models.DOOHDB.CampaignCriterion>(response);
-        }
-
-        partial void OnUpdateCampaignCriterion(HttpRequestMessage requestMessage);
-        
-        public async Task<HttpResponseMessage> UpdateCampaignCriterion(int campaignCriteriaId = default(int), DOOH.Server.Models.DOOHDB.CampaignCriterion campaignCriterion = default(DOOH.Server.Models.DOOHDB.CampaignCriterion))
-        {
-            var uri = new Uri(baseUri, $"CampaignCriteria({campaignCriteriaId})");
-
-            var httpRequestMessage = new HttpRequestMessage(HttpMethod.Patch, uri);
-
-
-            httpRequestMessage.Content = new StringContent(Radzen.ODataJsonSerializer.Serialize(campaignCriterion), Encoding.UTF8, "application/json");
-
-            OnUpdateCampaignCriterion(httpRequestMessage);
 
             return await httpClient.SendAsync(httpRequestMessage);
         }

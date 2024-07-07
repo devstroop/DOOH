@@ -26,9 +26,13 @@
             </Overlay>
         </CarouselComponent>
     </Template>
-
+    
 </RadzenDataList>
-
+<RadzenRow Visible="@(!Data.Any())">
+    <RadzenColumn>
+        <NoRecordsFound Title="No advertisements found" Subtitle="Please upload a media from import."></NoRecordsFound>
+    </RadzenColumn>
+</RadzenRow>
 <style>
         
         .close-button {

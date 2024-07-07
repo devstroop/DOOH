@@ -79,8 +79,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                     {
                         _campaignId = _campaign.CampaignId;
                         CampaignName = _campaign.CampaignName;
-                        StartDate = _campaign.StartDate;
-                        EndDate = _campaign.EndDate;
+                        StartDate = _campaign?.StartDate ?? DateTime.Now;
+                        EndDate = _campaign?.EndDate ?? DateTime.Now;
                         Budget = _campaign.Budget;
                         BudgetType = (BudgetType)_campaign.BudgetType;
                         IsDraft = DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status)_campaign.Status);
@@ -106,7 +106,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             _schedules = result.Value.AsODataEnumerable();
         }
 
-        private int _selectedTabIndex = 0;
+        private int _selectedTabIndex = 1;
 
 
         private async Task SaveCampaignAdboards()

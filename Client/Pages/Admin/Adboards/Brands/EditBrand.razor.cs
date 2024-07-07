@@ -9,7 +9,7 @@ using Radzen;
 using Radzen.Blazor;
 using DOOH.Server.Models.DOOHDB;
 
-namespace DOOH.Client.Pages.Admin.Settings.Brands
+namespace DOOH.Client.Pages.Admin.Adboards.Brands
 {
     public partial class EditBrand
     {

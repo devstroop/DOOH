@@ -1,25 +1,25 @@
 @layout AdminLayout
-@page "/admin/settings/brands"
+@page "/admin/adboards/brands"
 
 @attribute [Authorize]
 <PageTitle>Brands</PageTitle>
 <RadzenStack>
     <RadzenRow AlignItems="AlignItems.Center">
-        <RadzenColumn Size="6">
-            <RadzenBreadCrumb>
-                <RadzenBreadCrumbItem Path="/admin" Icon="dashboard" />
-                <RadzenBreadCrumbItem Path="/admin/settings" Text="Settings" />
-                <RadzenBreadCrumbItem Path="/admin/settings/brands" Text="Brands" Icon="recommend" />
-            </RadzenBreadCrumb>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Brands" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
         </RadzenColumn>
-        <RadzenColumn Size="6">
+        <RadzenColumn Size="12" SizeMD="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                <RadzenTextBox Placeholder="Search ..." class="rz-px-2 rz-py-1" @oninput="@Search" aria-label="Search" />
-                <RadzenButton Icon="add" Click="@AddButtonClick" Size="ButtonSize.Medium" Variant="Variant.Flat" />
+                <RadzenButton Icon="add" Text="Create" Click="@AddButtonClick" Size="ButtonSize.Medium" Variant="Variant.Flat" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
 
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenTextBox Placeholder="Search Brands..." class="rz-px-2 rz-py-1 w-100" @oninput="@Search" aria-label="Search" />
+        </RadzenColumn>
+    </RadzenRow>
     <RadzenRow Visible="@(brands?.Count() == 0)">
         <RadzenColumn>
             <NoRecordsFound Title="No brands found!" Subtitle="Please add a brand." />

@@ -28,21 +28,22 @@
 </RadzenRow>
 <RadzenRow>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8">
+        @* <OpenLayerMap /> *@
         <RadzenRow>
-            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; height: 480px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; min-height: 540px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
                 <Markers>
                     @if (showSelectedAdboardsOnly && Data.Any())
                     {
-                        @foreach (var each in Adboards.Where(x => Data.Any(y=> y.AdboardId == y.AdboardId)))
+                        @foreach (var each in Adboards.Where(x => Data.Any(y => y.AdboardId == y.AdboardId)))
                         {
-                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style=""/>
                         }
                     }
                     else
                     {
                         @foreach (var each in Adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
                         {
-                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style="" />
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style=""/>
                         }
                     }
                 </Markers>
@@ -51,11 +52,10 @@
     </RadzenColumn>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
         <RadzenRow>
-            <RadzenColumn Size="12" Style="height: 480px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
-                @if (adboardsCount == 0)
-                {
+            <RadzenColumn Size="12" Style="height: 540px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
+                <RadzenStack Visible="@(!(showSelectedAdboardsOnly && Data.Any() ? Adboards.Where(x => Data.Any(x => x.AdboardId == x.AdboardId)) : Adboards).Any())">
                     <NoRecordsFound Title="Oops" Subtitle="No adboards found."></NoRecordsFound>
-                } 
+                </RadzenStack>
                 <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && Data.Any() ? Adboards.Where(x => Data.Any(x => x.AdboardId == x.AdboardId)) : Adboards)" WrapItems="true" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Style="min-height: 640px">
                     <Template>
                         <CampaignAdboardTemplate Context="@context" Selected="@Data.Any(x => x.AdboardId == context.AdboardId)" OnSelect="@OnSelectAdboard" OnUnselect="@OnUnselectAdboard"/>

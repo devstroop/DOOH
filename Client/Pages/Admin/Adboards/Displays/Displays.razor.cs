@@ -87,58 +87,9 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
 
         protected async Task EditRow(DataGridRowMouseEventArgs<DOOH.Server.Models.DOOHDB.Display> args)
         {
-            await DialogService.OpenAsync<EditDisplay>("Edit Display", new Dictionary<string, object> { {"DisplayId", args.Data.DisplayId} });
+            await DialogService.OpenAsync<EditDisplay>($"Edit Display (#{args.Data.DisplayId})", new Dictionary<string, object> { {"DisplayId", args.Data.DisplayId} });
             await grid0.Reload();
         }
-
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Display display)
-        {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
-                {
-                    var deleteResult = await DOOHDBService.DeleteDisplay(displayId:display.DisplayId);
-
-                    if (deleteResult != null)
-                    {
-                        await grid0.Reload();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = $"Error",
-                    Detail = $"Unable to delete Display"
-                });
-            }
-        }
-
-        protected async Task ExportClick(RadzenSplitButtonItem args)
-        {
-            if (args?.Value == "csv")
-            {
-                await DOOHDBService.ExportDisplaysToCSV(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Brand",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Displays");
-            }
-
-            if (args == null || args.Value == "xlsx")
-            {
-                await DOOHDBService.ExportDisplaysToExcel(new Query
-{
-    Filter = $@"{(string.IsNullOrEmpty(grid0.Query.Filter)? "true" : grid0.Query.Filter)}",
-    OrderBy = $"{grid0.Query.OrderBy}",
-    Expand = "Brand",
-    Select = string.Join(",", grid0.ColumnsCollection.Where(c => c.GetVisible() && !string.IsNullOrEmpty(c.Property)).Select(c => c.Property.Contains(".") ? c.Property + " as " + c.Property.Replace(".", "") : c.Property))
-}, "Displays");
-            }
-        }
+        
     }
 }

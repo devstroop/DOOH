@@ -1,4 +1,4 @@
-﻿using DOOH.Server.Models.DOOHDB;
+using DOOH.Server.Models.DOOHDB;
 using Microsoft.AspNetCore.Components;
 using Radzen;
 using Radzen.Blazor;
@@ -18,6 +18,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Inject] protected NotificationService NotificationService { get; set; }
 
         RadzenDropDownDataGrid<IEnumerable<int>> grid;
+
+        [Inject]
+        protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
+
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> advertisements;
+
+        protected int advertisementsCount;
         protected override async Task OnParametersSetAsync()
         {
             Schedule = Schedule ?? new Server.Models.DOOHDB.Schedule()
@@ -63,6 +70,22 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 {
                     Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to save"
                 });
+            }
+        }
+
+
+        protected async Task advertisementsLoadData(LoadDataArgs args)
+        {
+            try
+            {
+                var result = await DOOHDBService.GetAdvertisements(new Query { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy });
+
+                advertisements = result.Value.AsODataEnumerable();
+                advertisementsCount = result.Count;
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
             }
         }
     }
