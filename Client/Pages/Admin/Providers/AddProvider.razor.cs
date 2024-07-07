@@ -35,9 +35,14 @@ namespace DOOH.Client.Pages.Admin.Providers
 
         protected override async Task OnInitializedAsync()
         {
-            provider = new DOOH.Server.Models.DOOHDB.Provider();
+            provider = new DOOH.Server.Models.DOOHDB.Provider()
+            {
+                ProviderId = 0,
+                Country = "India"
+            };
         }
         protected bool errorVisible;
+
         protected DOOH.Server.Models.DOOHDB.Provider provider;
         
         
