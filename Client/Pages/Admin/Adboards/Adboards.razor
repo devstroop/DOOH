@@ -28,7 +28,7 @@
             <NoRecordsFound Title="No adboards found!" Subtitle="Please add an adboard." />
         </RadzenColumn>
     </RadzenRow>
-    <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30}) Visible="@(adboards.Any())">
+    <RadzenDataList Style="" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30}) Visible="@(adboards.Any())">
         <Template>
             <AdboardTemplate Context="@context">
                 <Actions Context="childContext">

@@ -1,7 +1,23 @@
 @attribute [Authorize]
+@*
 <RadzenRow class="rz-mb-4">
-    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-2">
-        <RadzenRow AlignItems="AlignItems.Center">
+       <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8" class="rz-my-2">
+           
+       </RadzenColumn>
+       <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
+           <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-2 rz-py-2 rz-mx-2" Gap="2rem" Visible="@ShowSelectedAdboardLabel">
+               <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
+                   <RadzenIcon Icon="info" IconColor="white" />
+                   <RadzenText class="rz-mb-0" Text="@SelectedAdboardLabel" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
+               </RadzenRow>
+               <RadzenButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Shade="Shade.Lighter" Text="Clear" Click="@ClearSelectedAdboards" />
+           </RadzenRow>
+       </RadzenColumn>
+   </RadzenRow>
+*@
+<RadzenRow>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8">
+        <RadzenRow AlignItems="AlignItems.Center" class="rz-mb-3">
             <RadzenColumn>
                 <RadzenRow AlignItems="AlignItems.Center">
                     <RadzenColumn>
@@ -15,22 +31,8 @@
                 <RadzenLabel Text="Selected Only" Component="CheckBoxAdboardOnly" Style="font-size: 14px" />
             </RadzenStack>
         </RadzenRow>
-    </RadzenColumn>
-    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
-        <RadzenRow JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Style="background-color: green; border-radius: 6px;" class="rz-px-2 rz-py-2 rz-mx-2" Gap="2rem" Visible="@ShowSelectedAdboardLabel">
-            <RadzenRow AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Start" Gap="0.5rem">
-                <RadzenIcon Icon="info" IconColor="white" />
-                <RadzenText class="rz-mb-0" Text="@SelectedAdboardLabel" TextStyle="TextStyle.H6" Style="color: white; font-weight: 400;" />
-            </RadzenRow>
-            <RadzenButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Shade="Shade.Lighter" Text="Clear" Click="@ClearSelectedAdboards" />
-        </RadzenRow>
-    </RadzenColumn>
-</RadzenRow>
-<RadzenRow>
-    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="8">
-        @* <OpenLayerMap /> *@
         <RadzenRow>
-            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; min-height: 540px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map @bind-Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; min-height: 580px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" FitBoundsToMarkersOnUpdate="true" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
                 <Markers>
                     @if (showSelectedAdboardsOnly && Data.Any())
                     {
@@ -52,7 +54,7 @@
     </RadzenColumn>
     <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="4">
         <RadzenRow>
-            <RadzenColumn Size="12" Style="height: 540px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
+            <RadzenColumn Size="12" Style="height: 630px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
                 <RadzenStack Visible="@(!(showSelectedAdboardsOnly && Data.Any() ? Adboards.Where(x => Data.Any(x => x.AdboardId == x.AdboardId)) : Adboards).Any())">
                     <NoRecordsFound Title="Oops" Subtitle="No adboards found."></NoRecordsFound>
                 </RadzenStack>

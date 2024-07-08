@@ -1,5 +1,5 @@
-<RadzenStack>
-    <RadzenAlert Text="Please add a schedule." Title="Important!" Visible="!Data.Any()"></RadzenAlert>
+<RadzenColumn>
+    <RadzenAlert AlertStyle="AlertStyle.Warning" Shade="Shade.Lighter" Text="Please add a schedule." Title="Important!" Visible="!Data.Any()"></RadzenAlert>
     <RadzenRow>
         <RadzenColumn SizeMD="@(Data.Any() ? 7 : 12)" SizeLG="@(Data.Any() ? 8 : 12)" SizeXL="@(Data.Any() ? 9 : 12)">
             <RadzenScheduler TItem="Server.Models.DOOHDB.Schedule" StartProperty="Date" EndProperty="Date" TextProperty="Label" Data="@Data" SelectedIndex="0"
@@ -9,7 +9,7 @@
                 @* <RadzenYearView StartMonth="@StartMonth"></RadzenYearView> *@
             </RadzenScheduler>
         </RadzenColumn>
-        <RadzenColumn SizeMD="@(Data.Any() ? 5 : 0)" SizeLG="@(Data.Any() ? 4 : 0)" SizeXL="@(Data.Any() ? 3 : 0)" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem" Visible="@Data.Any()">
+        <RadzenColumn SizeMD="@(Data.Any() ? 5 : 0)" SizeLG="@(Data.Any() ? 4 : 0)" SizeXL="@(Data.Any() ? 3 : 0)" Style="max-height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem" Visible="@Data.Any()">
             <RadzenDataList TItem="Server.Models.DOOHDB.Schedule" Data="@Data.OrderBy(x => x.Date)" WrapItems="true" Count="@Data.Count()">
                 <Template>
                     <ScheduleTemplate Context="@context" Update="@OnScheduleModify" Delete="@OnScheduleDelete" Edit="@OnScheduleEdit"></ScheduleTemplate>
@@ -17,7 +17,7 @@
             </RadzenDataList>
         </RadzenColumn>
     </RadzenRow>
-</RadzenStack>
+</RadzenColumn>
 <style>
     .schedule-slot {
         display: flex;

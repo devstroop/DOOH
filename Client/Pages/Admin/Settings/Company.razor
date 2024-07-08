@@ -23,7 +23,6 @@
     </RadzenRow>
     @if (company != null && isEditing)
     {
-        <RadzenCard class="rz-p-2">
             <RadzenColumn SizeMD=12>
                 <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Company</RadzenAlert>
                 <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Company" Data="@company" Visible="@(company != null)">
@@ -166,11 +165,9 @@
                     </RadzenRow>
                 </RadzenTemplateForm>
             </RadzenColumn>
-        </RadzenCard>
     }
     else if (company != null && !isEditing)
     {
-        <RadzenCard  class="rz-p-2">
             <RadzenColumn SizeMD=12>
                 <RadzenRow style="margin-bottom: 1rem">
                     <RadzenColumn SizeMD="3">
@@ -306,7 +303,6 @@
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenColumn>
-        </RadzenCard>
     }
 </RadzenStack>
 
