@@ -13,7 +13,7 @@ namespace DOOH.Client.Pages.Admin.Providers
     public partial class EditProvider
     {
         [Inject]
-        protected IJSRuntime JSRuntime { get; set; }
+        protected IJSRuntime Runtime { get; set; }
 
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
@@ -30,14 +30,14 @@ namespace DOOH.Client.Pages.Admin.Providers
         [Inject]
         protected NotificationService NotificationService { get; set; }
         [Inject]
-        public DOOHDBService DOOHDBService { get; set; }
+        public DOOHDBService DatabaseService { get; set; }
 
         [Parameter]
         public int ProviderId { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            provider = await DOOHDBService.GetProviderByProviderId(providerId:ProviderId);
+            provider = await DatabaseService.GetProviderByProviderId(providerId:ProviderId);
         }
         protected bool errorVisible;
         protected DOOH.Server.Models.DOOHDB.Provider provider;
@@ -50,7 +50,7 @@ namespace DOOH.Client.Pages.Admin.Providers
             {
                 IsSaving = true;
                 StateHasChanged();
-                var result = await DOOHDBService.UpdateProvider(providerId:ProviderId, provider);
+                var result = await DatabaseService.UpdateProvider(providerId:ProviderId, provider);
                 if (result != null)
                 {
                     DialogService.Close(provider);
@@ -70,6 +70,25 @@ namespace DOOH.Client.Pages.Admin.Providers
         protected async Task CancelButtonClick(MouseEventArgs args)
         {
             DialogService.Close(null);
+        }
+
+        protected async Task DeleteButtonClick(MouseEventArgs args)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var deleteResult = await DatabaseService.DeleteProvider(ProviderId);
+                    if (deleteResult != null)
+                    {
+                        DialogService.Close(provider);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete Provider" });
+            }
         }
 
 

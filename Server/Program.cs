@@ -105,7 +105,6 @@ else
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseHeaderPropagation();
-app.UseRequestLocalization(options => options.AddSupportedCultures("en", "hi").AddSupportedUICultures("en", "hi").SetDefaultCulture("en"));
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -114,5 +113,6 @@ app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWeb
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
 // app.Services.CreateScope().ServiceProvider.GetRequiredService<DOOHDBContext>().Database.Migrate();
 // app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
+// app.UseRequestLocalization(options => options.AddSupportedCultures("en", "hi").AddSupportedUICultures("en", "hi").SetDefaultCulture("en"));
 app.UseRequestLocalization("en-IN");
 app.Run();

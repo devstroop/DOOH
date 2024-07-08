@@ -101,6 +101,17 @@
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenLabel Text="Daily Capacity" Component="DailyCapacityInSeconds" />
+                    <RadzenBadge Text="In sec" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="8">
+                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.DailyCapacityInSeconds" Name="DailyCapacityInSeconds" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
