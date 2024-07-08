@@ -1,7 +1,7 @@
 @using System.Net.Mime
 @using DOOH.Server.Models.DOOHDB
 
-<RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-shadow-3 rz-mt-3 campaign-schedule-card">
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" class="rz-mt-2 campaign-schedule-card border-1">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" class="campaign-schedule-top-right" Gap="0.5rem">
         <RadzenButton Icon="edit" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Primary" Click="@EditClick" Style="border-radius: 16px"></RadzenButton>
         <RadzenButton Icon="close" Size="ButtonSize.ExtraSmall" ButtonStyle="ButtonStyle.Danger" Click="@DeleteClick" Style="border-radius: 16px"></RadzenButton>
@@ -16,6 +16,7 @@
             <RadzenText Text="@Context.Start.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
             <RadzenText Text="@Context.Start.ToString("MMM yyyy").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-size: 11px; color:#5f5f5f"></RadzenText>
         </RadzenStack>
+        -
         <RadzenStack Gap="0">
             <RadzenText Text="@Context.End.ToString("ddd").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0 fw-semibold" Style="color:#5f5f5f"></RadzenText>
             <RadzenText Text="@Context.End.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
