@@ -12,9 +12,14 @@
         @*     <RadzenText Text="@Context.ScheduleId.ToString()"></RadzenText> *@
         @* </RadzenStack> *@
         <RadzenStack Gap="0">
-            <RadzenText Text="@Context.Date.ToString("ddd").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0 fw-semibold" Style="color:#5f5f5f"></RadzenText>
-            <RadzenText Text="@Context.Date.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
-            <RadzenText Text="@Context.Date.ToString("MMM yyyy").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-size: 11px; color:#5f5f5f"></RadzenText>
+            <RadzenText Text="@Context.Start.ToString("ddd").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0 fw-semibold" Style="color:#5f5f5f"></RadzenText>
+            <RadzenText Text="@Context.Start.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
+            <RadzenText Text="@Context.Start.ToString("MMM yyyy").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-size: 11px; color:#5f5f5f"></RadzenText>
+        </RadzenStack>
+        <RadzenStack Gap="0">
+            <RadzenText Text="@Context.End.ToString("ddd").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0 fw-semibold" Style="color:#5f5f5f"></RadzenText>
+            <RadzenText Text="@Context.End.ToString("dd")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0 fw-semibold" Style="color: #2f2f2f"></RadzenText>
+            <RadzenText Text="@Context.End.ToString("MMM yyyy").ToUpper()" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-size: 11px; color:#5f5f5f"></RadzenText>
         </RadzenStack>
         <RadzenStack Gap="0" JustifyContent="JustifyContent.SpaceBetween">
             <RadzenText Text="@($"ID: {Context.ScheduleId.ToString()}")" TextStyle="Radzen.Blazor.TextStyle.Caption" Style="font-weight: 500"></RadzenText>

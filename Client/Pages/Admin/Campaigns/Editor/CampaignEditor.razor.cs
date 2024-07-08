@@ -87,7 +87,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                         Status = (DOOH.Server.Models.Enums.Status)_campaign.Status;
                         _selectedAdboards = _campaign.CampaignAdboards.Select(ca => ca.Adboard).ToList();
                         _advertisements = _campaign.Advertisements;
-                        _schedules = _campaign.Schedules.Where(x => x.Date >= DateTime.Today);
+                        _schedules = _campaign.Schedules.Where(x => x.Start >= DateTime.Today);
                         // _scheduleAdboards = _schedules.SelectMany(x => x.ScheduleAdboards);
                     }
                 }

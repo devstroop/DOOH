@@ -269,7 +269,11 @@ namespace DOOH.Server.Data
               .HasDefaultValueSql(@"((1))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
-              .Property(p => p.Date)
+              .Property(p => p.Start)
+              .HasDefaultValueSql(@"(getdate())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.End)
               .HasDefaultValueSql(@"(getdate())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
@@ -361,8 +365,12 @@ namespace DOOH.Server.Data
               .HasColumnType("datetime");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
-              .Property(p => p.Date)
-              .HasColumnType("datetime2");
+              .Property(p => p.Start)
+              .HasColumnType("datetime");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Schedule>()
+              .Property(p => p.End)
+              .HasColumnType("datetime");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
               .Property(p => p.CreatedAt)

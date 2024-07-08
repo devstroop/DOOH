@@ -61,11 +61,11 @@ public partial class ScheduleEditor
                 return;
             }
 
-            if(Data.Any(x => x.Date.Date == args.Start.Date))
-            {
-                await OnScheduleEdit(Data.First(x => x.Date.Date == args.Start.Date));
-                return;
-            }
+            // if(Data.Any(x => x.Date.Date == args.Start.Date))
+            // {
+            //     await OnScheduleEdit(Data.First(x => x.Date.Date == args.Start.Date));
+            //     return;
+            // }
             
             DOOH.Server.Models.DOOHDB.Schedule data = await DialogService.OpenAsync<ScheduleValueEditor>("Add Schedule",
                 new Dictionary<string, object> { { "CampaignId", CampaignId }, { "Adboards", SelectedAdboards }, { "Date", args.Start } });
@@ -98,7 +98,8 @@ public partial class ScheduleEditor
 
         if (data != null)
         {
-            args.Data.Date = data.Date;
+            args.Data.Start = data.Start;
+            args.Data.End = data.End;
             args.Data.Rotation = data.Rotation;
             args.Data.Label = data.Label;
             args.Data.ScheduleAdboards = data.ScheduleAdboards;
@@ -132,22 +133,24 @@ public partial class ScheduleEditor
 
         if (draggedAppointment != null)
         {
-            var date = draggedAppointment.Date + args.TimeSpan;
+            var start = draggedAppointment.Start + args.TimeSpan;
+            var end = draggedAppointment.End + args.TimeSpan;
             
-            if (date < Min || date > Max)
+            if (start < Min || start > Max || end < Min || end > Max || start > end)
             {
                 NotificationService.Notify(NotificationSeverity.Error, "Cannot move", "Cannot be moved to this date.");
                 return;
             }
 
-            if (Data.Any(x => x.Date.Date == date))
-            {
-                NotificationService.Notify(NotificationSeverity.Error, "Cannot move", "Another schedule already exists on this date.");
-                return;
-            }
+            // if (Data.Any(x => x.Date.Date == start))
+            // {
+            //     NotificationService.Notify(NotificationSeverity.Error, "Cannot move", "Another schedule already exists on this date.");
+            //     return;
+            // }
             
 
-            draggedAppointment.Date += args.TimeSpan;
+            draggedAppointment.Start += args.TimeSpan;
+            draggedAppointment.End += args.TimeSpan;
 
             draggedAppointment.Label = draggedAppointment.Label;
             
@@ -182,7 +185,8 @@ public partial class ScheduleEditor
 
         if (result != null)
         {
-            data.Date = result.Date;
+            data.Start = result.Start;
+            data.End = result.End;
             data.Rotation = result.Rotation;
             data.Label = result.Label;
             data.ScheduleAdboards = result.ScheduleAdboards;

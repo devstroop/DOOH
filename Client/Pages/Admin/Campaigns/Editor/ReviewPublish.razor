@@ -62,7 +62,9 @@
                             @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Label" Title="Label" /> *@
                             <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Date" Title="Date">
                                 <Template Context="schedule">
-                                    @schedule.Date.ToString("d")
+                                    @schedule.Start.ToString("d")
+                                    -
+                                    @schedule.End.ToString("d")
                                 </Template>
                             </RadzenDataGridColumn>
                             <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Schedule" Property="Rotation" Title="Rotation"/>
