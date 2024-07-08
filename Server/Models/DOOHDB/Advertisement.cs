@@ -36,5 +36,7 @@ namespace DOOH.Server.Models.DOOHDB
         public DateTime? VerifiedAt { get; set; }
 
         public ICollection<Analytic> Analytics { get; set; }
+
+        public ICollection<ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
     }
 }

@@ -1037,6 +1037,7 @@ namespace DOOH.Server
             var itemToDelete = Context.Advertisements
                               .Where(i => i.AdvertisementId == advertisementid)
                               .Include(i => i.Analytics)
+                              .Include(i => i.ScheduleAdvertisements)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -3487,6 +3488,7 @@ namespace DOOH.Server
             var itemToDelete = Context.Schedules
                               .Where(i => i.ScheduleId == scheduleid)
                               .Include(i => i.ScheduleAdboards)
+                              .Include(i => i.ScheduleAdvertisements)
                               .FirstOrDefault();
 
             if (itemToDelete == null)
@@ -4165,6 +4167,171 @@ namespace DOOH.Server
             }
 
             OnAfterUserInformationDeleted(itemToDelete);
+
+            return itemToDelete;
+        }
+    
+        public async Task ExportScheduleAdvertisementsToExcel(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadvertisements/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadvertisements/excel(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        public async Task ExportScheduleAdvertisementsToCSV(Query query = null, string fileName = null)
+        {
+            navigationManager.NavigateTo(query != null ? query.ToUrl($"export/doohdb/scheduleadvertisements/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')") : $"export/doohdb/scheduleadvertisements/csv(fileName='{(!string.IsNullOrEmpty(fileName) ? UrlEncoder.Default.Encode(fileName) : "Export")}')", true);
+        }
+
+        partial void OnScheduleAdvertisementsRead(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> items);
+
+        public async Task<IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>> GetScheduleAdvertisements(Query query = null)
+        {
+            var items = Context.ScheduleAdvertisements.AsQueryable();
+
+            items = items.Include(i => i.Advertisement);
+            items = items.Include(i => i.Schedule);
+
+            if (query != null)
+            {
+                if (!string.IsNullOrEmpty(query.Expand))
+                {
+                    var propertiesToExpand = query.Expand.Split(',');
+                    foreach(var p in propertiesToExpand)
+                    {
+                        items = items.Include(p.Trim());
+                    }
+                }
+
+                ApplyQuery(ref items, query);
+            }
+
+            OnScheduleAdvertisementsRead(ref items);
+
+            return await Task.FromResult(items);
+        }
+
+        partial void OnScheduleAdvertisementGet(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+        partial void OnGetScheduleAdvertisementByScheduleIdAndAdvertisementId(ref IQueryable<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> items);
+
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> GetScheduleAdvertisementByScheduleIdAndAdvertisementId(int scheduleid, int advertisementid)
+        {
+            var items = Context.ScheduleAdvertisements
+                              .AsNoTracking()
+                              .Where(i => i.ScheduleId == scheduleid && i.AdvertisementId == advertisementid);
+
+            items = items.Include(i => i.Advertisement);
+            items = items.Include(i => i.Schedule);
+ 
+            OnGetScheduleAdvertisementByScheduleIdAndAdvertisementId(ref items);
+
+            var itemToReturn = items.FirstOrDefault();
+
+            OnScheduleAdvertisementGet(itemToReturn);
+
+            return await Task.FromResult(itemToReturn);
+        }
+
+        partial void OnScheduleAdvertisementCreated(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+        partial void OnAfterScheduleAdvertisementCreated(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> CreateScheduleAdvertisement(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement scheduleadvertisement)
+        {
+            OnScheduleAdvertisementCreated(scheduleadvertisement);
+
+            var existingItem = Context.ScheduleAdvertisements
+                              .Where(i => i.ScheduleId == scheduleadvertisement.ScheduleId && i.AdvertisementId == scheduleadvertisement.AdvertisementId)
+                              .FirstOrDefault();
+
+            if (existingItem != null)
+            {
+               throw new Exception("Item already available");
+            }            
+
+            try
+            {
+                Context.ScheduleAdvertisements.Add(scheduleadvertisement);
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(scheduleadvertisement).State = EntityState.Detached;
+                throw;
+            }
+
+            OnAfterScheduleAdvertisementCreated(scheduleadvertisement);
+
+            return scheduleadvertisement;
+        }
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> CancelScheduleAdvertisementChanges(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item)
+        {
+            var entityToCancel = Context.Entry(item);
+            if (entityToCancel.State == EntityState.Modified)
+            {
+              entityToCancel.CurrentValues.SetValues(entityToCancel.OriginalValues);
+              entityToCancel.State = EntityState.Unchanged;
+            }
+
+            return item;
+        }
+
+        partial void OnScheduleAdvertisementUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+        partial void OnAfterScheduleAdvertisementUpdated(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> UpdateScheduleAdvertisement(int scheduleid, int advertisementid, DOOH.Server.Models.DOOHDB.ScheduleAdvertisement scheduleadvertisement)
+        {
+            OnScheduleAdvertisementUpdated(scheduleadvertisement);
+
+            var itemToUpdate = Context.ScheduleAdvertisements
+                              .Where(i => i.ScheduleId == scheduleadvertisement.ScheduleId && i.AdvertisementId == scheduleadvertisement.AdvertisementId)
+                              .FirstOrDefault();
+
+            if (itemToUpdate == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+                
+            var entryToUpdate = Context.Entry(itemToUpdate);
+            entryToUpdate.CurrentValues.SetValues(scheduleadvertisement);
+            entryToUpdate.State = EntityState.Modified;
+
+            Context.SaveChanges();
+
+            OnAfterScheduleAdvertisementUpdated(scheduleadvertisement);
+
+            return scheduleadvertisement;
+        }
+
+        partial void OnScheduleAdvertisementDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+        partial void OnAfterScheduleAdvertisementDeleted(DOOH.Server.Models.DOOHDB.ScheduleAdvertisement item);
+
+        public async Task<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> DeleteScheduleAdvertisement(int scheduleid, int advertisementid)
+        {
+            var itemToDelete = Context.ScheduleAdvertisements
+                              .Where(i => i.ScheduleId == scheduleid && i.AdvertisementId == advertisementid)
+                              .FirstOrDefault();
+
+            if (itemToDelete == null)
+            {
+               throw new Exception("Item no longer available");
+            }
+
+            OnScheduleAdvertisementDeleted(itemToDelete);
+
+
+            Context.ScheduleAdvertisements.Remove(itemToDelete);
+
+            try
+            {
+                Context.SaveChanges();
+            }
+            catch
+            {
+                Context.Entry(itemToDelete).State = EntityState.Unchanged;
+                throw;
+            }
+
+            OnAfterScheduleAdvertisementDeleted(itemToDelete);
 
             return itemToDelete;
         }

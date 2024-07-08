@@ -368,5 +368,19 @@ namespace DOOH.Server.Controllers
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
         }
+
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/csv")]
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdvertisementsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetScheduleAdvertisements(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/excel")]
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdvertisementsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetScheduleAdvertisements(), Request.Query, false), fileName);
+        }
     }
 }

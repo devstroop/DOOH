@@ -32,7 +32,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 ScheduleId = 0,
                 CampaignId = CampaignId,
                 Start = Date,
-                End = Date,
+                End = Date.AddDays(1),
                 Rotation = 1
             };
             StateHasChanged();

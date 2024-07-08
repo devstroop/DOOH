@@ -30,6 +30,10 @@ namespace DOOH.Server.Data
                 table.ScheduleId, table.AdboardId
             });
 
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>().HasKey(table => new {
+                table.ScheduleId, table.AdvertisementId
+            });
+
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .HasOne(i => i.Category)
               .WithMany(i => i.Adboards)
@@ -179,6 +183,18 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Uploads)
               .HasForeignKey(i => i.Owner)
               .HasPrincipalKey(i => i.UserId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>()
+              .HasOne(i => i.Advertisement)
+              .WithMany(i => i.ScheduleAdvertisements)
+              .HasForeignKey(i => i.AdvertisementId)
+              .HasPrincipalKey(i => i.AdvertisementId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>()
+              .HasOne(i => i.Schedule)
+              .WithMany(i => i.ScheduleAdvertisements)
+              .HasForeignKey(i => i.ScheduleId)
+              .HasPrincipalKey(i => i.ScheduleId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
@@ -443,6 +459,8 @@ namespace DOOH.Server.Data
         public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

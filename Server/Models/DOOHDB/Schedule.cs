@@ -28,5 +28,7 @@ namespace DOOH.Server.Models.DOOHDB
         public string Label { get; set; }
 
         public ICollection<ScheduleAdboard> ScheduleAdboards { get; set; }
+
+        public ICollection<ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
     }
 }
