@@ -39,7 +39,10 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected override async Task OnInitializedAsync()
         {
-            adboard = new DOOH.Server.Models.DOOHDB.Adboard();
+            adboard = new DOOH.Server.Models.DOOHDB.Adboard()
+            {
+                Country = "India",
+            };
             adboardImages = new List<DOOH.Server.Models.DOOHDB.AdboardImage>();
         }
         protected bool errorVisible;
@@ -236,14 +239,13 @@ namespace DOOH.Client.Pages.Admin.Adboards
         }
         protected void OnRefreshImage() => StateHasChanged();
 
-        //GetLocation
         protected async Task GetLocation()
         {
-            var position = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
-            if (position != null)
+            var coords = await JSRuntime.InvokeAsync<JsonNode>("getCoords");
+            if (coords != null)
             {
-                adboard.Latitude = (double)position[0];
-                adboard.Longitude = (double)position[1];
+                adboard.Longitude = (float)coords[0];
+                adboard.Latitude = (float)coords[1];
             }
         }
     }
