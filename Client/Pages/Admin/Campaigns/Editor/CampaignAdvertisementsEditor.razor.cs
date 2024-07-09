@@ -51,7 +51,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private async Task OnHoverClick(MouseEventArgs args, Advertisement advertisement)
         {
             
-            var url = advertisement.Upload.GetUrl();
+            var url = advertisement.Key.GetUrl();
             await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px", CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true });
         }
 
@@ -72,18 +72,14 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             });
             if (result != null)
             {
-                if (result is Upload upload)
-                {
-                    var advertisement = new Advertisement
-                    {
-                        AdvertisementId = 0,
-                        CampaignId = CampaignId,
-                        UploadKey = upload.Key,
-                        Upload = upload
-                    };
-                    advertisement = await DoohdbService.CreateAdvertisement(advertisement);
-                    await Add.InvokeAsync(advertisement);
-                }
+                // var advertisement = new Advertisement
+                // {
+                //     AdvertisementId = 0,
+                //     CampaignId = CampaignId,
+                //     Key = upload.Key,
+                // };
+                // advertisement = await DoohdbService.CreateAdvertisement(advertisement);
+                // await Add.InvokeAsync(advertisement);
             }
         }
         

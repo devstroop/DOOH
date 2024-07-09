@@ -19,7 +19,7 @@
                 <RadzenLabel Text="Logo" Component="BrandLogo" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <UploadComponent ObjectFit="contain" Items="@Images" Add="@OnAddLogo" Delete="@OnDeleteLogo" Max="1" Refresh="@OnRefreshImage" />
+                <UploadImageComponent ObjectFit="contain" Items="@Images" Add="@OnAddLogo" Delete="@OnDeleteLogo" Max="1" Refresh="@OnRefreshImage" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">

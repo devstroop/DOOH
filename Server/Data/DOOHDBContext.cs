@@ -88,12 +88,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Advertisement>()
-              .HasOne(i => i.Upload)
-              .WithMany(i => i.Advertisements)
-              .HasForeignKey(i => i.UploadKey)
-              .HasPrincipalKey(i => i.Key);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.Analytic>()
               .HasOne(i => i.Adboard)
               .WithMany(i => i.Analytics)
@@ -172,18 +166,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.ScheduleId)
               .HasPrincipalKey(i => i.ScheduleId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
-              .HasOne(i => i.Tax1)
-              .WithMany(i => i.Taxes1)
-              .HasForeignKey(i => i.ParentTaxId)
-              .HasPrincipalKey(i => i.TaxId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .HasOne(i => i.UserInformation)
-              .WithMany(i => i.Uploads)
-              .HasForeignKey(i => i.Owner)
-              .HasPrincipalKey(i => i.UserId);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>()
               .HasOne(i => i.Advertisement)
               .WithMany(i => i.ScheduleAdvertisements)
@@ -195,6 +177,12 @@ namespace DOOH.Server.Data
               .WithMany(i => i.ScheduleAdvertisements)
               .HasForeignKey(i => i.ScheduleId)
               .HasPrincipalKey(i => i.ScheduleId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
+              .HasOne(i => i.Tax1)
+              .WithMany(i => i.Taxes1)
+              .HasForeignKey(i => i.ParentTaxId)
+              .HasPrincipalKey(i => i.TaxId);
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
@@ -227,6 +215,10 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.AdboardWifi>()
               .Property(p => p.CreatedAt)
               .HasDefaultValueSql(@"(sysdatetime())");
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.Advertisement>()
+              .Property(p => p.Size)
+              .HasDefaultValueSql(@"((0))");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Advertisement>()
               .Property(p => p.CreatedAt)
@@ -295,10 +287,6 @@ namespace DOOH.Server.Data
             builder.Entity<DOOH.Server.Models.DOOHDB.Tax>()
               .Property(p => p.TaxRate)
               .HasDefaultValueSql(@"((0.00))");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .Property(p => p.CreatedAt)
-              .HasDefaultValueSql(@"(sysdatetime())");
 
             builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
               .Property(p => p.CreatedAt)
@@ -388,14 +376,6 @@ namespace DOOH.Server.Data
               .Property(p => p.End)
               .HasColumnType("datetime");
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .Property(p => p.CreatedAt)
-              .HasColumnType("datetime");
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.Upload>()
-              .Property(p => p.UpdatedAt)
-              .HasColumnType("datetime");
-
             builder.Entity<DOOH.Server.Models.DOOHDB.UserInformation>()
               .Property(p => p.CreatedAt)
               .HasColumnType("datetime");
@@ -454,13 +434,11 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdboard> ScheduleAdboards { get; set; }
 
+        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
+
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.Upload> Uploads { get; set; }
-
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
-
-        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

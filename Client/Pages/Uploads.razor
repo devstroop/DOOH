@@ -1,0 +1,18 @@
+@using Amazon.S3.Model
+@attribute [Authorize]
+<PageTitle>Uploads</PageTitle>
+
+<RadzenStack Style="min-height: 400px">
+    <RadzenDataList
+        TItem="S3Object"
+        Data="@objects"
+        Count="@objectsCount"
+        LoadData="@LoadObjects"
+        @bind-Loading="@Loading"
+        AllowVirtualization="true">
+        <Template>
+            @context.Key
+            @context.Size
+        </Template>
+    </RadzenDataList>
+</RadzenStack>

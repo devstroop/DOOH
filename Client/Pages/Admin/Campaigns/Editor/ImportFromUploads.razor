@@ -1,43 +1,43 @@
-<RadzenRow class="h-100">
-    <RadzenColumn SizeMD="8">
-        <RadzenStack>
-            <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Upload" @ref="list0" Data="@uploads" LoadData="@UploadsLoadData" Count="@uploadsCount" AllowVirtualization="false" Style="min-height: 200px" WrapItems="true" AllowPaging="true" PageSize="10">
-                <Template>
-                    <RadzenStack class="rz-p-2" Gap="0.5rem">
-                        <CarouselComponent Images="@(new List<string> { context.GetThumbnail() })" Width="100%" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px">
-                            <Overlay>
-                                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
-                                    <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => PlayClick(args, context))"/>
-                                    <RadzenButton Icon="close" Click="@((args) => DeleteClick(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75"/>
-                                    <RadzenText Text="@context.Key.Replace("\\", "/").Split('/').LastOrDefault()" TextStyle="TextStyle.Caption" class="rz-mb-0 custom-bottomStart"/>
-                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" class="opacity-50 custom-topLeft">
-                                        <RadzenIcon Icon="browse_gallery" Style="font-size: 16px"/>
-                                        <RadzenText TextStyle="TextStyle.Caption" Text="@($"{(int)Math.Round(context.Duration ?? 0)} sec")" class="rz-mb-0" Style="color: #fff"/>
-                                    </RadzenStack>
-                                </RadzenStack>
-                            </Overlay>
-                        </CarouselComponent>
-                        <RadzenButton Text="Import" Icon="download" Click="(args) => ImportClick(args, context)"></RadzenButton>
-
-                    </RadzenStack>
-                </Template>
-                <LoadingTemplate>
-                    <Loading Title="Loading" Subtitle="Uploads"></Loading>
-                </LoadingTemplate>
-            </RadzenDataList>
-            <RadzenStack Visible="!uploads.Any()">
-                <NoRecordsFound Title="No uploads found" Subtitle="Please upload a media."></NoRecordsFound>
-            </RadzenStack>
-        </RadzenStack>
-    </RadzenColumn>
-
-    <RadzenColumn SizeMD="4">
-        <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="/api/cdn/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select file" } })"
-                      Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" Error="@OnError" class="w-100 h-100"/>
-        <RadzenProgressBar Value="@progress" class="rz-mx-2" Visible="@(showProgress && progress < 100)"/>
-        <RadzenProgressBar class="rz-mx-2" ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Visible="@(showProgress && progress == 100)" />
-    </RadzenColumn>
-</RadzenRow>
+@* <RadzenRow class="h-100"> *@
+@*     <RadzenColumn SizeMD="8"> *@
+@*         <RadzenStack> *@
+@*             <RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Upload" @ref="list0" Data="@uploads" LoadData="@UploadsLoadData" Count="@uploadsCount" AllowVirtualization="false" Style="min-height: 200px" WrapItems="true" AllowPaging="true" PageSize="10"> *@
+@*                 <Template> *@
+@*                     <RadzenStack class="rz-p-2" Gap="0.5rem"> *@
+@*                         <CarouselComponent Images="@(new List<string> { context.GetThumbnail() })" Width="100%" Height="210px" Style="object-fit: cover; border:solid 1px #d5d5d5;" BorderRadius="4px"> *@
+@*                             <Overlay> *@
+@*                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween"> *@
+@*                                     <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => PlayClick(args, context))"/> *@
+@*                                     <RadzenButton Icon="close" Click="@((args) => DeleteClick(args, context))" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.ExtraSmall" Variant="Variant.Text" class="close-button opacity-75"/> *@
+@*                                     <RadzenText Text="@context.Key.Replace("\\", "/").Split('/').LastOrDefault()" TextStyle="TextStyle.Caption" class="rz-mb-0 custom-bottomStart"/> *@
+@*                                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.25rem" class="opacity-50 custom-topLeft"> *@
+@*                                         <RadzenIcon Icon="browse_gallery" Style="font-size: 16px"/> *@
+@*                                         <RadzenText TextStyle="TextStyle.Caption" Text="@($"{context.} sec")" class="rz-mb-0" Style="color: #fff"/> *@
+@*                                     </RadzenStack> *@
+@*                                 </RadzenStack> *@
+@*                             </Overlay> *@
+@*                         </CarouselComponent> *@
+@*                         <RadzenButton Text="Import" Icon="download" Click="(args) => ImportClick(args, context)"></RadzenButton> *@
+@* *@
+@*                     </RadzenStack> *@
+@*                 </Template> *@
+@*                 <LoadingTemplate> *@
+@*                     <Loading Title="Loading" Subtitle="Uploads"></Loading> *@
+@*                 </LoadingTemplate> *@
+@*             </RadzenDataList> *@
+@*             <RadzenStack Visible="!uploads.Any()"> *@
+@*                 <NoRecordsFound Title="No uploads found" Subtitle="Please upload a media."></NoRecordsFound> *@
+@*             </RadzenStack> *@
+@*         </RadzenStack> *@
+@*     </RadzenColumn> *@
+@* *@
+@*     <RadzenColumn SizeMD="4"> *@
+@*         <RadzenUpload id="ddUpload" @ref="uploadDd" ChooseText="Drag and drop here or click to choose files" Auto="true" Multiple="true" Url="/api/cdn/multiple" Accept="video/mp4" InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select file" } })" *@
+@*                       Progress=@OnProgress Complete="@OnComplete" Change="@OnChange" Error="@OnError" class="w-100 h-100"/> *@
+@*         <RadzenProgressBar Value="@progress" class="rz-mx-2" Visible="@(showProgress && progress < 100)"/> *@
+@*         <RadzenProgressBar class="rz-mx-2" ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Visible="@(showProgress && progress == 100)" /> *@
+@*     </RadzenColumn> *@
+@* </RadzenRow> *@
 <style>
 
     .rz-dialog-content {

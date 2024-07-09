@@ -10,26 +10,39 @@ namespace DOOH.Server.Controllers
     [ApiController]
     public class CDNController : ControllerBase
     {
-        private readonly DOOHDBService DOOHDBService;
-        private readonly Services.CDNService CDNService;
-        private readonly ApplicationIdentityDbContext IdentityContext;
-        private readonly Services.FFMPEGService FFMPEGService;
+        private readonly Services.CDNService cdnService;
+        private readonly ApplicationIdentityDbContext identityContext;
+        private readonly Services.FFMPEGService ffmpegService;
         
-
-        public CDNController(Services.CDNService CDNService, DOOHDBService DOOHDBService, ApplicationIdentityDbContext identityContext, Services.FFMPEGService FFMPEGService)
+        public CDNController(Services.CDNService cdnService, DOOHDBService doohdbService, ApplicationIdentityDbContext identityContext, Services.FFMPEGService ffmpegService)
         {
-            this.CDNService = CDNService ?? throw new ArgumentNullException(nameof(CDNService));
-            this.DOOHDBService = DOOHDBService ?? throw new ArgumentNullException(nameof(DOOHDBService));
-            this.IdentityContext = identityContext ?? throw new ArgumentNullException(nameof(IdentityContext));
-            this.FFMPEGService = FFMPEGService ?? throw new ArgumentNullException(nameof(FFMPEGService));
+            this.cdnService = cdnService ?? throw new ArgumentNullException(nameof(cdnService));
+            // this.DOOHDBService = DOOHDBService ?? throw new ArgumentNullException(nameof(DOOHDBService));
+            this.identityContext = identityContext ?? throw new ArgumentNullException(nameof(identityContext));
+            this.ffmpegService = ffmpegService ?? throw new ArgumentNullException(nameof(ffmpegService));
         }
 
+        [Authorize]
         [HttpGet("objects")] // List objects in S3.
         public async Task<IActionResult> ListObjectsAsync()
         {
             try
             {
-                var objects = await CDNService.ListObjectsAsync();
+                var objects = await cdnService.ListObjectsAsync();
+                return Ok(objects);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [Authorize]
+        [HttpGet("objects/{**directory}")] // List objects in S3.
+        public async Task<IActionResult> ListObjectsFromDirectoryAsync(string directory)
+        {
+            try
+            {
+                var objects = await cdnService.ListObjectsAsync(directory);
                 return Ok(objects);
             }
             catch (Exception ex)
@@ -38,13 +51,12 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        //[Authorize]
         [HttpGet("objects/presigned")] // List presigned object URLs in S3.
         public async Task<IActionResult> ListPresignedObjectUrlsAsync()
         {
             try
             {
-                var objects = await CDNService.ListPresignedObjectUrlsAsync(TimeSpan.FromMinutes(15));
+                var objects = await cdnService.ListPresignedObjectUrlsAsync(TimeSpan.FromMinutes(15));
                 return Ok(objects);
             }
             catch (Exception ex)
@@ -53,13 +65,12 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        //[Authorize]
         [HttpGet("object/{**key}")] // Get an object from S3.
         public async Task<IActionResult> GetObjectAsync(string key)
         {
             try
             {
-                var stream = await CDNService.GetObjectAsync(key);
+                var stream = await cdnService.GetObjectAsync(key);
                 return Ok(stream);
             }
             catch (Exception ex)
@@ -68,14 +79,27 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        //[Authorize]
+        [HttpGet("metadata/{**key}")] // Get an object metadata from S3.
+        public async Task<IActionResult> GetObjectMetadataAsync(string key)
+        {
+            try
+            {
+                var metadata = await cdnService.GetObjectMetadataAsync(key);
+                return Ok(metadata);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        
         [HttpGet("probe/{**key}")] // Probe an object in S3.
         public async Task<IActionResult> GetProbeAsync(string key)
         {
             try
             {
-                var stream = await CDNService.GetObjectAsync(key);
-                var probe = await FFMPEGService.Probe(stream);
+                var stream = await cdnService.GetObjectAsync(key);
+                var probe = await ffmpegService.Probe(stream);
                 return Ok(probe);
             }
             catch (Exception ex)
@@ -89,7 +113,7 @@ namespace DOOH.Server.Controllers
         {
             try
             {
-                var presignedUrl = CDNService.GetPresignedObjectUrl(key, TimeSpan.FromMinutes(15));
+                var presignedUrl = cdnService.GetPresignedObjectUrl(key, TimeSpan.FromMinutes(15));
                 return Ok(presignedUrl);
             }
             catch (Exception ex)
@@ -100,117 +124,101 @@ namespace DOOH.Server.Controllers
 
         [Authorize]
         [HttpPost("single")] // Upload an object to S3.
-        public async Task<Server.Models.DOOHDB.Upload> UploadObjectAsync(IFormFile file)
+        public async Task<Dictionary<string, string>> UploadObjectAsync(IFormFile file)
         {
-            var userId = IdentityContext.Users.Where(x => x.UserName.Equals(User.Identity.Name)).FirstOrDefault()?.Id;
-            string bucket = (User.Identity.Name == "admin" ? "admin" : userId);
-            ProbeData probe = null;
-            List<Stream> streams;
-            string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
-            string key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
-            bool isVideo = file.ContentType.Contains("video");
+            var userId = identityContext.Users.FirstOrDefault(x => x.UserName.Equals(User.Identity.Name))?.Id;
+            var bucket = (User.Identity?.Name?.ToLower() == "admin" ? "admin" : userId);
+            var contentType = file.ContentType;
+            var thumbnail = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "thumbnail.png");
+            var key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
 
 
-            using var stream0 = file.OpenReadStream();
-            var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
+            await using var stream0 = file.OpenReadStream();
+            var (out0, probeData) = await ffmpegService.ConvertVideoToMp4(stream0, transpose: 2);
 
-            using var stream1 = out0;
-            await CDNService.UploadObjectAsync(key, stream1);
 
-            if (isVideo)
+            var metadata = new Dictionary<string, string>
             {
-                using var stream2 = file.OpenReadStream();
-                probe = await FFMPEGService.Probe(stream2);
-
-                using var stream3 = file.OpenReadStream();
-                streams = await FFMPEGService.ExtractImagesFromVideo(stream3, fps: 1 / (double.TryParse(probe.Format.Duration, out double _duration) ? _duration : 1.0));
-                if (streams.Count > 0)
-                {
-                    await CDNService.UploadObjectAsync(thumbnailKey, streams.FirstOrDefault());
-                }
-            }
-
-            // prepare attachment from probe data
-            var upload = new Models.DOOHDB.Upload
-            {
-                Key = key,
-                FileName = file.FileName,
-                Thumbnail = isVideo ? thumbnailKey : null,
-                Size = file.Length,
-                ContentType = file.ContentType,
-                AspectRatio = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                Duration = probe != null ? (double.TryParse(probe.Format.Duration, out double duration) ? duration : 0) : null,
-                Height = probe != null ? (int.TryParse(probe.Streams.FirstOrDefault().Height, out int height) ? height : 0) : null,
-                Width = probe != null ? (int.TryParse(probe.Streams.FirstOrDefault().Width, out int width) ? width : 0) : null,
-                BitRate = probe != null ? (int.TryParse(probe.Format.BitRate, out int bitRate) ? bitRate : 0) : null,
-                CodecName = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                FrameRate = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                Owner = userId
+                { "key", key },
+                { "filename", file.FileName },
+                { "thumbnail", thumbnail },
+                { "size", probeData.Format.Size },
+                { "content_type", contentType },
+                { "aspect_ratio", probeData.Streams.FirstOrDefault()?.DisplayAspectRatio },
+                { "duration", probeData.Format.Duration },
+                { "codec", probeData.Streams.FirstOrDefault()?.CodecName },
+                { "height", probeData.Streams.FirstOrDefault()?.Height },
+                { "width", probeData.Streams.FirstOrDefault()?.Width },
+                { "bit_rate", probeData.Format.BitRate },
+                { "frame_rate", probeData.Streams.FirstOrDefault()?.RFrameRate },
+                { "format_name", probeData.Format.FormatName },
+                { "owner", userId }
             };
 
-            // commit then return attachment, user needs to be notified new key assigned
-            return await DOOHDBService.CreateUpload(upload);
+
+            await using var stream1 = out0;
+            await cdnService.UploadObjectAsync(key, stream1, metadata);
+
+            if (!contentType.Contains("video")) return metadata;
+            await using var stream3 = file.OpenReadStream();
+            var streams = await ffmpegService.ExtractImagesFromVideo(stream3, fps: 1 / (double.TryParse(probeData.Format.Duration, out double _duration) ? _duration : 1.0));
+            if (streams.Count > 0)
+            {
+                await cdnService.UploadObjectAsync(thumbnail, streams.FirstOrDefault());
+            }
+
+
+            return metadata;
         }
 
         [Authorize]
         [HttpPost("multiple")] // Upload multiple objects to S3.
-        public async Task<List<Models.DOOHDB.Upload>> UploadObjectsAsync(IEnumerable<IFormFile> files)
+        public async Task<List<Dictionary<string, string>>> UploadObjectsAsync(IEnumerable<IFormFile> files)
         {
-            var userId = IdentityContext.Users.Where(x => x.UserName.Equals(User.Identity.Name)).FirstOrDefault()?.Id;
-            List<Models.DOOHDB.Upload> uploads = new List<Models.DOOHDB.Upload>();
+            var userId = identityContext.Users.FirstOrDefault(x => x.UserName.Equals(User.Identity.Name))?.Id;
+            var metadatas = new List<Dictionary<string, string>>();
             foreach (var file in files)
             {
+                var bucket = (User.Identity?.Name?.ToLower() == "admin" ? "admin" : userId);
+                
+                var contentType = file.ContentType;
 
-                string bucket = (User.Identity.Name == "admin" ? "admin" : userId);
-                ProbeData probe = null;
-                List<Stream> streams;
-                string thumbnailKey = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "png");
-                string key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
-                bool isVideo = file.ContentType.Contains("video");
+                var thumbnail = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), "thumbnail.png");
+                var key = bucket + "/" + Path.ChangeExtension(Path.GetRandomFileName(), System.IO.Path.GetExtension(file.FileName));
 
-
-                using var stream0 = file.OpenReadStream();
-                var out0 = await FFMPEGService.ConvertVideoToMp4(stream0, transpose: 2);
-
-                using var stream1 = out0;
-                await CDNService.UploadObjectAsync(key, stream1);
-
-                if (isVideo)
+                await using var stream0 = file.OpenReadStream();
+                var (out0, probeData) = await ffmpegService.ConvertVideoToMp4(stream0, transpose: 2);
+                var metadata = new Dictionary<string, string>
                 {
-                    using var stream2 = file.OpenReadStream();
-                    probe = await FFMPEGService.Probe(stream2);
-
-                    using var stream3 = file.OpenReadStream();
-                    streams = await FFMPEGService.ExtractImagesFromVideo(stream3, fps: 1 / (double.TryParse(probe.Format.Duration, out double _duration) ? _duration : 1.0));
-                    if (streams.Count > 0)
-                    {
-                        await CDNService.UploadObjectAsync(thumbnailKey, streams.FirstOrDefault());
-                    }
-                }
-
-                // prepare attachment from probe data
-                var upload = new Models.DOOHDB.Upload
-                {
-                    Key = key,
-                    FileName = file.FileName,
-                    Thumbnail = isVideo ? thumbnailKey : null,
-                    Size = file.Length,
-                    ContentType = file.ContentType,
-                    AspectRatio = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                    Duration = probe != null ? (double.TryParse(probe.Format.Duration, out double duration) ? duration : 0) : null,
-                    Height = probe != null ? (int.TryParse(probe.Streams.FirstOrDefault().Height, out int height) ? height : 0) : null,
-                    Width = probe != null ? (int.TryParse(probe.Streams.FirstOrDefault().Width, out int width) ? width : 0) : null,
-                    BitRate = probe != null ? (int.TryParse(probe.Format.BitRate, out int bitRate) ? bitRate : 0) : null,
-                    CodecName = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                    FrameRate = probe != null ? probe.Streams.FirstOrDefault().DisplayAspectRatio : null,
-                    Owner = userId
+                    { "key", key },
+                    { "filename", file.FileName },
+                    { "thumbnail", thumbnail },
+                    { "size", probeData.Format.Size },
+                    { "content_type", contentType },
+                    { "aspect_ratio", probeData.Streams.FirstOrDefault()?.DisplayAspectRatio },
+                    { "duration", probeData.Format.Duration },
+                    { "codec", probeData.Streams.FirstOrDefault()?.CodecName },
+                    { "height", probeData.Streams.FirstOrDefault()?.Height },
+                    { "width", probeData.Streams.FirstOrDefault()?.Width },
+                    { "bit_rate", probeData.Format.BitRate },
+                    { "frame_rate", probeData.Streams.FirstOrDefault()?.RFrameRate },
+                    { "format_name", probeData.Format.FormatName },
+                    { "owner", userId }
                 };
 
-                // commit then return attachment, user needs to be notified new key assigned
-                upload = await DOOHDBService.CreateUpload(upload);
-                uploads.Add(upload);
+
+                await using var stream1 = out0;
+                await cdnService.UploadObjectAsync(key, stream1, metadata);
+
+                if (!contentType.Contains("video")) continue;
+                await using var stream3 = file.OpenReadStream();
+                var streams = await ffmpegService.ExtractImagesFromVideo(stream3, fps: 1 / (double.TryParse(probeData.Format.Duration, out var duration) ? duration : 1.0));
+                if (streams.Count > 0)
+                {
+                    await cdnService.UploadObjectAsync(thumbnail, streams.FirstOrDefault());
+                }
             }
-            return uploads;
+            return metadatas;
         }
 
         [Authorize]
@@ -219,8 +227,8 @@ namespace DOOH.Server.Controllers
         {
             try
             {
-                await DOOHDBService.DeleteUpload(key);
-                await CDNService.DeleteObjectAsync(key);
+                var metadata = await cdnService.GetObjectMetadataAsync(key);
+                await cdnService.DeleteObjectAsync(key);
 
                 return Ok();
             }

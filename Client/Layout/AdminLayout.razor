@@ -56,7 +56,7 @@
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
                 <RadzenPanelMenuItem Text="Campaigns" Icon="campaign" Path="/admin/campaigns">
-                    @* <RadzenPanelMenuItem Text="New" Icon="add" Path="/admin/campaigns/editor" /> *@
+                    <RadzenPanelMenuItem Text="Uploads" Click="@((args) => DialogService.OpenAsync<Pages.Uploads>("Uploads"))" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
                     <RadzenPanelMenuItem Text="Motherboards" Path="/admin/adboards/motherboards" />
@@ -88,8 +88,8 @@
             
         </RadzenSidebar>
         <RadzenFooter>
-            <RadzenRow AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.Center">
-                <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            <RadzenRow AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenText Text="doohfy.com" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
                 <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
             </RadzenRow>
         </RadzenFooter>

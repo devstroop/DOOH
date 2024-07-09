@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using DOOH.Server.Models.DOOHDB;
 using DOOH.Server.Models.Enums;
+using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
@@ -73,7 +74,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 if (CampaignId != null && int.TryParse(CampaignId.ToString(), out int campaignId))
                 {
                     _campaignId = campaignId;
-                    var expand = "CampaignAdboards($expand=Adboard),Advertisements($expand=Upload),Schedules($expand=ScheduleAdboards($expand=Adboard))";
+                    var expand = "CampaignAdboards($expand=Adboard),Advertisements,Schedules($expand=ScheduleAdboards($expand=Adboard))";
                     _campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: _campaignId, expand: expand);
                     if (_campaign != null)
                     {
@@ -106,7 +107,8 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             _schedules = result.Value.AsODataEnumerable();
         }
 
-        private int _selectedTabIndex = 1;
+        private RadzenTabs _tabs;
+        private int _selectedTabIndex = 0;
 
 
         private async Task SaveCampaignAdboards()
@@ -133,8 +135,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        private async Task SaveCampaign(MouseEventArgs args)
+        private async Task ContinueClick(MouseEventArgs args)
         {
+            if (_selectedTabIndex < 2)
+            {
+                _selectedTabIndex++;
+                return;
+            }
             try
             {
                 var confirmariotnResult = await DialogService.Confirm("Are you sure you want to save?");
@@ -203,7 +210,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        private async Task Cancel(MouseEventArgs args)
+        private async Task DiscardClick(MouseEventArgs args)
         {
             var result = await DialogService.Confirm("Are you sure you want to cancel?");
             if (result == true)

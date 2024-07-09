@@ -34,7 +34,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected NotificationService NotificationService { get; set; }
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Adboard> list0;
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
         protected int Zoom { get; set; } = 12;
         protected bool showSelectedAdboardsOnly { get; set; } = false;
 

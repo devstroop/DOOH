@@ -1,5 +1,7 @@
-﻿using Amazon.Runtime;
+﻿using System.Net;
+using Amazon.Runtime;
 using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace DOOH.Server.Services
 {
@@ -23,19 +25,27 @@ namespace DOOH.Server.Services
         /// <summary>
         /// Lists objects in S3.
         /// </summary>
+        /// <param name="directory"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<List<Amazon.S3.Model.S3Object>> ListObjectsAsync(CancellationToken cancellationToken = default)
+        public async Task<List<Amazon.S3.Model.S3Object>> ListObjectsAsync(string directory = null, CancellationToken cancellationToken = default)
         {
             var request = new Amazon.S3.Model.ListObjectsV2Request
             {
-                BucketName = _bucket
+                BucketName = _bucket + ((string.IsNullOrWhiteSpace(directory) || directory?.Trim() == "/") ? string.Empty : $"/{directory}")
             };
 
             var response = await _s3Client.ListObjectsV2Async(request, cancellationToken);
             return response.S3Objects;
         }
 
+        /// <summary>
+        /// Lists presigned object URLs in S3.
+        /// </summary>
+        /// <param name="duration"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task<List<string>> ListPresignedObjectUrlsAsync(TimeSpan duration, CancellationToken cancellationToken = default)
         {
             var request = new Amazon.S3.Model.ListObjectsV2Request
@@ -65,6 +75,38 @@ namespace DOOH.Server.Services
         }
 
         /// <summary>
+        /// Get Metadata of an object in S3.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="AmazonS3Exception"></exception>
+        public async Task<MetadataCollection> GetObjectMetadataAsync(string key, CancellationToken cancellationToken = default)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                throw new ArgumentNullException(nameof(key));
+
+            var request = new Amazon.S3.Model.GetObjectMetadataRequest
+            {
+                BucketName = _bucket,
+                Key = key
+            };
+            try
+            {
+                var response = await _s3Client.GetObjectMetadataAsync(request, cancellationToken);
+                return response.Metadata;
+            }
+            catch (AmazonS3Exception ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                    return null;
+                throw;
+            }
+        }
+        
+        
+        /// <summary>
         /// Generates a presigned URL for an object in S3.
         /// </summary>
         /// <param name="key"></param>
@@ -88,10 +130,11 @@ namespace DOOH.Server.Services
         /// </summary>
         /// <param name="key"></param>
         /// <param name="stream"></param>
+        /// <param name="metadata"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task UploadObjectAsync(string key, Stream stream, CancellationToken cancellationToken = default)
+        public async Task<Dictionary<string, string>> UploadObjectAsync(string key, Stream stream, Dictionary<string, string> metadata = null, CancellationToken cancellationToken = default)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -102,9 +145,14 @@ namespace DOOH.Server.Services
                 Key = key,
                 InputStream = stream,
                 DisablePayloadSigning = true,
-                //ObjectLockRetainUntilDate = DateTime.UtcNow.AddMinutes(10)
+                //TODO: ObjectLockRetainUntilDate = DateTime.UtcNow.AddMinutes(10)
             };
-            await _s3Client.PutObjectAsync(request, cancellationToken);
+            foreach (var each in metadata ?? new Dictionary<string, string>())
+            {
+                request.Metadata.Add(each.Key, each.Value);
+            }
+            var response = await _s3Client.PutObjectAsync(request, cancellationToken);
+            return response?.HttpStatusCode == HttpStatusCode.OK ? response.ResponseMetadata.Metadata.ToDictionary() : null;
         }
 
         /// <summary>
@@ -113,14 +161,15 @@ namespace DOOH.Server.Services
         /// <param name="key"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task DeleteObjectAsync(string key, CancellationToken cancellationToken = default)
+        public async Task<bool> DeleteObjectAsync(string key, CancellationToken cancellationToken = default)
         {
             var request = new Amazon.S3.Model.DeleteObjectRequest
             {
                 BucketName = _bucket,
                 Key = key
             };
-            await _s3Client.DeleteObjectAsync(request, cancellationToken);
+            var response = await _s3Client.DeleteObjectAsync(request, cancellationToken);
+            return response?.HttpStatusCode == HttpStatusCode.OK;
         }
     }
 }

@@ -32,14 +32,14 @@
                     </RadzenDropDown>
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
-                    <RadzenButton Text="Continue" ButtonStyle="Radzen.ButtonStyle.Primary" Click="@SaveCampaign" IsBusy="@IsSaving" BusyText="Saving"/>
-                    <RadzenButton Text="Discard" ButtonStyle="ButtonStyle.Light" Click="@Cancel"/>
+                    <RadzenButton Text="Continue" ButtonStyle="Radzen.ButtonStyle.Primary" Click="@ContinueClick" IsBusy="@IsSaving" BusyText="Saving"/>
+                    <RadzenButton Text="Discard" ButtonStyle="ButtonStyle.Light" Click="@DiscardClick"/>
                 </RadzenStack>
             </RadzenStack>
         </RadzenColumn>
         
     </RadzenRow>
-    <RadzenTabs @bind-SelectedIndex="@_selectedTabIndex">
+    <RadzenTabs @ref="@_tabs" @bind-SelectedIndex="@_selectedTabIndex">
         <Tabs>
             @* <RadzenTabsItem Text="Basic" Icon="info"> *@
             @* </RadzenTabsItem> *@
