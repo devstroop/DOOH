@@ -28,15 +28,15 @@ namespace DOOH.Server.Services
         /// <param name="directory"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<List<Amazon.S3.Model.S3Object>> ListObjectsAsync(string directory = null, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<Amazon.S3.Model.S3Object>> ListObjectsAsync(string directory = null, CancellationToken cancellationToken = default)
         {
             var request = new Amazon.S3.Model.ListObjectsV2Request
             {
-                BucketName = _bucket + ((string.IsNullOrWhiteSpace(directory) || directory?.Trim() == "/") ? string.Empty : $"/{directory}")
+                BucketName = _bucket
             };
 
             var response = await _s3Client.ListObjectsV2Async(request, cancellationToken);
-            return response.S3Objects;
+            return (string.IsNullOrWhiteSpace(directory) || directory?.Trim() == "/") ? response.S3Objects : response.S3Objects.Where(x => x.Key.StartsWith(directory));
         }
 
         /// <summary>
