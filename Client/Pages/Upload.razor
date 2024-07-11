@@ -1,4 +1,5 @@
 @using System.Text.Json
+@using DOOH.Server.Models
 <RadzenStack>
     <RadzenRow>
         <RadzenColumn>
@@ -74,7 +75,7 @@
         IsUploading = false;
         IsProcessing = false;
         StateHasChanged();
-        var metadataList = JsonSerializer.Deserialize<List<Dictionary<string, dynamic>>>(args.RawResponse);
+        var metadataList = JsonSerializer.Deserialize<List<MediaMetadata>>(args.RawResponse);
         Dialog.Close(metadataList);
     }
     [Inject] private DialogService Dialog { get; set; }

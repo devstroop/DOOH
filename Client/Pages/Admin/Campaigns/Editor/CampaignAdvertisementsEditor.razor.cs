@@ -9,6 +9,7 @@ using System.Text.Json.Nodes;
 using Amazon.S3.Model;
 using DOOH.Client.Components;
 using DOOH.Client.Extensions;
+using DOOH.Server.Models;
 using DOOH.Server.Models.DOOHDB;
 using FFmpegBlazor;
 
@@ -67,9 +68,27 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private async Task UploadClick(MouseEventArgs args)
         {
             var result = await DialogService.OpenAsync<Upload>("Upload", null);
-            if (result != null)
+            if (result != null && result is List<MediaMetadata>)
             {
-                Console.WriteLine(JsonSerializer.Serialize(result));
+                foreach (MediaMetadata each in result)
+                {
+                    var advertisement = new Advertisement()
+                    {
+                        AdvertisementId = 0,
+                        CampaignId = CampaignId,
+                        Key = each.Key,
+                        Duration = double.TryParse(each.Duration, out double duration) ? duration : 0,  
+                        Width = each.Width,
+                        Height = each.Height,
+                        Size = long.TryParse(each.Size, out long size) ? size : 0,
+                        Thumbnail = each.Thumbnail,
+                        Codec = each.Codec,
+                        FrameRate = each.FrameRate,
+                        BitRate = each.BitRate
+                    };
+                    
+                    await Add.InvokeAsync(advertisement);
+                }
             }
         }
         private async Task ImportClick(MouseEventArgs args)
@@ -78,9 +97,29 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 { "Selectable", true }
             });
-            if (result != null)
+            if (result != null && result is List<MediaMetadata>)
             {
-                Console.WriteLine(JsonSerializer.Serialize(result));
+                foreach (MediaMetadata each in result)
+                {
+                    var advertisement = new Advertisement()
+                    {
+                        AdvertisementId = 0,
+                        CampaignId = CampaignId,
+                        Key = each.Key,
+                        Duration = double.TryParse(each.Duration, out double duration) ? duration : 0,  
+                        Width = each.Width,
+                        Height = each.Height,
+                        Size = long.TryParse(each.Size, out long size) ? size : 0,
+                        Thumbnail = each.Thumbnail,
+                        Codec = each.Codec,
+                        FrameRate = each.FrameRate,
+                        BitRate = each.BitRate
+                    };
+                    
+                    await Add.InvokeAsync(advertisement);
+                }
+                
+                
             }
         }
     }

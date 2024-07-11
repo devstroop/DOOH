@@ -278,6 +278,14 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         
         private async Task OnAddAdvertisement(Advertisement advertisement)
         {
+            // if (_advertisements.Any(x => x.AdvertisementId == advertisement.AdvertisementId))
+            // {
+            //     NotificationService.Notify(new NotificationMessage
+            //         { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "Advertisement already added" });
+            //     return;
+            // }
+            advertisement.CampaignId = _campaignId;
+            advertisement = await DoohdbService.CreateAdvertisement(advertisement);
             await LoadCampaign();
         }
         

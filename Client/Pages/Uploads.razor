@@ -1,5 +1,6 @@
 @using Amazon.S3.Model
 @using DOOH.Server.Extensions
+@using DOOH.Server.Models
 @attribute [Authorize]
 @inject DOOH.Client.Services.S3ClientService S3Service
 @inject Radzen.DialogService DialogService
@@ -53,6 +54,12 @@
         <RadzenColumn Size="6">
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
                 <RadzenButton
+                    Visible="@Selectable"
+                    Text="Import"
+                    Click="@ImportClick"
+                ></RadzenButton>
+                <RadzenButton
+                    Visible="!Selectable"
                     Text="Upload"
                     Click="@UploadClick"
                 ></RadzenButton>
@@ -61,11 +68,6 @@
                     Text="Refresh"
                     ButtonStyle="ButtonStyle.Light"
                     Click="@RefreshClick"
-                ></RadzenButton>
-                <RadzenButton
-                    Visible="@Selectable"
-                    Text="Import"
-                    Click="@ImportClick"
                 ></RadzenButton>
             </RadzenStack>
         </RadzenColumn>
@@ -166,10 +168,9 @@
         selectedObjects = value ? selectedObjects.Append(s3Object) : selectedObjects.Where(x => x.Key != s3Object.Key);
     }
     
-    // ImportClick
     private async Task ImportClick(MouseEventArgs args)
     {
-        var metadataList = new List<Dictionary<string, dynamic>>();
+        var metadataList = new List<MediaMetadata>();
         foreach (var s3Object in selectedObjects)
         {
             var metadata = await S3Service.GetMetadataAsync(s3Object.Key);

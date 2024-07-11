@@ -116,10 +116,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 Adboards = result.Value.AsODataEnumerable();
                 // selectedAdboardIds = selectedAdboardIds.Where(x => Adboards.Any(y => y.AdboardId == x)).ToList();
 
-                foreach (var adboard in Adboards)
-                {
-                    await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
-                }
+                // foreach (var adboard in Adboards)
+                // {
+                //     await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
+                // }
 
                 adboardsCount = result.Count;
             }

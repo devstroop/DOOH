@@ -45,12 +45,12 @@ namespace DOOH.Client.Services
             return JsonConvert.DeserializeObject<ProbeData>(jsonString);
         }
         // Metadata
-        public async Task<Dictionary<string, dynamic>> GetMetadataAsync(string key)
+        public async Task<MediaMetadata> GetMetadataAsync(string key)
         {
             var response = await httpClient.GetAsync($"metadata/{key}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(jsonString);
+            return JsonConvert.DeserializeObject<MediaMetadata>(jsonString);
         }
         
         public async Task DeleteObjectAsync(string key)

@@ -33,9 +33,9 @@ namespace DOOH.Server.Models.DOOHDB
 
         public int? Width { get; set; }
 
-        public int? Codec { get; set; }
-
         public string FrameRate { get; set; }
+
+        public string Codec { get; set; }
 
         public string BitRate { get; set; }
 

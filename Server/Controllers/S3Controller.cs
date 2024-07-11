@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Amazon.Runtime;
 using Amazon.S3;
 using System.Net;
+using System.Text.Json;
 using DOOH.Server.Models;
 
 namespace DOOH.Server.Controllers
@@ -122,7 +123,7 @@ namespace DOOH.Server.Controllers
                     await UploadObjectToS3Async(thumbnail, streams.First());
                 }
 
-                metadata["thumbnail"] = thumbnail;
+                metadata.Thumbnail = thumbnail;
             }
 
             return Ok(metadata);
@@ -133,7 +134,7 @@ namespace DOOH.Server.Controllers
         public async Task<IActionResult> UploadObjectsAsync(IEnumerable<IFormFile> files)
         {
             var userId = _identityContext.Users.FirstOrDefault(x => x.UserName.Equals(User.Identity.Name))?.Id;
-            var metadatas = new List<Dictionary<string, string>>();
+            var metadatas = new List<MediaMetadata>();
 
             foreach (var file in files)
             {
@@ -160,7 +161,7 @@ namespace DOOH.Server.Controllers
                         await UploadObjectToS3Async(thumbnail, streams.First());
                     }
 
-                    metadata["thumbnail"] = thumbnail;
+                    metadata.Thumbnail = thumbnail;
                 }
 
                 metadatas.Add(metadata);
@@ -176,7 +177,8 @@ namespace DOOH.Server.Controllers
             {
                 var request = new Amazon.S3.Model.GetObjectRequest { BucketName = _bucket, Key = key };
                 var response = await _s3Client.GetObjectAsync(request);
-                var probe = await _ffmpegService.Probe(response.ResponseStream);
+                await using var stream = response.ResponseStream;
+                var probe = await _ffmpegService.Probe(stream);
                 return Ok(probe);
             });
         }
@@ -217,7 +219,7 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        private async Task UploadObjectToS3Async(string key, Stream stream, IDictionary<string, string> metadata = null)
+        private async Task UploadObjectToS3Async(string key, Stream stream, MediaMetadata metadata = null)
         {
             var request = new Amazon.S3.Model.PutObjectRequest
             {
@@ -229,8 +231,8 @@ namespace DOOH.Server.Controllers
             };
 
             if (metadata != null)
-            {
-                foreach (var each in metadata)
+            {;
+                foreach (var each in metadata.ToDictionary())
                 {
                     request.Metadata.Add(each.Key, each.Value);
                 }
@@ -255,24 +257,51 @@ namespace DOOH.Server.Controllers
             }
         }
 
-        private Dictionary<string, string> CreateMetadata(IFormFile file, string key, ProbeData probeData, string userId)
+        private MediaMetadata CreateMetadata(IFormFile file, string key, ProbeData probeData, string userId)
         {
-            return new Dictionary<string, string>
-            {
-                { "aspect_ratio", probeData?.Streams?.FirstOrDefault()?.DisplayAspectRatio },
-                { "bit_rate", probeData?.Format?.BitRate },
-                { "codec", probeData?.Streams?.FirstOrDefault()?.CodecName },
-                { "content_type", file.ContentType },
-                { "created_at", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-                { "duration", probeData?.Format?.Duration },
-                { "filename", file.FileName },
-                { "frame_rate", probeData?.Streams?.FirstOrDefault()?.RFrameRate },
-                { "height", probeData?.Streams?.FirstOrDefault()?.Height },
-                { "key", key },
-                { "owner", userId },
-                { "size", probeData?.Format?.Size },
-                { "width", probeData?.Streams?.FirstOrDefault()?.Width }
-            };
+            var aspectRatio = probeData?.Streams?.FirstOrDefault()?.DisplayAspectRatio;
+            var bitRate = probeData?.Format?.BitRate;
+            var codec = probeData?.Streams?.FirstOrDefault()?.CodecName;
+            var contentType = file.ContentType;
+            var duration = probeData?.Format?.Duration;
+            var frameRate = probeData?.Streams?.FirstOrDefault()?.RFrameRate;
+            var height = int.TryParse(probeData?.Streams?.FirstOrDefault()?.Height, out int heightOut) ? heightOut : 0;
+            var size = probeData?.Format?.Size;
+            var width = int.TryParse(probeData?.Streams?.FirstOrDefault()?.Width, out int widthOut) ? widthOut : 0;
+            return new MediaMetadata
+            (
+                aspectRatio: aspectRatio,
+                bitRate: bitRate,
+                codec: codec,
+                contentType: contentType,
+                createdAt: DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                duration: duration,
+                filename: file.FileName,
+                frameRate: frameRate,
+                height: height,
+                key: key,
+                owner: userId,
+                size: size,
+                thumbnail: $"{key}.thumbnail.png",
+                width: width
+            );
+            // return new Dictionary<string, string>
+            // {
+            //     { "aspect_ratio", probeData?.Streams?.FirstOrDefault()?.DisplayAspectRatio },
+            //     { "bit_rate", probeData?.Format?.BitRate },
+            //     { "codec", probeData?.Streams?.FirstOrDefault()?.CodecName },
+            //     { "content_type", file.ContentType },
+            //     { "created_at", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") },
+            //     { "duration", probeData?.Format?.Duration },
+            //     { "filename", file.FileName },
+            //     { "frame_rate", probeData?.Streams?.FirstOrDefault()?.RFrameRate },
+            //     { "height", probeData?.Streams?.FirstOrDefault()?.Height },
+            //     { "key", key },
+            //     { "owner", userId },
+            //     { "size", probeData?.Format?.Size },
+            //     { "thumbnail", $"{key}.thumbnail.png" },
+            //     { "width", probeData?.Streams?.FirstOrDefault()?.Width }
+            // };
         }
     }
 }
