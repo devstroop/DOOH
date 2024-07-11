@@ -13,7 +13,7 @@
     <Content Include="Controllers\AccountController.cs" />
     <Content Include="Controllers\ApplicationRolesController.cs" />
     <Content Include="Controllers\ApplicationUsersController.cs" />
-    <Content Include="Controllers\CDNController.cs" />
+    <Content Include="Controllers\S3Controller.cs" />
     <Content Include="Controllers\CultureController.cs" />
     <Content Include="Controllers\DOOHDB\AdboardImagesController.cs" />
     <Content Include="Controllers\DOOHDB\AdboardNetworksController.cs" />

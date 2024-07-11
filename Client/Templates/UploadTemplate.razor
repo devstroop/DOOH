@@ -1,0 +1,57 @@
+@using Amazon.S3.Model
+@using DOOH.Client.Services
+@using DOOH.Server.Extensions
+
+<RadzenRow Style="padding: 0">
+    <RadzenImage Path="@Context.GetThumbnailUrl()" Style="width: 120px; height: 120px; border-radius:0.5rem; object-fit: cover;"></RadzenImage>
+    <RadzenColumn>
+        <RadzenStack>
+            <RadzenText Text="@Context.Key.Split('/').Last()" class="rz-mb-0" TextStyle="TextStyle.H5"></RadzenText>
+            <RadzenStack Gap="0">
+                <RadzenText Text="@Context.Size.ToFileSize()" class="rz-mb-0" TextStyle="TextStyle.Caption"></RadzenText>
+                <RadzenText Text="@Context.LastModified.GetTimeAgo()" class="rz-mb-0" TextStyle="TextStyle.Caption"></RadzenText>
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" Shade="Shade.Default" Icon="play_arrow" Text="Play" Click="@PlayClick" Visible="@Playable"></RadzenButton>
+                <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" Shade="Shade.Default" ButtonStyle="ButtonStyle.Success" Icon="" Text="Select" Click="@Select" Visible="@(Selectable && !Selected)"></RadzenButton>
+                <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Outlined" Shade="Shade.Default" ButtonStyle="ButtonStyle.Danger" Icon="" Text="Unselect" Click="@Unselect" Visible="@(Selectable && Selected)"></RadzenButton>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenStack>
+        <RadzenButton Icon="close" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" Click="@DeleteClick" Visible="@Deletable"></RadzenButton>
+    </RadzenStack>
+</RadzenRow>
+
+@code {
+    [Parameter] public S3Object Context { get; set; }
+    [Parameter] public bool Selected { get; set; } = false;
+    [Parameter] public bool Selectable { get; set; } = false;
+    [Parameter] public bool Playable { get; set; } = false;
+    [Parameter] public bool Deletable { get; set; } = false;
+    [Parameter] public EventCallback<bool> SelectionChange { get; set; } = EventCallback<bool>.Empty;
+    [Parameter] public EventCallback<S3Object> Play { get; set; } = EventCallback<S3Object>.Empty;
+    [Parameter] public EventCallback<S3Object> Delete { get; set; } = EventCallback<S3Object>.Empty;
+
+    private async Task PlayClick(MouseEventArgs args)
+    {
+        if (Play.HasDelegate) await Play.InvokeAsync(Context);
+    }
+
+    private async Task Select(MouseEventArgs args)
+    {
+        Selected = true;
+        if (SelectionChange.HasDelegate) await SelectionChange.InvokeAsync(Selected);
+    }
+
+    private async Task Unselect(MouseEventArgs args)
+    {
+        Selected = false;
+        if (SelectionChange.HasDelegate) await SelectionChange.InvokeAsync(Selected);
+    }
+
+    private async Task DeleteClick()
+    {
+        await Delete.InvokeAsync(Context);
+    }
+}

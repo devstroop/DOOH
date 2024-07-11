@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime;
 using Radzen;
 using DOOH.Server.Components;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,19 @@ using DOOH.Server.Services;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set GC settings
+GCSettings.LatencyMode = GCLatencyMode.LowLatency;
+GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+GC.Collect();
+
+
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024).AddInteractiveWebAssemblyComponents();
 builder.Services.AddControllers();
 builder.Services.AddRadzenComponents();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<DOOH.Server.Services.CDNService>();
+builder.Services.AddScoped<DOOH.Client.Services.S3ClientService>();
 builder.Services.AddScoped<DOOH.Server.Services.FFMPEGService>();
 builder.Services.AddScoped<DOOH.Server.DOOHDBService>();
 builder.Services.AddDbContext<DOOH.Server.Data.DOOHDBContext>(options =>

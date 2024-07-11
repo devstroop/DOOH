@@ -4,7 +4,9 @@ using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Amazon.S3.Model;
 using DOOH.Client.Components;
 using DOOH.Client.Extensions;
 using DOOH.Server.Models.DOOHDB;
@@ -62,26 +64,24 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
 
         // ImportClick
+        private async Task UploadClick(MouseEventArgs args)
+        {
+            var result = await DialogService.OpenAsync<Upload>("Upload", null);
+            if (result != null)
+            {
+                Console.WriteLine(JsonSerializer.Serialize(result));
+            }
+        }
         private async Task ImportClick(MouseEventArgs args)
         {
-            // OpenDialog
-            var result = await DialogService.OpenAsync<ImportFromUploads>("Import from Uploads", options: new DialogOptions()
+            var result = await DialogService.OpenAsync<Client.Pages.Uploads>("Import from Uploads", new Dictionary<string, object>()
             {
-                Width = "100%",
-                Height = "100%"
+                { "Selectable", true }
             });
             if (result != null)
             {
-                // var advertisement = new Advertisement
-                // {
-                //     AdvertisementId = 0,
-                //     CampaignId = CampaignId,
-                //     Key = upload.Key,
-                // };
-                // advertisement = await DoohdbService.CreateAdvertisement(advertisement);
-                // await Add.InvokeAsync(advertisement);
+                Console.WriteLine(JsonSerializer.Serialize(result));
             }
         }
-        
     }
 }
