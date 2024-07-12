@@ -239,11 +239,11 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
         protected async Task GetLocation()
         {
-            var position = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
-            if (position != null)
+            var coords = await JSRuntime.InvokeAsync<JsonNode>("getCoords");
+            if (coords != null)
             {
-                adboard.Latitude = (double)position[0];
-                adboard.Longitude = (double)position[1];
+                adboard.Longitude = (float)coords[0];
+                adboard.Latitude = (float)coords[1];
             }
         }
     }

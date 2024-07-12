@@ -4,9 +4,12 @@ using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using Amazon.S3.Model;
 using DOOH.Client.Components;
 using DOOH.Client.Extensions;
+using DOOH.Server.Models;
 using DOOH.Server.Models.DOOHDB;
 using FFmpegBlazor;
 
@@ -51,7 +54,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private async Task OnHoverClick(MouseEventArgs args, Advertisement advertisement)
         {
             
-            var url = advertisement.Upload.GetUrl();
+            var url = advertisement.Key.GetUrl();
             await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px", CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true });
         }
 
@@ -62,30 +65,62 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
 
         // ImportClick
-        private async Task ImportClick(MouseEventArgs args)
+        private async Task UploadClick(MouseEventArgs args)
         {
-            // OpenDialog
-            var result = await DialogService.OpenAsync<ImportFromUploads>("Import from Uploads", options: new DialogOptions()
+            var result = await DialogService.OpenAsync<Upload>("Upload", null);
+            if (result != null && result is List<MediaMetadata>)
             {
-                Width = "100%",
-                Height = "100%"
-            });
-            if (result != null)
-            {
-                if (result is Upload upload)
+                foreach (MediaMetadata each in result)
                 {
-                    var advertisement = new Advertisement
+                    var advertisement = new Advertisement()
                     {
                         AdvertisementId = 0,
                         CampaignId = CampaignId,
-                        UploadKey = upload.Key,
-                        Upload = upload
+                        Key = each.Key,
+                        Duration = double.TryParse(each.Duration, out double duration) ? duration : 0,  
+                        Width = each.Width,
+                        Height = each.Height,
+                        Size = long.TryParse(each.Size, out long size) ? size : 0,
+                        Thumbnail = each.Thumbnail,
+                        Codec = each.Codec,
+                        FrameRate = each.FrameRate,
+                        BitRate = each.BitRate
                     };
-                    advertisement = await DoohdbService.CreateAdvertisement(advertisement);
+                    
                     await Add.InvokeAsync(advertisement);
                 }
             }
         }
-        
+        private async Task ImportClick(MouseEventArgs args)
+        {
+            var result = await DialogService.OpenAsync<Client.Pages.Uploads>("Import from Uploads", new Dictionary<string, object>()
+            {
+                { "Selectable", true }
+            });
+            if (result != null && result is List<MediaMetadata>)
+            {
+                foreach (MediaMetadata each in result)
+                {
+                    var advertisement = new Advertisement()
+                    {
+                        AdvertisementId = 0,
+                        CampaignId = CampaignId,
+                        Key = each.Key,
+                        Duration = double.TryParse(each.Duration, out double duration) ? duration : 0,  
+                        Width = each.Width,
+                        Height = each.Height,
+                        Size = long.TryParse(each.Size, out long size) ? size : 0,
+                        Thumbnail = each.Thumbnail,
+                        Codec = each.Codec,
+                        FrameRate = each.FrameRate,
+                        BitRate = each.BitRate
+                    };
+                    
+                    await Add.InvokeAsync(advertisement);
+                }
+                
+                
+            }
+        }
     }
 }

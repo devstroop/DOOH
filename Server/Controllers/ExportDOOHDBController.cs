@@ -173,6 +173,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetCampaignAdboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/campaigncriteria/csv")]
+        [HttpGet("/export/DOOHDB/campaigncriteria/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignCriteriaToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/campaigncriteria/excel")]
+        [HttpGet("/export/DOOHDB/campaigncriteria/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportCampaignCriteriaToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/categories/csv")]
         [HttpGet("/export/DOOHDB/categories/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportCategoriesToCSV(string fileName = null)
@@ -313,6 +327,20 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetScheduleAdboards(), Request.Query, false), fileName);
         }
 
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/csv")]
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdvertisementsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetScheduleAdvertisements(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/excel")]
+        [HttpGet("/export/DOOHDB/scheduleadvertisements/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleAdvertisementsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetScheduleAdvertisements(), Request.Query, false), fileName);
+        }
+
         [HttpGet("/export/DOOHDB/taxes/csv")]
         [HttpGet("/export/DOOHDB/taxes/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportTaxesToCSV(string fileName = null)
@@ -327,20 +355,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetTaxes(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/uploads/csv")]
-        [HttpGet("/export/DOOHDB/uploads/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportUploadsToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetUploads(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/uploads/excel")]
-        [HttpGet("/export/DOOHDB/uploads/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportUploadsToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetUploads(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/userinformations/csv")]
         [HttpGet("/export/DOOHDB/userinformations/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportUserInformationsToCSV(string fileName = null)
@@ -353,20 +367,6 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/campaigncriteria/csv")]
-        [HttpGet("/export/DOOHDB/campaigncriteria/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignCriteriaToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/campaigncriteria/excel")]
-        [HttpGet("/export/DOOHDB/campaigncriteria/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportCampaignCriteriaToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetCampaignCriteria(), Request.Query, false), fileName);
         }
     }
 }

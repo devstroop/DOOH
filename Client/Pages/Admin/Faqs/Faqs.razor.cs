@@ -101,14 +101,23 @@ namespace DOOH.Client.Pages.Admin.Faqs
         {
             try
             {
-                var result = await DOOHDBService.GetFaqs(new Query { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy });
+                IsLoading = true;
+                StateHasChanged();
+                var result = await DOOHDBService.GetFaqs(new Query
+                    { Top = args.Top, Skip = args.Skip, Filter = args.Filter, OrderBy = args.OrderBy });
 
                 faqs = result.Value.AsODataEnumerable();
                 faqsCount = result.Count;
             }
             catch (Exception)
             {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+                NotificationService.Notify(new NotificationMessage
+                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to load" });
+            }
+            finally
+            {
+                IsLoading = false;
+                StateHasChanged();
             }
         }
 

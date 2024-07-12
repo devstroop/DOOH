@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Radzen;
 using DOOH.Server.Models.DOOHDB;
 using DOOH.Server.Models.Enums;
+using Radzen.Blazor;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
@@ -51,7 +52,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
 
         protected bool CampaignNameEditable { get; set; } = false;
-
+        
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,21 +74,21 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 if (CampaignId != null && int.TryParse(CampaignId.ToString(), out int campaignId))
                 {
                     _campaignId = campaignId;
-                    var expand = "CampaignAdboards($expand=Adboard),Advertisements($expand=Upload),Schedules($expand=ScheduleAdboards($expand=Adboard))";
+                    var expand = "CampaignAdboards($expand=Adboard),Advertisements,Schedules($expand=ScheduleAdboards($expand=Adboard))";
                     _campaign = await DoohdbService.GetCampaignByCampaignId(campaignId: _campaignId, expand: expand);
                     if (_campaign != null)
                     {
                         _campaignId = _campaign.CampaignId;
                         CampaignName = _campaign.CampaignName;
-                        StartDate = _campaign.StartDate;
-                        EndDate = _campaign.EndDate;
+                        StartDate = _campaign?.StartDate ?? DateTime.Now;
+                        EndDate = _campaign?.EndDate ?? DateTime.Now;
                         Budget = _campaign.Budget;
                         BudgetType = (BudgetType)_campaign.BudgetType;
                         IsDraft = DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status)_campaign.Status);
                         Status = (DOOH.Server.Models.Enums.Status)_campaign.Status;
                         _selectedAdboards = _campaign.CampaignAdboards.Select(ca => ca.Adboard).ToList();
                         _advertisements = _campaign.Advertisements;
-                        _schedules = _campaign.Schedules.Where(x => x.Date >= DateTime.Today);
+                        _schedules = _campaign.Schedules.Where(x => x.Start >= DateTime.Today);
                         // _scheduleAdboards = _schedules.SelectMany(x => x.ScheduleAdboards);
                     }
                 }
@@ -96,6 +97,11 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 IsSaving = false;
                 StateHasChanged();
+            }
+
+            if (CampaignId == null || !int.TryParse(CampaignId.ToString(), out var _))
+            {
+                NavigationManager.NavigateTo("admin/campaigns");
             }
         }
         
@@ -106,6 +112,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             _schedules = result.Value.AsODataEnumerable();
         }
 
+        private RadzenTabs _tabs;
         private int _selectedTabIndex = 0;
 
 
@@ -133,8 +140,13 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        private async Task SaveCampaign(MouseEventArgs args)
+        private async Task ContinueClick(MouseEventArgs args)
         {
+            if (_selectedTabIndex < 2)
+            {
+                _selectedTabIndex++;
+                return;
+            }
             try
             {
                 var confirmariotnResult = await DialogService.Confirm("Are you sure you want to save?");
@@ -203,7 +215,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             }
         }
 
-        private async Task Cancel(MouseEventArgs args)
+        private async Task DiscardClick(MouseEventArgs args)
         {
             var result = await DialogService.Confirm("Are you sure you want to cancel?");
             if (result == true)
@@ -271,6 +283,14 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         
         private async Task OnAddAdvertisement(Advertisement advertisement)
         {
+            // if (_advertisements.Any(x => x.AdvertisementId == advertisement.AdvertisementId))
+            // {
+            //     NotificationService.Notify(new NotificationMessage
+            //         { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "Advertisement already added" });
+            //     return;
+            // }
+            advertisement.CampaignId = _campaignId;
+            advertisement = await DoohdbService.CreateAdvertisement(advertisement);
             await LoadCampaign();
         }
         

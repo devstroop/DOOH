@@ -20,12 +20,24 @@ namespace DOOH.Server.Models.DOOHDB
         public Campaign Campaign { get; set; }
 
         [Required]
-        public string UploadKey { get; set; }
+        public string Key { get; set; }
 
-        public Upload Upload { get; set; }
+        public long Size { get; set; }
+
+        public string Thumbnail { get; set; }
 
         [Required]
         public double Duration { get; set; }
+
+        public int? Height { get; set; }
+
+        public int? Width { get; set; }
+
+        public string FrameRate { get; set; }
+
+        public string Codec { get; set; }
+
+        public string BitRate { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -36,5 +48,7 @@ namespace DOOH.Server.Models.DOOHDB
         public DateTime? VerifiedAt { get; set; }
 
         public ICollection<Analytic> Analytics { get; set; }
+
+        public ICollection<ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
     }
 }

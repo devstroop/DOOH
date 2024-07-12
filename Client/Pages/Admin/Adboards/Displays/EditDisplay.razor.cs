@@ -102,6 +102,30 @@ namespace DOOH.Client.Pages.Admin.Adboards.Displays
             DialogService.Close(null);
         }
 
+        protected async Task DeleteClick(MouseEventArgs args)
+        {
+            try
+            {
+                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
+                {
+                    var deleteResult = await DOOHDBService.DeleteDisplay(displayId: DisplayId);
+
+                    if (deleteResult != null)
+                    {
+                        DialogService.Close(display);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = $"Error",
+                    Detail = $"Unable to delete Display"
+                });
+            }
+        }
 
         [Inject]
         protected SecurityService Security { get; set; }

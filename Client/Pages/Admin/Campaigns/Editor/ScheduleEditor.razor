@@ -1,23 +1,23 @@
-<RadzenStack>
-    <RadzenAlert Text="Please add a schedule." Title="Important!" Visible="!Data.Any()"></RadzenAlert>
+<RadzenColumn>
+    <RadzenAlert AlertStyle="AlertStyle.Warning" Shade="Shade.Lighter" Text="Please add a schedule." Title="Important!" Visible="!Data.Any()"></RadzenAlert>
     <RadzenRow>
         <RadzenColumn SizeMD="@(Data.Any() ? 7 : 12)" SizeLG="@(Data.Any() ? 8 : 12)" SizeXL="@(Data.Any() ? 9 : 12)">
-            <RadzenScheduler TItem="Server.Models.DOOHDB.Schedule" StartProperty="Date" EndProperty="Date" TextProperty="Label" Data="@Data" SelectedIndex="0"
+            <RadzenScheduler TItem="Server.Models.DOOHDB.Schedule" StartProperty="Start" EndProperty="End" TextProperty="Label" Data="@Data" SelectedIndex="0"
                              SlotSelect="@OnSlotSelect" AppointmentSelect="@OnScheduleSelect" AppointmentRender="@OnScheduleRender"
                              AppointmentMove="@OnScheduleMove" Style="height: 640px" Date="@SelectedDate" SlotRender="@OnSlotRender">
                 <RadzenMonthView></RadzenMonthView>
                 @* <RadzenYearView StartMonth="@StartMonth"></RadzenYearView> *@
             </RadzenScheduler>
         </RadzenColumn>
-        <RadzenColumn SizeMD="@(Data.Any() ? 5 : 0)" SizeLG="@(Data.Any() ? 4 : 0)" SizeXL="@(Data.Any() ? 3 : 0)" Style="height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem" Visible="@Data.Any()">
-            <RadzenDataList TItem="Server.Models.DOOHDB.Schedule" Data="@Data.OrderBy(x => x.Date)" WrapItems="true" Count="@Data.Count()">
+        <RadzenColumn SizeMD="@(Data.Any() ? 5 : 0)" SizeLG="@(Data.Any() ? 4 : 0)" SizeXL="@(Data.Any() ? 3 : 0)" Style="max-height: 640px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem" Visible="@Data.Any()">
+            <RadzenDataList TItem="Server.Models.DOOHDB.Schedule" Data="@Data.OrderBy(x => x.Start)" WrapItems="true" Count="@Data.Count()">
                 <Template>
                     <ScheduleTemplate Context="@context" Update="@OnScheduleModify" Delete="@OnScheduleDelete" Edit="@OnScheduleEdit"></ScheduleTemplate>
                 </Template>
             </RadzenDataList>
         </RadzenColumn>
     </RadzenRow>
-</RadzenStack>
+</RadzenColumn>
 <style>
     .schedule-slot {
         display: flex;
@@ -25,10 +25,13 @@
         align-items: center;
         
         justify-content: space-between;
-        padding: 0.5rem;
+        padding: 0.25rem 0.5rem;
         font-size: 12px;
-        border: 1px solid #ccc;
-        background-color: green;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        background-color: forestgreen;
+        color: white;
+        border-radius: 6px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     }
 
     .schedule-slot-error {

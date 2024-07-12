@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime;
 using Radzen;
 using DOOH.Server.Components;
 using Microsoft.EntityFrameworkCore;
@@ -16,12 +17,19 @@ using DOOH.Server.Services;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Set GC settings
+GCSettings.LatencyMode = GCLatencyMode.LowLatency;
+GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
+GC.Collect();
+
+
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024).AddInteractiveWebAssemblyComponents();
 builder.Services.AddControllers();
 builder.Services.AddRadzenComponents();
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<DOOH.Server.Services.CDNService>();
+builder.Services.AddScoped<DOOH.Client.Services.S3ClientService>();
 builder.Services.AddScoped<DOOH.Server.Services.FFMPEGService>();
 builder.Services.AddScoped<DOOH.Server.DOOHDBService>();
 builder.Services.AddDbContext<DOOH.Server.Data.DOOHDBContext>(options =>
@@ -42,6 +50,7 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Brand>("Brands");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Campaign>("Campaigns");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignAdboard>("CampaignAdboards").EntityType.HasKey(entity => new { entity.CampaignId, entity.AdboardId });
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignCriterion>("CampaignCriteria");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Category>("Categories");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Company>("Companies");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Display>("Displays");
@@ -52,10 +61,9 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Provider>("Providers");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Schedule>("Schedules");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.ScheduleAdboard>("ScheduleAdboards").EntityType.HasKey(entity => new { entity.ScheduleId, entity.AdboardId });
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>("ScheduleAdvertisements").EntityType.HasKey(entity => new { entity.ScheduleId, entity.AdvertisementId });
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Upload>("Uploads");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.CampaignCriterion>("CampaignCriteria");
     opt.AddRouteComponents("odata/DOOHDB", oDataBuilderDOOHDB.GetEdmModel()).Count().Filter().OrderBy().Expand().Select().SetMaxTop(null).TimeZone = TimeZoneInfo.Utc;
 });
 //builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();
@@ -85,7 +93,6 @@ builder.Services.AddLocalization();
 builder.Services.AddScoped<DOOH.Client.DOOHDBService>();
 var app = builder.Build();
 // Configure the HTTP request pipeline.
-
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -106,17 +113,14 @@ else
 app.UseHttpsRedirection();
 app.MapControllers();
 app.UseHeaderPropagation();
-app.UseRequestLocalization(options => options.AddSupportedCultures("en", "hi").AddSupportedUICultures("en", "hi").SetDefaultCulture("en"));
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode().AddInteractiveWebAssemblyRenderMode().AddAdditionalAssemblies(typeof(DOOH.Client._Imports).Assembly);
 app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationIdentityDbContext>().Database.Migrate();
-app.Services.CreateScope().ServiceProvider.GetRequiredService<DOOHDBContext>().Database.Migrate();
-
+// app.Services.CreateScope().ServiceProvider.GetRequiredService<DOOHDBContext>().Database.Migrate();
 // app.MapHub<AdboardStatusHub>("/hubs/adboard-status");
-
-
+// app.UseRequestLocalization(options => options.AddSupportedCultures("en", "hi").AddSupportedUICultures("en", "hi").SetDefaultCulture("en"));
 app.UseRequestLocalization("en-IN");
 app.Run();

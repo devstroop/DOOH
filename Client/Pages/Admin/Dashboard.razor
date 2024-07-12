@@ -9,252 +9,240 @@
 
 <RadzenStack>
     <RadzenStack>
-        <RadzenRow>
-            <RadzenColumn Size="6">
-                <RadzenText Text="Admin Dashboard" TextStyle="TextStyle.H4" TagName="TagName.H1"/>
-            </RadzenColumn>
-            <RadzenColumn Size="6">
-                <RadzenStack Orientation="Orientation.Horizontal">
+    <RadzenRow class="rz-mb-3">
+        <RadzenColumn Size="6">
+            <RadzenText Text="Dashboard" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                <RadzenBadge Text="ADMIN" BadgeStyle="BadgeStyle.Light" Style="font-size: 16px; font-weight: 400;" class="rz-px-3 rz-py-2"></RadzenBadge>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    
+    
+    
+    
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeMD="8" SizeLG="7">
+            <RadzenFieldset Text="# Campaigns" Style="height: 100%; position:  relative;">
+                <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
+                <RadzenChart Style="width: 100%; height: 120px; margin-bottom: -30px;">
+                    <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
+                    @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
+                    <RadzenValueAxis Visible="false" />
+                    <RadzenCategoryAxis Visible="false" />
+                    <RadzenLegend Visible="false" />
+                </RadzenChart>
+            </RadzenFieldset>
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4" SizeLG="5">
+            <RadzenStack>
 
+                <RadzenStack Style="height: 150px; position:  relative;">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenText Text="# Adboards" TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="rz-mb-0"></RadzenText>
+                    </RadzenStack>
+                    <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
+                    <RadzenChart Style="width: 100%; height: 120px; margin-bottom: -30px;">
+                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
+                        @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
+                        <RadzenValueAxis Visible="false" />
+                        <RadzenCategoryAxis Visible="false" />
+                        <RadzenLegend Visible="false" />
+                    </RadzenChart>
                 </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
-                <RadzenCard Style="height: 150px; position:  relative;">
+                <RadzenStack Style="height: 150px; position:  relative;">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenIcon Icon="campaign" Style="font-size: 20px;"></RadzenIcon>
-                        <RadzenText Text="Campaigns" TextStyle="Radzen.Blazor.TextStyle.H5" class="rz-mb-0"></RadzenText>
-                    </RadzenStack>
-                    <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
-                    <RadzenChart Style="width: 100%; height: 120px; margin-bottom: -30px;">
-                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
-                        @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
-                        <RadzenValueAxis Visible="false" />
-                        <RadzenCategoryAxis Visible="false" />
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                </RadzenCard>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
-                <RadzenCard Style="height: 150px; position:  relative;">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenIcon Icon="campaign" Style="font-size: 24px;"></RadzenIcon>
-                        <RadzenText Text="Campaigns" TextStyle="Radzen.Blazor.TextStyle.H5" class="rz-mb-0"></RadzenText>
-                    </RadzenStack>
-                    <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
-                    <RadzenChart Style="width: 100%; height: 120px; margin-bottom: -30px;">
-                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
-                        @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
-                        <RadzenValueAxis Visible="false" />
-                        <RadzenCategoryAxis Visible="false" />
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                </RadzenCard>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
-                <RadzenCard Style="height: 150px; position:  relative;">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenIcon Icon="tv" Style="font-size: 24px;"></RadzenIcon>
-                        <RadzenText Text="Adboards" TextStyle="Radzen.Blazor.TextStyle.H5" class="rz-mb-0"></RadzenText>
-                    </RadzenStack>
-                    <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
-                    <RadzenChart Style="width: 100%; height: 120px; margin-bottom: -30px;">
-                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
-                        @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
-                        <RadzenValueAxis Visible="false" />
-                        <RadzenCategoryAxis Visible="false" />
-                        <RadzenLegend Visible="false" />
-                    </RadzenChart>
-                </RadzenCard>
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="6" SizeLG="3">
-                <RadzenCard Style="height: 150px; position:  relative;">
-                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                        <RadzenIcon Icon="group" Style="font-size: 24px;"></RadzenIcon>
-                        <RadzenText Text="Users" TextStyle="Radzen.Blazor.TextStyle.H5" class="rz-mb-0"></RadzenText>
+                        <RadzenText Text="# Users" TextStyle="Radzen.Blazor.TextStyle.Subtitle2" class="rz-mb-0"></RadzenText>
                     </RadzenStack>
                     <RadzenText TextStyle="TextStyle.H1" Style="position: absolute; right: 1.5rem; top: 1rem;">@userRegistrationTrends?.Count()</RadzenText>
                     <RadzenChart Style="width: 100%; height: 100%; margin-bottom: -30px;">
-                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)" />
+                        <RadzenLineSeries Data=@userRegistrationTrends ValueProperty="Count" CategoryProperty="Day" Title="User Registrations" Smooth="true" Stroke="var(--rz-success)"/>
                         @* <RadzenLineSeries Data=@UserRegistrationTrends ValueProperty="Count" CategoryProperty="Name" Title="Closed Issues" Smooth="true" Stroke="var(--rz-danger)" /> *@
-                        <RadzenValueAxis Visible="false" />
-                        <RadzenCategoryAxis Visible="false" />
-                        <RadzenLegend Visible="false" />
+                        <RadzenValueAxis Visible="false"/>
+                        <RadzenCategoryAxis Visible="false"/>
+                        <RadzenLegend Visible="false"/>
                     </RadzenChart>
-                </RadzenCard>
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow>
-            <RadzenColumn SizeMD="7">
-                <RadzenStack>
-                    <RadzenCard>
-                        <RadzenStack Gap="1rem">
-                            <RadzenRow class="rz-mb-2">
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                        <RadzenIcon Icon="campaign" Style="font-size: 20px"></RadzenIcon>
-                                        <RadzenText Text="Campaigns" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
-                                        <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))"></RadzenButton>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" ColumnWidth="100px" AllowSorting="true" LoadData="@campaignsLoadData" Count="@campaignsCount">
-                                <Columns>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignId" Title="Id" Width="60px"/>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignName" Title="Campaign Name"/>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Budget" Title="Budget">
-                                        <Template>
-                                            <RadzenRow RowGap="0.25rem" Gap="0.5rem">
-                                                <RadzenText Text="@($"{context.Budget:C}")" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: bold;"/>
-                                                <RadzenText Text="@(context.BudgetType == 2 ? "per day" : "total")" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-px-2 rz-py-05" Style="font-size: 10px; font-weight: 500; border-radius: 4px; background-color: grey; color: #ffffff"/>
-                                            </RadzenRow>
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StartDate" Title="Start Date" Width="72px">
-                                        <Template>
-                                            @context.StartDate.ToString("d")
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="EndDate" Title="End Date" Width="72px">
-                                        <Template>
-                                            @context.EndDate.ToString("d")
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UserId" Title="User"/>
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Status" Title="Status"> *@
-                                    @*     <Template> *@
-                                    @*     </Template> *@
-                                    @* </RadzenDataGridColumn> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CreatedAt" Title="CreatedAt"> *@
-                                    @*     <Template> *@
-                                    @*         @context.CreatedAt *@
-                                    @*     </Template> *@
-                                    @* </RadzenDataGridColumn> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UpdatedAt" Title="UpdatedAt" /> *@
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Title="" Sortable="false">
-                                        <Template>
-                                            <RadzenBadge Text="@context.Status.ToFriendlyString()" Variant="Variant.Outlined"></RadzenBadge>
-                                            <RadzenBadge Text="New" Variant="Variant.Flat" Visible="@(context.CreatedAt.Date == DateTime.Today)"></RadzenBadge>
-                                            <RadzenBadge Text="Updated" Variant="Variant.Flat" Visible="@(context.UpdatedAt?.Date == DateTime.Today)"></RadzenBadge>
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                </Columns>
-                            </RadzenDataGrid>
-                        </RadzenStack>
-                    </RadzenCard>
-                    <RadzenCard>
-                        <RadzenStack Gap="1rem">
-                            <RadzenRow class="rz-mb-2">
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                        <RadzenIcon Icon="group" Style="font-size: 20px"></RadzenIcon>
-                                        <RadzenText Text="Providers" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
-                                        <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))"></RadzenButton>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Provider" Data="@providers" ColumnWidth="120px" AllowPaging="true" LoadData="@providersLoadData" Count="@providersCount" AllowAlternatingRows="false" AllowPickAllColumns="false">
-                                <Columns>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="ProviderId" Title="Id" Width="60px" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="CompanyName" Title="Company" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="ContactName" Title="Contact" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="Email" Title="Email" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="IsActive" Title="Active" Width="54px">
-                                        <Template>
-                                            @if (context.IsActive)
-                                            {
-                                            <RadzenIcon Icon="check" IconColor="green"/>
-                                            }
-                                            else
-                                            {
-                                            <RadzenIcon Icon="close" IconColor="red"/>
-                                            }
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="Phone" Title="Phone" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="State" Title="State" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="UserId" Title="User" />
-                                </Columns>
-                            </RadzenDataGrid>
-                        </RadzenStack>
-                    </RadzenCard>
                 </RadzenStack>
-            </RadzenColumn>
-            <RadzenColumn SizeMD="5">
-                <RadzenStack>
-                    <RadzenCard>
-                        <RadzenStack>
-                            <RadzenRow class="rz-mb-2">
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                        <RadzenIcon Icon="tv" Style="font-size: 20px"></RadzenIcon>
-                                        <RadzenText Text="Adboards" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                                <RadzenColumn Size="6">
-                                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
-                                        <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))" ></RadzenButton>
-                                    </RadzenStack>
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="120px" AllowSorting="false" AllowPaging="false" AllowFiltering="false" LoadData="@adboardsLoadData" Count="@adboardsCount" AllowAlternatingRows="false" AllowPickAllColumns="false">
-                                <Columns>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" Width="48px"/>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="SignName" Title="Sign Name" />
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Provider" Title="Provider">
-                                        <Template>
-                                            @context.Provider.CompanyName
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Category" Title="Category" Width="84px">
-                                        <Template>
-                                            @context.Category.CategoryName
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Display" Title="Display"> *@
-                                    @*     <Template> *@
-                                    @*         @context.Display.Brand.BrandName *@
-                                    @*         @context.Display.Model *@
-                                    @*     </Template> *@
-                                    @* </RadzenDataGridColumn> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Motherboard" Title="Motherboard"> *@
-                                    @*     <Template> *@
-                                    @*         @context.Motherboard.Brand.BrandName *@
-                                    @*         @context.Motherboard.Model *@
-                                    @*     </Template> *@
-                                    @* </RadzenDataGridColumn> *@
-
-                                    <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="IsActive" Title="Active" Width="48px">
-                                        <Template>
-                                            @if (context.IsActive)
-                                            {
-                                            <RadzenIcon Icon="check" IconColor="green"/>
-                                            }
-                                            else
-                                            {
-                                            <RadzenIcon Icon="close" IconColor="red"/>
-                                            }
-                                        </Template>
-                                    </RadzenDataGridColumn>
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CreatedAt" Title="Created At" Width="96px"/> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="City" Title="City" /> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Country" Title="Country" /> *@
-                                    @* <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="State" Title="State" /> *@
-                                </Columns>
-                            </RadzenDataGrid>
-                        </RadzenStack>
-                    </RadzenCard>
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    
+    
+    
+    
+    
+    @* <RadzenRow> *@
+    @*         <RadzenColumn SizeMD="7"> *@
+    @*             <RadzenStack> *@
+    @*                 <RadzenCard> *@
+    @*                     <RadzenStack Gap="1rem"> *@
+    @*                         <RadzenRow class="rz-mb-2"> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenIcon Icon="campaign" Style="font-size: 20px"></RadzenIcon> *@
+    @*                                     <RadzenText Text="Campaigns" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))"></RadzenButton> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                         </RadzenRow> *@
+    @*                         <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" ColumnWidth="100px" AllowSorting="true" LoadData="@campaignsLoadData" Count="@campaignsCount"> *@
+    @*                             <Columns> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignId" Title="Id" Width="60px"/> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CampaignName" Title="Campaign Name"/> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Budget" Title="Budget"> *@
+    @*                                     <Template> *@
+    @*                                         <RadzenRow RowGap="0.25rem" Gap="0.5rem"> *@
+    @*                                             <RadzenText Text="@($"{context.Budget:C}")" TextStyle="TextStyle.Caption" class="rz-mb-0" Style="font-weight: bold;"/> *@
+    @*                                             <RadzenText Text="@(context.BudgetType == 2 ? "per day" : "total")" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-px-2 rz-py-05" Style="font-size: 10px; font-weight: 500; border-radius: 4px; background-color: grey; color: #ffffff"/> *@
+    @*                                         </RadzenRow> *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="StartDate" Title="Start Date" Width="72px"> *@
+    @*                                     <Template> *@
+    @*                                         @context.StartDate.ToString("d") *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="EndDate" Title="End Date" Width="72px"> *@
+    @*                                     <Template> *@
+    @*                                         @context.EndDate.ToString("d") *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UserId" Title="User"/> *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="Status" Title="Status"> #1# *@
+    @*                                 $1$     <Template> #1# *@
+    @*                                 $1$     </Template> #1# *@
+    @*                                 $1$ </RadzenDataGridColumn> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="CreatedAt" Title="CreatedAt"> #1# *@
+    @*                                 $1$     <Template> #1# *@
+    @*                                 $1$         @context.CreatedAt #1# *@
+    @*                                 $1$     </Template> #1# *@
+    @*                                 $1$ </RadzenDataGridColumn> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Property="UpdatedAt" Title="UpdatedAt" /> #1# *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Campaign" Title="" Sortable="false"> *@
+    @*                                     <Template> *@
+    @*                                         <RadzenBadge Text="@context.Status.ToFriendlyString()" Variant="Variant.Outlined"></RadzenBadge> *@
+    @*                                         <RadzenBadge Text="New" Variant="Variant.Flat" Visible="@(context.CreatedAt.Date == DateTime.Today)"></RadzenBadge> *@
+    @*                                         <RadzenBadge Text="Updated" Variant="Variant.Flat" Visible="@(context.UpdatedAt?.Date == DateTime.Today)"></RadzenBadge> *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                             </Columns> *@
+    @*                         </RadzenDataGrid> *@
+    @*                     </RadzenStack> *@
+    @*                 </RadzenCard> *@
+    @*                 <RadzenCard> *@
+    @*                     <RadzenStack Gap="1rem"> *@
+    @*                         <RadzenRow class="rz-mb-2"> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenIcon Icon="group" Style="font-size: 20px"></RadzenIcon> *@
+    @*                                     <RadzenText Text="Providers" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))"></RadzenButton> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                         </RadzenRow> *@
+    @*                         <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Provider" Data="@providers" ColumnWidth="120px" AllowPaging="true" LoadData="@providersLoadData" Count="@providersCount" AllowAlternatingRows="false" AllowPickAllColumns="false"> *@
+    @*                             <Columns> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="ProviderId" Title="Id" Width="60px" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="CompanyName" Title="Company" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="ContactName" Title="Contact" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="Email" Title="Email" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="IsActive" Title="Active" Width="54px"> *@
+    @*                                     <Template> *@
+    @*                                         @if (context.IsActive) *@
+    @*                                         { *@
+    @*                                         <RadzenIcon Icon="check" IconColor="green"/> *@
+    @*                                         } *@
+    @*                                         else *@
+    @*                                         { *@
+    @*                                         <RadzenIcon Icon="close" IconColor="red"/> *@
+    @*                                         } *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="Phone" Title="Phone" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="State" Title="State" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Provider" Property="UserId" Title="User" /> *@
+    @*                             </Columns> *@
+    @*                         </RadzenDataGrid> *@
+    @*                     </RadzenStack> *@
+    @*                 </RadzenCard> *@
+    @*             </RadzenStack> *@
+    @*         </RadzenColumn> *@
+    @*         <RadzenColumn SizeMD="5"> *@
+    @*             <RadzenStack> *@
+    @*                 <RadzenCard> *@
+    @*                     <RadzenStack> *@
+    @*                         <RadzenRow class="rz-mb-2"> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenIcon Icon="tv" Style="font-size: 20px"></RadzenIcon> *@
+    @*                                     <RadzenText Text="Adboards" TextStyle="Radzen.Blazor.TextStyle.H6" TagName="TagName.H1" class="rz-mb-0"/> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                             <RadzenColumn Size="6"> *@
+    @*                                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center"> *@
+    @*                                     <RadzenButton Text="Refresh" Icon="refresh" Size="Radzen.ButtonSize.ExtraSmall" Click="@((args) => adboardsLoadData(new LoadDataArgs()))" ></RadzenButton> *@
+    @*                                 </RadzenStack> *@
+    @*                             </RadzenColumn> *@
+    @*                         </RadzenRow> *@
+    @*                         <RadzenDataGrid TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" ColumnWidth="120px" AllowSorting="false" AllowPaging="false" AllowFiltering="false" LoadData="@adboardsLoadData" Count="@adboardsCount" AllowAlternatingRows="false" AllowPickAllColumns="false"> *@
+    @*                             <Columns> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="AdboardId" Title="Id" Width="48px"/> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="SignName" Title="Sign Name" /> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Provider" Title="Provider"> *@
+    @*                                     <Template> *@
+    @*                                         @context.Provider.CompanyName *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Category" Title="Category" Width="84px"> *@
+    @*                                     <Template> *@
+    @*                                         @context.Category.CategoryName *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Display" Title="Display"> #1# *@
+    @*                                 $1$     <Template> #1# *@
+    @*                                 $1$         @context.Display.Brand.BrandName #1# *@
+    @*                                 $1$         @context.Display.Model #1# *@
+    @*                                 $1$     </Template> #1# *@
+    @*                                 $1$ </RadzenDataGridColumn> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Motherboard" Title="Motherboard"> #1# *@
+    @*                                 $1$     <Template> #1# *@
+    @*                                 $1$         @context.Motherboard.Brand.BrandName #1# *@
+    @*                                 $1$         @context.Motherboard.Model #1# *@
+    @*                                 $1$     </Template> #1# *@
+    @*                                 $1$ </RadzenDataGridColumn> #1# *@
+    @* *@
+    @*                                 <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="IsActive" Title="Active" Width="48px"> *@
+    @*                                     <Template> *@
+    @*                                         @if (context.IsActive) *@
+    @*                                         { *@
+    @*                                         <RadzenIcon Icon="check" IconColor="green"/> *@
+    @*                                         } *@
+    @*                                         else *@
+    @*                                         { *@
+    @*                                         <RadzenIcon Icon="close" IconColor="red"/> *@
+    @*                                         } *@
+    @*                                     </Template> *@
+    @*                                 </RadzenDataGridColumn> *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="CreatedAt" Title="Created At" Width="96px"/> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="City" Title="City" /> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="Country" Title="Country" /> #1# *@
+    @*                                 $1$ <RadzenDataGridColumn TItem="DOOH.Server.Models.DOOHDB.Adboard" Property="State" Title="State" /> #1# *@
+    @*                             </Columns> *@
+    @*                         </RadzenDataGrid> *@
+    @*                     </RadzenStack> *@
+    @*                 </RadzenCard> *@
+    @*             </RadzenStack> *@
+    @*         </RadzenColumn> *@
+    @*     </RadzenRow> *@
     </RadzenStack>
 </RadzenStack>

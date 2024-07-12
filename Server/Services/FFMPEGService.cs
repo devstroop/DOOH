@@ -1,6 +1,7 @@
 ﻿using DOOH.Server.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace DOOH.Server.Services
 {
@@ -46,13 +47,16 @@ namespace DOOH.Server.Services
             return await response.Content.ReadAsStreamAsync();
         }
 
-        public async Task<Stream> ConvertVideoToMp4(Stream stream, int? transpose = null)
+        public async Task<Tuple<Stream, ProbeData>> ConvertVideoToMp4(Stream stream, int? transpose = null)
         {
             var content = new MultipartFormDataContent();
             content.Add(new StreamContent(stream), "file", "file");
             var response = await _httpClient.PostAsync($"/convert/video/to/mp4{(transpose != null ? $"?transpose={transpose}" : "")}", content);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStreamAsync();
+            var streamResult = await response.Content.ReadAsStreamAsync();
+            var headers = response.Headers.ToDictionary(x => x.Key, x => x.Value.FirstOrDefault());
+            var probeData = JsonConvert.DeserializeObject<ProbeData>(headers["X-Media-Metadata"]);
+            return new Tuple<Stream, ProbeData>(streamResult, probeData);
         }
 
         public async Task<Stream> ConvertImageToJpg(Stream stream)

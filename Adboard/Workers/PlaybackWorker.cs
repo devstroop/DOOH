@@ -130,7 +130,7 @@ namespace DOOH.Adboard.Workers
 
                 try
                 {
-                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.UploadKey}");
+                    var mediaUri = new Uri($"https://cdn.hallads.com/{advertisement.Key}");
                     var media = new Media(libvlc, mediaUri);
 
                     if (await Task.Run(() => player.Play(media), cancellationToken))

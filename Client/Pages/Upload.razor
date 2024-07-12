@@ -1,0 +1,82 @@
+@using System.Text.Json
+@using DOOH.Server.Models
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenUpload
+                id="@($"ddUpload_{Id}")"
+                class="dd-upload"
+                Icon="upload"
+                ChooseText="Drag and drop or browse and select a video file"
+                Accept="video/mp4"
+                Url="api/s3/multiple"
+                Progress="@OnProgress"
+                Auto="true"
+                Multiple="true"
+                Complete="@OnComplete"
+                Visible="true"
+                Disabled="@(IsUploading || IsProcessing)"/>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Success" @bind-Value="@Progress" Visible="@(IsUploading && !IsProcessing)"></RadzenProgressBar>
+    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" ShowValue="false" Value="100" Mode="ProgressBarMode.Indeterminate" Visible="@IsProcessing"></RadzenProgressBar>
+</RadzenStack>
+
+<style>
+    .dd-upload {
+        left: 0;
+        right: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .dd-upload .rz-fileupload-buttonbar .rz-fileupload-choose .rzi {
+        font-size: 24px;
+        align-self: center;
+        color: #9f9f9f;
+    }
+
+    .dd-upload .rz-fileupload-buttonbar .rz-fileupload-choose {
+        height: 180px;
+        width: 100%;
+        text-align: center;
+        align-content: center;
+        border-radius: 8px;
+        border: 2px dashed #bfbfbf;
+        background-color: #efefef;
+        font-weight: 400;
+    }
+</style>
+@code {
+    private const string Id = "default";
+
+    private bool IsUploading { get; set; } = false;
+    private bool IsProcessing { get; set; } = false;
+    
+    private double Progress { get; set; } = 0;
+    
+    private void OnProgress(UploadProgressArgs args)
+    {
+        Progress = args.Progress;
+        if (Progress > 0 && !IsUploading)
+        {
+            IsUploading = true;
+        }
+        if (Progress >= 100 && !IsProcessing)
+        {
+            IsUploading = false;
+            IsProcessing = true;
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnComplete(UploadCompleteEventArgs args)
+    {
+        IsUploading = false;
+        IsProcessing = false;
+        StateHasChanged();
+        var metadataList = JsonSerializer.Deserialize<List<MediaMetadata>>(args.RawResponse);
+        Dialog.Close(metadataList);
+    }
+    [Inject] private DialogService Dialog { get; set; }
+}

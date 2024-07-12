@@ -11,7 +11,56 @@
             <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@providersForProviderId" TextProperty="ContactName" ValueProperty="ProviderId" AllowClear=true
                                         Placeholder="Choose Provider" style="display: block; width: 100%" @bind-Value="@adboard.ProviderId" Name="ProviderId"
-                                        SelectedValue=@providersForProviderIdValue Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData />
+                                        SelectedValue="@providersForProviderIdValue" Count=@providersForProviderIdCount LoadData=@providersForProviderIdLoadData>
+                    
+                    <Columns>
+                        <RadzenDropDownDataGridColumn Property="ContactName" Title="Contact" MinWidth="120px" />
+                        <RadzenDropDownDataGridColumn Property="CompanyName" Title="Company" MinWidth="150px" />
+                        <RadzenDropDownDataGridColumn Property="Email" Title="Email" MinWidth="150px" />
+                        @* <RadzenDropDownDataGridColumn Property="Phone" Title="Phone" MinWidth="105px" /> *@
+                    </Columns>
+                    
+                    <ValueTemplate Context="ctx">
+                        
+                        <RadzenStack Orientation="Orientation.Horizontal" Gap="0.25rem">
+                            <RadzenText Text="@ctx.ContactName" Visible="!String.IsNullOrEmpty(ctx.ContactName)" class="rz-mb-0" /> 
+                                -
+                            <RadzenText Text="@ctx.CompanyName" class="rz-mb-0" />
+                        </RadzenStack>
+
+                    </ValueTemplate>
+                    
+                </RadzenDropDownDataGrid>
+
+                @if (providersForProviderIdValue != null)
+                {
+                <table style="font-size: 12px">
+                    <tr>
+                        <td>Id (#)</td>
+                        <td>@providersForProviderIdValue.ProviderId</td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td>@providersForProviderIdValue.ContactName</td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td>@providersForProviderIdValue.Email</td>
+                    </tr>
+                    <tr>
+                        <td>Phone</td>
+                        <td>@providersForProviderIdValue.Phone</td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td>@($"{providersForProviderIdValue.Address}, {providersForProviderIdValue.City}, {providersForProviderIdValue.State}")</td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>@(providersForProviderIdValue.IsActive == true ? "Active" : "Inactive")</td>
+                    </tr>
+                </table>
+                }
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
@@ -21,7 +70,16 @@
             <RadzenColumn SizeMD="8">
                 <RadzenDropDownDataGrid Data="@categoriesForCategoryId" TextProperty="CategoryName" ValueProperty="CategoryId" AllowClear=true
                                         Placeholder="Choose Category" style="display: block; width: 100%" @bind-Value="@adboard.CategoryId" Name="CategoryId"
-                                        SelectedValue=@categoriesForCategoryIdValue Count=@categoriesForCategoryIdCount LoadData=@categoriesForCategoryIdLoadData />
+                                        SelectedValue=@categoriesForCategoryIdValue Count=@categoriesForCategoryIdCount LoadData=@categoriesForCategoryIdLoadData>
+                    <Columns>
+                        <RadzenDropDownDataGridColumn Property="CategoryName" Title="Category" MinWidth="120px" />
+                        -
+                        <RadzenDropDownDataGridColumn Property="CategoryDescription" Title="Description" MinWidth="150px" />
+                    </Columns>
+                    <ValueTemplate Context="ctx">
+                        <RadzenText Text="@ctx.CategoryName" Visible="!String.IsNullOrEmpty(ctx.CategoryName)" class="rz-mb-0" />
+                    </ValueTemplate>
+                </RadzenDropDownDataGrid>
             </RadzenColumn>
         </RadzenRow>
 
@@ -73,10 +131,21 @@
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
+                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                    <RadzenLabel Text="Daily Capacity" Component="DailyCapacityInSeconds" />
+                    <RadzenBadge Text="In sec" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="8">
+                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.DailyCapacityInSeconds" Name="DailyCapacityInSeconds" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Images" Component="Images" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <UploadComponent ObjectFit="cover" Items="@adboardImages.Select(x => x.Image).ToList()" Add="@OnAddImage" Delete="@OnDeleteImage" Refresh="@OnRefreshImage" />
+                <UploadImageComponent ObjectFit="cover" Items="@adboardImages.Select(x => x.Image).ToList()" Add="@OnAddImage" Delete="@OnDeleteImage" Refresh="@OnRefreshImage" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
@@ -84,33 +153,35 @@
                 <RadzenLabel Text="Location" Component="Location" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenNumeric @bind-Value="@adboard.Latitude" Name="Latitude" Placeholder="Lattitude" />
-                <RadzenNumeric @bind-Value="@adboard.Longitude" Name="Longitude" Placeholder="Longitude" />
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Click="@GetLocation" />
+                <RadzenRow Gap="0.5rem ">
+                    <RadzenColumn>
+                        <RadzenNumeric @bind-Value="@adboard.Latitude" Name="Latitude" Placeholder="Latitude" />
+                        <RadzenLabel Text="Latitude" Style="font-size: 12px; color: #bfbfbf"></RadzenLabel>
+                    </RadzenColumn>
+                    <RadzenColumn>
+                        <RadzenNumeric @bind-Value="@adboard.Longitude" Name="Longitude" Placeholder="Longitude"/>
+                        <RadzenLabel Text="Longitude" Style="font-size: 12px; color: #bfbfbf"></RadzenLabel>
+                    </RadzenColumn>
+                    <RadzenStack JustifyContent="JustifyContent.Start">
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Click="@GetLocation"/>
+                    </RadzenStack>
+                </RadzenRow>
             </RadzenColumn>
         </RadzenRow>
-        @* <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="4">
-                <RadzenLabel Text="Latitude" Component="Latitude" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="8">
-                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Latitude" Name="Latitude" />
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow style="margin-bottom: 1rem">
-            <RadzenColumn SizeMD="4">
-                <RadzenLabel Text="Longitude" Component="Longitude" style="width: 100%" />
-            </RadzenColumn>
-            <RadzenColumn SizeMD="8">
-                <RadzenNumeric style="display: block; width: 100%" @bind-Value="@adboard.Longitude" Name="Longitude" />
-            </RadzenColumn>
-        </RadzenRow> *@
         <RadzenRow style="margin-bottom: 1rem">
             <RadzenColumn SizeMD="4">
                 <RadzenLabel Text="Sign Name" Component="SignName" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.SignName" Name="SignName" />
+                <RadzenTextBox style="display: block; width: 100%" @bind-Value="@adboard.SignName" Name="SignName" Placeholder="Enter Sign Name" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow style="margin-bottom: 1rem">
+            <RadzenColumn SizeMD="4">
+                <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="8">
+                <RadzenTextArea style="display: block; width: 100%" @bind-Value="@adboard.Address" Name="Address" Placeholder="Enter Address" />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">
@@ -134,7 +205,7 @@
                 <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
             </RadzenColumn>
             <RadzenColumn SizeMD="8">
-                <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" @bind-Value="@adboard.Country" Name="Country"  />
+                <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" @bind-Value="@adboard.Country" Name="Country" Disabled="true"  />
             </RadzenColumn>
         </RadzenRow>
         <RadzenRow style="margin-bottom: 1rem">

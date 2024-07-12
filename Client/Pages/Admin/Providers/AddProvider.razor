@@ -50,12 +50,12 @@
                 <RadzenFieldset Text="Address" >
                     <RadzenRow style="margin-bottom: 1rem">
                         <RadzenColumn SizeMD="4">
-                            <RadzenLabel Text="Address" Component="Address" style="width: 100%" />
+                            <RadzenLabel Text="Building/Street" Component="Address" style="width: 100%" />
                         </RadzenColumn>
                         <RadzenColumn SizeMD="8">
                             <RadzenRow>
                                 <RadzenColumn><RadzenTextBox style="display: block; width: 100%" @bind-Value="@provider.Address" Name="Address" /></RadzenColumn>
-                                <RadzenButton Text="Fetch" Click="@FetchAddressClick"></RadzenButton>
+                                @* <RadzenButton Text="Fetch" Click="@FetchAddressClick"></RadzenButton> *@
                             </RadzenRow>
                             <RadzenRequiredValidator Component="Address" Text="Address is required" />
                         </RadzenColumn>
@@ -81,7 +81,7 @@
                             <RadzenLabel Text="Country" Component="Country" style="width: 100%" />
                         </RadzenColumn>
                         <RadzenColumn SizeMD="8">
-                            <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" @bind-Value="@provider.Country" Name="Country"  />
+                            <RadzenTextBox  Placeholder="Enter Country" style="display: block; width: 100%" Value="@provider.Country" Name="Country" Disabled="true"  />
                         </RadzenColumn>
                     </RadzenRow>
                 </RadzenFieldset>

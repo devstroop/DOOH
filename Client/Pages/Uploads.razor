@@ -1,0 +1,181 @@
+@using Amazon.S3.Model
+@using DOOH.Server.Extensions
+@using DOOH.Server.Models
+@attribute [Authorize]
+@inject DOOH.Client.Services.S3ClientService S3Service
+@inject Radzen.DialogService DialogService
+@inject Radzen.NotificationService Notification
+
+<PageTitle>Uploads</PageTitle>
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenStack Style="height: 600px; display: flex; flex-direction: column; overflow-y: auto;">
+                <RadzenAlert
+                    Visible="@(!objects.Any() && !IsLoading)"
+                    AllowClose="false"
+                    Text="No uploads found."
+                ></RadzenAlert>
+                <RadzenDataList
+                    TItem="S3Object"
+                    Data="@objects"
+                    Count="@objectsCount"
+                    @bind-IsLoading="@IsLoading"
+                    AllowVirtualization="true"
+                    Style="min-height: 300px;">
+                    <Template>
+                        <UploadTemplate
+                            Context="@context"
+                            
+                            Selected="@selectedObjects.Any(x => x.Key == context.Key)"
+                            SelectionChange="@((value) => ObjectSelectChange(context, value))"
+                            Selectable="@Selectable"
+                            
+                            Play="@PlayClick"
+                            Playable="true"
+                            Delete="@DeleteClick"
+                            Deletable="true">
+                        </UploadTemplate>
+                    </Template>
+                    <LoadingTemplate>
+                        <Loading></Loading>
+                    </LoadingTemplate>
+                </RadzenDataList>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+                <RadzenText Text="@SelectedText" Visible="!string.IsNullOrEmpty(SelectedText)" class="rz-mb-0" TextStyle="TextStyle.Subtitle2"></RadzenText>
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" Icon="close" Text="Clear" Size="ButtonSize.ExtraSmall" Visible="!string.IsNullOrEmpty(SelectedText)"></RadzenButton>
+            </RadzenStack>
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" Wrap="FlexWrap.Wrap">
+                <RadzenButton
+                    Visible="@Selectable"
+                    Text="Import"
+                    Click="@ImportClick"
+                ></RadzenButton>
+                <RadzenButton
+                    Visible="!Selectable"
+                    Text="Upload"
+                    Click="@UploadClick"
+                ></RadzenButton>
+                <RadzenButton
+                    Visible="!IsLoading"
+                    Text="Refresh"
+                    ButtonStyle="ButtonStyle.Light"
+                    Click="@RefreshClick"
+                ></RadzenButton>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>
+
+
+@code
+{
+    [Parameter] public bool Selectable { get; set; } = false;
+    
+    private bool IsLoading { get; set; } = true;
+    private IEnumerable<S3Object> objects = new List<S3Object>();
+    private IEnumerable<S3Object> selectedObjects = new List<S3Object>();
+    private int objectsCount = 0;
+    private string SelectedText => selectedObjects.Any() ? $"{selectedObjects.Count()} selected" : string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadObjects();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadObjects();
+        }
+    }
+
+    private async Task LoadObjects()
+    {
+        try
+        {
+            IsLoading = true;
+            StateHasChanged();
+            objects = await S3Service.GetObjectsAsync();
+            objects = objects.OrderByDescending(x => x.LastModified);
+            objectsCount = objects.Count();
+        }
+        catch (Exception ex)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", ex.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+    
+    private async Task UploadClick(MouseEventArgs args)
+    {
+        var result = await DialogService.OpenAsync<Upload>("Upload", null);
+        if (result != null)
+        {
+            await LoadObjects();
+            Console.WriteLine(result);
+        }
+    }
+    
+    private async Task RefreshClick(MouseEventArgs args)
+    {
+        await LoadObjects();
+    }
+    
+    
+    private async Task DeleteClick(S3Object s3Object)
+    {
+        var result = await DialogService.Confirm("Are you sure?", "Delete", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+        if (result == true)
+        {
+            try
+            {
+                await S3Service.DeleteObjectAsync(s3Object.Key);
+                Notification.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = "Deleted", Detail = "The object has been deleted." });
+            }
+            catch (Exception ex)
+            {
+                Notification.Notify(new NotificationMessage() { Severity = NotificationSeverity.Error, Summary = "Error", Detail = ex.Message });
+            }
+            finally
+            {
+                await LoadObjects();
+            }
+        }
+    }
+    
+    private async Task PlayClick(S3Object s3Object)
+    {
+        var url = s3Object.GetUrl();
+        var filename = s3Object.Key.Split('/').Last();
+        await DialogService.OpenAsync<Player>($"{filename}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px", CloseDialogOnEsc = true, CloseDialogOnOverlayClick = true });
+    }
+    
+    private void ObjectSelectChange(S3Object s3Object, bool value)
+    {
+        selectedObjects = value ? selectedObjects.Append(s3Object) : selectedObjects.Where(x => x.Key != s3Object.Key);
+    }
+    
+    private async Task ImportClick(MouseEventArgs args)
+    {
+        var metadataList = new List<MediaMetadata>();
+        foreach (var s3Object in selectedObjects)
+        {
+            var metadata = await S3Service.GetMetadataAsync(s3Object.Key);
+            metadataList.Add(metadata);
+        }
+        DialogService.Close(metadataList);
+    }
+}

@@ -34,7 +34,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         protected NotificationService NotificationService { get; set; }
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Adboard> list0;
-        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards;
+        protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
         protected int Zoom { get; set; } = 12;
         protected bool showSelectedAdboardsOnly { get; set; } = false;
 
@@ -84,7 +84,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
                 // Construct the search filter
                 string searchFilter = !string.IsNullOrEmpty(sanitizedSearch)
-                    ? $"(contains(Address, '{sanitizedSearch}') or contains(CityName, '{sanitizedSearch}') or contains(StateName, '{sanitizedSearch}') or contains(CountryName, '{sanitizedSearch}'))"
+                    ? $"(contains(SignName, '{sanitizedSearch}') or contains(Address, '{sanitizedSearch}') or contains(City, '{sanitizedSearch}') or contains(State, '{sanitizedSearch}') or contains(Country, '{sanitizedSearch}'))"
                     : null;
 
                 // Combine filters
@@ -116,10 +116,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 Adboards = result.Value.AsODataEnumerable();
                 // selectedAdboardIds = selectedAdboardIds.Where(x => Adboards.Any(y => y.AdboardId == x)).ToList();
 
-                foreach (var adboard in Adboards)
-                {
-                    await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
-                }
+                // foreach (var adboard in Adboards)
+                // {
+                //     await Console.Out.WriteLineAsync(adboard.Category.CategoryColor);
+                // }
 
                 adboardsCount = result.Count;
             }

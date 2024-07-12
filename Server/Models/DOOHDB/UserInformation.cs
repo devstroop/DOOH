@@ -21,7 +21,5 @@ namespace DOOH.Server.Models.DOOHDB
         public DateTime? SuspendedAt { get; set; }
 
         public bool? IsSuspended { get; set; }
-
-        public ICollection<Upload> Uploads { get; set; }
     }
 }

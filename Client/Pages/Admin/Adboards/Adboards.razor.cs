@@ -89,7 +89,7 @@ namespace DOOH.Client.Pages.Admin.Adboards
 
                 // Construct the search filter
                 string searchFilter = !string.IsNullOrEmpty(sanitizedSearch)
-                    ? $"(contains(Address, '{sanitizedSearch}') or contains(CityName, '{sanitizedSearch}') or contains(StateName, '{sanitizedSearch}') or contains(CountryName, '{sanitizedSearch}'))"
+                    ? $"(contains(SignName, '{sanitizedSearch}') or contains(Address, '{sanitizedSearch}') or contains(City, '{sanitizedSearch}') or contains(State, '{sanitizedSearch}') or contains(Country, '{sanitizedSearch}'))"
                     : null;
 
                 // Combine filters

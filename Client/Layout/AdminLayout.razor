@@ -5,29 +5,37 @@
 <RadzenContextMenu />
 
 <CascadingValue Value="@this">
-    @* <LoadingComponent Visible="@ShowLoading" Style="width: 100%; height: 100%" /> *@
-    <RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+    <RadzenLayout style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body rz-footer'">
         <RadzenHeader>
             <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="0">
                 <RadzenColumn Size="5">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
                         <RadzenSidebarToggle Click="@SidebarToggleClick"></RadzenSidebarToggle>
-                        <RadzenSplitButton Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Primary" Shade="Shade.Light" Text="Quick" Icon="">
-                            <RadzenSplitButtonItem Text="New Campaign" />
-                        </RadzenSplitButton>
+                        <RadzenStack JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+                            <a href="/">
+                                <LazyImageComponent DefaultImageUrl="/vectors/Admin-Blue.svg" ImageUrl="@Company?.AdminLogo" Style="height: 32px;" />
+                            </a>
+                        </RadzenStack>
                     </RadzenStack>
                 </RadzenColumn>
                 <RadzenColumn Size="7">
                     <RadzenStack AlignItems="AlignItems.Center" Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
-                        <RadzenButton Icon="notifications" Style="margin-right: 1rem" Variant="Variant.Text" />
+                        @* <RadzenSplitButton Text="Create" Size="ButtonSize.Medium"> *@
+                        @*     <RadzenSplitButtonItem Text="Campaign" Icon="campaign"  /> *@
+                        @*     <RadzenSplitButtonItem Text="Adboard" Icon="tv" /> *@
+                        @*     <RadzenSplitButtonItem Text="Provider" Icon="group" /> *@
+                        @*     <RadzenSplitButtonItem Text="User" Icon="people" /> *@
+                        @*     <RadzenSplitButtonItem Text="FAQ" Icon="info" /> *@
+                        @* </RadzenSplitButton> *@
                         <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                             <ChildContent>
                                 <RadzenProfileMenuItem Path="profile" Icon="settings" Text="Profile" />
                                 <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
                             </ChildContent>
                             <Template>
-                                @* @Security.User?.Name *@
-                                <RadzenGravatar Email="@Security.User?.Name" />
+                                <RadzenStack JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
+                                    <RadzenGravatar Email="@Security.User?.Name" />
+                                </RadzenStack>
                             </Template>
                         </RadzenProfileMenu>
                     </RadzenStack>
@@ -35,26 +43,25 @@
             </RadzenRow>
         </RadzenHeader>
         <RadzenBody Expanded="@sidebarExpanded">
-            <RadzenRow class="rz-mx-auto rz-px-2 rz-pt-2 rz-pt-md-2 rz-pt-lg-2 rz-pt-xl-4 rz-pb-2 rz-pb-lg-12" Style="max-width: 1920px;">
+            <RadzenRow class="rz-mx-auto rz-px-2 rz-pt-2 rz-pt-md-2 rz-pt-lg-2 rz-pt-xl-2 rz-pb-2 rz-pb-lg-12" Style="max-width: 1920px;">
                 <RadzenColumn Size="12">
                     @Body
                 </RadzenColumn>
             </RadzenRow>
         </RadzenBody>
-        <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 270px">
-            <RadzenStack AlignItems="Radzen.AlignItems.Center" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding); border-bottom: var(--rz-panel-menu-item-border);">
-                <a href="/">
-                    <LazyImageComponent DefaultImageUrl="/vectors/Admin-Blue.svg" ImageUrl="@Company?.AdminLogo" Style="height: 40px;" />
-                </a>
-            </RadzenStack>
+        <RadzenSidebar Expanded="@sidebarExpanded" style="z-index: 2; width: 240px">
+            @* <RadzenStack class="rz-mx-2"> *@
+            @*     <RadzenButton Size="ButtonSize.Large" Text="New Campaign" Icon="add" class="w-100"></RadzenButton> *@
+            @* </RadzenStack> *@
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Dashboard" Icon="dashboard" Path="/admin/dashboard" />
                 <RadzenPanelMenuItem Text="Campaigns" Icon="campaign" Path="/admin/campaigns">
-                    @* <RadzenPanelMenuItem Text="New" Icon="add" Path="/admin/campaigns/editor" /> *@
+                    <RadzenPanelMenuItem Text="Uploads" Click="@((args) => DialogService.OpenAsync<Pages.Uploads>("Uploads"))" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Adboards" Icon="tv" Path="/admin/adboards">
                     <RadzenPanelMenuItem Text="Motherboards" Path="/admin/adboards/motherboards" />
                     <RadzenPanelMenuItem Text="Displays" Path="/admin/adboards/displays" />
+                    <RadzenPanelMenuItem Text="Brands" Path="/admin/adboards/brands" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Pages" Icon="pages">
                     <RadzenPanelMenuItem Text="About" Path="/admin/pages/about" />
@@ -63,14 +70,14 @@
                     <RadzenPanelMenuItem Text="Privacy" Path="/admin/pages/privacy" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="FAQs" Icon="quiz" Path="/admin/faqs" />
-                <RadzenPanelMenuItem Text="Providers" Icon="group" Path="/admin/providers" />
+                <RadzenPanelMenuItem Text="Providers" Icon="group" Path="/admin/providers">
+                    <RadzenPanelMenuItem Text="Categories" Path="/admin/providers/categories" />
+                </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Users" Icon="people" Path="/admin/users">
                     <RadzenPanelMenuItem Text="Roles" Path="/admin/users/application-roles" />
                 </RadzenPanelMenuItem>
                 <RadzenPanelMenuItem Text="Settings" Icon="settings" Path="/admin/settings">
                     <RadzenPanelMenuItem Text="Company" Icon="business" Path="/admin/settings/company" />
-                    <RadzenPanelMenuItem Text="Brands" Icon="recommend" Path="/admin/settings/brands" />
-                    <RadzenPanelMenuItem Text="Categories" Icon="category" Path="/admin/settings/categories" />
                     <RadzenPanelMenuItem Text="Taxes" Icon="percent" Path="/admin/settings/taxes" />
                     <RadzenPanelMenuItem Text="Criteria" Icon="policy" Path="/admin/settings/criteria" />
                 </RadzenPanelMenuItem>
@@ -78,10 +85,13 @@
             @* <RadzenStack AlignItems="AlignItems.Center">
             <CulturePicker></CulturePicker>
             </RadzenStack> *@
-            <RadzenStack AlignItems="Radzen.AlignItems.Center" Gap="0" class="rz-py-4 rz-py-lg-6" Style="padding: var(--rz-panel-menu-item-padding);">
-                <RadzenText Text="DOOH v1.0.0" TextStyle="Radzen.Blazor.TextStyle.Caption" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-                <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
-            </RadzenStack>
+            
         </RadzenSidebar>
+        <RadzenFooter>
+            <RadzenRow AlignItems="Radzen.AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenText Text="doohfy.com" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+                <RadzenText Text="Copyright Ⓒ 2024" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0" TagName="Radzen.Blazor.TagName.P" TextAlign="Radzen.TextAlign.Center" />
+            </RadzenRow>
+        </RadzenFooter>
     </RadzenLayout>
 </CascadingValue>

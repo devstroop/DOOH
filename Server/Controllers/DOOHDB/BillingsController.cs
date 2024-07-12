@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Billings.Where(i => i.BillingId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Analytic,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Analytic");
                 this.OnAfterBillingUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Billings.Where(i => i.BillingId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Analytic,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Analytic");
                 this.OnAfterBillingUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Billings.Where(i => i.BillingId == item.BillingId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Analytic,AspNetUser");
+                Request.QueryString = Request.QueryString.Add("$expand", "Analytic");
 
                 this.OnAfterBillingCreated(item);
 

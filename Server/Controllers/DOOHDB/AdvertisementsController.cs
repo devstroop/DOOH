@@ -113,7 +113,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign");
                 this.OnAfterAdvertisementUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -148,7 +148,7 @@ namespace DOOH.Server.Controllers.DOOHDB
                 this.context.SaveChanges();
 
                 var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == key);
-                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign");
                 this.OnAfterAdvertisementUpdated(item);
                 return new ObjectResult(SingleResult.Create(itemToReturn));
             }
@@ -184,7 +184,7 @@ namespace DOOH.Server.Controllers.DOOHDB
 
                 var itemToReturn = this.context.Advertisements.Where(i => i.AdvertisementId == item.AdvertisementId);
 
-                Request.QueryString = Request.QueryString.Add("$expand", "Campaign,Upload");
+                Request.QueryString = Request.QueryString.Add("$expand", "Campaign");
 
                 this.OnAfterAdvertisementCreated(item);
 

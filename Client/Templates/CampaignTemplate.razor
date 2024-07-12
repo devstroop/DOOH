@@ -1,7 +1,7 @@
-<RadzenColumn Size="12" Style="@Style" class="rz-shadow-3 rz-border-radius-2">
+<RadzenColumn Size="12" Style="@Style" class="rz-border-radius-2">
     <RadzenRow>
-        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="1" Visible="@(Campaign?.Advertisements != null)">
-            <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="100%" Height="180px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
+        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="2" Visible="@(Campaign?.Advertisements != null)">
+            <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="100%" Height="210px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
                 <Overlay>
                     <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible" />
                     <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>
@@ -19,10 +19,10 @@
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="display: block" class="flex-grow-1" JustifyContent="Radzen.JustifyContent.SpaceBetween">
                         @* <RadzenDropDown TValue="Status" TextProperty="StatusName"  ValueProperty="StatusId" Data=@Statuses Change="@(args => StateHasChanged())" Style="width: 100%; max-width: 400px;" Name="DropDownChangeEvent" /> *@
                         @* <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
-                        <RadzenDropDown TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@CurrentStatus" Change="@OnStatusChange" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="border: 0px none #dfe5ec; background-color: transparent" AllowSelectAll="false" class="justify-content-center">
+                        <RadzenDropDown TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@CurrentStatus" Change="@OnStatusChange" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="background-color: transparent;" AllowSelectAll="false" class="justify-content-center">
                             <Template>
                                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
-                                    <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon(context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor(context)" ></RadzenIcon>
+                                    <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon(context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor(context)" Style="font-size: 18px;" ></RadzenIcon>
                                     <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString(context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
                                 </RadzenStack>
                             </Template>
@@ -192,10 +192,10 @@
 
     private async Task OnHoverClick(MouseEventArgs args, string image)
     {
-        var advertisement = Campaign.Advertisements.Where(x => CurrentImage.Contains(x.Upload.Thumbnail)).FirstOrDefault();
+        var advertisement = Campaign.Advertisements.Where(x => CurrentImage.Contains(x.Thumbnail)).FirstOrDefault();
         if (advertisement != null)
         {
-            var url = advertisement.Upload.GetUrl();
+            var url = advertisement.Key.GetUrl();
             await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
         }
         // NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = url });
@@ -247,7 +247,7 @@
         }
     }
     
-    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Upload.GetThumbnail());
+    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Thumbnail.GetUrl());
     
     private int currentIndex = 0;
     private string CurrentImage => Images.ElementAtOrDefault(currentIndex);

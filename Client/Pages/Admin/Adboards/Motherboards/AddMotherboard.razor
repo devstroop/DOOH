@@ -3,16 +3,43 @@
     <RadzenColumn SizeMD=12>
         <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save Motherboard</RadzenAlert>
         <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Motherboard" Data="@motherboard" Visible="@(motherboard != null)" Submit="@FormSubmit">
+
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Brand" Component="Brand" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenDropDownDataGrid Data="@brandsForBrandId" TextProperty="BrandName" ValueProperty="BrandId" AllowClear=true
-                         Placeholder="Choose Brand" style="display: block; width: 100%" @bind-Value="@motherboard.BrandId" Name="BrandId"
-                        SelectedValue=@brandsForBrandIdValue Count=@brandsForBrandIdCount LoadData=@brandsForBrandIdLoadData />
+                    <RadzenDropDownDataGrid Data="@brandsForBrandId" TextProperty="BrandName" ValueProperty="BrandId" AllowClear="true"
+                                            Placeholder="Choose Brand" style="display: block; width: 100%" @bind-Value="@motherboard.BrandId" Name="BrandId"
+                                            SelectedValue="@brandsForBrandIdValue" Count="@brandsForBrandIdCount" LoadData="@brandsForBrandIdLoadData">
+                        <Columns>
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandId)" Title="Id" Width="60px" />
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandName)" Title=" Brand Name" Width="auto" />
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandLogo)" Title="Logo" Width="72px">
+                                <Template Context="brand">
+                                    <RadzenImage Path="@brand.BrandLogo" style="width: auto; height: 32px" Visible="@(brand.BrandLogo != null)"></RadzenImage>
+                                </Template>
+                            </RadzenDropDownDataGridColumn>
+                        </Columns>
+                        <ValueTemplate Context="ctx2">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenImage Path="@(((DOOH.Server.Models.DOOHDB.Brand)ctx2).BrandLogo)" style="width: auto; height: 24px" Visible="@(ctx2.BrandLogo != null)"></RadzenImage>
+                                <RadzenText Text="@((ctx2 as DOOH.Server.Models.DOOHDB.Brand).BrandName)" class="rz-mb-0" Style="font-weight: 500" />
+                            </RadzenStack>
+                        </ValueTemplate>
+                    </RadzenDropDownDataGrid>
                 </RadzenColumn>
             </RadzenRow>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
                     <RadzenLabel Text="Model" Component="Model" style="width: 100%" />
@@ -24,7 +51,7 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Cpu" Component="Cpu" style="width: 100%" />
+                    <RadzenLabel Text="CPU" Component="Cpu" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@motherboard.Cpu" Name="Cpu" />
@@ -32,7 +59,7 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Ram" Component="Ram" style="width: 100%" />
+                    <RadzenLabel Text="RAM" Component="Ram" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@motherboard.Ram" Name="Ram" />
@@ -40,7 +67,7 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Rom" Component="Rom" style="width: 100%" />
+                    <RadzenLabel Text="ROM" Component="Rom" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
                     <RadzenTextBox style="display: block; width: 100%" @bind-Value="@motherboard.Rom" Name="Rom" />

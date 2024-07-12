@@ -7,6 +7,7 @@
 		<Authors>Akash Shah (Devstroop Technologies)</Authors>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="AWSSDK.S3" Version="3.7.308" />
 		<PackageReference Include="Blazored.Video" Version="1.0.1" />
 		<PackageReference Include="FFmpegBlazor" Version="1.0.0.8" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
@@ -30,6 +31,23 @@
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddCountry.razor" />
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\AddState.razor" />
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Region\Region.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Brands\AddBrand.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Brands\Brands.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Brands\EditBrand.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\AddCategory.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\Categories.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\EditCategory.razor" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\OpenLayer.NET\OpenLayer.NET.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <AdditionalFiles Include="Pages\Admin\Adboards\Brands\AddBrand.razor" />
+	  <AdditionalFiles Include="Pages\Admin\Adboards\Brands\Brands.razor" />
+	  <AdditionalFiles Include="Pages\Admin\Adboards\Brands\EditBrand.razor" />
+	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\AddCategory.razor" />
+	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\Categories.razor" />
+	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\EditCategory.razor" />
 	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>

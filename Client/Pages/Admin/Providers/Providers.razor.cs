@@ -71,25 +71,6 @@ namespace DOOH.Client.Pages.Admin.Providers
             await grid0.Reload();
         }
 
-        protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Provider provider)
-        {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to delete this record?") == true)
-                {
-                    var deleteResult = await DOOHDBService.DeleteProvider(provider.ProviderId);
-                    if (deleteResult != null)
-                    {
-                        await grid0.Reload();
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to delete Provider" });
-            }
-        }
-
         protected async Task ExportClick(RadzenSplitButtonItem args)
         {
             var query = new Query

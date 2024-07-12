@@ -33,7 +33,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         
         
         
-        private IEnumerable<string> Images => Campaign.Advertisements?.Select(x => x.Upload.GetThumbnail()) ?? new List<string>();
+        private IEnumerable<string> Images => Campaign.Advertisements?.Select(x => x.Thumbnail.GetUrl()) ?? new List<string>();
     
         private int _currentIndex = 0;
         private string CurrentImage => Images.ElementAtOrDefault(_currentIndex);
@@ -56,10 +56,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private async Task OnHoverClick(MouseEventArgs args, string image)
         {
-            var advertisement = Campaign.Advertisements.Where(x => CurrentImage.Contains(x.Upload.Thumbnail)).FirstOrDefault();
+            var advertisement = Campaign.Advertisements.FirstOrDefault(x => CurrentImage.Contains(x.Thumbnail));
             if (advertisement != null)
             {
-                var url = advertisement.Upload.GetUrl();
+                var url = advertisement.Key.GetUrl();
                 await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
             }
             // NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = url });

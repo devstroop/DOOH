@@ -21,10 +21,14 @@ namespace DOOH.Server.Models.DOOHDB
 
         public int Rotation { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime Start { get; set; }
+
+        public DateTime End { get; set; }
 
         public string Label { get; set; }
 
         public ICollection<ScheduleAdboard> ScheduleAdboards { get; set; }
+
+        public ICollection<ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
     }
 }

@@ -30,6 +30,8 @@ namespace DOOH.Server.Models.DOOHDB
 
         public Category Category { get; set; }
 
+        public int? DailyCapacityInSeconds { get; set; }
+
         public decimal? BaseRatePerSecond { get; set; }
 
         public double Latitude { get; set; }
@@ -40,17 +42,17 @@ namespace DOOH.Server.Models.DOOHDB
 
         public string Address { get; set; }
 
-        public bool IsActive { get; set; }
-
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime? UpdatedAt { get; set; }
-
         public string City { get; set; }
 
         public string State { get; set; }
 
         public string Country { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime? UpdatedAt { get; set; }
 
         public ICollection<AdboardImage> AdboardImages { get; set; }
 

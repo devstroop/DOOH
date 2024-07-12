@@ -1,0 +1,47 @@
+@layout AdminLayout
+@page "/admin/adboards/brands"
+
+@attribute [Authorize]
+<PageTitle>Brands</PageTitle>
+<RadzenStack>
+    <RadzenRow AlignItems="AlignItems.Center">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Brands" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add" Text="Create" Click="@AddButtonClick" Size="ButtonSize.Medium" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenTextBox Placeholder="Search Brands..." class="rz-px-2 rz-py-1 w-100" @oninput="@Search" aria-label="Search" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow Visible="@(brands?.Count() == 0)">
+        <RadzenColumn>
+            <NoRecordsFound Title="No brands found!" Subtitle="Please add a brand." />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn SizeMD=12>
+            <RadzenDataList @ref="@list0" IsLoading="@isLoading" TItem="DOOH.Server.Models.DOOHDB.Brand" Data="@brands" AllowPaging="true" LoadData="@brandsLoadData" Count="@brandsCount" WrapItems="true">
+                <Template>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Style="width: 400px; box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1); border: 1px solid #e9e9e9; border-radius: 4px; width: 400px">
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            <RadzenImage Path="@context.BrandLogo" style="width: auto; height: 32px" Visible="@(context.BrandLogo != null)" />
+                            <RadzenText Text="@context.BrandName" class="rz-mb-0" Style="font-weight: 500" />
+                        </RadzenStack>
+                        <RadzenSplitButton Icon="more_vert" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Click="@((args) => MoreVertClick(args, context))">
+                            <RadzenSplitButtonItem Text="Edit" Icon="edit" />
+                            <RadzenSplitButtonItem Text="Delete" Icon="delete" />
+                        </RadzenSplitButton>
+                    </RadzenStack>
+                </Template>
+            </RadzenDataList>
+
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>

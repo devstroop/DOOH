@@ -11,7 +11,7 @@ namespace DOOH.Server.Models.DOOHDB
     public partial class Billing
     {
         [Key]
-        [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BillingId { get; set; }
 
         [Required]

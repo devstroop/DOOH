@@ -1,4 +1,5 @@
 @page "/edit-display"
+@using DOOH.Server.Models.DOOHDB
 
 @attribute [Authorize]
 <PageTitle>Edit Display</PageTitle>
@@ -11,9 +12,25 @@
                     <RadzenLabel Text="Brand" Component="Brand" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenDropDownDataGrid Data="@brandsForBrandId" TextProperty="BrandName" ValueProperty="BrandId" AllowClear=true
-                         Placeholder="Choose Brand" style="display: block; width: 100%" @bind-Value="@display.BrandId" Name="BrandId"
-                        SelectedValue=@brandsForBrandIdValue Count=@brandsForBrandIdCount LoadData=@brandsForBrandIdLoadData />
+                    <RadzenDropDownDataGrid Data="@brandsForBrandId" TextProperty="BrandName" ValueProperty="BrandId" AllowClear="true"
+                                            Placeholder="Choose Brand" style="display: block; width: 100%" @bind-Value="@display.BrandId" Name="BrandId"
+                                            SelectedValue="@brandsForBrandIdValue" Count="@brandsForBrandIdCount" LoadData="@brandsForBrandIdLoadData">
+                        <Columns>
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandId)" Title="Id" Width="60px" />
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandName)" Title=" Brand Name" Width="auto" />
+                            <RadzenDropDownDataGridColumn Property="@nameof(DOOH.Server.Models.DOOHDB.Brand.BrandLogo)" Title="Logo" Width="72px">
+                                <Template Context="brand">
+                                    <RadzenImage Path="@brand.BrandLogo" style="width: auto; height: 32px" Visible="@(brand.BrandLogo != null)"></RadzenImage>
+                                </Template>
+                            </RadzenDropDownDataGridColumn>
+                        </Columns>
+                        <ValueTemplate Context="ctx2">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                <RadzenImage Path="@(((Brand)ctx2).BrandLogo)" style="width: auto; height: 24px" Visible="@(ctx2.BrandLogo != null)"></RadzenImage>
+                                <RadzenText Text="@((ctx2 as Brand).BrandName)" class="rz-mb-0" Style="font-weight: 500" />
+                            </RadzenStack>
+                        </ValueTemplate>
+                    </RadzenDropDownDataGrid>
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
@@ -27,40 +44,38 @@
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Pixel Width" Component="PixelWidth" style="width: 100%" />
+                    <RadzenLabel Text="Pixel" Component="Pixel" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.PixelWidth" Name="PixelWidth" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.PixelWidth" Name="PixelWidth" />
+                        <RadzenLabel Text="x"></RadzenLabel>
+                        <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.PixelHeight" Name="PixelHeight" />
+                    </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>
             <RadzenRow style="margin-bottom: 1rem">
                 <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Pixel Height" Component="PixelHeight" style="width: 100%" />
+                    <RadzenLabel Text="Screen" Component="Screen" style="width: 100%" />
                 </RadzenColumn>
                 <RadzenColumn SizeMD="9">
-                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.PixelHeight" Name="PixelHeight" />
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                        <RadzenNumeric style="display: flex;" @bind-Value="@display.ScreenWidth" Name="ScreenWidth" />
+                        <RadzenLabel Text="x"></RadzenLabel>
+                        <RadzenNumeric style="display: flex;" @bind-Value="@display.ScreenHeight" Name="ScreenHeight" />
+                    </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Screen Width" Component="ScreenWidth" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.ScreenWidth" Name="ScreenWidth" />
-                </RadzenColumn>
-            </RadzenRow>
-            <RadzenRow style="margin-bottom: 1rem">
-                <RadzenColumn SizeMD="3">
-                    <RadzenLabel Text="Screen Height" Component="ScreenHeight" style="width: 100%" />
-                </RadzenColumn>
-                <RadzenColumn SizeMD="9">
-                    <RadzenNumeric style="display: block; width: 100%" @bind-Value="@display.ScreenHeight" Name="ScreenHeight" />
+            <RadzenRow>
+                <RadzenColumn Size="6">
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Delete" Variant="Variant.Flat" Click="@DeleteClick"  /></RadzenColumn>
+                <RadzenColumn Size="6">
+                    <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                        <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" IsBusy="@IsSaving" BusyText="Saving" />
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+                    </RadzenStack>
                 </RadzenColumn>
             </RadzenRow>
-          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" IsBusy="@IsSaving" BusyText="Saving" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
-          </RadzenStack>
         </RadzenTemplateForm>
     </RadzenColumn>
 
