@@ -52,7 +52,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
 
         protected bool CampaignNameEditable { get; set; } = false;
-
+        
 
         protected override async Task OnInitializedAsync()
         {
@@ -97,6 +97,11 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 IsSaving = false;
                 StateHasChanged();
+            }
+
+            if (CampaignId == null || !int.TryParse(CampaignId.ToString(), out var _))
+            {
+                NavigationManager.NavigateTo("admin/campaigns");
             }
         }
         

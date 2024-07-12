@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DOOH.Client.Pages.Admin.Campaigns.Editor;
 using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -70,32 +71,40 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to create this record?") == true)
+                var result = await DialogService.OpenAsync<CreateCampaign>("Create Campaign", null);
+                if (result != null && result is string)
                 {
-                    NavigationManager.NavigateTo($"admin/campaigns/editor");
-                    // await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, null, options: new DialogOptions
-                    // {
-                    //     Width = "100%",
-                    //     Height = "100%",
-                    //     ShowClose = true,
-                    //     ShowTitle = false,
-                    //     Style = "border-radius: 0px;"
-                    // });
-                    // await list0.Reload();
+                    string campaignName = result.ToString();
+                    var campaign = new DOOH.Server.Models.DOOHDB.Campaign();
+                    campaign.CampaignName = campaignName;
+                    campaign.UserId = Security.User.Id;
+                    campaign.Status = (int)DOOH.Server.Models.Enums.Status.Draft;
+                        
+                    var created = await DOOHDBService.CreateCampaign(campaign);
+                    if (created != null)
+                    {
+                        NavigationManager.NavigateTo($"admin/campaigns/editor{created.CampaignId}");
+                    }
+                    else
+                    {
+                        NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error, Summary = "Error",
+                            Detail = "Unable to create campaign"
+                        });
+                        NavigationManager.NavigateTo("admin/campaigns");
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage
+                else
                 {
-                    Severity = NotificationSeverity.Error,
-                    Summary = $"Error",
-                    Detail = $"Unable to create Campaign"
-                });
-            }
-
+                    NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error, Summary = "Error",
+                        Detail = "Unable to create campaign"
+                    });
+                    NavigationManager.NavigateTo("admin/campaigns");
+                }
+            
         }
 
 
@@ -128,31 +137,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
         // OnEdit
         protected async Task OnEdit(DOOH.Server.Models.DOOHDB.Campaign campaign)
         {
-            try
-            {
-                if (await DialogService.Confirm("Are you sure you want to edit this record?") == true)
-                {
-                    NavigationManager.NavigateTo($"admin/campaigns/editor/{campaign.CampaignId}");
-                    // await DialogService.OpenAsync<Admin.Campaigns.Editor.CampaignEditor>(string.Empty, new Dictionary<string, object> { { "Campaign", campaign } }, options: new DialogOptions
-                    // {
-                    //     Width = "100%",
-                    //     Height = "100%",
-                    //     ShowClose = true,
-                    //     ShowTitle = false,
-                    //     Style = "border-radius: 0px;"
-                    // });
-                    // await list0.Reload();
-                }
-            }
-            catch (Exception ex)
-            {
-                NotificationService.Notify(new NotificationMessage
-                {
-                    Severity = NotificationSeverity.Error,
-                    Summary = $"Error",
-                    Detail = $"Unable to edit Campaign"
-                });
-            }
+            NavigationManager.NavigateTo($"admin/campaigns/editor/{campaign.CampaignId}");
         }
 
         protected async Task OnDelete(DOOH.Server.Models.DOOHDB.Campaign campaign)

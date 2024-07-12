@@ -247,7 +247,7 @@
         }
     }
     
-    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Thumbnail);
+    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Thumbnail.GetUrl());
     
     private int currentIndex = 0;
     private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
