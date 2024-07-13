@@ -2,11 +2,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 using Radzen;
-using Radzen.Blazor;
-using System;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using Amazon.S3.Model;
 using DOOH.Client.Components;
 using DOOH.Client.Extensions;
 using DOOH.Server.Models;
@@ -72,6 +67,18 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 foreach (MediaMetadata each in result)
                 {
+                    // Check if each.Property is not null
+                    if (each.Key == null)
+                    {
+                        NotificationService.Notify(NotificationSeverity.Warning, "Metadata not found", $"The metadata for the advertisement with key {each.Key} was not found.");
+                        continue;
+                    }
+                    // Check if the advertisement already exists
+                    if (Data.Any(a => a.Key == each.Key))
+                    {
+                        NotificationService.Notify(NotificationSeverity.Warning, "Advertisement already exists", $"The advertisement with key {each.Key} already exists in the campaign.");
+                        continue;
+                    }
                     var advertisement = new Advertisement()
                     {
                         AdvertisementId = 0,
@@ -101,6 +108,18 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
             {
                 foreach (MediaMetadata each in result)
                 {
+                    // Check if each.Property is not null
+                    if (each.Key == null)
+                    {
+                        NotificationService.Notify(NotificationSeverity.Warning, "Metadata not found", $"The metadata for the advertisement with key {each.Key} was not found.");
+                        continue;
+                    }
+                    // Check if the advertisement already exists
+                    if (Data.Any(a => a.Key == each.Key))
+                    {
+                        NotificationService.Notify(NotificationSeverity.Warning, "Advertisement already exists", $"The advertisement with key {each.Key} already exists in the campaign.");
+                        continue;
+                    }
                     var advertisement = new Advertisement()
                     {
                         AdvertisementId = 0,

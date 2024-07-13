@@ -1,4 +1,6 @@
 @using System.Text.Json
+@using System.Text.RegularExpressions
+@using DOOH.Server.Extensions
 @using DOOH.Server.Models
 <RadzenStack>
     <RadzenRow>
@@ -14,6 +16,7 @@
                 Auto="true"
                 Multiple="true"
                 Complete="@OnComplete"
+                Error="@OnError"
                 Visible="true"
                 Disabled="@(IsUploading || IsProcessing)"/>
         </RadzenColumn>
@@ -72,11 +75,43 @@
 
     private async Task OnComplete(UploadCompleteEventArgs args)
     {
-        IsUploading = false;
-        IsProcessing = false;
-        StateHasChanged();
-        var metadataList = JsonSerializer.Deserialize<List<MediaMetadata>>(args.RawResponse);
-        Dialog.Close(metadataList);
+        var options = new JsonSerializerOptions
+        {
+            Converters = { new DictionaryStringStringConverter() }
+        };
+
+        try
+        {
+            var result = JsonSerializer.Deserialize<List<Dictionary<string, string>>>(args.RawResponse, options);
+            var data = result.Select(MediaMetadata.FromDictionary).ToList();
+            Dialog.Close(data);
+        }
+        catch (Exception e)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Upload failed", e.Message);
+        }
     }
+    
+    private async Task OnError(UploadErrorEventArgs args)
+    {
+        try
+        {
+            var errorMessage = args.Message;
+            var regex = new Regex(@"Failed to read the request form. (.+)");
+            var match = regex.Match(errorMessage);
+            if (match.Success)
+            {
+                errorMessage = match.Groups[1].Value;
+                // Show error message
+                Notification.Notify(NotificationSeverity.Error, "Upload failed", errorMessage);
+            }
+        }
+        catch (Exception e)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Upload failed", e.Message);
+        }
+    }
+    
+    [Inject] private NotificationService Notification { get; set; }
     [Inject] private DialogService Dialog { get; set; }
 }

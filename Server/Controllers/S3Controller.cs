@@ -5,6 +5,7 @@ using Amazon.Runtime;
 using Amazon.S3;
 using System.Net;
 using System.Text.Json;
+using Amazon.S3.Model;
 using DOOH.Server.Models;
 
 namespace DOOH.Server.Controllers
@@ -40,15 +41,28 @@ namespace DOOH.Server.Controllers
         [HttpGet("objects")]
         public async Task<IActionResult> ListObjectsAsync()
         {
-            return await HandleS3RequestAsync(async () =>
-            {
-                var request = new Amazon.S3.Model.ListObjectsV2Request { BucketName = _bucket };
-                var response = await _s3Client.ListObjectsV2Async(request);
-                var userId = _identityContext.Users.FirstOrDefault(x => x.UserName.Equals(User.Identity.Name))?.Id;
-                var objects = response.S3Objects.Where(x => !x.Key.EndsWith(".thumbnail.png"));
-                objects = User.IsInRole("Admin") ? objects : objects.Where(obj => obj.Key.StartsWith(userId!));
-                return Ok(objects);
-            });
+            var request = new Amazon.S3.Model.ListObjectsV2Request { BucketName = _bucket };
+            var response = await _s3Client.ListObjectsV2Async(request);
+            var userId = _identityContext.Users.FirstOrDefault(x => x.UserName.Equals(User.Identity.Name))?.Id;
+            var objects = response.S3Objects.Where(x => !x.Key.EndsWith(".thumbnail.png"));
+            objects = User.IsInRole("Admin") ? objects : objects.Where(obj => obj.Key.StartsWith(userId!));
+            // List<CustomS3ObjectModel> result = new List<CustomS3ObjectModel>();
+            // foreach (var each in objects ?? new List<S3Object>())
+            // {
+            //     var customObject = new CustomS3ObjectModel
+            //     {
+            //         ETag = each.ETag,
+            //         Key = each.Key,
+            //         LastModified = each.LastModified,
+            //         Owner = JsonSerializer.Serialize(each.Owner),
+            //         RestoreStatus = JsonSerializer.Serialize(each.RestoreStatus),
+            //         Size = each.Size,
+            //         StorageClass = JsonSerializer.Serialize(each.StorageClass),
+            //         BucketName = each.BucketName
+            //     };
+            //     result.Add(customObject);
+            // }
+            return Ok(objects);
         }
         
         [HttpDelete("object/{**key}")]
@@ -285,23 +299,6 @@ namespace DOOH.Server.Controllers
                 thumbnail: $"{key}.thumbnail.png",
                 width: width
             );
-            // return new Dictionary<string, string>
-            // {
-            //     { "aspect_ratio", probeData?.Streams?.FirstOrDefault()?.DisplayAspectRatio },
-            //     { "bit_rate", probeData?.Format?.BitRate },
-            //     { "codec", probeData?.Streams?.FirstOrDefault()?.CodecName },
-            //     { "content_type", file.ContentType },
-            //     { "created_at", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-            //     { "duration", probeData?.Format?.Duration },
-            //     { "filename", file.FileName },
-            //     { "frame_rate", probeData?.Streams?.FirstOrDefault()?.RFrameRate },
-            //     { "height", probeData?.Streams?.FirstOrDefault()?.Height },
-            //     { "key", key },
-            //     { "owner", userId },
-            //     { "size", probeData?.Format?.Size },
-            //     { "thumbnail", $"{key}.thumbnail.png" },
-            //     { "width", probeData?.Streams?.FirstOrDefault()?.Width }
-            // };
         }
     }
 }

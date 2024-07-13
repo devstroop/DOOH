@@ -33,12 +33,14 @@
                 </RadzenStack>
                 
                 <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
-                    <RadzenSplitButton Icon="more_vert" Variant="Variant.Flat" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Light" Click="@((args) => SplitButtonClick(args, context))">
-                        <ChildContent>
-                            <RadzenMenuItem Text="Edit" Icon="edit"/>
-                            <RadzenMenuItem Text="Delete" Icon="delete" />
-                        </ChildContent>
-                    </RadzenSplitButton>
+                    <RadzenButton Icon="edit" Click="@((args) => EditButtonClick(args, context))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Light" />
+                    <RadzenButton Icon="delete" Click="@((args) => DeleteButtonClick(args, context))" Variant="Variant.Flat" ButtonStyle="ButtonStyle.Danger" />
+                    @* <RadzenSplitButton Icon="more_vert" Variant="Variant.Flat" Size="ButtonSize.Medium" ButtonStyle="ButtonStyle.Light" Click="@((args) => SplitButtonClick(args, context))"> *@
+                    @*     <ChildContent> *@
+                    @*         <RadzenMenuItem Text="Edit" Icon="edit"/> *@
+                    @*         <RadzenMenuItem Text="Delete" Icon="delete"/> *@
+                    @*     </ChildContent> *@
+                    @* </RadzenSplitButton> *@
                 </RadzenStack>
             </RadzenStack>
         </Template>

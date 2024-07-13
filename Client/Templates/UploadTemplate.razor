@@ -1,12 +1,12 @@
-@using Amazon.S3.Model
 @using DOOH.Client.Services
 @using DOOH.Server.Extensions
+@using DOOH.Server.Models
 
 <RadzenRow Style="padding: 0" class="rz-p-2">
     <RadzenImage Path="@Context.GetThumbnailUrl()" Style="width: 120px; height: 120px; border-radius:0.5rem; object-fit: cover;"></RadzenImage>
     <RadzenColumn>
         <RadzenStack>
-            <RadzenText Text="@Context.Key.Split('/').Last()" class="rz-mb-0" TextStyle="TextStyle.H5"></RadzenText>
+            <RadzenText Text="@Context.Key.Split('/')?.Last()" class="rz-mb-0" TextStyle="TextStyle.H5"></RadzenText>
             <RadzenStack Gap="0">
                 <RadzenText Text="@Context.Size.ToFileSize()" class="rz-mb-0" TextStyle="TextStyle.Caption"></RadzenText>
                 <RadzenText Text="@Context.LastModified.GetTimeAgo()" class="rz-mb-0" TextStyle="TextStyle.Caption"></RadzenText>
@@ -24,14 +24,14 @@
 </RadzenRow>
 
 @code {
-    [Parameter] public S3Object Context { get; set; }
+    [Parameter] public CustomS3ObjectModel Context { get; set; }
     [Parameter] public bool Selected { get; set; } = false;
     [Parameter] public bool Selectable { get; set; } = false;
     [Parameter] public bool Playable { get; set; } = false;
     [Parameter] public bool Deletable { get; set; } = false;
     [Parameter] public EventCallback<bool> SelectionChange { get; set; } = EventCallback<bool>.Empty;
-    [Parameter] public EventCallback<S3Object> Play { get; set; } = EventCallback<S3Object>.Empty;
-    [Parameter] public EventCallback<S3Object> Delete { get; set; } = EventCallback<S3Object>.Empty;
+    [Parameter] public EventCallback<CustomS3ObjectModel> Play { get; set; } = EventCallback<CustomS3ObjectModel>.Empty;
+    [Parameter] public EventCallback<CustomS3ObjectModel> Delete { get; set; } = EventCallback<CustomS3ObjectModel>.Empty;
 
     private async Task PlayClick(MouseEventArgs args)
     {

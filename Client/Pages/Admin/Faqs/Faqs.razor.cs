@@ -62,13 +62,13 @@ namespace DOOH.Client.Pages.Admin.Faqs
         protected async Task AddButtonClick(MouseEventArgs args)
         {
             await DialogService.OpenAsync<AddFaq>("Add Faq", null);
-            await grid0.Reload();
+            await faqsLoadData(new LoadDataArgs() { });
         }
 
         protected async Task EditRow(DOOH.Server.Models.DOOHDB.Faq args)
         {
             await DialogService.OpenAsync<EditFaq>("Edit Faq", new Dictionary<string, object> { {"FaqId", args.FaqId} });
-            await grid0.Reload();
+            await faqsLoadData(new LoadDataArgs() { });
         }
 
         protected async Task GridDeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Faq faq)
@@ -81,7 +81,7 @@ namespace DOOH.Client.Pages.Admin.Faqs
 
                     if (deleteResult != null)
                     {
-                        await grid0.Reload();
+                        await faqsLoadData(new LoadDataArgs() { });
                     }
                 }
             }
@@ -120,18 +120,17 @@ namespace DOOH.Client.Pages.Admin.Faqs
                 StateHasChanged();
             }
         }
-
-        // SplitButtonClick
-        protected async Task SplitButtonClick(RadzenSplitButtonItem item, DOOH.Server.Models.DOOHDB.Faq faq)
+        
+        // EditButtonClick
+        protected async Task EditButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Faq faq)
         {
-            if (item.Text == "Edit")
-            {
-                await EditRow(faq);
-            }
-            else if (item.Text == "Delete")
-            {
-                await GridDeleteButtonClick(null, faq);
-            }
+            await EditRow(faq);
+        }
+        
+        // DeleteButtonClick
+        protected async Task DeleteButtonClick(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Faq faq)
+        {
+            await GridDeleteButtonClick(args, faq);
         }
     }
 }
