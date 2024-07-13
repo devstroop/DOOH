@@ -299,23 +299,6 @@ namespace DOOH.Server.Controllers
                 thumbnail: $"{key}.thumbnail.png",
                 width: width
             );
-            // return new Dictionary<string, string>
-            // {
-            //     { "aspect_ratio", probeData?.Streams?.FirstOrDefault()?.DisplayAspectRatio },
-            //     { "bit_rate", probeData?.Format?.BitRate },
-            //     { "codec", probeData?.Streams?.FirstOrDefault()?.CodecName },
-            //     { "content_type", file.ContentType },
-            //     { "created_at", DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ") },
-            //     { "duration", probeData?.Format?.Duration },
-            //     { "filename", file.FileName },
-            //     { "frame_rate", probeData?.Streams?.FirstOrDefault()?.RFrameRate },
-            //     { "height", probeData?.Streams?.FirstOrDefault()?.Height },
-            //     { "key", key },
-            //     { "owner", userId },
-            //     { "size", probeData?.Format?.Size },
-            //     { "thumbnail", $"{key}.thumbnail.png" },
-            //     { "width", probeData?.Streams?.FirstOrDefault()?.Width }
-            // };
         }
     }
 }

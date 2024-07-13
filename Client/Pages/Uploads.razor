@@ -47,7 +47,7 @@
         <RadzenColumn Size="6">
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
                 <RadzenText Text="@SelectedText" Visible="!string.IsNullOrEmpty(SelectedText)" class="rz-mb-0" TextStyle="TextStyle.Subtitle2"></RadzenText>
-                <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" Icon="close" Text="Clear" Size="ButtonSize.ExtraSmall" Visible="!string.IsNullOrEmpty(SelectedText)"></RadzenButton>
+                <RadzenButton Click="@ClearClick" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Text" Icon="close" Text="Clear" Size="ButtonSize.ExtraSmall" Visible="!string.IsNullOrEmpty(SelectedText)"></RadzenButton>
             </RadzenStack>
         </RadzenColumn>
         <RadzenColumn Size="6">
@@ -119,6 +119,12 @@
             IsLoading = false;
             StateHasChanged();
         }
+    }
+    
+    // ClearClick
+    private async Task ClearClick(MouseEventArgs args)
+    {
+        selectedObjects = new List<CustomS3ObjectModel>();
     }
     
     private async Task UploadClick(MouseEventArgs args)

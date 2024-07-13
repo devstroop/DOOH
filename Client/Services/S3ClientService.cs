@@ -52,7 +52,8 @@ namespace DOOH.Client.Services
             var response = await httpClient.GetAsync($"metadata/{key}");
             response.EnsureSuccessStatusCode();
             var jsonString = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<MediaMetadata>(jsonString);
+            var result = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonString);
+            return MediaMetadata.FromDictionary(result);
         }
         
         public async Task DeleteObjectAsync(string key)
