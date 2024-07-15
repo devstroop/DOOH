@@ -27,22 +27,28 @@
                 </RadzenRow>
             </RadzenColumn>
         </RadzenRow>
+        
+        
+        
+        
         <RadzenRow class="rz-mb-2">
             <RadzenColumn SizeMD="3">
                 <RadzenLabel Text="Adboards"/>
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenDropDownDataGrid @ref="grid" class="w-100" Chips="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowClear="true" @bind-Value="@SelectedAdboardIds"
+                
+                
+                <RadzenDropDownDataGrid @ref="gridAdboards" class="w-100" Chips="true" AllowFiltering="true" AllowClear="true" @bind-Value="@SelectedAdboardIds"
                                         Multiple="true" Placeholder="Select adboards" Data=@Adboards TextProperty="@nameof(Adboard.SignName)" ValueProperty="@nameof(Adboard.AdboardId)" Name="DropDownDataGridMultiple">
                     <Columns>
                         <RadzenDropDownDataGridColumn Width="36px" Sortable="false">
                             <HeaderTemplate>
-                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select all" } })" Disabled="@(!grid.AllowSelectAll)" TriState="false" TValue="bool" Value="@(Adboards.Any(c => SelectedAdboardIds != null && SelectedAdboardIds.Contains(c.AdboardId)))"
-                                                Change="@(args => SelectedAdboardIds = args ? grid.View.Cast<Adboard>().Select(c => c.AdboardId).AsEnumerable() : SelectedAdboardIds = Enumerable.Empty<int>())"/>
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select all" } })" Disabled="@(!gridAdboards.AllowSelectAll)" TriState="false" TValue="bool" Value="@(Adboards.Any(c => SelectedAdboardIds != null && SelectedAdboardIds.Contains(c.AdboardId)))"
+                                                Change="@(args => SelectedAdboardIds = args ? gridAdboards.View.Cast<Adboard>().Select(c => c.AdboardId).AsEnumerable() : SelectedAdboardIds = Enumerable.Empty<int>())"/>
                             </HeaderTemplate>
                             <Template Context="data">
                                 <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select item" } })" TriState="false" Value="@(SelectedAdboardIds != null && SelectedAdboardIds.Contains(((Server.Models.DOOHDB.Adboard)data).AdboardId))"
-                                                TValue="bool" Change=@(args => grid.SelectItem(data)) @onclick:stopPropagation/>
+                                                TValue="bool" Change=@(args => gridAdboards.SelectItem(data)) @onclick:stopPropagation/>
                             </Template>
                         </RadzenDropDownDataGridColumn>
                         <RadzenDropDownDataGridColumn Property="@nameof(Adboard.AdboardId)" Title="Id" Width="54px">
@@ -60,22 +66,52 @@
                         </RadzenDropDownDataGridColumn>
                     </Columns>
                 </RadzenDropDownDataGrid>
+                
+                
             </RadzenColumn>
         </RadzenRow>
+        
+        
         <RadzenRow>
             <RadzenColumn SizeMD="3">
                 <RadzenLabel Text="Advertisements"/>
             </RadzenColumn>
             <RadzenColumn SizeMD="9">
-                <RadzenDropDownDataGrid class="w-100" TValue="IEnumerable<int>" ValueProperty="AdvertisementId" TextProperty="UploadKey" Data="@advertisements" Multiple="true" AllowSorting="true" AllowPaging="true" AllowFiltering="true" LoadData="@advertisementsLoadData" Count="@advertisementsCount" Placeholder="Select advertisements">
+                
+                
+                <RadzenDropDownDataGrid @ref="@gridAdvertisements" class="w-100" Chips="true" AllowFiltering="true" AllowClear="true" @bind-Value="@SelectedAdvertisementIds" ValueProperty="@nameof(Advertisement.AdvertisementId)" Data="@Advertisements" TextProperty="@nameof(Advertisement.Key)" 
+                                        Multiple="true" AllowSorting="true" Placeholder="Select advertisements">
                     <Columns>
-                        <RadzenDropDownDataGridColumn Property="UploadKey" Title="Upload"/>
-                        <RadzenDropDownDataGridColumn Property="Duration" Title="Duration"/>
-                        @* <RadzenDropDownDataGridColumn Property="IsVerified" Title="IsVerified" /> *@
+                        <RadzenDropDownDataGridColumn Width="36px" Sortable="false">
+                            <HeaderTemplate>
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select all" } })" Disabled="@(!gridAdvertisements.AllowSelectAll)" TriState="false" TValue="bool" Value="@(Advertisements.Any(c => SelectedAdvertisementIds != null && SelectedAdvertisementIds.Contains(c.AdvertisementId)))"
+                                                Change="@(args => SelectedAdvertisementIds = args ? gridAdvertisements.View.Cast<Advertisement>().Select(c => c.AdvertisementId).AsEnumerable() : SelectedAdvertisementIds = Enumerable.Empty<int>())"/>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select item" } })" TriState="false" Value="@(SelectedAdvertisementIds != null && SelectedAdvertisementIds.Contains(((Server.Models.DOOHDB.Advertisement)data).AdvertisementId))"
+                                                TValue="bool" Change=@(args => gridAdvertisements.SelectItem(data)) @onclick:stopPropagation/>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                        <RadzenDropDownDataGridColumn Property="Key" Title="Upload">
+                            <Template Context="data">
+                                <RadzenText Text="@(data.Key)"></RadzenText>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                        <RadzenDropDownDataGridColumn Property="Duration" Title="Duration">
+                            <Template Context="data">
+                                <RadzenText Text="@(data.Duration)"></RadzenText>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
                     </Columns>
                 </RadzenDropDownDataGrid>
+                
+                
             </RadzenColumn>
         </RadzenRow>
+        
+        
+        
+        
         <RadzenRow style="margin-bottom: 16px" AlignItems="AlignItems.Center" class="rz-my-3">
             <RadzenColumn SizeMD="3">
                 <RadzenLabel Text="Rotation"/>
@@ -122,3 +158,75 @@
             width: 580px !important;
         }
     </style>
+    
+    
+    @code{
+
+        
+        [Parameter] public int CampaignId { get; set; }
+        [Parameter] public DateTime Date { get; set; } = DateTime.Today;
+        [Parameter] public Server.Models.DOOHDB.Schedule Schedule { get; set; }
+        [Parameter] public IEnumerable<Server.Models.DOOHDB.Adboard> Adboards { get; set; }
+        [Parameter] public IEnumerable<Server.Models.DOOHDB.Advertisement> Advertisements { get; set; }
+        [Parameter] public IEnumerable<int> SelectedAdboardIds { get; set; } = new List<int>();
+        [Parameter] public IEnumerable<int> SelectedAdvertisementIds { get; set; } = new List<int>();
+
+        [Inject] protected DialogService Dialog { get; set; }
+        
+        [Inject] protected NotificationService NotificationService { get; set; }
+
+        RadzenDropDownDataGrid<IEnumerable<int>> gridAdboards;
+        RadzenDropDownDataGrid<IEnumerable<int>> gridAdvertisements;
+
+        [Inject]
+        protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
+        
+        protected override async Task OnParametersSetAsync()
+        {
+            Schedule = Schedule ?? new Server.Models.DOOHDB.Schedule()
+            {
+                ScheduleId = 0,
+                CampaignId = CampaignId,
+                Start = Date,
+                End = Date.AddDays(1),
+                Rotation = 1
+            };
+            StateHasChanged();
+        }
+        
+        private async Task OnSubmit(DOOH.Server.Models.DOOHDB.Schedule schedule)
+        {
+            try
+            {
+                if (!SelectedAdboardIds.Any())
+                {
+                    NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Please select at least one adboard"
+                    });
+                    return;
+                }
+                // Suggest a suitable label for the schedule, contains no of rotations and adboards
+                var label = $"{schedule.Rotation * SelectedAdboardIds.Count() * Schedule.ScheduleAdvertisements.Select(x => x.Advertisement.Duration).Sum()} secs";
+                // schedule.Label = $"{schedule.Rotation} {(schedule.Rotation > 1 ? "rotations" : "rotation")}";
+                schedule.Label = label;
+                var adboards = Adboards.Where(x => SelectedAdboardIds.Contains(x.AdboardId)).ToList();
+                var scheduleAdboards = adboards.Select(x => new ScheduleAdboard
+                {
+                    AdboardId = x.AdboardId,
+                    ScheduleId = schedule.ScheduleId
+                }).ToList();
+                schedule.ScheduleAdboards = scheduleAdboards;
+                Dialog.Close(schedule);
+
+            }
+            catch (Exception exception)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to save"
+                });
+            }
+        }
+
+    }

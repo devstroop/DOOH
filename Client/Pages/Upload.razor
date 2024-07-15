@@ -110,6 +110,13 @@
         {
             Notification.Notify(NotificationSeverity.Error, "Upload failed", e.Message);
         }
+        finally
+        {
+            IsUploading = false;
+            IsProcessing = false;
+            Progress = 0;
+            StateHasChanged();
+        }
     }
     
     [Inject] private NotificationService Notification { get; set; }

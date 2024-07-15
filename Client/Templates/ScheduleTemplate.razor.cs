@@ -10,8 +10,6 @@ public partial class ScheduleTemplate : ComponentBase
     [Parameter] public EventCallback<Schedule> Edit { get; set; } = EventCallback<Schedule>.Empty;
     [Parameter] public EventCallback<Schedule> Update { get; set; } = EventCallback<Schedule>.Empty;
     [Parameter] public EventCallback<Schedule> Delete { get; set; } = EventCallback<Schedule>.Empty;
-    
-    
 
     private async Task RemoveRotationClick(MouseEventArgs args)
     {

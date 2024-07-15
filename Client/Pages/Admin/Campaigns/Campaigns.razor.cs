@@ -95,15 +95,6 @@ namespace DOOH.Client.Pages.Admin.Campaigns
                         NavigationManager.NavigateTo("admin/campaigns");
                     }
                 }
-                else
-                {
-                    NotificationService.Notify(new NotificationMessage
-                    {
-                        Severity = NotificationSeverity.Error, Summary = "Error",
-                        Detail = "Unable to create campaign"
-                    });
-                    NavigationManager.NavigateTo("admin/campaigns");
-                }
             
         }
 
@@ -116,9 +107,12 @@ namespace DOOH.Client.Pages.Admin.Campaigns
             {
                 IsLoading = true;
                 //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", orderby: $"{args.OrderBy}", top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements, CampaignAdboards($expand=Adboard)");
+                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", 
+                    orderby: $"CreatedAt desc",
+                    top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements, CampaignAdboards($expand=Adboard)");
 
                 campaigns = result.Value.AsODataEnumerable();
+                
                 campaignsCount = result.Count;
             }
             catch (Exception)

@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using Radzen.Blazor;
 using System.Text.Json.Nodes;
+using DOOH.Server.Extensions;
 
 namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 {
@@ -13,35 +14,36 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public int CampaignId { get; set; }
         
         [Parameter]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Data { get; set; } = new List<DOOH.Server.Models.DOOHDB.Adboard>();
+        public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignAdboard> Data { get; set; } = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
         
         [Parameter]
-        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> Add { get; set; }
+        public EventCallback<DOOH.Server.Models.DOOHDB.CampaignAdboard> Add { get; set; }
         
         [Parameter]
-        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> Remove { get; set; }
+        public EventCallback<DOOH.Server.Models.DOOHDB.CampaignAdboard> Remove { get; set; }
         
         [Parameter]
         public EventCallback Clear { get; set; }
 
         [Inject]
-        protected IJSRuntime JSRuntime { get; set; }
+        protected IJSRuntime Runtime { get; set; }
 
         [Inject]
-        protected DOOHDBService DOOHDBService { get; set; }
+        protected DOOHDBService DbService { get; set; }
 
         [Inject]
         protected NotificationService NotificationService { get; set; }
 
         protected RadzenDataList<DOOH.Server.Models.DOOHDB.Adboard> list0;
         protected IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> Adboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
-        protected int Zoom { get; set; } = 12;
         protected bool showSelectedAdboardsOnly { get; set; } = false;
 
         protected int adboardsCount;
         protected bool isAdboardsLoading = false;
         protected string search { get; set; } = "";
+        
         protected GoogleMapPosition CenterPosition { get; set; } = new GoogleMapPosition() { Lat = 42.6977, Lng = 23.3219 };
+        protected int Zoom { get; set; } = 12;
 
 
         protected override async Task OnParametersSetAsync()
@@ -50,18 +52,20 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         }
 
 
-        protected async Task Search(MouseEventArgs args)
+        protected async Task Search()
         {
             await list0.GoToPage(0);
             await list0.Reload();
         }
-        protected async Task FetchCurrentLocation(MouseEventArgs args)
-        {
-            var result = await JSRuntime.InvokeAsync<JsonArray>("getCoords");
-            await JSRuntime.InvokeVoidAsync("console.log", (double)result[0]);
-            await JSRuntime.InvokeVoidAsync("console.log", (double)result[1]);
-            CenterPosition = new GoogleMapPosition() { Lat = (double)result[0], Lng = (double)result[1] };
-        }
+        
+        // protected async Task FetchCurrentLocation(MouseEventArgs args)
+        // {
+        //     var result = await Runtime.InvokeAsync<JsonArray>("getCoords");
+        //     await Runtime.InvokeVoidAsync("console.log", (double)result[0]);
+        //     await Runtime.InvokeVoidAsync("console.log", (double)result[1]);
+        //     CenterPosition = new GoogleMapPosition() { Lat = (double)result[0], Lng = (double)result[1] };
+        // }
+        
         string SanitizeSearch(string input)
         {
             return input?.Replace("'", "''");
@@ -103,7 +107,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 }
 
                 // Get adboards
-                var result = await DOOHDBService.GetAdboards(
+                var result = await DbService.GetAdboards(
                     top: args.Top,
                     skip: args.Skip,
                     count: (args.Top != null && args.Skip != null),
@@ -122,6 +126,10 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 // }
 
                 adboardsCount = result.Count;
+                var mapPositions = Adboards.Select(x => new GoogleMapPosition { Lat = x.Latitude, Lng = x.Longitude }).ToList();
+                var centerAndZoom = GoogleMapPositionExtensions.GetCenterAndZoom(mapPositions);
+                CenterPosition = centerAndZoom.Item1;
+                Zoom = centerAndZoom.Item2;
             }
             catch (Exception)
             {
@@ -144,7 +152,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         async void OnMapClick(GoogleMapClickEventArgs args)
         {
             //console.Log($"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
-            await JSRuntime.InvokeVoidAsync("console.log", $"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
+            await Runtime.InvokeVoidAsync("console.log", $"Map clicked at Lat: {args.Position.Lat}, Lng: {args.Position.Lng}");
         }
 
         async Task OnMarkerClick(RadzenGoogleMapMarker marker)
@@ -167,22 +175,38 @@ window.infoWindow = new google.maps.InfoWindow({{content: '{message}'}});
 setTimeout(() => window.infoWindow.open(map, marker), 200);
 ";
 
-            await JSRuntime.InvokeVoidAsync("eval", code);
+            await Runtime.InvokeVoidAsync("eval", code);
+        }
+
+        private async Task FocusOnAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
+        {
+            CenterPosition = new GoogleMapPosition() { Lat = adboard.Latitude, Lng = adboard.Longitude };
+            Zoom = 16;
         }
 
         private async Task OnSelectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
             if (Data.All(x => x.AdboardId != adboard.AdboardId))
             {
-                await Add.InvokeAsync(adboard);
+                var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard
+                {
+                    AdboardId = adboard.AdboardId,
+                    CampaignId = CampaignId
+                };
+                await Add.InvokeAsync(campaignAdboard);
             }
         }
 
         private async Task OnUnselectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (Data.Any( x => x.AdboardId == adboard.AdboardId))
+            if (Data.Any(x => x.AdboardId == adboard.AdboardId))
             {
-                await Remove.InvokeAsync(adboard);
+                var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard
+                {
+                    AdboardId = adboard.AdboardId,
+                    CampaignId = CampaignId
+                };
+                await Remove.InvokeAsync(campaignAdboard);
             }
         }
 
