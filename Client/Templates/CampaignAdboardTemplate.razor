@@ -1,4 +1,4 @@
-<RadzenRow AlignItems="AlignItems.Start" @onclick="@OnClick" class="rz-border-radius-2 rz-p-3">
+<RadzenRow AlignItems="AlignItems.Start" @onclick="@((args) => OnClick.InvokeAsync(Context))" class="rz-border-radius-2 rz-p-3">
     <CarouselComponent Images="@Context.AdboardImages.Select(x => x.Image)" Style="object-fit: cover; min-width: 120px;" Height="150px" Width="150px" />
     <RadzenColumn> 
         <RadzenStack Gap="0" JustifyContent="JustifyContent.SpaceBetween" Style="height: 100%">
@@ -19,20 +19,16 @@
                 </RadzenRow>
 
             </RadzenStack>
-            <RadzenRow>
-                <RadzenColumn Size="6">
-                    <RadzenStack Orientation="Orientation.Horizontal" Gap="0" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.End">
-                        <RadzenText Text="@($"₹{(Context.BaseRatePerSecond ?? 0):F2}")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0" Style="" />
-                        <RadzenText Text="/sec" TextStyle="TextStyle.Body1" class="rz-mb-0" Style="font-weight:300; font-size: 12px" />
-                    </RadzenStack>
-                </RadzenColumn>
-                <RadzenColumn Size="6">
-                    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.End" class="rz-mt-4">
-                        <RadzenButton Text="Select" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Visible="!Selected" Click="@SelectClick" />
-                        <RadzenButton Text="Unselect" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Size="ButtonSize.Small" Visible="@Selected" Click="@UnselectClick" />
-                    </RadzenStack>
-                </RadzenColumn>
-            </RadzenRow>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween" Wrap="FlexWrap.Wrap">
+                <RadzenStack Orientation="Orientation.Horizontal" Gap="0" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.End">
+                    <RadzenText Text="@($"₹{(Context.BaseRatePerSecond ?? 0):F2}")" TextStyle="TextStyle.DisplayH6" class="rz-mb-0" Style="" />
+                    <RadzenText Text="/sec" TextStyle="TextStyle.Body1" class="rz-mb-0" Style="font-weight:300; font-size: 12px" />
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.End" class="rz-mt-4">
+                    <RadzenButton Text="Select" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Visible="!Selected" Click="@SelectClick" />
+                    <RadzenButton Text="Unselect" ButtonStyle="ButtonStyle.Danger" Variant="Variant.Outlined" Size="ButtonSize.Small" Visible="@Selected" Click="@UnselectClick" />
+                </RadzenStack>
+            </RadzenStack>
         </RadzenStack>
     </RadzenColumn>
 </RadzenRow>

@@ -1,4 +1,5 @@
 @using System.Net.Mime
+@using DOOH.Server.Extensions
 @using DOOH.Server.Models.DOOHDB
 
 <RadzenStack class="rz-mt-2 rz-px-3 rz-py-2 campaign-schedule-card border-1" Gap="0">
@@ -32,17 +33,9 @@
                 </RadzenStack>
             </RadzenStack>
         </RadzenStack>
-        @* <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="padding-top: 1rem" Gap="0.5rem"> *@
-        @*     <RadzenButton Shade="Shade.Lighter" Icon="remove" Size="ButtonSize.Small" Click="@RemoveRotationClick"></RadzenButton> *@
-        @*     <RadzenStack Gap="0" AlignItems="AlignItems.End" Orientation="Orientation.Horizontal" Style="min-width: 48px; padding-left: 0.5rem" JustifyContent="JustifyContent.Center"> *@
-        @*         <RadzenText Text="@Context.Rotation.ToString()" TextStyle="TextStyle.H6" class="rz-mb-0"></RadzenText> *@
-        @*         <RadzenIcon Icon="360" Style="font-size: 16px" IconColor="var(--rz-primary)"></RadzenIcon> *@
-        @*     </RadzenStack> *@
-        @*     <RadzenButton Icon="add" Shade="Shade.Lighter" Size="ButtonSize.Small" Click="@AddRotationClick"></RadzenButton> *@
-        @* </RadzenStack> *@
     </RadzenStack>
     <RadzenStack AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Style="background-color: #dfdfdf; border-radius: 0.25rem; padding: 0.25rem; margin-top: 0.5rem">
-        <RadzenText Text="@Context.Label" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"></RadzenText>
+        <RadzenText Text="@Context.Estimate().ToString()" TextStyle="Radzen.Blazor.TextStyle.Caption" class="rz-mb-0"></RadzenText>
     </RadzenStack>
 </RadzenStack>
 

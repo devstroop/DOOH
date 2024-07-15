@@ -19,8 +19,8 @@ namespace DOOH.Client.Templates
         public RenderFragment<DOOH.Server.Models.DOOHDB.Adboard> Actions { get; set; }
 
         [Parameter]
-        public EventCallback<MouseEventArgs> OnClick { get; set; }
-
+        public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> OnClick { get; set; }
+        
         [Parameter]
         public EventCallback<DOOH.Server.Models.DOOHDB.Adboard> OnSelect { get; set; }
 

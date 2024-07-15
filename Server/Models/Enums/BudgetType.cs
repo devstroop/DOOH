@@ -10,29 +10,28 @@
     {
         public static string ToFriendlyString(this BudgetType budgetType)
         {
-            switch (budgetType)
+            return budgetType switch
             {
-                case BudgetType.Total:
-                    return "Total";
-                case BudgetType.Daily:
-                    return "Daily";
-                default:
-                    return string.Empty;
-            }
+                BudgetType.Total => "Total",
+                BudgetType.Daily => "Daily",
+                _ => string.Empty
+            };
         }
 
 
+        public static string GetColor(this BudgetType? budgetType)
+        {
+            return budgetType.HasValue ? budgetType.Value.GetColor() : "transparent";
+        }
+
         public static string GetColor(this BudgetType budgetType)
         {
-            switch (budgetType)
+            return budgetType switch
             {
-                case BudgetType.Total:
-                    return "darkgoldenrod";
-                case BudgetType.Daily:
-                    return "green";
-                default:
-                    return "transparent";
-            }
+                BudgetType.Total => "darkgoldenrod",
+                BudgetType.Daily => "green",
+                _ => "transparent"
+            };
         }
     }
 }
