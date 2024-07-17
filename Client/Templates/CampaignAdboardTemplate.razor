@@ -6,14 +6,15 @@
                 <RadzenRow>
                     <RadzenColumn Size="12">
                         <RadzenStack Gap="0" AlignItems="AlignItems.Start">
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="0.5rem" Style="">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap" Gap="0.5rem" Style="" class="rz-mb-3">
                                 <RadzenRow AlignItems="AlignItems.Center">
                                     <RadzenText Text="@($"{Context.AdboardId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
                                     <RadzenText Text="@(String.IsNullOrEmpty(Context.SignName) ? "NA" : Context.SignName)" TextStyle="TextStyle.Subtitle1" class="rz-mb-0" />
                                 </RadzenRow>
                                 <RadzenBadge Text="@Context.Category.CategoryName.ToUpper()" Style="@($"{(String.IsNullOrEmpty(Context.Category.CategoryColor) ? "" : $"background-color:{Context.Category.CategoryColor}")}; border-radius: 4px; font-weight: 600;")" class="rz-pt-05 rz-px-15 rz-mb-0" />
                             </RadzenStack>
-                            <RadzenText Text="@($"{Context.City} {Context.State}")" TextStyle="TextStyle.Overline" class="rz-mt-1" />
+                            <RadzenText Text="@($"{Context.Address}")" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                            <RadzenText Text="@($"{Context.City} {Context.State}")" TextStyle="TextStyle.Body2" class="rz-mb-0" />
                         </RadzenStack>
                     </RadzenColumn>
                 </RadzenRow>
