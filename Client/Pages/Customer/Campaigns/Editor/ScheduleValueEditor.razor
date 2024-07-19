@@ -1,0 +1,241 @@
+@using DOOH.Server.Models.DOOHDB
+@inject DialogService DialogService
+<RadzenStack Gap="1.5rem">
+    <RadzenRow>
+        <RadzenColumn Size="12">
+            <RadzenRow AlignItems="AlignItems.Center" Gap="0" RowGap="0">
+                <RadzenBadge Text="New" Style="font-size: 16px; font-weight: 500; padding: 6px 8px; background-color: green;" Visible="@(Schedule?.ScheduleId == null || Schedule?.ScheduleId == 0)"></RadzenBadge>
+                <RadzenBadge Text="Edit" Style="font-size: 16px; font-weight: 500; padding: 6px 8px; background-color: goldenrod" Visible="@(Schedule?.ScheduleId != null && Schedule?.ScheduleId != 0)"></RadzenBadge>
+                <RadzenText Text="Schedule" Style="font-size: 18px; font-weight: 500; padding: 6px 8px; margin: 0;"></RadzenText>
+            </RadzenRow>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenTemplateForm TItem="DOOH.Server.Models.DOOHDB.Schedule" Data="@Schedule" Submit=@OnSubmit Visible="@(Schedule != null)">
+        <RadzenRow class="rz-mb-2">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Date" />
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn>
+                        <RadzenDatePicker @bind-Value="@Schedule.Start" Name="Start" ShowTime="false" DateFormat="d" Style="width: 100%;"/>
+                    </RadzenColumn>
+                    <RadzenLabel Text="-" class="rz-mb-0"/>
+                    <RadzenColumn>
+                        <RadzenDatePicker @bind-Value="@Schedule.End" Name="End" ShowTime="false" DateFormat="d" Style="width: 100%;"/>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenColumn>
+        </RadzenRow>
+        
+        
+        
+        
+        <RadzenRow class="rz-mb-2">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Adboards"/>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                
+                
+                <RadzenDropDownDataGrid @ref="gridAdboards" class="w-100" Chips="true" AllowFiltering="true" AllowClear="true" @bind-Value="@SelectedAdboardIds"
+                                        Multiple="true" Placeholder="Select adboards" Data=@Adboards TextProperty="@nameof(Adboard.SignName)" ValueProperty="@nameof(Adboard.AdboardId)" Name="DropDownDataGridMultiple">
+                    <Columns>
+                        <RadzenDropDownDataGridColumn Width="36px" Sortable="false">
+                            <HeaderTemplate>
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select all" } })" Disabled="@(!gridAdboards.AllowSelectAll)" TriState="false" TValue="bool" Value="@(Adboards.Any(c => SelectedAdboardIds != null && SelectedAdboardIds.Contains(c.AdboardId)))"
+                                                Change="@(args => SelectedAdboardIds = args ? gridAdboards.View.Cast<Adboard>().Select(c => c.AdboardId).AsEnumerable() : Enumerable.Empty<int>())"/>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select item" } })" TriState="false" Value="@(SelectedAdboardIds != null && SelectedAdboardIds.Contains(((Server.Models.DOOHDB.Adboard)data).AdboardId))"
+                                                TValue="bool" Change=@(args => gridAdboards.SelectItem(data)) @onclick:stopPropagation/>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+
+                        <RadzenDropDownDataGridColumn Property="@nameof(Adboard.AdboardId)" Title="Id" Width="54px">
+                            <Template Context="data">
+                                <RadzenRow>
+                                    <RadzenText Text="@($"{data.AdboardId}")" class="rz-mb-0 rz-px-1 rz-py-05" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 4px"/>
+                                </RadzenRow>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                        <RadzenDropDownDataGridColumn Property="@nameof(Adboard.SignName)" Title="SignName" Width="100px"/>
+                        <RadzenDropDownDataGridColumn Property="@nameof(Adboard.BaseRatePerSecond)" Title="Rate" Width="72px">
+                            <Template Context="data">
+                                <RadzenText Text="@($"{data.BaseRatePerSecond:C}/s")" class="rz-mb-0" Style="font-size: 14px; font-weight: 500; color: green;"/>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                    </Columns>
+                </RadzenDropDownDataGrid>
+                
+                
+            </RadzenColumn>
+        </RadzenRow>
+        
+        
+        <RadzenRow>
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Advertisements"/>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+
+                <RadzenDropDownDataGrid @ref="gridAdvertisements" class="w-100" Chips="true" AllowFiltering="true" AllowClear="true" @bind-Value="@SelectedAdvertisementIds"
+                                        ValueProperty="@nameof(Advertisement.AdvertisementId)" Data="@Advertisements" TextProperty="@nameof(Advertisement.Key)"
+                                        Multiple="true" AllowSorting="true" Placeholder="Select advertisements">
+                    <Columns>
+                        <RadzenDropDownDataGridColumn Width="36px" Sortable="false">
+                            <HeaderTemplate>
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select all" } })" Disabled="@(!gridAdvertisements.AllowSelectAll)" TriState="false" TValue="bool" Value="@(Advertisements.Any(c => SelectedAdvertisementIds != null && SelectedAdvertisementIds.Contains(c.AdvertisementId)))"
+                                                Change="@(args => SelectedAdvertisementIds = args ? gridAdvertisements.View.Cast<Advertisement>().Select(c => c.AdvertisementId).AsEnumerable() : Enumerable.Empty<int>())"/>
+                            </HeaderTemplate>
+                            <Template Context="data">
+                                <RadzenCheckBox InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "select item" } })" TriState="false" Value="@(SelectedAdvertisementIds != null && SelectedAdvertisementIds.Contains(((Server.Models.DOOHDB.Advertisement)data).AdvertisementId))"
+                                                TValue="bool" Change="@(args => gridAdvertisements.SelectItem(data))" @onclick:stopPropagation/>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                        <RadzenDropDownDataGridColumn Property="@nameof(Advertisement.Key)" Title="Upload">
+                            <Template Context="data">
+                                <RadzenText Text="@(data.Key)"></RadzenText>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                        <RadzenDropDownDataGridColumn Property="@nameof(Advertisement.Duration)" Title="Duration">
+                            <Template Context="data">
+                                <RadzenText Text="@(data.Duration.ToString())"></RadzenText>
+                            </Template>
+                        </RadzenDropDownDataGridColumn>
+                    </Columns>
+                </RadzenDropDownDataGrid>
+
+            </RadzenColumn>
+        </RadzenRow>
+        
+        
+        
+        
+        <RadzenRow style="margin-bottom: 16px" AlignItems="AlignItems.Center" class="rz-my-3">
+            <RadzenColumn SizeMD="3">
+                <RadzenLabel Text="Rotation"/>
+            </RadzenColumn>
+            <RadzenColumn SizeMD="9">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" Gap="1rem">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                        <RadzenButton Icon="remove" Size="ButtonSize.Small" Click="@((args) => Schedule.Rotation -= 1)"/>
+                        <RadzenNumeric class="rotation-input" @bind-Value="@Schedule.Rotation" Name="Budget" Min="0" Max="100" Style="text-align: center; width: 84px; max-width: 120px; appearance: none; border: none; font-size: 14px; font-weight: bold;"/>
+                        <RadzenButton Icon="add" Size="ButtonSize.Small" Click="@((args) => Schedule.Rotation += 1)"/>
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow class="rz-mt-4">
+            <RadzenColumn Size="6">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Visible="@(Schedule?.ScheduleId != null && Schedule?.ScheduleId != 0)">
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Text="Delete"/>
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn Size="6">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Save"/>
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Click="@((args) => Dialog.Close(null))"/>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenTemplateForm>
+</RadzenStack>
+<style>
+        .rotation-input input{
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .rotation-input .rz-spinner input[type=number], .rz-spinner input[type=text] {
+            padding: 0;
+        }
+        .rz-dialog-titlebar {
+            display: none;
+        }
+        div.rz-dialog{
+            width: 580px !important;
+        }
+    </style>
+    
+    
+    @code{
+
+        
+        [Parameter] public Server.Models.DOOHDB.Schedule Schedule { get; set; }
+        [Parameter] public int CampaignId { get; set; }
+        [Parameter] public DateTime Date { get; set; } = DateTime.Today;
+        [Parameter] public IEnumerable<Server.Models.DOOHDB.Adboard> Adboards { get; set; }
+        [Parameter] public IEnumerable<Server.Models.DOOHDB.Advertisement> Advertisements { get; set; }
+        private IEnumerable<int> SelectedAdboardIds { get; set; } = new List<int>();
+        private IEnumerable<int> SelectedAdvertisementIds { get; set; } = new List<int>();
+
+        [Inject] protected DialogService Dialog { get; set; }
+        
+        [Inject] protected NotificationService NotificationService { get; set; }
+
+        RadzenDropDownDataGrid<IEnumerable<int>> gridAdboards;
+        RadzenDropDownDataGrid<IEnumerable<int>> gridAdvertisements;
+
+        [Inject]
+        protected DOOH.Client.DOOHDBService DOOHDBService { get; set; }
+        
+        protected override async Task OnInitializedAsync()
+        {
+            Schedule = Schedule ?? new Server.Models.DOOHDB.Schedule()
+            {
+                ScheduleId = 0,
+                CampaignId = CampaignId,
+                Start = Date,
+                End = Date.AddDays(1),
+                Rotation = 1,
+                ScheduleAdvertisements = new List<ScheduleAdvertisement>(),
+                ScheduleCampaignAdboards = new List<ScheduleCampaignAdboard>()
+            };
+            SelectedAdboardIds = Schedule.ScheduleCampaignAdboards.Select(x => x.AdboardId);
+            SelectedAdvertisementIds = Schedule.ScheduleAdvertisements.Select(x => x.AdvertisementId);
+            StateHasChanged();
+        }
+        
+        private async Task OnSubmit(DOOH.Server.Models.DOOHDB.Schedule schedule)
+        {
+            try
+            {
+                // if (!SelectedAdboardIds.Any())
+                // {
+                //     NotificationService.Notify(new NotificationMessage
+                //     {
+                //         Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Please select at least one adboard"
+                //     });
+                //     return;
+                // }
+                schedule.Label = $"{schedule.Rotation * SelectedAdboardIds.Count() * Schedule.ScheduleAdvertisements.Select(x => x.Advertisement.Duration).Sum()} secs";
+                var adboards = Adboards.Where(x => SelectedAdboardIds.Contains(x.AdboardId)).ToList();
+                var scheduleCampaignAdboards = adboards.Select(x => new ScheduleCampaignAdboard
+                {
+                    AdboardId = x.AdboardId,
+                    ScheduleId = schedule.ScheduleId,
+                    CampaignId = CampaignId
+                }).ToList();
+                var advertisements = Advertisements.Where(x => SelectedAdvertisementIds.Contains(x.AdvertisementId)).ToList();
+                var scheduleAdvertisements = advertisements.Select(x => new ScheduleAdvertisement
+                {
+                    AdvertisementId = x.AdvertisementId,
+                    ScheduleId = schedule.ScheduleId
+                }).ToList();
+                schedule.ScheduleCampaignAdboards = scheduleCampaignAdboards;
+                schedule.ScheduleAdvertisements = scheduleAdvertisements;
+                Dialog.Close(schedule);
+
+            }
+            catch (Exception exception)
+            {
+                NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Unable to save"
+                });
+            }
+        }
+
+    }

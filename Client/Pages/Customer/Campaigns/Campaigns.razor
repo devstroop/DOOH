@@ -1,5 +1,5 @@
-@layout AdminLayout
-@page "/admin/campaigns"
+@layout PublicLayout
+@page "/customer/campaigns"
 @using DOOH.Server.Models.DOOHDB
 
 @attribute [Authorize]
@@ -29,7 +29,7 @@
     <RadzenColumn>
         <RadzenDataList IsLoading="@IsLoading" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Campaign" Data="@campaigns" AllowVirtualization="true" LoadData="@campaignsLoadData" Count="@campaignsCount" Style="min-height: 400px">
             <Template>
-                <AdminCampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete"/>
+                <CustomerCampaignTemplate Campaign="@context" Edit="@OnEdit" Delete="@OnDelete"/>
             </Template>
         </RadzenDataList>
     </RadzenColumn>

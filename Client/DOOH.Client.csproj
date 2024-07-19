@@ -36,6 +36,16 @@
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\AddCategory.razor" />
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\Categories.razor" />
 	  <_ContentIncludedByDefault Remove="Pages\Admin\Settings\Categories\EditCategory.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Adboards.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Brands\AddBrand.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Brands\Brands.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Brands\EditBrand.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Displays\AddDisplay.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Displays\Displays.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Displays\EditDisplay.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Motherboards\AddMotherboard.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Motherboards\EditMotherboard.razor" />
+	  <_ContentIncludedByDefault Remove="Pages\Provider\Adboards\Motherboards\Motherboards.razor" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\OpenLayer.NET\OpenLayer.NET.csproj" />
@@ -47,6 +57,19 @@
 	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\AddCategory.razor" />
 	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\Categories.razor" />
 	  <AdditionalFiles Include="Pages\Admin\Providers\Categories\EditCategory.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Campaigns.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\CampaignAdboardsEditor.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\CampaignAdvertisementsEditor.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\CampaignEditor.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\CreateCampaign.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\ReviewPublish.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\ScheduleEditor.razor" />
+	  <AdditionalFiles Include="Pages\Customer\Campaigns\Editor\ScheduleValueEditor.razor" />
+	  <AdditionalFiles Include="Pages\Provider\Adboards\Adboards.razor" />
+	  <AdditionalFiles Include="Pages\Provider\Adboards\AddAdboard.razor" />
+	  <AdditionalFiles Include="Pages\Provider\Adboards\EditAdboard.razor" />
+	  <AdditionalFiles Include="Pages\Provider\Adboards\Networks\AdboardNetworkDetails.razor" />
+	  <AdditionalFiles Include="Pages\Provider\Adboards\Wifis\ConfigureAdboardWifi.razor" />
 	</ItemGroup>
 	<PropertyGroup>
 		<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>

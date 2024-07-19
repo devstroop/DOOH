@@ -1,0 +1,266 @@
+<RadzenColumn Size="12" Style="@Style" class="rz-border-radius-2">
+    <RadzenRow>
+        <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="2" Visible="@(Campaign?.Advertisements != null)">
+            <CarouselComponent CurrentIndex="@currentIndex" Images="@Images" Width="100%" Height="210px" Style="display: block; object-fit: cover; border:solid 1px #d5d5d5;">
+                <Overlay>
+                    <RadzenButton Icon="play_arrow" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Large" Variant="Variant.Text" class="rz-border-radius-8 custom-center-icon-button" Click="@((args) => OnHoverClick(args, CurrentImage))" Visible="@IsCurrentImageVisible" />
+                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_left" class="nav-button left-button" Click="PreviousImage" Visible="IsPreviousButtonVisible"/>
+                    <RadzenButton Size="ButtonSize.ExtraSmall" Variant="Variant.Filled" ButtonStyle="ButtonStyle.Light" Icon="chevron_right" class="nav-button right-button" Click="NextImage" Visible="IsNextButtonVisible"/>
+                </Overlay>
+            </CarouselComponent>
+        </RadzenColumn>
+        <RadzenColumn>
+            <RadzenStack Style="height: 100%; width: 100%" JustifyContent="Radzen.JustifyContent.Stretch">
+                <RadzenStack Orientation="Orientation.Horizontal" Style="width: 100%; display: block" JustifyContent="Radzen.JustifyContent.SpaceBetween" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="Radzen.AlignItems.Center" Gap="0.5rem">
+                        <RadzenText Text="@($"{Campaign.CampaignId}")" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px" />
+                        <RadzenText Text="@Campaign.CampaignName" TextStyle="TextStyle.H5" class="rz-mb-0" Style="font-size: 20px;" />
+                    </RadzenStack>
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Style="display: block" class="flex-grow-1" JustifyContent="Radzen.JustifyContent.SpaceBetween">
+                        @* <RadzenDropDown TValue="Status" TextProperty="StatusName"  ValueProperty="StatusId" Data=@Statuses Change="@(args => StateHasChanged())" Style="width: 100%; max-width: 400px;" Name="DropDownChangeEvent" /> *@
+                        @* <RadzenBadge Text="Daily" Variant="Variant.Outlined" BadgeStyle="BadgeStyle.Primary" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" Visible="@(((BudgetType)Campaign.BudgetType) == BudgetType.Daily)" /> *@
+                        <RadzenDropDown TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@CurrentStatus" Change="@OnStatusChange" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="background-color: transparent;" AllowSelectAll="false" class="justify-content-center">
+                            <Template>
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                                    <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon(context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor(context)" Style="font-size: 18px;" ></RadzenIcon>
+                                    <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString(context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                                </RadzenStack>
+                            </Template>
+                        </RadzenDropDown>
+                        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center">
+                            @* <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status)Campaign.Status)" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" /> *@
+                            <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
+                                <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />
+                                <RadzenSplitButtonItem Text="Delete" Icon="delete" Style="font-size:12px;" />
+                            </RadzenSplitButton>
+                        </RadzenStack>
+                    </RadzenStack>
+                </RadzenStack>
+                <RadzenRow JustifyContent="JustifyContent.SpaceBetween">
+                    <RadzenColumn SizeMD="6">
+                        <RadzenStack Gap="0.5rem" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="0.5rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="date_range" Style="font-size: 16px" />
+                                    <RadzenText Text="Date" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenText Text="@($"{Campaign.StartDate:d} to {Campaign.EndDate:d}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="currency_rupee" Style="font-size: 16px" />
+                                    <RadzenText Text="Budget" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="Radzen.AlignItems.Center" Wrap="FlexWrap.Wrap">
+                                    <RadzenText Text="@($"{Campaign.Budget}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: bold;" />
+                                    <RadzenText Text="@(Campaign.BudgetType == 2 ? "per day" : "total")" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-px-2 rz-py-05" Style="font-size: 12px; font-weight: 500; border-radius: 4px; background-color: grey; color: #ffffff" />
+                                </RadzenStack>
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" @onclick="@OnLocationClick" Style="cursor: pointer;">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="location_on" Style="font-size: 16px" />
+                                    <RadzenText Text="Locations" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenText Text="@($"{Campaign.CampaignAdboards.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="attach_file" Style="font-size: 16px" />
+                                    <RadzenText Text="Ads" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenText Text="@($"{Campaign.Advertisements.Count}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                                @* <RadzenButton Icon="info" Variant="Variant.Text" Size="ButtonSize.Small" Style="padding: 2px" /> *@
+                            </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="browse_gallery" Style="font-size: 16px" />
+                                    <RadzenText Text="Duration" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenText Text="@($"{Campaign.Advertisements.Select(x => Math.Round(x.Duration)).Sum()} sec")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                                @* <RadzenButton Icon="more" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" /> *@
+                            </RadzenStack>
+                        </RadzenStack>
+                    </RadzenColumn>
+                    <RadzenStack JustifyContent="Radzen.JustifyContent.End">
+                        <RadzenFieldset Text="Analytics">
+                            <RadzenStack Orientation="Orientation.Horizontal">
+                                <RadzenStack Gap="0">
+                                    <RadzenText Text="Rotation" class="rz-mb-0" TextStyle="TextStyle.Caption" />
+                                    <RadzenText Text="15" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenStack Gap="0">
+                                    <RadzenText Text="Playtime" class="rz-mb-0" TextStyle="TextStyle.Caption" />
+                                    <RadzenText Text="00:00:00" TextStyle="TextStyle.H4" Style="font-weight: bold;" class="rz-mb-0" />
+                                </RadzenStack>
+                            </RadzenStack>
+                        </RadzenFieldset>
+                    </RadzenStack>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenColumn>
+<style>
+    .rz-g>div, .rz-datalist-data>li{
+        border-radius: 0.5rem;
+    }
+    .rz-menuitem {
+        padding: 0.5rem;
+    }
+
+        .rz-menuitem .rz-menuitem-icon {
+            font-size: 18px;
+        }
+
+    .rz-g > div, .rz-datalist-data > li {
+        padding: 0;
+    }
+
+    .rz-datalist-data {
+        padding: 0;
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+    div.rz-dropdown-trigger.rz-corner-right {
+        display: none;
+    }
+    
+    .custom-center-icon-button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    .nav-button {
+        position: absolute;
+        bottom: 0;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border-radius: 50%;
+        padding: 0.5rem;
+    }
+    
+    
+    .left-button {
+        left: 10px;
+    }
+    
+    .right-button {
+        right: 10px;
+    }
+</style>
+@code {
+    [Parameter] public DOOH.Server.Models.DOOHDB.Campaign Campaign { get; set; }
+    [Parameter] public string Style { get; set; } = "width: 100%; padding: 1rem;";
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Edit { get; set; }
+    [Parameter] public EventCallback<DOOH.Server.Models.DOOHDB.Campaign> Delete { get; set; }
+    [Parameter] public IEnumerable<Status> statuses { get; set; }
+
+    private DOOH.Server.Models.Enums.Status CurrentStatus { get; set; }
+    
+    private int statusesCount { get; set; } = 0;
+    
+    [Inject] private DOOHDBService DOOHDBService { get; set; }
+    [Inject] private DialogService DialogService { get; set; }
+    [Inject] private NotificationService NotificationService { get; set; }
+
+    private async Task OnLocationClick(MouseEventArgs args)
+    {
+        var markers = new List<Tuple<string, GoogleMapPosition>>();
+        GoogleMapPosition firstPosition = null;
+        foreach (var adboard in Campaign.CampaignAdboards)
+        {
+            var position = new GoogleMapPosition() { Lat = adboard?.Adboard?.Latitude ?? 0, Lng = adboard?.Adboard?.Longitude ?? 0 };
+            markers.Add(new Tuple<string, GoogleMapPosition>($"#{adboard.AdboardId}", position));
+            if (firstPosition == null)
+             {
+                firstPosition = position;
+            }
+        }
+
+ 
+
+        var parameters = new Dictionary<string, object>();
+        parameters.Add("Markers", markers);
+        parameters.Add("Center", firstPosition);
+        parameters.Add("Zoom", 12);
+        var options = new DialogOptions() { Width = "800px", Height = "600px", Draggable = true, CloseDialogOnOverlayClick = true, CloseDialogOnEsc = true };
+        await DialogService.OpenAsync<GoogleMapTemplate>("Map", parameters, options);
+    }
+
+    private async Task OnHoverClick(MouseEventArgs args, string image)
+    {
+        var advertisement = Campaign.Advertisements.Where(x => CurrentImage.Contains(x.Thumbnail)).FirstOrDefault();
+        if (advertisement != null)
+        {
+            var url = advertisement.Key.GetUrl();
+            await DialogService.OpenAsync<Player>($"#{advertisement.AdvertisementId}", new Dictionary<string, object>() { { "Src", url } }, new DialogOptions() { Width = "400px" });
+        }
+        // NotificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Info, Summary = "Image", Detail = url });
+    }
+
+    private async Task SplitBtnClick(RadzenSplitButtonItem item)
+    {
+        switch (item.Text)
+        {
+            case "Edit":
+                await Edit.InvokeAsync(Campaign);
+                break;
+            case "Delete":
+                await Delete.InvokeAsync(Campaign);
+                break;
+        }
+    }
+    
+    
+    // OnStatusChange
+    protected async Task OnStatusChange(object status)
+    {
+        try
+        {
+            var existing = await DOOHDBService.GetCampaignByCampaignId(campaignId: Campaign.CampaignId);
+            
+            var confirmmationResult = await DialogService.Confirm("Are you sure you want to change the status?");
+            if (confirmmationResult != true)
+            {
+                CurrentStatus = (DOOH.Server.Models.Enums.Status)existing.Status;
+                StateHasChanged();
+                return;
+            }
+            
+            existing.Status = (int)status;
+            var result = await DOOHDBService.UpdateCampaign(Campaign.CampaignId, existing);
+            if (result != null && result.IsSuccessStatusCode)
+            {
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Info, Summary = $"Status", Detail = $"Status changed successfully!" });
+            }
+            else
+            {
+                NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status." });
+            }
+        }
+        catch (System.Exception ex)
+        {
+            NotificationService.Notify(new NotificationMessage(){ Severity = NotificationSeverity.Error, Summary = $"Error", Detail = $"Unable to update status." });
+        }
+    }
+    
+    private IEnumerable<string> Images => Campaign.Advertisements.Select(x => x.Thumbnail.GetUrl());
+    
+    private int currentIndex = 0;
+    private string CurrentImage => Images.ElementAtOrDefault(currentIndex);
+    private bool IsCurrentImageVisible => !string.IsNullOrEmpty(CurrentImage);
+    private bool IsPreviousButtonVisible => currentIndex > 0;
+    private bool IsNextButtonVisible => Images.Count() - 1 > currentIndex;
+    private void NextImage()
+    {
+        currentIndex = (currentIndex + 1) % Images.Count();
+    }
+
+    private void PreviousImage()
+    {
+        currentIndex = (currentIndex - 1 + Images.Count()) % Images.Count();
+    }
+}

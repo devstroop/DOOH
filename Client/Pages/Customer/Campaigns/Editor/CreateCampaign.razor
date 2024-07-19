@@ -1,0 +1,37 @@
+@using DOOH.Server.Models.DOOHDB
+<RadzenStack>
+    <RadzenRow>
+        <RadzenColumn Size="3">
+            <RadzenLabel Text=" Campaign Name" />
+        </RadzenColumn>
+        <RadzenColumn Size="9">
+            <RadzenTextBox @bind-Value="campaign.CampaignName" Style="display: block; width: 100%" />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Click="@CancelClick" />
+                <RadzenButton Text="Continue" Click="@ContinueClick" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenStack>
+@code {
+    private Campaign campaign = new ();
+    private async Task ContinueClick(MouseEventArgs args)
+    {
+        campaign.CampaignId = 0;
+        
+        campaign = await DatabaseService.CreateCampaign(campaign);
+        
+        Navigation.NavigateTo($"/customer/campaigns/editor/{campaign.CampaignId}");
+    }
+    private async Task CancelClick(MouseEventArgs args)
+    {
+        Navigation.NavigateTo("/customer/campaigns");
+    }
+    [Inject] private DOOHDBService DatabaseService { get; set; }
+    [Inject] private NavigationManager Navigation { get; set; }
+    [Inject] private DialogService Dialog { get; set; }
+}

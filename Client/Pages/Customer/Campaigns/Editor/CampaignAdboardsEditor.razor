@@ -1,0 +1,83 @@
+@attribute [Authorize]
+<RadzenRow>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="7">
+        <RadzenRow AlignItems="AlignItems.Center" class="rz-mb-3">
+            <RadzenColumn>
+                <RadzenRow AlignItems="AlignItems.Center">
+                    <RadzenColumn>
+                        <RadzenFormField Text="Search by Sign Name, City or State" Style="display: block; width: 100%;" >
+                            <Start>
+                                <RadzenIcon Icon="search" IconStyle="IconStyle.Secondary" />
+                            </Start>
+                            <ChildContent>
+                                <RadzenTextBox @bind-Value="@search" Change="@Search" Style="display: block; width: 100%;" />
+                            </ChildContent>
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenColumn>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Visible="@ShowSelectedAdboardLabel">
+                <RadzenCheckBox @bind-Value=@showSelectedAdboardsOnly Name="CheckBoxAdboardOnly" />
+                <RadzenLabel Text="Selected" Component="CheckBoxAdboardOnly" Style="font-size: 14px" />
+            </RadzenStack>
+        </RadzenRow>
+        <RadzenRow Style="position: relative">@*FitBoundsToMarkersOnUpdate="@(Zoom == 12)" *@
+            <RadzenGoogleMap ApiKey="@GlobalVariables.MapApiKey" @ref=map Zoom="@Zoom" Center="@CenterPosition" Style="width: 100%; min-height: 580px;" MapClick="@OnMapClick" MarkerClick="@OnMarkerClick" Options="@(new Dictionary<string, object> { { "disableDoubleClickZoom", true } })">
+                <Markers>
+                    @if (showSelectedAdboardsOnly && Selected.Any())
+                    {
+                        @foreach (var each in Adboards.Where(x => Selected.Any(y => x.AdboardId == y.AdboardId)))
+                        {
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style=""/>
+                        }
+                    }
+                    else
+                    {
+                        @foreach (var each in Adboards ?? new List<DOOH.Server.Models.DOOHDB.Adboard>())
+                        {
+                            <RadzenGoogleMapMarker id="@($"map-marker-{each.AdboardId}")" Title="@($"{each.AdboardId}")" Position="@(new GoogleMapPosition() { Lat = each.Latitude, Lng = each.Longitude })" Style=""/>
+                        }
+                    }
+                </Markers>
+            </RadzenGoogleMap>
+            @* <RadzenButton Variant="Variant.Flat"  *@
+            @*               Icon="my_location"  *@
+            @*               draggable="false"  *@
+            @*               aria-label="Toggle fullscreen view"  *@
+            @*               title="Toggle fullscreen view"  *@
+            @*               type="button"  *@
+            @*               aria-pressed="false"  *@
+            @*               class="gm-fullscreen-control"  *@
+            @*               style="background: none rgb(255, 255, 255); border: 0px; margin: 10px; padding: 0px; text-transform: none; appearance: none; position: absolute; cursor: pointer; user-select: none; border-radius: 2px; height: 40px; width: 40px; box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 4px -1px; overflow: hidden; top: 48px; right: 0;"> *@
+            @* </RadzenButton> *@
+        </RadzenRow>
+    </RadzenColumn>
+    <RadzenColumn SizeSM="12" SizeMD="6" SizeLG="5">
+        <RadzenRow>
+            <RadzenColumn Size="12" Style="height: 630px; display: flex; flex-direction: column; overflow-y: auto; scroll-margin-top: 1rem">
+                <RadzenStack Visible="@(!(showSelectedAdboardsOnly && Selected.Any() ? Adboards.Where(x => Selected.Any(y => x.AdboardId == y.AdboardId)) : Adboards).Any())">
+                    <NoRecordsFound Title="Oops" Subtitle="No adboards found."></NoRecordsFound>
+                </RadzenStack>
+                <RadzenDataList @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@(showSelectedAdboardsOnly && Selected.Any() ? Adboards.Where(x => Selected.Any(y => x.AdboardId == y.AdboardId)) : Adboards)" WrapItems="true" LoadData="@adboardsLoadData" IsLoading="@isAdboardsLoading" Count="@adboardsCount" Style="min-height: 640px">
+                    <Template>
+                        <CampaignAdboardTemplate 
+                            Context="@context" 
+                            Selected="@Selected.Any(x => x.AdboardId == context.AdboardId)" 
+                            OnClick="@FocusOnAdboard"
+                            OnSelect="@OnSelectAdboard" 
+                            OnUnselect="@OnUnselectAdboard"/>
+                    </Template>
+                    <LoadingTemplate>
+                        <Loading></Loading>
+                    </LoadingTemplate>
+                </RadzenDataList>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenColumn>
+</RadzenRow>
+
+<style>
+    .rz-form-field-content{
+        width: 100%;
+    }
+</style>

@@ -1,34 +1,46 @@
 @layout ProviderLayout
 @page "/provider/adboards"
-@inject Microsoft.Extensions.Localization.IStringLocalizer<Adboards> L
 
 @attribute [Authorize]
 
 <PageTitle>Adboards</PageTitle>
-<RadzenRow>
-    <RadzenColumn Size="12">
-        <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" />
-    </RadzenColumn>
-</RadzenRow>
-<RadzenDataList TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading">
-    <Template>
-        <RadzenStack Orientation="Orientation.Horizontal" Style="min-width: 400px">
-            @* <ImageComponent Path="@context.Image"/> *@
-            <RadzenStack Style="width: 100%">
-                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween">
-                    <RadzenStack Gap="0">
-                        <RadzenText Text="@($"#{context.AdboardId}")" TextStyle="TextStyle.H5" />
-                        <RadzenText Text="@($"{(String.IsNullOrEmpty(context.SignName) ? $"{context.SignName}, " : "")} {context.City}")" TextStyle="TextStyle.Subtitle1" />
-                        <RadzenBadge Text="@context.Category.CategoryName" Style="@($"{(String.IsNullOrEmpty(context.Category.CategoryColor) ? "" : $"background-color:{context.Category.CategoryColor}")}")" />
-                    </RadzenStack>
-                    <RadzenStack>
-                        <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Text="Details" Style="margin-left: auto" Click="@DetailsSplitButtonClicked">
-                            @* <RadzenSplitButtonItem Text="Edit" Icon="edit" /> *@
-                            @* <RadzenSplitButtonItem Text="Delete" Icon="delete" /> *@
-                        </RadzenSplitButton>
-                    </RadzenStack>
-                </RadzenStack>
+<RadzenStack>
+    <RadzenRow class="rz-mb-1">
+        <RadzenColumn Size="6">
+            <RadzenText Text="Adboards" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="6">
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+                <RadzenButton Icon="refresh" ButtonStyle="ButtonStyle.Light" Click="@RefreshClick" />
             </RadzenStack>
-        </RadzenStack>
-    </Template>
-</RadzenDataList>
+        </RadzenColumn>
+    </RadzenRow>
+    
+    <RadzenRow>
+        <RadzenColumn>
+            <RadzenTextBox Placeholder="Search ..." @bind-Value=@search aria-label="Search by address" Style="display: block; width: 100%;" />
+        </RadzenColumn>
+        <RadzenButton Icon="search" Click="@Search" />
+    </RadzenRow>
+    <RadzenRow Visible="@(!adboards.Any())">
+        <RadzenColumn>
+            <NoRecordsFound Title="No adboards found!" Subtitle="Please add an adboard." />
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenDataList Style="" @ref="@list0" TItem="DOOH.Server.Models.DOOHDB.Adboard" Data="@adboards" AllowPaging="true" LoadData="@adboardsLoadData" Count="@adboardsCount" WrapItems="true" IsLoading="@isAdboardsLoading" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30}) Visible="@(adboards.Any())">
+        <Template>
+            <AdboardTemplate Context="@context">
+                <Actions Context="childContext">
+                    <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Click="@((args) => DetailsSplitButtonClicked(args, childContext))" Size="Radzen.ButtonSize.Small">
+                        <RadzenSplitButtonItem Text="Wifi" Icon="wifi" Style="font-size:12px;" />
+                    </RadzenSplitButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="location_on" Size="Radzen.ButtonSize.Small" Click="@((args) => MapClick(args, context))" Visible="@(((context.Latitude) != 0) && ((context.Longitude) != 0))" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Icon="public" Size="Radzen.ButtonSize.Small" Click="@((args) => NetworkClick(args, context))" Visible="@(context.AdboardNetworks.Count > 0)" />
+                </Actions>
+            </AdboardTemplate>
+        </Template>
+        <LoadingTemplate>
+            <RadzenText Text="Loading..." />
+        </LoadingTemplate>
+    </RadzenDataList>
+</RadzenStack>

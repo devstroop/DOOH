@@ -32,5 +32,9 @@
         {
             NavigationManager.NavigateTo("/provider/dashboard");
         }
+        else if (SecurityService.IsInRole("Customer"))
+        {
+            NavigationManager.NavigateTo("/customer/dashboard");
+        }
     }
 }

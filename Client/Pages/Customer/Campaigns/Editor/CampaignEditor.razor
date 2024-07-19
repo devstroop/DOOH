@@ -1,0 +1,98 @@
+@using DOOH.Server.Models.DOOHDB
+@using DOOH.Server.Models.Enums
+@layout AdminLayout
+@page "/customer/campaigns/editor/{CampaignId}"
+@attribute [Authorize]
+
+<PageTitle>Campaign Editor</PageTitle>
+<RadzenStack>
+    <RadzenRow class="rz-mb-2" AlignItems="AlignItems.Center" Gap="1rem" RowGap="1rem">
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Center" Gap="1rem" Wrap="FlexWrap.Wrap">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                @* <RadzenIcon Icon="campaign" Style="font-size: 28px"/> *@
+                <RadzenText Text="@CampaignIdLabel" class="rz-mb-0 rz-px-2 rz-py-1" Style="font-size: 12px; font-weight: 600; background-color: #dfdfdf; border-radius: 6px"/>
+                <RadzenText Text="@CampaignName" TextStyle="TextStyle.H5" style="margin: 0" Visible="!CampaignNameEditable"/>
+                <RadzenTextBox style="appearance: none; font-weight: 500; border: none; text-align: start; font-size: 16px; padding-inline: 6px" @bind-Value="@CampaignName" Name="CampaignName" Visible="@CampaignNameEditable"/>
+                <RadzenButton class="rz-ml-2" Icon="edit" ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Visible="!CampaignNameEditable" Click="@((args) => CampaignNameEditable = true)"/>
+                <RadzenButton class="rz-ml-2" Icon="check" ButtonStyle="ButtonStyle.Primary" Size="ButtonSize.Small" Visible="@CampaignNameEditable" Click="@((args) => CampaignNameEditable = false)"/>
+            </RadzenStack>
+        </RadzenStack>
+        <RadzenColumn>
+            <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Gap="0.5rem" class="w-100">
+                <RadzenStack Gap="0">
+                    <RadzenText Text="Status" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-ml-2" Style="font-size: 11px; font-weight: 300; color: #aaa;"/>
+                    <RadzenDropDown id="status" TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@Status" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="width: 150px;">
+                        <Template>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon((DOOH.Server.Models.Enums.Status)context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor((DOOH.Server.Models.Enums.Status)context)" Style="font-size: 16px;"></RadzenIcon>
+                                <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString((DOOH.Server.Models.Enums.Status)context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
+                            </RadzenStack>
+                        </Template>
+                    </RadzenDropDown>
+                </RadzenStack>
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
+                    <RadzenButton Text="Continue" ButtonStyle="Radzen.ButtonStyle.Primary" Click="@ContinueClick" IsBusy="@IsSaving" BusyText="Saving"/>
+                    <RadzenButton Text="Discard" ButtonStyle="ButtonStyle.Light" Click="@DiscardClick"/>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenColumn>
+        
+    </RadzenRow>
+    <RadzenTabs @ref="@_tabs" @bind-SelectedIndex="@SelectedTabIndex">
+        <Tabs>
+            <RadzenTabsItem Text="Locations" Icon="location_on">
+                <CampaignAdboardsEditor CampaignId="@_campaignId" 
+                                        Selected="@_campaignAdboards" 
+                                        Add="@OnAddCampaignAdboard" 
+                                        Remove="@OnRemoveCampaignAdboard"
+                                        RemoveAll="@OnRemoveAllCampaignAdboards"/>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Advertisements" Icon="featured_video">
+                <CampaignAdvertisementsEditor CampaignId="@_campaignId" 
+                                              Data="@_advertisements" 
+                                              Add="@OnAddAdvertisement" 
+                                              Remove="@OnRemoveAdvertisement" 
+                                              Refresh="@OnRefresh"/>
+            </RadzenTabsItem>
+            <RadzenTabsItem Text="Planner" Icon="schedule">
+                <ScheduleEditor CampaignId="@_campaignId" 
+                                Data="@_schedules" 
+                                SelectedAdboards="@_campaignAdboards.Select(x => x.Adboard)" 
+                                Advertisements="@_advertisements" 
+                                Add="@AddSchedule" 
+                                Update="@UpdateSchedule" 
+                                Delete="@DeleteSchedule"/>
+            </RadzenTabsItem>
+        </Tabs>
+    </RadzenTabs>
+</RadzenStack>
+
+<style>
+    .rz-tabview-nav {
+        width: auto;
+        overflow-x: auto; 
+        scroll-margin-left: 1rem;
+    }
+    .rz-dialog-titlebar {
+        background-color: #fff;
+    }
+
+    .rz-dialog-content {
+        background-color: #fff;
+    }
+
+    .rz-spinner-button {
+        display: none;
+    }
+    
+    div#status.rz-dropdown{
+        padding:  0.25rem 0.25rem;
+        height:  auto;
+        width: auto;
+        /*border:  none;*/
+        background-color:  transparent;
+    }
+    div.rz-dropdown-items-wrapper{
+        max-height:  480px !important;
+    }
+</style>

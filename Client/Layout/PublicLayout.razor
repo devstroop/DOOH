@@ -12,30 +12,52 @@
                         <LazyImageComponent DefaultImageUrl="/vectors/Doohfy-Blue.svg" ImageUrl="@Company?.Logo" Style="height: 28px;" />
                     </a>
 
-                    @* <RadzenMenu>
-                    <RadzenMenuItem Text="Home" Path="" />
-                    </RadzenMenu> *@
+                    <RadzenMenu>
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                            </Authorized>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="Provider">
+                            <Authorized>
+                            </Authorized>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="Customer">
+                            <Authorized>
+                                <RadzenMenuItem Text="Dashboard" Path="customer/dashboard" />
+                                <RadzenMenuItem Text="Campaigns" Path="customer/campaigns" />
+                            </Authorized>
+                        </AuthorizeView>
+                    </RadzenMenu>
                 </RadzenStack>
             </RadzenColumn>
             <RadzenColumn Size="6">
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center">
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Medium"/>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Provider">
+                        <Authorized>
+                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Medium"/>
+                        </Authorized>
+                    </AuthorizeView>
                     <AuthorizeView>
                         <Authorized>
-                            <RadzenButton Text="Dashboard" Click="@DashboardClick" Size="Radzen.ButtonSize.Medium" />
                             <RadzenProfileMenu Visible="@Security.IsAuthenticated()" Click="@ProfileMenuClick" ShowIcon="false">
                                 <ChildContent>
                                     @* <RadzenProfileMenuItem Path="/dashboard" Icon="dashboard" Text="Dashboard" /> *@
-                                    <RadzenProfileMenuItem Path="/profile" Icon="settings" Text="Profile" />
-                                    <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new" />
+                                    <RadzenProfileMenuItem Path="/profile" Icon="settings" Text="Profile"/>
+                                    <RadzenProfileMenuItem Text="Logout" Value="Logout" Icon="power_settings_new"/>
                                 </ChildContent>
                                 <Template>
                                     @* @Security.User?.Name *@
-                                    <RadzenGravatar Email="@Security.User?.Name" />
+                                    <RadzenGravatar Email="@Security.User?.Name"/>
                                 </Template>
                             </RadzenProfileMenu>
                         </Authorized>
                         <NotAuthorized>
-                            <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))" />
+                            <RadzenButton Text="Login" Click="@((args) => NavigationManager.NavigateTo("/authentication/login"))"/>
                         </NotAuthorized>
                     </AuthorizeView>
                 </RadzenStack>
