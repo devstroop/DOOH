@@ -26,12 +26,12 @@ namespace DOOH.Server.Data
                 table.CampaignId, table.AdboardId
             });
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>().HasKey(table => new {
-                table.ScheduleId, table.AdboardId
-            });
-
             builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>().HasKey(table => new {
                 table.ScheduleId, table.AdvertisementId
+            });
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleCampaignAdboard>().HasKey(table => new {
+                table.ScheduleId, table.AdboardId, table.CampaignId
             });
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
@@ -154,18 +154,6 @@ namespace DOOH.Server.Data
               .HasForeignKey(i => i.CampaignId)
               .HasPrincipalKey(i => i.CampaignId);
 
-            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>()
-              .HasOne(i => i.Adboard)
-              .WithMany(i => i.ScheduleAdboards)
-              .HasForeignKey(i => i.AdboardId)
-              .HasPrincipalKey(i => i.AdboardId);
-
-            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdboard>()
-              .HasOne(i => i.Schedule)
-              .WithMany(i => i.ScheduleAdboards)
-              .HasForeignKey(i => i.ScheduleId)
-              .HasPrincipalKey(i => i.ScheduleId);
-
             builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>()
               .HasOne(i => i.Advertisement)
               .WithMany(i => i.ScheduleAdvertisements)
@@ -183,6 +171,18 @@ namespace DOOH.Server.Data
               .WithMany(i => i.Taxes1)
               .HasForeignKey(i => i.ParentTaxId)
               .HasPrincipalKey(i => i.TaxId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleCampaignAdboard>()
+              .HasOne(i => i.Schedule)
+              .WithMany(i => i.ScheduleCampaignAdboards)
+              .HasForeignKey(i => i.ScheduleId)
+              .HasPrincipalKey(i => i.ScheduleId);
+
+            builder.Entity<DOOH.Server.Models.DOOHDB.ScheduleCampaignAdboard>()
+              .HasOne(i => i.CampaignAdboard)
+              .WithMany(i => i.ScheduleCampaignAdboards)
+              .HasForeignKey(i => new { i.CampaignId, i.AdboardId })
+              .HasPrincipalKey(i => new { i.CampaignId, i.AdboardId });
 
             builder.Entity<DOOH.Server.Models.DOOHDB.Adboard>()
               .Property(p => p.Latitude)
@@ -432,13 +432,13 @@ namespace DOOH.Server.Data
 
         public DbSet<DOOH.Server.Models.DOOHDB.Schedule> Schedules { get; set; }
 
-        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdboard> ScheduleAdboards { get; set; }
-
         public DbSet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement> ScheduleAdvertisements { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.Tax> Taxes { get; set; }
 
         public DbSet<DOOH.Server.Models.DOOHDB.UserInformation> UserInformations { get; set; }
+
+        public DbSet<DOOH.Server.Models.DOOHDB.ScheduleCampaignAdboard> ScheduleCampaignAdboards { get; set; }
 
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {

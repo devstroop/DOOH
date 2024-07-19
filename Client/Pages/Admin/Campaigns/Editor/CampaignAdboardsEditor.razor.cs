@@ -14,7 +14,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public int CampaignId { get; set; }
         
         [Parameter]
-        public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignAdboard> Data { get; set; } = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
+        public IEnumerable<DOOH.Server.Models.DOOHDB.CampaignAdboard> Selected { get; set; } = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
         
         [Parameter]
         public EventCallback<DOOH.Server.Models.DOOHDB.CampaignAdboard> Add { get; set; }
@@ -23,7 +23,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         public EventCallback<DOOH.Server.Models.DOOHDB.CampaignAdboard> Remove { get; set; }
         
         [Parameter]
-        public EventCallback Clear { get; set; }
+        public EventCallback RemoveAll { get; set; }
 
         [Inject]
         protected IJSRuntime Runtime { get; set; }
@@ -186,7 +186,7 @@ setTimeout(() => window.infoWindow.open(map, marker), 200);
 
         private async Task OnSelectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (Data.All(x => x.AdboardId != adboard.AdboardId))
+            if (Selected.All(x => x.AdboardId != adboard.AdboardId))
             {
                 var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard
                 {
@@ -199,7 +199,7 @@ setTimeout(() => window.infoWindow.open(map, marker), 200);
 
         private async Task OnUnselectAdboard(DOOH.Server.Models.DOOHDB.Adboard adboard)
         {
-            if (Data.Any(x => x.AdboardId == adboard.AdboardId))
+            if (Selected.Any(x => x.AdboardId == adboard.AdboardId))
             {
                 var campaignAdboard = new DOOH.Server.Models.DOOHDB.CampaignAdboard
                 {
@@ -212,12 +212,12 @@ setTimeout(() => window.infoWindow.open(map, marker), 200);
 
         private async Task ClearSelectedAdboards()
         {
-            await Clear.InvokeAsync();
+            await RemoveAll.InvokeAsync();
         }
 
 
-        private string SelectedAdboardLabel => $"{Data.Count()} selected!";
+        private string SelectedAdboardLabel => $"{Selected.Count()} selected!";
 
-        private bool ShowSelectedAdboardLabel => Data.Any();
+        private bool ShowSelectedAdboardLabel => Selected.Any();
     }
 }

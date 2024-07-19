@@ -6,7 +6,6 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor;
 
 public partial class ScheduleEditor
 {
-    
     [Parameter] public int CampaignId { get; set; } = 0;
     [Parameter] public DateTime Min { get; set; } = DateTime.Today;
     [Parameter] public DateTime Max { get; set; } = DateTime.Today.AddDays(90);
@@ -69,7 +68,13 @@ public partial class ScheduleEditor
             // }
             
             DOOH.Server.Models.DOOHDB.Schedule data = await DialogService.OpenAsync<ScheduleValueEditor>("Add Schedule",
-                new Dictionary<string, object> { { "CampaignId", CampaignId }, { "Adboards", SelectedAdboards }, { "Advertisements", Advertisements }, { "Date", args.Start } });
+                new Dictionary<string, object>
+                {
+                    { "CampaignId", CampaignId }, 
+                    { "Adboards", SelectedAdboards }, 
+                    { "Advertisements", Advertisements }, 
+                    { "Date", args.Start }
+                });
 
             if (data != null)
             {
@@ -95,7 +100,13 @@ public partial class ScheduleEditor
         //     return;
         // }
 
-        var data = await DialogService.OpenAsync<ScheduleValueEditor>("Edit Schedule", new Dictionary<string, object> { { "CampaignId", CampaignId }, { "Schedule", args.Data }, { "Adboards", SelectedAdboards }, { "Advertisements", Advertisements }, { "SelectedAdboardIds", args.Data.ScheduleAdboards.Select(x => x.AdboardId) }, { "SelectedAdvertisementIds", args.Data.ScheduleAdvertisements.Select(x => x.AdvertisementId) }  });
+        var data = await DialogService.OpenAsync<ScheduleValueEditor>("Edit Schedule", new Dictionary<string, object>
+        {
+            { "CampaignId", CampaignId }, 
+            { "Schedule", args.Data }, 
+            { "Adboards", SelectedAdboards }, 
+            { "Advertisements", Advertisements }
+        });
 
         if (data != null)
         {
@@ -103,7 +114,8 @@ public partial class ScheduleEditor
             args.Data.End = data.End;
             args.Data.Rotation = data.Rotation;
             args.Data.Label = data.Label;
-            args.Data.ScheduleAdboards = data.ScheduleAdboards;
+            data.ScheduleCampaignAdboards = args.Data.ScheduleCampaignAdboards;
+            data.ScheduleAdvertisements = args.Data.ScheduleAdvertisements;
         }
         
         Data = Data.Where(x => x.ScheduleId != args.Data.ScheduleId).Append(args.Data);
@@ -180,7 +192,13 @@ public partial class ScheduleEditor
     
     private async Task OnScheduleEdit(DOOH.Server.Models.DOOHDB.Schedule data)
     {
-        var result = await DialogService.OpenAsync<ScheduleValueEditor>("Edit Schedule", new Dictionary<string, object> { { "CampaignId", CampaignId }, { "Schedule", data }, { "Adboards", SelectedAdboards }, { "Advertisements", Advertisements }, { "SelectedAdboardIds", data.ScheduleAdboards.Select(x => x.AdboardId) }, { "SelectedAdvertisementIds", data.ScheduleAdvertisements.Select(x => x.AdvertisementId) }  });
+        var result = await DialogService.OpenAsync<ScheduleValueEditor>("Edit Schedule", new Dictionary<string, object>
+        {
+            { "CampaignId", CampaignId }, 
+            { "Schedule", data }, 
+            { "Adboards", SelectedAdboards }, 
+            { "Advertisements", Advertisements }
+        });
 
         if (result != null)
         {
@@ -188,7 +206,8 @@ public partial class ScheduleEditor
             data.End = result.End;
             data.Rotation = result.Rotation;
             data.Label = result.Label;
-            data.ScheduleAdboards = result.ScheduleAdboards;
+            data.ScheduleCampaignAdboards = result.ScheduleCampaignAdboards;
+            data.ScheduleAdvertisements = result.ScheduleAdvertisements;
         }
         
         Data = Data.Where(x => x.ScheduleId != data.ScheduleId).Append(data);

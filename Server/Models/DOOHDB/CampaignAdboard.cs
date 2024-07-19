@@ -21,5 +21,7 @@ namespace DOOH.Server.Models.DOOHDB
         public int AdboardId { get; set; }
 
         public Adboard Adboard { get; set; }
+
+        public ICollection<ScheduleCampaignAdboard> ScheduleCampaignAdboards { get; set; }
     }
 }

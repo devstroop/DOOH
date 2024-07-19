@@ -7,8 +7,8 @@ using System.Text.Json.Serialization;
 
 namespace DOOH.Server.Models.DOOHDB
 {
-    [Table("ScheduleAdboard", Schema = "dbo")]
-    public partial class ScheduleAdboard
+    [Table("ScheduleCampaignAdboard", Schema = "dbo")]
+    public partial class ScheduleCampaignAdboard
     {
         [Key]
         [Required]
@@ -20,6 +20,10 @@ namespace DOOH.Server.Models.DOOHDB
         [Required]
         public int AdboardId { get; set; }
 
-        public Adboard Adboard { get; set; }
+        public CampaignAdboard CampaignAdboard { get; set; }
+
+        [Key]
+        [Required]
+        public int CampaignId { get; set; }
     }
 }

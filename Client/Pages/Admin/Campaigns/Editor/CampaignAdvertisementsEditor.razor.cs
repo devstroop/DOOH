@@ -18,7 +18,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         [Parameter]
         public EventCallback<Advertisement> Add { get; set; }
         [Parameter]
-        public EventCallback<int> Delete { get; set; }
+        public EventCallback<int> Remove { get; set; }
         
         [Parameter]
         public Action Refresh { get; set; }
@@ -55,7 +55,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
 
         private async Task DeleteAdvertisement(MouseEventArgs args, DOOH.Server.Models.DOOHDB.Advertisement advertisement)
         {
-            await Delete.InvokeAsync(advertisement.AdvertisementId);
+            await Remove.InvokeAsync(advertisement.AdvertisementId);
         }
 
 
