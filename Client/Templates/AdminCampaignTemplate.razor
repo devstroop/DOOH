@@ -79,6 +79,14 @@
                                 <RadzenText Text="@($"{Campaign.Advertisements.Select(x => Math.Round(x.Duration)).Sum()} sec")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
                                 @* <RadzenButton Icon="more" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" /> *@
                             </RadzenStack>
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem">
+                                <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
+                                    <RadzenIcon Icon="person" Style="font-size: 16px" />
+                                    <RadzenText Text="User" TextStyle="TextStyle.Body2" class="rz-mb-0" />
+                                </RadzenStack>
+                                <RadzenText Text="@($"{Campaign.UserId}")" TextStyle="TextStyle.Body2" class="rz-mb-0" Style="font-weight: 500;" />
+                                <RadzenButton Icon="info_circle" Variant="Variant.Text" Size="ButtonSize.ExtraSmall" />
+                            </RadzenStack>
                         </RadzenStack>
                     </RadzenColumn>
                     <RadzenStack JustifyContent="Radzen.JustifyContent.End">
