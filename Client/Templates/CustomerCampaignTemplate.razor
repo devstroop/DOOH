@@ -1,3 +1,4 @@
+@using DOOH.Server.Extensions
 <RadzenColumn Size="12" Style="@Style" class="rz-border-radius-2">
     <RadzenRow>
         <RadzenColumn Size="12" SizeXS="12" SizeSM="12" SizeMD="3" SizeLG="2" SizeXL="2" Visible="@(Campaign?.Advertisements != null)">
@@ -28,7 +29,7 @@
                         @*     </Template> *@
                         @* </RadzenDropDown> *@
                         <RadzenStack>
-                            <RadzenBadge Text="Draft" BadgeStyle="BadgeStyle.Light" Visible="@DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status)Campaign.Status)" class="rz-p-2" Style="font-size: 12px; font-weight: bold;" />
+                            <RadzenBadge Text="@Campaign.Status.ToFriendlyString()" BadgeStyle="BadgeStyle.Light" class="rz-p-2" Style="@($"font-size: 12px; font-weight: bold; color: white; background-color: {Campaign.Status.GetColor().ToRgba(0.5)}")" />
                         </RadzenStack>
                         <RadzenSplitButton ButtonStyle="ButtonStyle.Light" Icon="more_vert" Size="ButtonSize.Small" Click="@SplitBtnClick">
                             <RadzenSplitButtonItem Text="Edit" Icon="edit" Style="font-size:12px;" />

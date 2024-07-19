@@ -68,12 +68,12 @@ public static class StatusExtensions
     {
         return status switch
         {
-            Status.Draft => "#17a2b8",
-            Status.Pending => "#007bff",
-            Status.Active => "#28a745",
-            Status.Completed => "#6c757d",
-            Status.Cancelled => "#dc3545",
-            Status.Suspended => "#ffc107",
+            Status.Draft => "#6c757d",       // Secondary color
+            Status.Pending => "#ffc107",     // Warning color
+            Status.Active => "#28a745",      // Success color
+            Status.Completed => "#6c757d",  // Secondary color
+            Status.Cancelled => "#dc3545",   // Danger color
+            Status.Suspended => "#dc3545",   // Danger color
             _ => null
         };
     }
