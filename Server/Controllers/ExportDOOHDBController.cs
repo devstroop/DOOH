@@ -313,20 +313,6 @@ namespace DOOH.Server.Controllers
             return ToExcel(ApplyQuery(await service.GetSchedules(), Request.Query, false), fileName);
         }
 
-        [HttpGet("/export/DOOHDB/scheduleadboards/csv")]
-        [HttpGet("/export/DOOHDB/scheduleadboards/csv(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportScheduleAdboardsToCSV(string fileName = null)
-        {
-            return ToCSV(ApplyQuery(await service.GetScheduleAdboards(), Request.Query, false), fileName);
-        }
-
-        [HttpGet("/export/DOOHDB/scheduleadboards/excel")]
-        [HttpGet("/export/DOOHDB/scheduleadboards/excel(fileName='{fileName}')")]
-        public async Task<FileStreamResult> ExportScheduleAdboardsToExcel(string fileName = null)
-        {
-            return ToExcel(ApplyQuery(await service.GetScheduleAdboards(), Request.Query, false), fileName);
-        }
-
         [HttpGet("/export/DOOHDB/scheduleadvertisements/csv")]
         [HttpGet("/export/DOOHDB/scheduleadvertisements/csv(fileName='{fileName}')")]
         public async Task<FileStreamResult> ExportScheduleAdvertisementsToCSV(string fileName = null)
@@ -367,6 +353,20 @@ namespace DOOH.Server.Controllers
         public async Task<FileStreamResult> ExportUserInformationsToExcel(string fileName = null)
         {
             return ToExcel(ApplyQuery(await service.GetUserInformations(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/schedulecampaignadboards/csv")]
+        [HttpGet("/export/DOOHDB/schedulecampaignadboards/csv(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleCampaignAdboardsToCSV(string fileName = null)
+        {
+            return ToCSV(ApplyQuery(await service.GetScheduleCampaignAdboards(), Request.Query, false), fileName);
+        }
+
+        [HttpGet("/export/DOOHDB/schedulecampaignadboards/excel")]
+        [HttpGet("/export/DOOHDB/schedulecampaignadboards/excel(fileName='{fileName}')")]
+        public async Task<FileStreamResult> ExportScheduleCampaignAdboardsToExcel(string fileName = null)
+        {
+            return ToExcel(ApplyQuery(await service.GetScheduleCampaignAdboards(), Request.Query, false), fileName);
         }
     }
 }

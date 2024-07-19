@@ -36,7 +36,6 @@
     <Content Include="Controllers\DOOHDB\PagesController.cs" />
     <Content Include="Controllers\DOOHDB\ProvidersController.cs" />
     <Content Include="Controllers\DOOHDB\TaxesController.cs" />
-    <Content Include="Controllers\DOOHDB\UploadsController.cs" />
     <Content Include="Controllers\DOOHDB\UserInformationsController.cs" />
     <Content Include="Controllers\ExportController.cs" />
     <Content Include="Controllers\ExportDOOHDBController.cs" />

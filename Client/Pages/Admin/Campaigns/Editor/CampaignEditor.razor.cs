@@ -35,14 +35,21 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         
         private RadzenTabs _tabs;
         private int SelectedTabIndex { get; set; }= 0;
-        private string CampaignName { get; set; } = "Unnamed Campaign";
+        private string CampaignName { get; set; } = "New Campaign";
         private BudgetType BudgetType { get; set; } = BudgetType.Total;
         private decimal Budget { get; set; } = 0;
         private bool IsDraft { get; set; } = true;
         private bool IsSaving { get; set; } = false;
         private DateTime StartDate { get; set; } = DateTime.Today;
         private DateTime EndDate { get; set; } = DateTime.Today.AddDays(30);
-        private DOOH.Server.Models.Enums.Status Status { get; set; } = DOOH.Server.Models.Enums.Status.Draft;
+        private Status Status { get; set; } = Status.Draft;
+        
+        
+        private Campaign _campaign;
+        // private IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> _selectedAdboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
+        private IEnumerable<CampaignAdboard> _campaignAdboards = new List<CampaignAdboard>();
+        private IEnumerable<Advertisement> _advertisements = new List<Advertisement>();
+        private IEnumerable<Schedule> _schedules = new List<Schedule>();
         
 
         protected bool CampaignNameEditable { get; set; } = false;
@@ -50,13 +57,6 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private bool IsCampaignLoading { get; set; } = false;
         private bool IsAdvertisementsLoading { get; set; } = false;
         private bool IsSchedulesLoading { get; set; } = false;
-        
-        
-        private DOOH.Server.Models.DOOHDB.Campaign _campaign;
-        private IEnumerable<DOOH.Server.Models.DOOHDB.Adboard> _selectedAdboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
-        private IEnumerable<DOOH.Server.Models.DOOHDB.CampaignAdboard> _selectedCampaignAdboards = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
-        private IEnumerable<DOOH.Server.Models.DOOHDB.Advertisement> _advertisements = new List<DOOH.Server.Models.DOOHDB.Advertisement>();
-        private IEnumerable<DOOH.Server.Models.DOOHDB.Schedule> _schedules = new List<DOOH.Server.Models.DOOHDB.Schedule>();
 
         
         protected override async Task OnInitializedAsync()
@@ -76,23 +76,18 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         {
             StateHasChanged();
         }
-
-        /// <summary>
-        /// Campaign
-        /// </summary>
-        /// 
-        private async Task LoadCampaign()
+        
+        private async Task  LoadCampaign()
         {
             try
             {
-                if(IsCampaignLoading) return;
+                if (IsCampaignLoading) return;
                 IsCampaignLoading = true;
                 StateHasChanged();
                 if (CampaignId != null && int.TryParse(CampaignId.ToString(), out int campaignId))
                 {
                     _campaignId = campaignId;
-                    const string expand = "CampaignAdboards($expand=Adboard),Advertisements,Schedules($expand=ScheduleAdboards($expand=Adboard),ScheduleAdvertisements($expand=Advertisement))";
-                    _campaign = await DbService.GetCampaignByCampaignId(campaignId: _campaignId, expand: expand);
+                    _campaign = await DbService.GetCampaignByCampaignId(campaignId: _campaignId, expand: "CampaignAdboards($expand=Adboard),Advertisements,Schedules($expand=ScheduleCampaignAdboards($expand=CampaignAdboard($expand=Adboard)),ScheduleAdvertisements($expand=Advertisement))");
                     if (_campaign != null)
                     {
                         _campaignId = _campaign.CampaignId;
@@ -101,15 +96,20 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                         EndDate = _campaign?.EndDate ?? DateTime.Now;
                         Budget = _campaign?.Budget ?? 0;
                         BudgetType = ((BudgetType?)_campaign?.BudgetType) ?? BudgetType.Total;
-                        IsDraft = DOOH.Server.Extensions.StatusExtensions.IsDraft((DOOH.Server.Models.Enums.Status?)_campaign?.Status ?? Status.Draft);
+                        IsDraft = DOOH.Server.Extensions.StatusExtensions.IsDraft(
+                            (DOOH.Server.Models.Enums.Status?)_campaign?.Status ?? Status.Draft);
                         Status = (DOOH.Server.Models.Enums.Status?)_campaign?.Status ?? Status.Draft;
-                        _selectedCampaignAdboards = _campaign?.CampaignAdboards;
-                        _selectedAdboards = _campaign?.CampaignAdboards?.Select(x => x.Adboard);
+                        _campaignAdboards = _campaign?.CampaignAdboards;
+                        // _selectedAdboards = _campaign?.CampaignAdboards?.Select(x => x.Adboard);
                         _advertisements = _campaign?.Advertisements;
                         _schedules = _campaign?.Schedules;
-                        // _scheduleAdboards = _schedules.SelectMany(x => x.ScheduleAdboards);
                     }
                 }
+            }
+            catch (Exception exception)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = exception.Message });
             }
             finally
             {
@@ -129,25 +129,25 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         /// <param name="adboard"></param>
         private async Task OnAddCampaignAdboard(DOOH.Server.Models.DOOHDB.CampaignAdboard adboard)
         {
-            if (_selectedCampaignAdboards.All(x => x.AdboardId != adboard.AdboardId))
+            if (_campaignAdboards.All(x => x.AdboardId != adboard.AdboardId))
             {
                 adboard = await DbService.CreateCampaignAdboard(adboard);
-                _selectedCampaignAdboards = _selectedCampaignAdboards.Append(adboard);  
-                _selectedAdboards = _selectedAdboards.Append(adboard.Adboard);
+                _campaignAdboards = _campaignAdboards.Append(adboard);  
+                // _selectedAdboards = _selectedAdboards.Append(adboard.Adboard);
             }
         }
 
-        private async Task OnRemoveAdboard(DOOH.Server.Models.DOOHDB.CampaignAdboard adboard)
+        private async Task OnRemoveCampaignAdboard(DOOH.Server.Models.DOOHDB.CampaignAdboard adboard)
         {
             var result = await DbService.DeleteCampaignAdboard(adboardId: adboard.AdboardId, campaignId: adboard.CampaignId);
-            _selectedCampaignAdboards = _selectedCampaignAdboards.Where(x => x.AdboardId != adboard.AdboardId);
-            _selectedAdboards = _selectedAdboards.Where(x => x.AdboardId != adboard.AdboardId);
+            _campaignAdboards = _campaignAdboards.Where(x => x.AdboardId != adboard.AdboardId);
+            // _selectedAdboards = _selectedAdboards.Where(x => x.AdboardId != adboard.AdboardId);
         }
 
-        private async Task OnClearAdboards()
+        private async Task OnRemoveAllCampaignAdboards()
         {
-            _selectedCampaignAdboards = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
-            _selectedAdboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
+            _campaignAdboards = new List<DOOH.Server.Models.DOOHDB.CampaignAdboard>();
+            // _selectedAdboards = new List<DOOH.Server.Models.DOOHDB.Adboard>();
         }
         
         
@@ -155,7 +155,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         /// Advertisements
         /// </summary>
         /// <param name="advertisementId"></param>
-        private async Task OnDeleteAdvertisement(int advertisementId)
+        private async Task OnRemoveAdvertisement(int advertisementId)
         {
             try
             {
@@ -208,7 +208,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                 if (IsSchedulesLoading) return;
                 IsSchedulesLoading = true;
                 StateHasChanged();
-                const string expand = "ScheduleAdboards($expand=Adboard),ScheduleAdvertisements($expand=Advertisement)";
+                const string expand = "ScheduleCampaignAdboards($expand=CampaignAdboard($expand=Adboard)),ScheduleAdvertisements($expand=Advertisement)";
                 var result = await DbService.GetSchedules(filter: $"CampaignId eq {_campaignId}", expand: expand,
                     orderby: "Start");
                 _schedules = result.Value.AsODataEnumerable();
@@ -228,12 +228,12 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         private async Task AddSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
             schedule = await DbService.CreateSchedule(schedule);
-            var toAddScheduleAdboards = schedule.ScheduleAdboards.ToList();
+            var toAddScheduleAdboards = schedule.ScheduleCampaignAdboards.ToList();
             var toAddScheduleAdvertisements = schedule.ScheduleAdvertisements.ToList();
             foreach (var scheduleAdboard in toAddScheduleAdboards)
             {
                 scheduleAdboard.ScheduleId = schedule.ScheduleId;
-                await DbService.CreateScheduleAdboard(scheduleAdboard);
+                await DbService.CreateScheduleCampaignAdboard(scheduleAdboard);
             }
             foreach (var scheduleAdvertisement in toAddScheduleAdvertisements)
             {
@@ -246,35 +246,62 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
         
         private async Task UpdateSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
-            await DbService.UpdateSchedule(schedule.ScheduleId, schedule);
-            var existing = await DbService.GetScheduleAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
-            var existingScheduleAdboards = existing.Value.AsODataEnumerable();
-            var toRemove = existingScheduleAdboards.Except(schedule.ScheduleAdboards).ToList();
-            var toAdd = schedule.ScheduleAdboards.Except(existingScheduleAdboards).ToList();
-            foreach (var scheduleAdboard in toAdd)
+            try
             {
-                await DbService.CreateScheduleAdboard(scheduleAdboard);
+                await DbService.UpdateSchedule(schedule.ScheduleId, schedule);
+                
+                var existingScheduleCampaignAdboardsResponse = await DbService.GetScheduleCampaignAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
+                var existingScheduleCampaignAdboards = existingScheduleCampaignAdboardsResponse.Value.AsODataEnumerable();
+                var toRemoveScheduleCampaignAdboards = existingScheduleCampaignAdboards.Except(schedule.ScheduleCampaignAdboards).ToList();
+                var toAddScheduleCampaignAdboards = schedule.ScheduleCampaignAdboards.Except(existingScheduleCampaignAdboards).ToList();
+                
+                foreach (var scheduleCampaignAdboard in toRemoveScheduleCampaignAdboards)
+                {
+                    await DbService.DeleteScheduleCampaignAdboard(scheduleCampaignAdboard.ScheduleId, scheduleCampaignAdboard.AdboardId, scheduleCampaignAdboard.CampaignId);
+                }
+                foreach (var scheduleAdboard in toAddScheduleCampaignAdboards)
+                {
+                    await DbService.CreateScheduleCampaignAdboard(scheduleAdboard);
+                }
+                
+                var existingScheduleAdvertisementsResponse = await DbService.GetScheduleAdvertisements(filter: $"ScheduleId eq {schedule.ScheduleId}");
+                var existingScheduleAdvertisements = existingScheduleAdvertisementsResponse.Value.AsODataEnumerable();
+                var toRemoveScheduleAdvertisements = existingScheduleAdvertisements.Except(schedule.ScheduleAdvertisements).ToList();
+                var toAddScheduleAdvertisements = schedule.ScheduleAdvertisements.Except(existingScheduleAdvertisements).ToList();
+                
+                foreach (var scheduleAdvertisement in toRemoveScheduleAdvertisements)
+                {
+                    await DbService.DeleteScheduleAdvertisement(scheduleAdvertisement.ScheduleId, scheduleAdvertisement.AdvertisementId);
+                }
+                
+                foreach (var scheduleAdvertisement in toAddScheduleAdvertisements)
+                {
+                    await DbService.CreateScheduleAdvertisement(scheduleAdvertisement);
+                }
             }
-            foreach (var scheduleAdboard in toRemove)
+            catch (Exception ex)
             {
-                await DbService.DeleteScheduleAdboard(scheduleAdboard.ScheduleId, scheduleAdboard.AdboardId);
+                NotificationService.Notify(new NotificationMessage
+                    { Severity = NotificationSeverity.Error, Summary = "Error", Detail = ex.Message });
             }
-
-            await LoadSchedules();
-            StateHasChanged();
+            finally
+            {
+                await LoadSchedules();
+                StateHasChanged();
+            }
         }
         
         private async Task DeleteSchedule(DOOH.Server.Models.DOOHDB.Schedule schedule)
         {
             // _schedules = _schedules.Where(x => x.ScheduleId != schedule.ScheduleId);
             await DbService.DeleteSchedule(schedule.ScheduleId);
-            var existing = await DbService.GetScheduleAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
+            var existing = await DbService.GetScheduleCampaignAdboards(filter: $"ScheduleId eq {schedule.ScheduleId}");
             var existingScheduleAdboards = existing.Value.AsODataEnumerable();
-            var toRemove = existingScheduleAdboards.Except(schedule.ScheduleAdboards).ToList();
+            var toRemove = existingScheduleAdboards.Except(schedule.ScheduleCampaignAdboards).ToList();
             
             foreach (var scheduleAdboard in toRemove)
             {
-                await DbService.DeleteScheduleAdboard(scheduleAdboard.ScheduleId, scheduleAdboard.AdboardId);
+                await DbService.DeleteScheduleCampaignAdboard(scheduleAdboard.ScheduleId, scheduleAdboard.AdboardId);
             }
             await LoadSchedules();
             StateHasChanged();
@@ -301,7 +328,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns.Editor
                     return;
                 }
                 
-                var selectedAdboardsResult = await DbService.GetAdboards(filter: $"AdboardId in ({string.Join(",", _selectedCampaignAdboards.Select(x => x.AdboardId))})", top: 1000);
+                var selectedAdboardsResult = await DbService.GetAdboards(filter: $"AdboardId in ({string.Join(",", _campaignAdboards.Select(x => x.AdboardId))})", top: 1000);
                 var selectedAdboards = selectedAdboardsResult.Value.AsODataEnumerable();
                 
                 // OpenDialog Review

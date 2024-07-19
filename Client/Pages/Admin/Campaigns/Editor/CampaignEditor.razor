@@ -42,22 +42,22 @@
         <Tabs>
             <RadzenTabsItem Text="Locations" Icon="location_on">
                 <CampaignAdboardsEditor CampaignId="@_campaignId" 
-                                        Data="@_selectedCampaignAdboards" 
+                                        Selected="@_campaignAdboards" 
                                         Add="@OnAddCampaignAdboard" 
-                                        Remove="@OnRemoveAdboard" 
-                                        Clear="@OnClearAdboards"/>
+                                        Remove="@OnRemoveCampaignAdboard"
+                                        RemoveAll="@OnRemoveAllCampaignAdboards"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Advertisements" Icon="featured_video">
                 <CampaignAdvertisementsEditor CampaignId="@_campaignId" 
                                               Data="@_advertisements" 
                                               Add="@OnAddAdvertisement" 
-                                              Delete="@OnDeleteAdvertisement" 
+                                              Remove="@OnRemoveAdvertisement" 
                                               Refresh="@OnRefresh"/>
             </RadzenTabsItem>
             <RadzenTabsItem Text="Planner" Icon="schedule">
                 <ScheduleEditor CampaignId="@_campaignId" 
                                 Data="@_schedules" 
-                                SelectedAdboards="@_selectedAdboards" 
+                                SelectedAdboards="@_campaignAdboards.Select(x => x.Adboard)" 
                                 Advertisements="@_advertisements" 
                                 Add="@AddSchedule" 
                                 Update="@UpdateSchedule" 

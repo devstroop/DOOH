@@ -17,13 +17,10 @@ using DOOH.Server.Services;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Set GC settings
 GCSettings.LatencyMode = GCLatencyMode.LowLatency;
 GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
 GC.Collect();
-
-
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents().AddHubOptions(options => options.MaximumReceiveMessageSize = 10 * 1024 * 1024).AddInteractiveWebAssemblyComponents();
 builder.Services.AddControllers();
@@ -60,10 +57,10 @@ builder.Services.AddControllers().AddOData(opt =>
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Page>("Pages");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Provider>("Providers");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Schedule>("Schedules");
-    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.ScheduleAdboard>("ScheduleAdboards").EntityType.HasKey(entity => new { entity.ScheduleId, entity.AdboardId });
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.ScheduleAdvertisement>("ScheduleAdvertisements").EntityType.HasKey(entity => new { entity.ScheduleId, entity.AdvertisementId });
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.Tax>("Taxes");
     oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.UserInformation>("UserInformations");
+    oDataBuilderDOOHDB.EntitySet<DOOH.Server.Models.DOOHDB.ScheduleCampaignAdboard>("ScheduleCampaignAdboards").EntityType.HasKey(entity => new { entity.ScheduleId, entity.AdboardId, entity.CampaignId });
     opt.AddRouteComponents("odata/DOOHDB", oDataBuilderDOOHDB.GetEdmModel()).Count().Filter().OrderBy().Expand().Select().SetMaxTop(null).TimeZone = TimeZoneInfo.Utc;
 });
 //builder.Services.AddScoped<DOOH.Client.Services.BrowserService>();

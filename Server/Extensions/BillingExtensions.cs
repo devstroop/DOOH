@@ -8,7 +8,7 @@ public static class BillingExtensions
     {
         try
         {
-            return schedule.Rotation * schedule.ScheduleAdboards.AsEnumerable().Select(x => x.Adboard.BaseRatePerSecond).Sum() ?? 0;
+            return schedule.Rotation * schedule.ScheduleCampaignAdboards.AsEnumerable().Select(x => x.CampaignAdboard.Adboard.BaseRatePerSecond).Sum() ?? 0;
         }
         catch (Exception ex)
         {
