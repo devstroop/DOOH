@@ -71,7 +71,7 @@ namespace DOOH.Client.Pages.Admin.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-                var result = await DialogService.OpenAsync<CreateCampaign>("Create Campaign", null);
+                var result = await DialogService.OpenAsync<Admin.Campaigns.Editor.CreateCampaign>("Create Campaign", null);
                 if (result != null && result is string)
                 {
                     string campaignName = result.ToString();

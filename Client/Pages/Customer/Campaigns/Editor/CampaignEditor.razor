@@ -1,6 +1,6 @@
 @using DOOH.Server.Models.DOOHDB
 @using DOOH.Server.Models.Enums
-@layout AdminLayout
+@layout PublicLayout
 @page "/customer/campaigns/editor/{CampaignId}"
 @attribute [Authorize]
 
@@ -20,15 +20,15 @@
         <RadzenColumn>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.SpaceBetween" AlignItems="AlignItems.Center" Gap="0.5rem" class="w-100">
                 <RadzenStack Gap="0">
-                    <RadzenText Text="Status" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-ml-2" Style="font-size: 11px; font-weight: 300; color: #aaa;"/>
-                    <RadzenDropDown id="status" TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@Status" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="width: 150px;">
-                        <Template>
-                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem">
-                                <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon((DOOH.Server.Models.Enums.Status)context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor((DOOH.Server.Models.Enums.Status)context)" Style="font-size: 16px;"></RadzenIcon>
-                                <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString((DOOH.Server.Models.Enums.Status)context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText>
-                            </RadzenStack>
-                        </Template>
-                    </RadzenDropDown>
+                    @* <RadzenText Text="Status" TextStyle="TextStyle.Caption" class="rz-mb-0 rz-ml-2" Style="font-size: 11px; font-weight: 300; color: #aaa;"/> *@
+                    @* <RadzenDropDown id="status" TValue="DOOH.Server.Models.Enums.Status" @bind-Value="@Status" Data="@(Enum.GetValues(typeof(DOOH.Server.Models.Enums.Status)).Cast<DOOH.Server.Models.Enums.Status>())" Style="width: 150px;"> *@
+                    @*     <Template> *@
+                    @*         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0.5rem"> *@
+                    @*             <RadzenIcon Icon="@DOOH.Server.Extensions.StatusExtensions.GetIcon((DOOH.Server.Models.Enums.Status)context)" IconColor="@DOOH.Server.Extensions.StatusExtensions.GetColor((DOOH.Server.Models.Enums.Status)context)" Style="font-size: 16px;"></RadzenIcon> *@
+                    @*             <RadzenText Text="@DOOH.Server.Extensions.StatusExtensions.ToFriendlyString((DOOH.Server.Models.Enums.Status)context)" class="rz-mb-0" TextStyle="TextStyle.Body2"></RadzenText> *@
+                    @*         </RadzenStack> *@
+                    @*     </Template> *@
+                    @* </RadzenDropDown> *@
                 </RadzenStack>
                 <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End" AlignItems="AlignItems.Center" Gap="0.5rem">
                     <RadzenButton Text="Continue" ButtonStyle="Radzen.ButtonStyle.Primary" Click="@ContinueClick" IsBusy="@IsSaving" BusyText="Saving"/>

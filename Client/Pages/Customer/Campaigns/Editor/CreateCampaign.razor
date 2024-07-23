@@ -12,20 +12,35 @@
         <RadzenColumn>
             <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.End">
                 <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Click="@CancelClick" />
-                <RadzenButton Text="Continue" Click="@ContinueClick" />
+                <RadzenButton Text="Create" Click="@ContinueClick" BusyText="Creating" IsBusy="@IsLoading" />
             </RadzenStack>
         </RadzenColumn>
     </RadzenRow>
 </RadzenStack>
 @code {
     private Campaign campaign = new ();
+    private bool IsLoading { get; set; } = false;
     private async Task ContinueClick(MouseEventArgs args)
     {
-        campaign.CampaignId = 0;
-        
-        campaign = await DatabaseService.CreateCampaign(campaign);
-        
-        Navigation.NavigateTo($"/customer/campaigns/editor/{campaign.CampaignId}");
+        try
+        {
+            if (IsLoading) return;
+            IsLoading = true;
+            StateHasChanged();
+            campaign.CampaignId = 0;
+            campaign.UserId = Security.User.Id;
+            campaign = await DatabaseService.CreateCampaign(campaign);
+            Navigation.NavigateTo($"/customer/campaigns/editor/{campaign.CampaignId}");
+        }
+        catch (Exception exception)
+        {
+            Notification.Notify(NotificationSeverity.Error, "Error", exception.Message);
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
     }
     private async Task CancelClick(MouseEventArgs args)
     {
@@ -34,4 +49,6 @@
     [Inject] private DOOHDBService DatabaseService { get; set; }
     [Inject] private NavigationManager Navigation { get; set; }
     [Inject] private DialogService Dialog { get; set; }
+    [Inject] private SecurityService Security { get; set; }
+    [Inject] private NotificationService Notification { get; set; }
 }

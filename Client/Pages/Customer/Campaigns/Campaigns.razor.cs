@@ -71,7 +71,7 @@ namespace DOOH.Client.Pages.Customer.Campaigns
 
         protected async Task AddButtonClick(MouseEventArgs args)
         {
-                var result = await DialogService.OpenAsync<CreateCampaign>("Create Campaign", null);
+                var result = await DialogService.OpenAsync<Customer.Campaigns.Editor.CreateCampaign>("Create Campaign", null);
                 if (result != null && result is string)
                 {
                     string campaignName = result.ToString();
@@ -106,8 +106,7 @@ namespace DOOH.Client.Pages.Customer.Campaigns
             try
             {
                 IsLoading = true;
-                //var result = await DOOHDBService.GetCampaigns(top: args.Top, skip: args.Skip, count:args.Top != null && args.Skip != null, filter: args.Filter, orderby: args.OrderBy);
-                var result = await DOOHDBService.GetCampaigns(filter: $@"(contains(CampaignName,""{search}"")) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}", 
+                var result = await DOOHDBService.GetCampaigns(filter: $"""(contains(CampaignName,"{search}") and (UserId eq '{Security.User.Id}')) and {(string.IsNullOrEmpty(args.Filter) ? "true" : args.Filter)}""", 
                     orderby: $"CreatedAt desc",
                     top: args.Top, skip: args.Skip, count: args.Top != null && args.Skip != null, expand: "Advertisements, CampaignAdboards($expand=Adboard)");
 
